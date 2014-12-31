@@ -92,7 +92,7 @@ class Maggy {
         $error = false;
         error_reporting(0);
         while (false !== ($entry = readdir($dirHandle)) && !$error) {
-            if ($entry != "." && $entry != "..") {
+            if ($entry != "." && $entry != ".." && stripos($entry, ".sql")) {
                 $fileParts = explode(".", $entry);
                 $fileParts = explode(" ", $fileParts[0]);
 

@@ -36,7 +36,7 @@ Ruth::setROLE("Admin", array_merge($PUBLIC_RIGHTS, $ADMIN_RIGHTS));
 Ruth::setOBJECT("DEB", $DEB);
 
 /**
- * Use Maggy to help with database migrations
+ * Use Maggy to help with database migrations, watch out for databases that do not support transactions
  */
 Ruth::addRoute("GET", "/maggy", function () {
     new Maggy("migration", ";");

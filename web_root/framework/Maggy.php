@@ -51,8 +51,11 @@ class Maggy {
         }
         $this->delim = $delim;
         $database = $this->DEB->getDatabase();
+        
+       
+        $this->migrationPath = $migrationPath;
 
-        if (empty($database["TINA4_MAGGY"])) {
+        if (empty($database["TINA4_MAGGY"]) && empty($database["tina4_maggy"])) {
             echo "Maggy: I need to create a migration table because it doesn't exist \n";
             $this->DEB->exec("create table tina4_maggy ("
                     . "migration_id varchar (14) not null,"
@@ -62,9 +65,11 @@ class Maggy {
                     . "primary key (migration_id))");
             $this->DEB->commit();
         }
-
-        //Run the migration     
-        $this->doMigration();
+        
+        if (file_exists ($this->migrationPath)) {
+          //Run the migration     
+          $this->doMigration();
+        }
     }
 
     /**

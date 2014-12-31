@@ -101,12 +101,11 @@ class Debby {
             if (!file_exists($imagefile)) {
                 file_put_contents($imagefile, $imagedata);
                 $makethumbnail = true;
-            }
-              else {
-              $makethumbnail = false;    
+            } else {
+                $makethumbnail = false;
             }
             $imagetype = exif_imagetype($imagefile);
-            
+
             if ($makethumbnail) {
                 //JPEG
                 if ($imagetype == 2) {
@@ -563,11 +562,10 @@ class Debby {
         //first section - change limits in mysql to firebird - needs to be enhanced for many sub selects
         //flatten sql
         //echo $sql;
-        
+
         if ($this->dbtype == "firebird") {
-           $sql = str_replace ("`", "\"", $sql);     
-        }
-          else      
+            $sql = str_replace("`", "\"", $sql);
+        } else
         if ($this->dbtype == "mssql" || $this->dbtype == "mssqlnative") {
             $sql = str_replace("first", "top", $sql);
             $sql = str_replace("||", "+", $sql);
@@ -579,15 +577,15 @@ class Debby {
         if ($this->dbtype == "mysql") {
             $sql = str_replace("'now'", "CURRENT_TIMESTAMP", $sql);
         }
-        
+
         if (( stripos($sql, "update") !== false || stripos($sql, "insert") !== false ) && ( $this->dbtype == "mssql" || $this->dbtype == "mssqlnative" )) {
             $sql = str_replace("'now'", "GETDATE()", $sql);
         } else if (( stripos($sql, "update") !== false || stripos($sql, "insert") !== false ) && $this->dbtype == "CUBRID") {
             $sql = str_replace("'now'", "CURRENT_TIMESTAMP()", $sql);
         }
-        
+
         if (stripos($sql, "update") === false && stripos($sql, "insert") === false && stripos($sql, "delete") === false) {
-            
+
             $sql = str_replace("\r", "", $sql);
             $sql = str_replace("\n", " ", $sql);
             $sql = str_replace(" ,", ",", $sql);
@@ -595,7 +593,7 @@ class Debby {
             $sql = str_replace(",", ", ", $sql);
             $parsedsql = explode(" ", $sql);
             //get rid of spaces ?
-            
+
             foreach ($parsedsql as $pid => $pvalue) {
                 $parsedsql[$pid] = trim($pvalue);
                 if ($parsedsql[$pid] == "")
@@ -703,13 +701,13 @@ class Debby {
                     }
                 }
                 $parsedsql = $newsql;
-            } 
+            }
         } else {
             $parsedsql = $sql;
         }
 
         $this->lastsql[count($this->lastsql)] = $parsedsql; // save the last sql  
-       
+
         return $parsedsql;
     }
 
@@ -799,11 +797,11 @@ class Debby {
         $result = false;
         $this->lastsql[count($this->lastsql)] = "preparse: " . $sql;
         $sql = $this->parseSQL($sql);
-                
+
         if (!$this->dbh) {
             trigger_error("No database handle, use connect first in " . __METHOD__ . " for " . $this->dbtype, E_USER_WARNING);
         } else /* ODBC Connection */ if ($this->dbtype == "odbc") {
-            
+
             $query = @odbc_prepare($this->dbh, $sql);
             $params = array();
             $params[0] = $query;
@@ -816,169 +814,159 @@ class Debby {
             } else {
                 $result = @odbc_execute($query);
             }
-            
         } else /* Microsoft SQL Server */ if ($this->dbtype == "mssqlnative") {
-            
-                $sql = $this->setParams($sql, $inputvalues);
-                $result = @sqlsrv_query($this->dbh, $sql);
-                if ($result != false) {
-                    $result = "No Errors";
-                } else {
-                    $result = $this->getError();
-                }
-                //help with the debugging on mssql
-                if ($result != "No Errors") {
-                    $result = false;
-                } else {
-                    $result = true;
-                }
-            
+
+            $sql = $this->setParams($sql, $inputvalues);
+            $result = @sqlsrv_query($this->dbh, $sql);
+            if ($result != false) {
+                $result = "No Errors";
+            } else {
+                $result = $this->getError();
+            }
+            //help with the debugging on mssql
+            if ($result != "No Errors") {
+                $result = false;
+            } else {
+                $result = true;
+            }
         } else /* CUBRID */ if ($this->dbtype == "CUBRID") {
-            
-                $sql = $this->setParams($sql, $inputvalues);
-                $result = @cubrid_execute($this->dbh, $sql);
-                if ($result) {
-                    $result = true;
-                    $this->lastrowid = @cubrid_insert_id();
-                }
-            
+
+            $sql = $this->setParams($sql, $inputvalues);
+            $result = @cubrid_execute($this->dbh, $sql);
+            if ($result) {
+                $result = true;
+                $this->lastrowid = @cubrid_insert_id();
+            }
         } else /* SQLite */ if ($this->dbtype == "sqlite") {
-            
-                $sql = $this->setParams($sql, $inputvalues);
+
+            $sql = $this->setParams($sql, $inputvalues);
 
 
-                @sqlite_exec($this->dbh, $sql, $result);
-                if ($result == "") {
-                    $result .= "No Errors\n";
-                }
-            
+            @sqlite_exec($this->dbh, $sql, $result);
+            if ($result == "") {
+                $result .= "No Errors\n";
+            }
         } else /* SQLite3 */ if ($this->dbtype == "sqlite3") {
-               
-                if (strpos($sql, "?") !== false) {
-                    //echo "here";
-                    $statement = $this->dbh->prepare($sql);
 
-                    //print_r ($this->dbh);
-                    if ($statement) {
+            if (strpos($sql, "?") !== false) {
+                //echo "here";
+                $statement = $this->dbh->prepare($sql);
 
-                        $params = array();
-                        for ($i = 1; $i < func_num_args(); $i++) {
-                            $params[$i] = func_get_arg($i);
-                        }
+                //print_r ($this->dbh);
+                if ($statement) {
+
+                    $params = array();
+                    for ($i = 1; $i < func_num_args(); $i++) {
+                        $params[$i] = func_get_arg($i);
+                    }
 
 
-                        foreach ($params as $pid => $param) {
-                            if (!preg_match('^(\P{Cc}|[\t\n])*$', $param)) { // preg_match $param)) {
-                                if (is_float($param)) {
-                                    //echo "binding {$pid} float"; 
-                                    $statement->bindValue($pid, $param, SQLITE3_FLOAT);
-                                } else
-                                if (is_int($param)) {
-                                    //echo "binding {$pid} int"; 
-                                    $statement->bindValue($pid, $param, SQLITE3_INTEGER);
-                                } else
-                                if (is_string($param)) {
-                                    //echo "binding text"; 
-                                    $statement->bindValue($pid, $param, SQLITE3_TEXT);
-                                }
-                            } else {
-                                //echo "binding blob  ";
-                                $statement->bindValue($pid, $param, SQLITE3_BLOB);
+                    foreach ($params as $pid => $param) {
+                        if (!preg_match('^(\P{Cc}|[\t\n])*$', $param)) { // preg_match $param)) {
+                            if (is_float($param)) {
+                                //echo "binding {$pid} float"; 
+                                $statement->bindValue($pid, $param, SQLITE3_FLOAT);
+                            } else
+                            if (is_int($param)) {
+                                //echo "binding {$pid} int"; 
+                                $statement->bindValue($pid, $param, SQLITE3_INTEGER);
+                            } else
+                            if (is_string($param)) {
+                                //echo "binding text"; 
+                                $statement->bindValue($pid, $param, SQLITE3_TEXT);
                             }
+                        } else {
+                            //echo "binding blob  ";
+                            $statement->bindValue($pid, $param, SQLITE3_BLOB);
                         }
-                        $result = $statement->execute();
-                    } else {
-                        echo $result = "Failed to run script {$sql}";
                     }
+                    $result = $statement->execute();
                 } else {
-                    $result = $this->dbh->exec($sql);
+                    echo $result = "Failed to run script {$sql}";
                 }
-                
-                
-                if ($result == 1) {
-                    $this->lastrowid = $this->dbh->lastInsertRowID();
-                }
-            
-        } else /* Firebird */ if ($this->dbtype == "firebird") {
-           
-                $params = array();
-                $params[] = null; 
-                //what if we have passed some parameters - firebird can do this
-                $tranID = "";
-                for ($i = 1; $i < func_num_args(); $i++) {
-                   
-                    if (strpos(func_get_arg($i)." ", "Resource") !== false) {
-                        $tranID = func_get_arg($i);
-                        
-                    } else {
-                        $params[] = func_get_arg($i);
-                    }
-                }
-               
-                if ($tranID !== "") {
-                    $query = @ibase_prepare($this->dbh, $tranID, $sql);
-                } else {
-                    $query = @ibase_prepare($this->dbh, $sql);
-                }
+            } else {
+                $result = $this->dbh->exec($sql);
+            }
 
-                $params[0] = $query;   
-                if (sizeof($params) != 0) {
-                    $result = @call_user_func_array("ibase_execute", $params);
+
+            if ($result == 1) {
+                $this->lastrowid = $this->dbh->lastInsertRowID();
+            }
+        } else /* Firebird */ if ($this->dbtype == "firebird") {
+
+            $params = array();
+            $params[] = null;
+            //what if we have passed some parameters - firebird can do this
+            $tranID = "";
+            for ($i = 1; $i < func_num_args(); $i++) {
+
+                if (strpos(func_get_arg($i) . " ", "Resource") !== false) {
+                    $tranID = func_get_arg($i);
                 } else {
-                    $result = @ibase_execute($query);
+                    $params[] = func_get_arg($i);
                 }
-            
+            }
+
+            if ($tranID !== "") {
+                $query = @ibase_prepare($this->dbh, $tranID, $sql);
+            } else {
+                $query = @ibase_prepare($this->dbh, $sql);
+            }
+
+            $params[0] = $query;
+            if (sizeof($params) != 0) {
+                $result = @call_user_func_array("ibase_execute", $params);
+            } else {
+                $result = @ibase_execute($query);
+            }
         } else /* Oracle */ if ($this->dbtype == "oracle") {
-            
-                $sql = $this->setParams($sql, $inputvalues);
-                $query = @oci_parse($this->dbh, $sql);
-                $result = @oci_execute($query);
-            
+
+            $sql = $this->setParams($sql, $inputvalues);
+            $query = @oci_parse($this->dbh, $sql);
+            $result = @oci_execute($query);
         } else /* MySQL */ if ($this->dbtype == "mysql") {
-            
-                if (function_exists("mysqli_connect")) {
-                    $sql = $this->setParams($sql, $inputvalues);
-                    $this->lastsql[count($this->lastsql)] = "preparse: " . $sql;
-                    if ($result = $this->dbh->query($sql)) {
-                        //$this->dbh->free_result($result);
-                        $result = "No Errors";
-                    } else {
-                        //add the last error message
-                        $this->lasterror[count($this->lasterror)] = $this->dbh->error;
-                    }
+
+            if (function_exists("mysqli_connect")) {
+                $sql = $this->setParams($sql, $inputvalues);
+                $this->lastsql[count($this->lastsql)] = "preparse: " . $sql;
+                if ($result = $this->dbh->query($sql)) {
+                    //$this->dbh->free_result($result);
+                    $result = "No Errors";
                 } else {
-                    $sql = $this->setParams($sql, $inputvalues);
-                    $result = @mysql_query($sql, $this->dbh);
-                    if ($result != false) {
-                        $result = "No Errors";
-                    } else {
-                        $result = $this->getError();
-                    }
+                    //add the last error message
+                    $this->lasterror[count($this->lasterror)] = $this->dbh->error;
                 }
-        
+            } else {
+                $sql = $this->setParams($sql, $inputvalues);
+                $result = @mysql_query($sql, $this->dbh);
+                if ($result != false) {
+                    $result = "No Errors";
+                } else {
+                    $result = $this->getError();
+                }
+            }
         } else /* Postgres */ if ($this->dbtype == "postgres") {
-           
-                $sql = $this->setParams($sql, $inputvalues);
-                $result = @pg_query($sql);
-                if ($result != false) {
-                    $result = "No Errors";
-                } else {
-                    $result = $this->getError();
-                }
-            
+
+            $sql = $this->setParams($sql, $inputvalues);
+            $result = @pg_query($sql);
+            if ($result != false) {
+                $result = "No Errors";
+            } else {
+                $result = $this->getError();
+            }
         } else /* Microsoft SQL Server */ if ($this->dbtype == "mssql") {
-           
-                $sql = $this->setParams($sql, $inputvalues);
-                $result = @mssql_query($sql);
-                if ($result != false) {
-                    $result = "No Errors";
-                } else {
-                    $result = $this->getError();
-                }
-                //help with the debugging on mssql
-                if ($result != "No Errors") {
-                    print_r($result);
-                }
+
+            $sql = $this->setParams($sql, $inputvalues);
+            $result = @mssql_query($sql);
+            if ($result != false) {
+                $result = "No Errors";
+            } else {
+                $result = $this->getError();
+            }
+            //help with the debugging on mssql
+            if ($result != "No Errors") {
+                print_r($result);
+            }
         } else {
             trigger_error("Please implement " . __METHOD__ . " for " . $this->dbtype, E_USER_ERROR);
         }
@@ -996,7 +984,6 @@ class Debby {
     /*     * *************************************************************************** 
       BEGIN Commit
      */
-
     function commit($tranId = null) {
         if (!$this->dbh) {
             trigger_error("No database handle, use connect first in " . __METHOD__ . " for " . $this->dbtype, E_USER_WARNING);
@@ -1007,16 +994,15 @@ class Debby {
         } else /* CUBRID */ if ($this->dbtype == "CUBRID") {
             $result = @cubrid_commit($this->dbh);
         } else /* SQLite */ if ($this->dbtype == "sqlite" || $this->dbtype == "sqlite3") {
-            trigger_error("Unsupported feature in " . __METHOD__ . " for " . $this->dbtype, E_USER_NOTICE);
+            
             $result = true;
-        } else /* Firebird */ 
+        } else /* Firebird */
         if ($this->dbtype == "firebird") {
-            if ($tranId != null) {    
-              $result = @ibase_commit($tranId);
+            if ($tranId != null) {
+                $result = @ibase_commit($tranId);
+            } else {
+                $result = @ibase_commit();
             }
-                else {
-                  $result = @ibase_commit();  
-                }
         } else /* Oracle */ if ($this->dbtype == "oracle") {
             $result = @oci_commit($this->dbh);
         } else /* MySQL */ if ($this->dbtype == "mysql") {
@@ -1032,7 +1018,7 @@ class Debby {
             //0trigger_error ("Please implement ".__METHOD__." for ".$this->dbtype, E_USER_ERROR);
             $result = true;
         } else /* Microsoft SQL Server */ if ($this->dbtype == "mssql") {
-            trigger_error("Unsupported feature in " . __METHOD__ . " for " . $this->dbtype, E_USER_NOTICE);
+            
             $result = true;
         } else {
             trigger_error("Please implement " . __METHOD__ . " for " . $this->dbtype, E_USER_ERROR);
@@ -1041,8 +1027,8 @@ class Debby {
         //see if there was an error
         $this->getError();
 
-        return $result;        
-     }
+        return $result;
+    }
 
     /*
       END  Commit
@@ -1108,17 +1094,17 @@ class Debby {
 
         }
 
-        if (strpos($date, "-") !== false || strpos($date, "/") !== false) {
+        if (strpos($data, "-") !== false || strpos($data, "/") !== false) {
             if (is_datetime($data)) {
                 $type = "DATETIME";
             } else
-            if (is_numeric($type)) {
+            if (is_numeric($data)) {
                 $type = "NUMERIC";
             } else {
                 $type = "VARCHAR";
             }
         } else
-        if (is_numeric($type)) {
+        if (is_numeric($data)) {
             $type = "NUMERIC";
         } else {
             $type = "VARCHAR";
@@ -1200,9 +1186,7 @@ class Debby {
                 $this->fieldinfo[$i - 1]["length"] = $column_size;
                 $this->fieldinfo[$i - 1]["type"] = strtoupper($column_type);
                 $this->fieldinfo[$i - 1][1] = strtoupper($column_name);
-                ;
                 $this->fieldinfo[$i - 1][0] = strtoupper($column_name);
-                ;
                 $this->fieldinfo[$i - 1][2] = $column_size;
                 $this->fieldinfo[$i - 1][4] = strtoupper($column_type);
             }
@@ -1290,9 +1274,7 @@ class Debby {
                 $this->fieldinfo[$i]["length"] = $field["Precision"];
                 $this->fieldinfo[$i]["type"] = strtoupper($column_type);
                 $this->fieldinfo[$i][1] = strtoupper($column_name);
-                ;
                 $this->fieldinfo[$i][0] = strtoupper($column_name);
-                ;
                 $this->fieldinfo[$i][2] = $column_size;
                 $this->fieldinfo[$i][4] = strtoupper($column_type);
             }
@@ -1389,6 +1371,7 @@ class Debby {
                         while ($temprow = $query->fetchArray(SQLITE3_ASSOC)) {
                             //make the row an object
                             unset($row);
+                            $row = (object) [];
                             foreach ($temprow as $fieldname => $fieldvalue) {
                                 $row->$fieldname = $fieldvalue;
                             }
@@ -1411,15 +1394,26 @@ class Debby {
                 }
                 $nooffields = $query->numColumns();
                 $this->fieldinfo = [];
-                for ($i = 0; $i < $nooffields; $i++) {
-                    $this->fieldinfo[$i]["name"] = $query->columnName($i);
-                    $this->fieldinfo[$i]["alias"] = ucwords(strtolower($this->fieldinfo[$i]["name"]));
-                    eval('$this->fieldinfo[$i]["type"] = $this->getDataType ($result[0]->' . $query->columnName($i) . ');');
-                    $this->fieldinfo[$i][1] = $this->fieldinfo[$i]["name"];
-                    $this->fieldinfo[$i][0] = $this->fieldinfo[$i]["alias"];
-                    //$this->fieldinfo[$i][2] = $column_size; //need to calculate this
-                    $this->fieldinfo[$i][4] = $this->fieldinfo[$i]["type"];
+                
+                if (is_object ($query)) {   
+                    for ($i = 0; $i < $nooffields; $i++) {
+                        $this->fieldinfo[$i]["name"] = $query->columnName($i);
+                        $this->fieldinfo[$i]["alias"] = ucwords(strtolower($this->fieldinfo[$i]["name"]));
+                       
+                        if (!empty ($result) > 0 ) {
+                         eval('$this->fieldinfo[$i]["type"] = $this->getDataType ($result[0]->' . $query->columnName($i) . ');');
+                        }
+                            else {
+                              $this->fieldinfo[$i]["type"] = ""; 
+                            }
+                        $this->fieldinfo[$i][1] = $this->fieldinfo[$i]["name"];
+                        $this->fieldinfo[$i][0] = $this->fieldinfo[$i]["alias"];
+                        $this->fieldinfo[$i][2] = 20; //need to calculate this
+                        $this->fieldinfo[$i][3] = null;
+                        $this->fieldinfo[$i][4] = $this->fieldinfo[$i]["type"];
+                    }
                 }
+
                 $this->affectedrows = $icount;
             }
         } else /* Firebird */ if ($this->dbtype == "firebird") {
@@ -1591,9 +1585,9 @@ class Debby {
                     $this->fieldinfo[$i]["length"] = $column_size;
                     $this->fieldinfo[$i]["type"] = strtoupper($column_type);
                     $this->fieldinfo[$i][1] = strtoupper($column_name);
-                    ;
+
                     $this->fieldinfo[$i][0] = strtoupper($column_name);
-                    ;
+
                     $this->fieldinfo[$i][2] = $column_size;
                     $this->fieldinfo[$i][4] = strtoupper($column_type);
                 }
@@ -1634,9 +1628,9 @@ class Debby {
                 $this->fieldinfo[$i]["length"] = $column_size;
                 $this->fieldinfo[$i]["type"] = strtoupper($column_type);
                 $this->fieldinfo[$i][1] = strtoupper($column_name);
-                ;
+
                 $this->fieldinfo[$i][0] = strtoupper($column_name);
-                ;
+
                 $this->fieldinfo[$i][2] = $column_size;
                 $this->fieldinfo[$i][4] = strtoupper($column_type);
             }
@@ -1902,7 +1896,7 @@ class Debby {
             $result[$YYto + 2] = $input[$YYin + 2];
             $result[$YYto + 3] = $input[$YYin + 3];
             if (!empty($split[1])) {
-              $result .= " " . $split[1]; //add the time piece to the end
+                $result .= " " . $split[1]; //add the time piece to the end
             }
             $result = trim($result);
         } else {
@@ -2019,7 +2013,7 @@ class Debby {
       BEGIN Get Value - Fetch a row in a number of formats
      */
 
-    function getRow($sql = "", $id = 0 , $rowtype = 0, $fetchblob = true) {
+    function getRow($sql = "", $id = 0, $rowtype = 0, $fetchblob = true) {
         $result = false;
         //Dont matter if there is no sql - use the last one.
         if ($sql == "") {
@@ -2163,17 +2157,21 @@ class Debby {
                      where type='table'
                   order by name";
             $tables = $this->getRows($sqltables);
-            foreach ($tables as $id => $record) {
-                $sqlinfo = "pragma table_info($record->NAME);";
-                $tableinfo = $this->getRows($sqlinfo);
-                //Go through the tables and extract their column information
-                foreach ($tableinfo as $tid => $trecord) {
-                    $database[trim($record->NAME)][$tid]["column"] = trim($trecord->CID);
-                    $database[trim($record->NAME)][$tid]["field"] = trim($trecord->NAME);
-                    $database[trim($record->NAME)][$tid]["type"] = trim($trecord->TYPE);
-                    $database[trim($record->NAME)][$tid]["default"] = trim($trecord->DFLT_VALUE);
-                    $database[trim($record->NAME)][$tid]["notnull"] = trim($trecord->NOTNULL);
-                    $database[trim($record->NAME)][$tid]["pk"] = trim($trecord->PK);
+            
+            
+            if (!empty($tables)) {
+                foreach ($tables as $id => $record) {
+                    $sqlinfo = "pragma table_info($record->NAME);";
+                    $tableinfo = $this->getRows($sqlinfo);
+                    //Go through the tables and extract their column information
+                    foreach ($tableinfo as $tid => $trecord) {
+                        $database[trim($record->NAME)][$tid]["column"] = trim($trecord->CID);
+                        $database[trim($record->NAME)][$tid]["field"] = trim($trecord->NAME);
+                        $database[trim($record->NAME)][$tid]["type"] = trim($trecord->TYPE);
+                        $database[trim($record->NAME)][$tid]["default"] = trim($trecord->DFLT_VALUE);
+                        $database[trim($record->NAME)][$tid]["notnull"] = trim($trecord->NOTNULL);
+                        $database[trim($record->NAME)][$tid]["pk"] = trim($trecord->PK);
+                    }
                 }
             }
             $result = $database;
@@ -2316,12 +2314,7 @@ class Debby {
         } else {
             trigger_error("Please implement " . __METHOD__ . " for " . $this->dbtype, E_USER_ERROR);
         }
-        /* Debugging for Close */
-        if ($result) {
-            //check the data
-        } else {
-            trigger_error("Cant extract metadata from $this->dbpath in " . __METHOD__ . " for " . $this->dbtype, E_USER_NOTICE);
-        }
+        
         return $result;
     }
 
@@ -2458,7 +2451,7 @@ class Debby {
             $passwordfields = "", //Fields that may be crypted automatically
             $datefields = "", //Fields that may be seen as date fields and converted accordingly
             $exec = false, $arrayindex = 0) {
-        error_reporting (0);
+        error_reporting(0);
         //Get the length of field prefix
         $prefixlen = strlen($fieldprefix);
         //Start the insert statement      
@@ -2555,7 +2548,7 @@ class Debby {
             $arrayindex = 0 //If a request field is an array - which index to use 
     ) {
         //Get the length of field prefix
-        error_reporting (0);
+        error_reporting(0);
         $prefixlen = strlen($fieldprefix);
         $sqlupdate = "update $tablename set 0=0 ";
         foreach ($_REQUEST as $name => $value) {

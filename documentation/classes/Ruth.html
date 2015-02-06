@@ -1,0 +1,2130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>API Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">234</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">3</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1513982110"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1513982110" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Cody.html">Cody</a></li>
+                                                    <li class="class"><a href="../classes/Debby.html">Debby</a></li>
+                                                    <li class="class"><a href="../classes/Emma.html">Emma</a></li>
+                                                    <li class="class"><a href="../classes/Maggy.html">Maggy</a></li>
+                                                    <li class="class"><a href="../classes/Phoebe.html">Phoebe</a></li>
+                                                    <li class="class"><a href="../classes/Reta.html">Reta</a></li>
+                                                    <li class="class"><a href="../classes/Ruth.html">Ruth</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/default.html">\</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\</small>Ruth</h1>
+                    <p><em></em></p>
+                    
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/Ruth.html#method_autoLoad" class="">autoLoad()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_Message" class="">Message()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_DEBUG" class="">DEBUG()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_setREQUEST" class="">setREQUEST()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_getREQUEST" class="">getREQUEST()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_getPOST_DATA" class="">getPOST_DATA()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_getOBJECT" class="">getOBJECT()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_setOBJECT" class="">setOBJECT()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_setCOOKIE" class="">setCOOKIE()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_getCOOKIE" class="">getCOOKIE()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_getFILES" class="">getFILES()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_getSERVER" class="">getSERVER()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_getPATH" class="">getPATH()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_getREAL_PATH" class="">getREAL_PATH()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_getDOCUMENT_ROOT" class="">getDOCUMENT_ROOT()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_getLASTROUTE" class="">getLASTROUTE()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_setSESSION" class="">setSESSION()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_getSESSION" class="">getSESSION()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_unsetSESSION" class="">unsetSESSION()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_setROLE" class="">setROLE()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_setAuthorization" class="">setAuthorization()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_delAuthorization" class="">delAuthorization()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_initRuth" class="">initRuth()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_addRoute" class="">addRoute()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_addErrorRoute" class="">addErrorRoute()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_responseHeader" class="">responseHeader()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_createRegEx" class="">createRegEx()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_matchRoute" class="">matchRoute()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_getParams" class="">getParams()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_redirect" class="">redirect()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_getAuthorization" class="">getAuthorization()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_parseRoutes" class="">parseRoutes()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No constants found</em>
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No protected properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <a href="../classes/Ruth.html#method___construct" class="">__construct()</a><br />
+                                                                    <a href="../classes/Ruth.html#method___destruct" class="">__destruct()</a><br />
+                                                                    <a href="../classes/Ruth.html#method___clone" class="">__clone()</a><br />
+                                                                    <a href="../classes/Ruth.html#method_parseParams" class="">parseParams()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/Ruth.html#property_DEBUG" class="">$DEBUG</a><br />
+                                                                    <a href="../classes/Ruth.html#property_routes" class="">$routes</a><br />
+                                                                    <a href="../classes/Ruth.html#property_errorRoutes" class="">$errorRoutes</a><br />
+                                                                    <a href="../classes/Ruth.html#property_objects" class="">$objects</a><br />
+                                                                    <a href="../classes/Ruth.html#property_SESSION" class="">$SESSION</a><br />
+                                                                    <a href="../classes/Ruth.html#property_REQUEST" class="">$REQUEST</a><br />
+                                                                    <a href="../classes/Ruth.html#property_COOKIE" class="">$COOKIE</a><br />
+                                                                    <a href="../classes/Ruth.html#property_SERVER" class="">$SERVER</a><br />
+                                                                    <a href="../classes/Ruth.html#property_FILES" class="">$FILES</a><br />
+                                                                    <a href="../classes/Ruth.html#property_ROLES" class="">$ROLES</a><br />
+                                                                    <a href="../classes/Ruth.html#property_DEFAULT_ROLE" class="">$DEFAULT_ROLE</a><br />
+                                                                    <a href="../classes/Ruth.html#property_REQUEST_METHOD" class="">$REQUEST_METHOD</a><br />
+                                                                    <a href="../classes/Ruth.html#property_REQUEST_URI" class="">$REQUEST_URI</a><br />
+                                                                    <a href="../classes/Ruth.html#property_DOCUMENT_ROOT" class="">$DOCUMENT_ROOT</a><br />
+                                                                    <a href="../classes/Ruth.html#property_REAL_PATH" class="">$REAL_PATH</a><br />
+                                                                    <a href="../classes/Ruth.html#property_PATH" class="">$PATH</a><br />
+                                                                    <a href="../classes/Ruth.html#property_POST_DATA" class="">$POST_DATA</a><br />
+                                                                    <a href="../classes/Ruth.html#property_CODES" class="">$CODES</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/Ruth.html"><div class="path-wrapper">Ruth.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">Default</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\Ruth</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr><td colspan="2"><em>None found</em></td></tr>
+                                        </table>
+                </aside>
+            </div>
+
+                        
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_DEBUG" name="property_DEBUG" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$DEBUG</h3>
+                <pre class="signature">$DEBUG : Boolean</pre>
+                <p><em>Indicates whether debugging is on or off</em></p>
+                
+
+                                <h4>Type</h4>
+                Boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_routes" name="property_routes" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$routes</h3>
+                <pre class="signature">$routes : Array</pre>
+                <p><em>The list of all the routes in the system which are in the form  (object) array(&quot;requestMethod&quot; =&gt; $requestMethod, &quot;routePath&quot; =&gt; $routePath, &quot;routeFunction&quot; =&gt; $routeFunction);</em></p>
+                
+
+                                <h4>Type</h4>
+                Array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_errorRoutes" name="property_errorRoutes" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$errorRoutes</h3>
+                <pre class="signature">$errorRoutes : </pre>
+                <p><em>A list of error routes to goto when an error happens, this will be instead of the default</em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_objects" name="property_objects" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$objects</h3>
+                <pre class="signature">$objects : Array</pre>
+                <p><em>A list of objects which must persist in Ruth</em></p>
+                
+
+                                <h4>Type</h4>
+                Array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_SESSION" name="property_SESSION" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$SESSION</h3>
+                <pre class="signature">$SESSION : Array</pre>
+                <p><em>An array snapshot of the $_SESSION variable</em></p>
+                
+
+                                <h4>Type</h4>
+                Array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_REQUEST" name="property_REQUEST" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$REQUEST</h3>
+                <pre class="signature">$REQUEST : Array</pre>
+                <p><em>An array snapshot of the $_REQUEST variable</em></p>
+                
+
+                                <h4>Type</h4>
+                Array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_COOKIE" name="property_COOKIE" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$COOKIE</h3>
+                <pre class="signature">$COOKIE : Array</pre>
+                <p><em>An array snapshot of the $_COOKIE variable</em></p>
+                
+
+                                <h4>Type</h4>
+                Array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_SERVER" name="property_SERVER" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$SERVER</h3>
+                <pre class="signature">$SERVER : Array</pre>
+                <p><em>An array snapshot of the $_SERVER variable</em></p>
+                
+
+                                <h4>Type</h4>
+                Array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_FILES" name="property_FILES" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$FILES</h3>
+                <pre class="signature">$FILES : Array</pre>
+                <p><em>An array snapshot of the $_FILES variable</em></p>
+                
+
+                                <h4>Type</h4>
+                Array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_ROLES" name="property_ROLES" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$ROLES</h3>
+                <pre class="signature">$ROLES : Array</pre>
+                <p><em>The roles are not compulsory but can be defined to provide security in the system</em></p>
+                
+
+                                <h4>Type</h4>
+                Array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_DEFAULT_ROLE" name="property_DEFAULT_ROLE" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$DEFAULT_ROLE</h3>
+                <pre class="signature">$DEFAULT_ROLE : String</pre>
+                <p><em>The default role to be used in the security, see addRole</em></p>
+                
+
+                                <h4>Type</h4>
+                String
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_REQUEST_METHOD" name="property_REQUEST_METHOD" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$REQUEST_METHOD</h3>
+                <pre class="signature">$REQUEST_METHOD : String</pre>
+                <p><em>The request method can be either GET, POST, PUT, DELETE</em></p>
+                
+
+                                <h4>Type</h4>
+                String
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_REQUEST_URI" name="property_REQUEST_URI" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$REQUEST_URI</h3>
+                <pre class="signature">$REQUEST_URI : String</pre>
+                <p><em>The full URL passed by the browser</em></p>
+                
+
+                                <h4>Type</h4>
+                String
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_DOCUMENT_ROOT" name="property_DOCUMENT_ROOT" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$DOCUMENT_ROOT</h3>
+                <pre class="signature">$DOCUMENT_ROOT : String</pre>
+                <p><em>The path to the document root of the web server</em></p>
+                
+
+                                <h4>Type</h4>
+                String
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_REAL_PATH" name="property_REAL_PATH" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$REAL_PATH</h3>
+                <pre class="signature">$REAL_PATH : String</pre>
+                <p><em>The real path to where the web files are being hosted, can be different from the document root</em></p>
+                
+
+                                <h4>Type</h4>
+                String
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_PATH" name="property_PATH" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$PATH</h3>
+                <pre class="signature">$PATH : String</pre>
+                <p><em>The path after the domain name</em></p>
+                
+
+                                <h4>Type</h4>
+                String
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_POST_DATA" name="property_POST_DATA" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$POST_DATA</h3>
+                <pre class="signature">$POST_DATA : String</pre>
+                <p><em>This will be the raw post data as per php://input</em></p>
+                
+
+                                <h4>Type</h4>
+                String
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_CODES" name="property_CODES" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$CODES</h3>
+                <pre class="signature">$CODES : Array</pre>
+                <p><em>A list of codes that will be used with HTTP responses</em></p>
+                
+
+                                <h4>Type</h4>
+                Array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_autoLoad" name="method_autoLoad" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">autoLoad()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">autoLoad(  <span class="argument">$paths</span>,   <span class="argument">$loadAutoLoad = true</span>,   <span class="argument">$ignoreRequires = false</span>) </pre>
+                <p><em>Auto Load tries to include new class requires automatically</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$paths </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$loadAutoLoad </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$ignoreRequires </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_Message" name="method_Message" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">Message()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">Message(String  <span class="argument">$message</span>) </pre>
+                <p><em>The debugging system for the class</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$message </td>
+                                <td><p>A message to be sent through for debugging purposes</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_DEBUG" name="method_DEBUG" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">DEBUG()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">DEBUG() </pre>
+                <p><em>Switch debugging on for Ruth</em></p>
+                <p>Turns on the debugging in Ruth showing a user how the routing is done</p>
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setREQUEST" name="method_setREQUEST" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setREQUEST()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setREQUEST(String  <span class="argument">$keyName = &quot;&quot;</span>, \type  <span class="argument">$keyValue = &quot;&quot;</span>) </pre>
+                <p><em>A function to set request variables using Ruth</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$keyName </td>
+                                <td><p>The name of the request variable to set.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>\type</td>
+                                <td>$keyValue </td>
+                                <td><p>The value stored in the request variable</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getREQUEST" name="method_getREQUEST" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getREQUEST()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getREQUEST(String  <span class="argument">$keyName = &quot;&quot;</span>) : Mixed</pre>
+                <p><em>Getter for the stored $_REQUEST params, blank keyName returns all</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$keyName </td>
+                                <td><p>The name of the request variable</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    Mixed
+                                            &mdash; <p>An mixed variable of what was present for that key</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getPOST_DATA" name="method_getPOST_DATA" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getPOST_DATA()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getPOST_DATA() </pre>
+                <p><em>Getter for the raw post data as per php://input</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getOBJECT" name="method_getOBJECT" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getOBJECT()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getOBJECT(String  <span class="argument">$keyName = &quot;&quot;</span>) : Object</pre>
+                <p><em>Gets a particular object based on the key</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$keyName </td>
+                                <td><p>The name of the object</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    Object
+                                            &mdash; <p>The object that was requested</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setOBJECT" name="method_setOBJECT" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setOBJECT()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setOBJECT(String  <span class="argument">$name</span>, Object  <span class="argument">$object</span>) </pre>
+                <p><em>Sets the object in the Ruth system for use everywhere</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$name </td>
+                                <td><p>The name of the object</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>Object</td>
+                                <td>$object </td>
+                                <td><p>The actual object</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setCOOKIE" name="method_setCOOKIE" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setCOOKIE()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setCOOKIE(String  <span class="argument">$cookieName</span>, String  <span class="argument">$value = &quot;&quot;</span>, String  <span class="argument">$minutes = 60</span>) </pre>
+                <p><em>Sets the Cookie name and value for things we need to store client side</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$cookieName </td>
+                                <td><p>The name of the cookie</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$value </td>
+                                <td><p>The value to be stored in the cookie</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$minutes </td>
+                                <td><p>How many minutes until the cookie must expire</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getCOOKIE" name="method_getCOOKIE" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getCOOKIE()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getCOOKIE(String  <span class="argument">$keyName = &quot;&quot;</span>) : String</pre>
+                <p><em>Getter for the cookie variables, blank keyName returns all</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$keyName </td>
+                                <td><p>The name of the cookie</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    String
+                                            &mdash; <p>The value of the cookie</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getFILES" name="method_getFILES" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getFILES()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getFILES(String  <span class="argument">$keyName = &quot;&quot;</span>) : Object</pre>
+                <p><em>Getter for the file variables, blank keyName will return all</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$keyName </td>
+                                <td><p>The name of the file variable</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    Object
+                                            &mdash; <p>The file object that is present in the $_FILES variable</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getSERVER" name="method_getSERVER" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getSERVER()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getSERVER(String  <span class="argument">$keyName = &quot;&quot;</span>) : String</pre>
+                <p><em>Getter for the Server variables</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$keyName </td>
+                                <td><p>The name of the variable requested</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    String
+                                            &mdash; <p>The value of the variable requested</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getPATH" name="method_getPATH" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getPATH()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getPATH() : String</pre>
+                <p><em>Get the path of the URL after the website address</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    String
+                                            &mdash; <p>The path of the website after the domain name</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getREAL_PATH" name="method_getREAL_PATH" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getREAL_PATH()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getREAL_PATH() : String</pre>
+                <p><em>Get the real path to where ruth is running form</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    String
+                                            &mdash; <p>return the real path</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getDOCUMENT_ROOT" name="method_getDOCUMENT_ROOT" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getDOCUMENT_ROOT()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getDOCUMENT_ROOT() : String</pre>
+                <p><em>Return the document root where the webserver is running from is running from</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    String
+                                            &mdash; <p>The path to where the website is being hosted relative to the server</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getLASTROUTE" name="method_getLASTROUTE" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getLASTROUTE()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getLASTROUTE(String  <span class="argument">$requestMethod = &quot;&quot;</span>) : String</pre>
+                <p><em>Gets the last route based on an option match to request method , either post or get</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$requestMethod </td>
+                                <td><p>GET or POST</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    String
+                                            &mdash; <p>Last route that Ruth remembers</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setSESSION" name="method_setSESSION" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setSESSION()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setSESSION(String  <span class="argument">$keyName = &quot;&quot;</span>, \type  <span class="argument">$keyValue = &quot;&quot;</span>) </pre>
+                <p><em>A function to set session variables using Ruth</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$keyName </td>
+                                <td><p>The name of the sesson variable to set.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>\type</td>
+                                <td>$keyValue </td>
+                                <td><p>The value stored in the session variable</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getSESSION" name="method_getSESSION" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getSESSION()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getSESSION(\type  <span class="argument">$keyName = &quot;&quot;</span>) : \type</pre>
+                <p><em>Get a session variable using Ruth</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\type</td>
+                                <td>$keyName </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    \type
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_unsetSESSION" name="method_unsetSESSION" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">unsetSESSION()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">unsetSESSION(String  <span class="argument">$keyName</span>) : boolean</pre>
+                <p><em>Unset session variables using Ruth</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$keyName </td>
+                                <td><p>The name of the session variable</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>Was the resseting successful</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setROLE" name="method_setROLE" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setROLE()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setROLE(\type  <span class="argument">$roleName = &quot;&quot;</span>, \type  <span class="argument">$routesAllowed = &quot;&quot;</span>, \type  <span class="argument">$defaultRole = false</span>) </pre>
+                <p><em>Set a role for Ruth to use in validating your routes that you want people to access</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\type</td>
+                                <td>$roleName </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>\type</td>
+                                <td>$routesAllowed </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>\type</td>
+                                <td>$defaultRole </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setAuthorization" name="method_setAuthorization" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setAuthorization()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setAuthorization(String  <span class="argument">$roleName = &quot;&quot;</span>, Mixed  <span class="argument">$authDATA = &quot;&quot;</span>, Integer  <span class="argument">$lifeTime = 30</span>) </pre>
+                <p><em>The method to set authorization</em></p>
+                <p>Authorization works by setting an authToken in the session and an expiry time. Also the role is defined for security purposes.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$roleName </td>
+                                <td><p>The naame of the Role matching declared roles</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>Mixed</td>
+                                <td>$authDATA </td>
+                                <td><p>Any PHP array or object</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>Integer</td>
+                                <td>$lifeTime </td>
+                                <td><p>The amount minutes</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_delAuthorization" name="method_delAuthorization" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">delAuthorization()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">delAuthorization() : Boolean</pre>
+                <p><em>Deletes the security token</em></p>
+                <p>The session is invalidated and the internal session variable of Ruth updated</p>
+
+                
+                
+                                    <h4>Returns</h4>
+                    Boolean
+                                            &mdash; <p>Returns true if there was a non empty authToken in the session</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_initRuth" name="method_initRuth" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">initRuth()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">initRuth(String  <span class="argument">$sessionName</span>) </pre>
+                <p><em>Create the session name and initialize all the system variables</em></p>
+                <p>This method creates a session with the name specified and sets all the internal variables it can.
+It also parses the URL for any get variables that may be present and puts them in the internal $REQUEST</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$sessionName </td>
+                                <td><p>The name of the session for the web application</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_addRoute" name="method_addRoute" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">addRoute()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">addRoute(String  <span class="argument">$requestMethod</span>, String  <span class="argument">$routePath</span>, \Function  <span class="argument">$routeFunction</span>, Boolean  <span class="argument">$routeIgnoreTracking = false</span>) : Boolean</pre>
+                <p><em>The Add Route Method</em></p>
+                <p>This method adds routes into the system based on what the user wants to use, your webserver needs to be configured correctly for this
+to work.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$requestMethod </td>
+                                <td><p>Either GET, PUT, POST, DELETE</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$routePath </td>
+                                <td><p>A path to be used as a route, eg. /user, variables can also be parsed /user/{id}/ and wildcards are *</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>\Function</td>
+                                <td>$routeFunction </td>
+                                <td><p>A function which will be called with the corresponding variables</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>Boolean</td>
+                                <td>$routeIgnoreTracking </td>
+                                <td><p>Ruth uses this to give you back the last route but you may not want her to remember all the paths</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    Boolean
+                                            &mdash; <p>Always returns true</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_addErrorRoute" name="method_addErrorRoute" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">addErrorRoute()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">addErrorRoute(Integer  <span class="argument">$errorCode</span>, String  <span class="argument">$routePath</span>) : boolean</pre>
+                <p><em>This is where you add custom routes for HTML error codes, they should be already defined via addRoute in order to work</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>Integer</td>
+                                <td>$errorCode </td>
+                                <td><p>A valid HTML error code</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$routePath </td>
+                                <td><p>A valid route for Ruth to redirect to</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_responseHeader" name="method_responseHeader" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">responseHeader()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">responseHeader(String  <span class="argument">$errorCode = 404</span>, String  <span class="argument">$message = &quot;&quot;</span>) </pre>
+                <p><em>The response header</em></p>
+                <p>We use response header to return a valid HTTP response when something happens, included is a message or body to display with the message</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$errorCode </td>
+                                <td><p>A valid error code which is declared above</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$message </td>
+                                <td><p>A custom message to display with the error code otherwise the default is taken.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_createRegEx" name="method_createRegEx" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">createRegEx()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">createRegEx(\type  <span class="argument">$routePath</span>) : String</pre>
+                <p><em>Creates a regular expression</em></p>
+                <p>This method created a regular expression to be used for matching with the routing and security</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\type</td>
+                                <td>$routePath </td>
+                                <td><p>The path specified by the user</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    String
+                                            &mdash; <p>A regular expression which can be used for routing</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_matchRoute" name="method_matchRoute" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">matchRoute()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">matchRoute(\type  <span class="argument">$routePath</span>, string  <span class="argument">$URI</span>) : boolean</pre>
+                <p><em>The method</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\type</td>
+                                <td>$routePath </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$URI </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getParams" name="method_getParams" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getParams()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getParams(  <span class="argument">$routePath</span>,   <span class="argument">$URI</span>) </pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$routePath </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$URI </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_redirect" name="method_redirect" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">redirect()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">redirect(  <span class="argument">$newPath = &quot;&quot;</span>) </pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$newPath </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getAuthorization" name="method_getAuthorization" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getAuthorization()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getAuthorization(  <span class="argument">$routePath = &quot;&quot;</span>) </pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$routePath </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_parseRoutes" name="method_parseRoutes" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">parseRoutes()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">parseRoutes(  <span class="argument">$customPath = &quot;&quot;</span>) </pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$customPath </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___construct" name="method___construct" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">__construct()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__construct() </pre>
+                <p><em>Static class mustn&#039;t construct</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___destruct" name="method___destruct" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">__destruct()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__destruct() </pre>
+                <p><em>Static class mustn&#039;t destruct</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___clone" name="method___clone" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">__clone()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__clone() </pre>
+                <p><em>static object should not be cloned</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_parseParams" name="method_parseParams" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">parseParams()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">parseParams(  <span class="argument">$URI = &quot;&quot;</span>) : Array</pre>
+                <p><em>Parse the params</em></p>
+                <p>This parses the params from the ? sent on the URL</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$URI </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    Array
+                                            &mdash; <p>An array of params that were passed from the URL - GET variables</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">Ruth.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/Ruth.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on February 6th, 2015 at 07:16.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

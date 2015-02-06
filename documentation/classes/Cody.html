@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>API Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">234</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">3</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1522852556"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1522852556" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Cody.html">Cody</a></li>
+                                                    <li class="class"><a href="../classes/Debby.html">Debby</a></li>
+                                                    <li class="class"><a href="../classes/Emma.html">Emma</a></li>
+                                                    <li class="class"><a href="../classes/Maggy.html">Maggy</a></li>
+                                                    <li class="class"><a href="../classes/Phoebe.html">Phoebe</a></li>
+                                                    <li class="class"><a href="../classes/Reta.html">Reta</a></li>
+                                                    <li class="class"><a href="../classes/Ruth.html">Ruth</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/default.html">\</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\</small>Cody</h1>
+                    <p><em></em></p>
+                    
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/Cody.html#method_Cody" class="">Cody()</a><br />
+                                                                    <a href="../classes/Cody.html#method_getFieldInfo" class="">getFieldInfo()</a><br />
+                                                                    <a href="../classes/Cody.html#method_getCode" class="">getCode()</a><br />
+                                                                    <a href="../classes/Cody.html#method_bootStrapTable" class="">bootStrapTable()</a><br />
+                                                                    <a href="../classes/Cody.html#method_bootStrapTabs" class="">bootStrapTabs()</a><br />
+                                                                    <a href="../classes/Cody.html#method_display" class="">display()</a><br />
+                                                                    <a href="../classes/Cody.html#method_select" class="">select()</a><br />
+                                                                    <a href="../classes/Cody.html#method_multitag" class="">multitag()</a><br />
+                                                                    <a href="../classes/Cody.html#method_multitagGooglePlaces" class="">multitagGooglePlaces()</a><br />
+                                                                    <a href="../classes/Cody.html#method_validateForm" class="">validateForm()</a><br />
+                                                                    <a href="../classes/Cody.html#method_bootStrapPanel" class="">bootStrapPanel()</a><br />
+                                                                    <a href="../classes/Cody.html#method_bootStrapForm" class="">bootStrapForm()</a><br />
+                                                                    <a href="../classes/Cody.html#method_bootStrapMessageBox" class="">bootStrapMessageBox()</a><br />
+                                                                    <a href="../classes/Cody.html#method_bootstrapDashboardPanel" class="">bootstrapDashboardPanel()</a><br />
+                                                                    <a href="../classes/Cody.html#method_bootStrapView" class="">bootStrapView()</a><br />
+                                                                    <a href="../classes/Cody.html#method_kendoGrid" class="">kendoGrid()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No constants found</em>
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No protected properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <em>No private methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/Cody.html#property_DEB" class="">$DEB</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/Cody.html"><div class="path-wrapper">Cody.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">Default</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\Cody</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr><td colspan="2"><em>None found</em></td></tr>
+                                        </table>
+                </aside>
+            </div>
+
+                        
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_DEB" name="property_DEB" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$DEB</h3>
+                <pre class="signature">$DEB : \Debby</pre>
+                <p><em>The database connection</em></p>
+                
+
+                                <h4>Type</h4>
+                <a href="../classes/Debby.html">\Debby</a>
+                &mdash; A valid Debby database object                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_Cody" name="method_Cody" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">Cody()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">Cody(\Debby  <span class="argument">$DEB</span>) </pre>
+                <p><em>The constructor for Cody requires a Debby database connection</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/Debby.html">\Debby</a></td>
+                                <td>$DEB </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getFieldInfo" name="method_getFieldInfo" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getFieldInfo()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getFieldInfo(String  <span class="argument">$sql</span>) : \FieldInfo</pre>
+                <p><em>This function gets the fields from an SQL statement</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$sql </td>
+                                <td><p>A valid SQL statement for the selected database</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    \FieldInfo
+                                            &mdash; <p>An Array of Field Objects</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getCode" name="method_getCode" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getCode()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getCode(  <span class="argument">$tablename = &quot;&quot;</span>) </pre>
+                <p><em>Get the code from a tablename</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$tablename </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_bootStrapTable" name="method_bootStrapTable" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">bootStrapTable()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">bootStrapTable(String  <span class="argument">$sql = &quot;select * from user_detail&quot;</span>, Array  <span class="argument">$buttons = &quot;&quot;</span>, String  <span class="argument">$hideColumns = &quot;&quot;</span>, String  <span class="argument">$toolbar = &quot;My Grid&quot;</span>, Array  <span class="argument">$customfields = null</span>, String  <span class="argument">$name = &quot;grid&quot;</span>, String  <span class="argument">$class = &quot;table table-striped&quot;</span>, Integer  <span class="argument">$rowLimit = 1000</span>, Boolean  <span class="argument">$paginate = true</span>, Boolean  <span class="argument">$searchable = true</span>, Boolean  <span class="argument">$checked = false</span>,   <span class="argument">$checkedPostURL = &quot;&quot;</span>,   <span class="argument">$checkSingleSelect = true</span>,   <span class="argument">$event = &quot;&quot;</span>) : \type</pre>
+                <p><em>An easy way to make a paginated bootStrapTable</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$sql </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>Array</td>
+                                <td>$buttons </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$hideColumns </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$toolbar </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>Array</td>
+                                <td>$customfields </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$name </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$class </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>Integer</td>
+                                <td>$rowLimit </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>Boolean</td>
+                                <td>$paginate </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>Boolean</td>
+                                <td>$searchable </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>Boolean</td>
+                                <td>$checked </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$checkedPostURL </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$checkSingleSelect </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$event </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    \type
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_bootStrapTabs" name="method_bootStrapTabs" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">bootStrapTabs()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">bootStrapTabs(array  <span class="argument">$tabs = array()</span>) : string</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$tabs </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>USAGE
+$tabs = array(
+"Tab 1" => div("HTML/Shape tags", p("paragraph content")),
+"Tab 2" => "Any Content",
+"Tab 3" => "Tab 3 Content",
+);
+echo (new Cody($this->DEB))->bootStrapTabs($tabs);</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                                                            <p>generate unique id identifier for tab ids</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_display" name="method_display" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">display()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">display() </pre>
+                <p><em>The CRUD code generation tool of cody</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_select" name="method_select" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">select()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">select(String  <span class="argument">$name = &quot;txt&quot;</span>, String  <span class="argument">$alttext = &quot;&quot;</span>, String  <span class="argument">$selecttype = &quot;array&quot;</span>, String  <span class="argument">$lookup = &quot;&quot;</span>, String  <span class="argument">$value = &quot;&quot;</span>, String  <span class="argument">$event = &quot;&quot;</span>, String  <span class="argument">$cssid = &quot;&quot;</span>, Boolean  <span class="argument">$readonly = false</span>, Boolean  <span class="argument">$nochoose = true</span>) : String</pre>
+                <p><em>The select tag creator</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$name </td>
+                                <td><p>The name of the select drop down</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$alttext </td>
+                                <td><p>The hover text to be displayed</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$selecttype </td>
+                                <td><p>Can be array, sql, multiarray, multisql</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$lookup </td>
+                                <td><p>An SQL statement or pipe delimited key value set - eg 0,None|1,Yes|2,No</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$value </td>
+                                <td><p>A value key to be set as the default in the drop down</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$event </td>
+                                <td><p>An event for the select box - eg onchange="window.alert('hello');"</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$cssid </td>
+                                <td><p>The name of the id for styling purposes</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>Boolean</td>
+                                <td>$readonly </td>
+                                <td><p>Is the component readonly</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>Boolean</td>
+                                <td>$nochoose </td>
+                                <td><p>Removes a dummy choose from option</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    String
+                                            &mdash; <p>The resulting html for the select</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_multitag" name="method_multitag" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">multitag()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">multitag(String  <span class="argument">$name</span>, String  <span class="argument">$alias</span>, String  <span class="argument">$url</span>, String  <span class="argument">$value</span>, String  <span class="argument">$dafaultValue = &quot;&quot;</span>) : \type</pre>
+                <p><em>The multitag function which returns back a bloodhound, type ahead component compatible with bootstrap.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$name </td>
+                                <td><p>The name of the component to be used with an ID</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$alias </td>
+                                <td><p>An Alias for the place holder message</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$url </td>
+                                <td><p>The url where the multitag can fetch its data from in the form ID, DATA = itemValue, itemText</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$value </td>
+                                <td><p>A value for the the multitag if it is not fetched</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$dafaultValue </td>
+                                <td><p>The default values to be loaded into the input</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    \type
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_multitagGooglePlaces" name="method_multitagGooglePlaces" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">multitagGooglePlaces()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">multitagGooglePlaces(String  <span class="argument">$name</span>, String  <span class="argument">$alias</span>, String  <span class="argument">$url</span>, String  <span class="argument">$value</span>, String  <span class="argument">$dafaultValue = &quot;&quot;</span>) : \type</pre>
+                <p><em>The multitag function which returns back a bloodhound, type ahead component compatible with bootstrap.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$name </td>
+                                <td><p>The name of the component to be used with an ID</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$alias </td>
+                                <td><p>An Alias for the place holder message</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$url </td>
+                                <td><p>The url where the multitag can fetch its data from in the form ID, DATA = itemValue, itemText</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$value </td>
+                                <td><p>A value for the the multitag if it is not fetched</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$dafaultValue </td>
+                                <td><p>The default values to be loaded into the input</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    \type
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_validateForm" name="method_validateForm" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">validateForm()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">validateForm(String  <span class="argument">$rules</span>, String  <span class="argument">$messages = &quot;&quot;</span>,   <span class="argument">$formId = &quot;formInput&quot;</span>) : String</pre>
+                <p><em>The Validation of forms</em></p>
+                <p>The form validator is an easy way to validate forms in the system using jQuery</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$rules </td>
+                                <td><p>A JSON object which matches the form inputs we need to use</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$messages </td>
+                                <td><p>A JSON object which matches the form inputs for the messaging</p></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$formId </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    String
+                                            &mdash; <p>An HTML javascript output</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                                            <dt>See also</dt>
+                                                                <dd><a href="http://jqueryvalidation.org/files/demo/"><span class="namespace-wrapper"></span></a></dd>
+                                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_bootStrapPanel" name="method_bootStrapPanel" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">bootStrapPanel()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">bootStrapPanel(String  <span class="argument">$title</span>, String  <span class="argument">$content</span>, String  <span class="argument">$class = &quot;panel panel-default panel-small&quot;</span>,   <span class="argument">$footerContent = &quot;&quot;</span>,   <span class="argument">$icon = &quot;&quot;</span>) </pre>
+                <p><em>Boot strap panel formatter</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$title </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$content </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$class </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$footerContent </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$icon </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_bootStrapForm" name="method_bootStrapForm" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">bootStrapForm()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">bootStrapForm(String  <span class="argument">$sql = &quot;&quot;</span>,   <span class="argument">$hideColumns = &quot;&quot;</span>,   <span class="argument">$custombuttons = null</span>,   <span class="argument">$customfields = null</span>,   <span class="argument">$submitAction = &quot;&quot;</span>,   <span class="argument">$formId = &quot;formId&quot;</span>) : \type</pre>
+                <p><em>A function to create a valid Bootstrap Form</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$sql </td>
+                                <td><p>A valid SQL statement for the selected database</p></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$hideColumns </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$custombuttons </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$customfields </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$submitAction </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$formId </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    \type
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_bootStrapMessageBox" name="method_bootStrapMessageBox" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">bootStrapMessageBox()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">bootStrapMessageBox(String  <span class="argument">$title</span>, String  <span class="argument">$linkTitle = &quot;Click Here&quot;</span>, String  <span class="argument">$url = &quot;#&quot;</span>, String  <span class="argument">$number = &quot;&quot;</span>, \type  <span class="argument">$panelClass = &quot;panel panel-primary&quot;</span>, \type  <span class="argument">$glyphClass = &quot;fa fa-comments fa-5x&quot;</span>) : \$html</pre>
+                <p><em>This is a function to create a dashboard type message box</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$title </td>
+                                <td><p>Main title of the message box</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$linkTitle </td>
+                                <td><p>Title of the link</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$url </td>
+                                <td><p>The url/href of the link</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$number </td>
+                                <td><p>value for the amount of comments or etc..</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>\type</td>
+                                <td>$panelClass </td>
+                                <td><p>Class for the panel to determine the color or style</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>\type</td>
+                                <td>$glyphClass </td>
+                                <td><p>Class for the glyph to determine which glyph and size</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    \$html
+                                            &mdash; <p>return</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_bootstrapDashboardPanel" name="method_bootstrapDashboardPanel" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">bootstrapDashboardPanel()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">bootstrapDashboardPanel(\type  <span class="argument">$title</span>, \type  <span class="argument">$number</span>, \type  <span class="argument">$sql = &quot;&quot;</span>) : \type</pre>
+                <p><em>TODO - FIX THIS</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\type</td>
+                                <td>$title </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>\type</td>
+                                <td>$number </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>\type</td>
+                                <td>$sql </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    \type
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_bootStrapView" name="method_bootStrapView" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">bootStrapView()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">bootStrapView(\type  <span class="argument">$sql = &quot;&quot;</span>, \type  <span class="argument">$hideColumns = &quot;&quot;</span>, \type  <span class="argument">$custombuttons = null</span>, \type  <span class="argument">$customfields = null</span>, \type  <span class="argument">$submitAction = &quot;&quot;</span>) : \type</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\type</td>
+                                <td>$sql </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>\type</td>
+                                <td>$hideColumns </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>\type</td>
+                                <td>$custombuttons </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>\type</td>
+                                <td>$customfields </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>\type</td>
+                                <td>$submitAction </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    \type
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_kendoGrid" name="method_kendoGrid" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">kendoGrid()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">kendoGrid(String  <span class="argument">$sql</span>, String  <span class="argument">$gridName = &quot;myGrid&quot;</span>, String  <span class="argument">$height = &quot;550&quot;</span>, Boolean  <span class="argument">$groupable = true</span>, Boolean  <span class="argument">$sortable = true</span>, Boolean  <span class="argument">$pageable = true</span>, Boolean  <span class="argument">$selectable = true</span>, Boolean  <span class="argument">$pageSize = 20</span>) : String</pre>
+                <p><em>A function that make a Kendo Grid for you to cut and paste.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>String</td>
+                                <td>$sql </td>
+                                <td><p>A valid SQL statement</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$gridName </td>
+                                <td><p>The name of the grid, essential when using more than one grid on a page</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>String</td>
+                                <td>$height </td>
+                                <td><p>The height of the grid</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>Boolean</td>
+                                <td>$groupable </td>
+                                <td><p>Can the grid use the grouping functionality</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>Boolean</td>
+                                <td>$sortable </td>
+                                <td><p>Is the grid able to be sorted</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>Boolean</td>
+                                <td>$pageable </td>
+                                <td><p>Can the grid handle paging</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>Boolean</td>
+                                <td>$selectable </td>
+                                <td><p>The items in the grid can be selected</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>Boolean</td>
+                                <td>$pageSize </td>
+                                <td><p>The default page size is 20 items</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    String
+                                            &mdash; <p>A valid Javascript / HTML implementation of the grid</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">Cody.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/Cody.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on February 6th, 2015 at 07:15.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

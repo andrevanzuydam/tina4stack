@@ -1,0 +1,24 @@
+{
+  "name": "tina4stack",
+  "version": "1.0.0",
+  "description": "The tina4stack for writing PHP applications the Manga way!",
+  "main": "index.php",
+  "scripts": {
+    "test": "php5 index.php"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andrevanzuydam/tina4stack.git"
+  },
+  "keywords": [
+    "tina4",
+    "php",
+    "routing"
+  ],
+  "author": "Andre van Zuydam",
+  "license": "GNU",
+  "bugs": {
+    "url": "https://github.com/andrevanzuydam/tina4stack/issues"
+  },
+  "homepage": "https://github.com/andrevanzuydam/tina4stack"
+}

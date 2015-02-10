@@ -1,48 +1,133 @@
 <?php
-
 /**
- * Class for HTML elements
+ * The basic shape element class to handle inheritance
  */
-class htmlElement {
+class shapeBaseElement {
+
+    private $id;
+    private $parent;
+    private $keyValue;
+    private $keyName;
+
+    function __construct($keyName = "", $keyValue = "") {
+        $this->id = uniqid();
+        $this->parent = "";
+        $this->keyName = $keyName;
+        $this->keyValue = $keyValue;
+        $this->registerGlobal();
+    }
+
+    function __clone() {
+        if (empty($this->parent)) {
+            $this->parent = $this->id;
+            $this->id = uniqid();
+        }
+        $this->registerGlobal();
+    }
+
+    function registerGlobal() {
+        $GLOBALS["shapeElements"][$this->id] = $this;
+    }
+
+    function getParent() {
+        return $this->parent;
+    }
+
+    function getValue() {
+        return $this->keyValue;
+    }
+
+    function getKey() {
+        return $this->keyName;
+    }
+
+    function getId() {
+        return $this->id;
+    }
+
+    function setParent($value = null) {
+        $this->parent = $value;
+    }
+
+    function setValue($value) {
+        $this->keyValue = $value;
+    }
+
+    function setKey($value) {
+        $this->keyName = $value;
+    }
+
+}
+/**
+ * The htmlElement class which handles the HTML compilation etc
+ */
+class htmlElement extends shapeBaseElement {
 
     private $openingTag = "";
     private $closingTag = "";
-    private $content;
     private $attributes;
-    private $validAttribs;
-    private $unsupported = false;
+    private $content;
 
     /**
-     * If we want to put validation for attributes in at a later stage
-     * @param type $attribs
+     * Compile all the Attributes
+     * @return string
      */
-    function setValidAttribs($attribs) {
-        $this->validAttribs = $attribs;
+    function compileAttributes() {
+        $html = "";
+        if (!empty($this->attributes)) {
+            foreach ($this->attributes as $aid => $attribute) {
+                if (!is_array($attribute->getValue())) {
+                    $html .= ' ' . $attribute->getKey() . '="' . $attribute->getValue() . '"';
+                }
+            }
+        }
+        return $html;
     }
 
     /**
-     * Sets whether the tag is unsupported
+     * Compile the content for the Element
+     * @param type $acontent
+     * @return type
      */
-    function setUnsupported() {
-        $this->unsupported = true;
+    function compileContent($acontent = null) {
+        $html = "";
+        if (!empty($acontent)) {
+            foreach ($acontent as $cid => $content) {
+
+
+                if (is_object($content) && get_class($content) === "shapeBaseElement") {
+                    if (is_object($content->getValue()) && get_class($content->getValue()) === "htmlElement") {
+
+                        $html .= $content->getValue()->compileHTML();
+                    } else {
+                        $html .= $content->getValue();
+                    }
+                }
+            }
+        }
+        return $html;
     }
 
     /**
-     * Is the tag still supported
-     * @return Boolean supported type
+     * Compiling HTML
+     * @return type
      */
-    function getSupported() {
-        return !$this->unsupported;
+    function compileHTML() {
+        $html = "";
+        $attributes = $this->compileAttributes();
+        $html .= str_ireplace("[attributes]", $attributes, $this->openingTag);
+        $html .= $this->compileContent($this->content);
+        $html .= str_ireplace("[attributes]", $attributes, $this->closingTag);
+
+        return $html;
     }
 
     /**
-     * Set the opening and closing tags
-     * @param String $openingTag
-     * @param String $closingTag
+     * Make HTML from the Object
+     * @return type
      */
-    function setTags($openingTag, $closingTag) {
-        $this->openingTag = $openingTag;
-        $this->closingTag = $closingTag;
+    function __toString() {
+        return $this->compileHTML();
     }
 
     /**
@@ -59,18 +144,20 @@ class htmlElement {
      * @param type $arg
      */
     function parseArgument($arg) {
-      
         if (is_array($arg) && $this->is_assoc($arg) && !empty($arg)) {
-            $this->attributes[] = $arg;
+            foreach ($arg as $keyName => $keyValue) {
+                $this->attributes[] = new shapeBaseElement($keyName, $keyValue);
+            }
         } else {
-            $this->content[] = $arg;
+            $this->content[] = new shapeBaseElement("content", $arg);
         }
     }
 
     /**
-     * Constructor for the html element which takes dynamic arguments
+     * Constructor for HTMLElement
      */
     function __construct() {
+        parent::__construct();
         $args = func_get_args();
         foreach ($args as $arg) {
             $this->parseArgument($arg);
@@ -78,243 +165,249 @@ class htmlElement {
     }
 
     /**
-     * Compile all the attributes
-     * @return string
+     * Cloning the Object
      */
-    function compileAttributes() {
-        $html = "";
-        if (!empty($this->attributes)) {
-            foreach ($this->attributes as $aid => $attribute) {
-                foreach ($attribute as $key => $keyValue) {
-                    $html .= ' ' . $key . '="' . $keyValue . '"';
+    function __clone() {
+        parent::__clone();
+        $this->cloneChildren($this);
+    }
+
+    /**
+     * Clone All the Children
+     * @param type $element
+     */
+    function cloneChildren($element) {
+        if (!empty($element->attributes)) {
+            foreach ($element->attributes as $aid => $attribute) {
+                if (empty($attribute->getParent())) {
+                    $element->attributes[$aid] = clone $attribute;
                 }
             }
         }
-        return $html;
-    }
+        if (!empty($element->content)) {
+            foreach ($element->content as $cid => $content) {
 
-    /**
-     * Compile all the content, makes it possible to be recursive
-     * @param type $acontent
-     * @return type
-     */
-    function compileContent($acontent = null) {
-        $html = "";
-        
-        if (empty($acontent)) {
-            $acontent = $this->content;
-        }
-          else
-        if (!empty($acontent)) {
-            //check if this array has values
-            if (count($acontent) > 0) {
-             
-              foreach ($acontent as $cid => $content) {
-                if (is_array($content)) {
-                    $html .= $this->compileContent($content);
-                } else {
-                    $html .= $content;
+                $element->content[$cid] = clone $content;
+
+                if (is_object($content) && get_class($content) === "shapeBaseElement") {
+                   
+                    if (is_object($element->content[$cid]->getValue()) && get_class($element->content[$cid]->getValue()) == "htmlElement") {
+                        
+                        $element->content[$cid]->setValue(clone $element->content[$cid]->getValue());
+                        $this->cloneChildren($element->content[$cid]->getValue());
+                    }
                 }
-              }
-            }            
+            }
         }
-        return $html;
     }
 
     /**
-     * Compile HTML puts all the elements together of the tag as well as its sub children
-     * @return type
-     */
-    function compileHTML() {
-        $html = "";
-        $html .= str_ireplace("[attributes]", $this->compileAttributes(), $this->openingTag);
-        $html .= $this->compileContent($this->content);
-        $html .= str_ireplace("[attributes]", $this->compileAttributes(), $this->closingTag);
-
-        return $html;
-    }
-
-    /**
-     * Function to set the content of the HTML element
+     * Setting Content
      * @param type $value
      */
     function setContent($value) {
-        $this->content = [$value];
+        if (count($this->content) == 1) {
+          $this->content[0]->setValue($value);  
+          if (!empty($this->content[0]->getParent())) {
+            
+            $this->content[0]->setParent();  
+          }
+        }
+          else {
+          
+          $content = new shapeBaseElement("content", $value);    
+          $this->content = [$content];
+          //find all the children of this element and add the attribute
+          foreach ($GLOBALS["shapeElements"] as $eid => $element) {
+             if ($element->getParent() === $this->getId()) {
+                 $element->cloneContent($content);
+             }
+          }
+          
+        }
+        $this->setInherited();
     }
-    
+
     /**
-     * Function to append content to an HTML element
-     * @param type $value
-     */
-    function addContent($value) {
-        $this->content[] = $value;
-    }
-    
-    /**
-     * Function to retrieve the content
+     * Getting the content for the Element
      * @return type
      */
     function getContent() {
-       return $this->compileContent();   
+        return $this->content;
     }
-    
-    
+
     /**
-     * Function to get attribute
-     * @param String $keyName The name of the attribute
-     * @return String Value of the Attributes
+     * Adding Content
+     * @param type $value
      */
-    function getAttribute ($keyName) {
-      if (!empty($this->attributes)) {
-        foreach ($this->attributes as $aid => $attribute) {
-           foreach ($attribute as $key => $value) {
-             if (strtoupper($key) === strtoupper($keyName) ) {
-               return $value;
-               break;
-             }  
-           }  
-        }  
-      }  
+    function addContent($value) {
+        $this->content[] = new shapeBaseElement("content", $value);
     }
-    
+
     /**
-     * Function to set attribute, if not found it adds it
-     * @param String $keyName The name of the attribute
-     * @param String $keyValue The name of the value for the attribute
+     * BySearch - internal function to find elements
      */
-    function setAttribute ($keyName, $keyValue) {
-       $wasSet = false;
-       if (!empty($this->attributes)) {
-        foreach ($this->attributes as $aid => $attribute) {
-           foreach ($attribute as $key => $value) {
-             if (strtoupper($key) === strtoupper($keyName) ) {
-               $this->attributes[$aid][$key] = $keyValue;
-               $wasSet = true;
-               break;
-             }  
-           }  
-        }  
-      }
-      if (!$wasSet) {
-        $this->attributes[] = [$keyName => $keyValue];  
-      }
-    } 
-   
-    /**
-     * Alias of set Attribute
-     * @param String $keyName
-     * @param String $keyValue
-     */
-    function addAttribute ($keyName, $keyValue) {
-       $this->setAttribute($keyName, $keyValue); 
+    function bySearch ($keyName, $keyIndex="id") {
+        $result = null;
+        if (!empty($this->attributes)) {
+            foreach ($this->attributes as $aid => $attribute) {
+                if (strtoupper($attribute->getKey()) === strtoupper("id") && $attribute->getValue() === $keyName) {
+                    $result = $this;
+                }
+            }
+        }
+        
+        if (empty($result)) {
+            if (!empty($this->content)) {
+                foreach ($this->content as $cid => $content) {
+                if (is_object($content) && get_class($content) === "shapeBaseElement") {
+                        if (is_object($this->content[$cid]->getValue()) && get_class($this->content[$cid]->getValue()) == "htmlElement") {
+                            $result = $this->content[$cid]->getValue()->byId($keyName);
+                            if (!empty($result)) {
+                               break;  
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $result;
     }
     
     /**
-     * Returns the HTML
-     * @return type
+     * Find and Element by Its HTML Id
+     * Example: p(["id" => "Test"])
+     * @param type $keyName
+     * @return \htmlElement
      */
-    function __toString() {
-        return $this->compileHTML();
+    function byId($keyName) {
+       return $this->bySearch($keyName, "id"); 
+    }
+    
+    /**
+     * Find and Element by Its HTML Id
+     * Example: p(["clas" => "Test"])
+     * @param type $keyName
+     * @return \htmlElement
+     */
+    function byClass($keyName) {
+       return $this->bySearch($keyName, "class"); 
     }
 
-}
-
-
-function getHTMLAttributes ($element) {
-  $result = [];
-  if (!empty($element->attributes)) {
-     foreach ($element->attributes as $keyName => $keyValue) {
-       $result[] = [$keyName => $keyValue->value];  
-     } 
-  }    
-  return $result;
-}
-
-function getHTMLText ($element) {
-    $result = "";
-    if (!empty($element->childNodes)) {
-     foreach(range(0,$element->childNodes->length-1) as $idx)
-        {
-           if (!empty($element->childNodes->item($idx))) {
-             if($element->childNodes->item($idx)->nodeType==3) {
-                $result .= $element->childNodes->item($idx)->nodeValue;
-             }
-           } 
-        }   
-   } 
-   return $result;
-}
-
-function traverseDOM ($element) {
-    $result = [];
-    foreach ($element as $subelement) {
-      if (!empty($subelement->tagName)) {
-          $result[] = (object)["tag" => $subelement->tagName, "attributes" => getHTMLAttributes($subelement),  "content" => getHTMLText($subelement), "children" => traverseDOM($subelement->childNodes)];
-      }  
-    }
-    return $result;
-}
-
-function parseHTMLText ($content) {
-   $result = "";
-   if (!empty($content)) {
-     $result = '"'.$content.'"';  
-   }
-     else {
-       $result = "\n";   
-   }
-   return $result;
-}
-
-function parseHTMLAttributes($attributes) {
-   $result = "";
-   if (!empty($attributes)) {
-     $result = [];
-     foreach ($attributes as $aid => $attribute) {
-        foreach ($attribute as $key => $value) {
-          $result[] = '"'.$key.'"=>"'.$value.'"';  
-        } 
-     }  
-     $result = '['.join(",", $result).'],';
-   } 
-   
-   return $result;
-}
-
-function arrayToShapeCode ($shapeArray, $level=0) {
-   $code = "";
-   $level++;
-   $padding = str_repeat (" ", $level*2);
-   foreach ($shapeArray as $aid => $shape) {
-       $code .= $padding.$shape->tag.'('.parseHTMLAttributes($shape->attributes).parseHTMLText($shape->content).arrayToShapeCode($shape->children, $level).$padding.")";  
-       if ($aid < count ($shapeArray)-1) {
-         $code .= ",\n"; 
-       }
-   }
-   
-   $code .= "\n"; 
-   return $code; 
-}
-
-
-/**
- * Convert the HTML content to Shape Code
- * @param String $content HTML from a website 
- * @return String Shape code
- */
-function HTMLtoShape ($content) {
-    $dom = new DOMDocument;
-    @$dom->loadHTML($content);
-    
-    $document = $dom->childNodes;
-    
-    $shapeArray = traverseDOM($document);
+    /**
+     * Set inherited properties
+     */
+    function setInherited() {
+            if (!empty($this->attributes)) {
+                foreach ($this->attributes as $cid => $attribute) {
+                    if (is_object($attribute) && get_class($attribute) === "shapeBaseElement") {
+                        //update all the children to have my value
+                        foreach ($GLOBALS["shapeElements"] as $sid => $element) {
+                           if ($element->getParent() === $attribute->getId()) {
+                               $element->setValue (  $attribute->getValue());
+                           }  
+                        }
+                    }    
+                }
+            }
+            
+            if (!empty($this->content)) {
+                foreach ($this->content as $cid => $content) {
+                    if (is_object($content) && get_class($content) === "shapeBaseElement") {
+                        //update all the children to have my value
+                        foreach ($GLOBALS["shapeElements"] as $sid => $element) {
+                           if ($element->getParent() === $content->getId()) {
+                             if (is_object($element) && get_class($element) == "shapeBaseElement") {
+                                 if (is_object($element->getValue()) && get_class($element->getValue()) === "htmlElement") {
+                                   $this->content[$cid]->getValue()->setInherited();
+                                 }
+                                   else {
+                                     $element->setValue (  $content->getValue());
+                                   }
+                               }
+                           }  
+                        }
+                        
+                        if (is_object($this->content[$cid]->getValue()) && get_class($this->content[$cid]->getValue()) === "htmlElement") {
+                            if ($element->getParent() === $content->getId()) {
+                              
+                            }
+                        }
+                    }
+                }
+            }
       
-    $shapeCode = arrayToShapeCode ($shapeArray);
+    }
     
-    
-    
-    return $shapeCode;
+    /**
+     * Set attributes to the Element
+     * @param type $keyName
+     * @param type $keyValue
+     */
+    function setAttribute($keyName, $keyValue) {
+        $wasSet = false;
+        if (!empty($this->attributes)) {
+        foreach ($this->attributes as $aid => $attribute) {
+            if ($attribute->getKey() === $keyName) {
+                if (!empty($attribute->getParent())) {
+                    $this->attributes[$aid] = clone $attribute;
+                }
+                $this->attributes[$aid]->setValue($keyValue);
+                $this->attributes[$aid]->setParent();
+                $this->setInherited();
+                $wasSet = true;
+            }
+        }
+        }
+
+        if (!$wasSet) {
+            $attribute = new shapeBaseElement($keyName, $keyValue);
+            $this->attributes[] = $attribute;
+            //find all the children of this element and add the attribute
+            foreach ($GLOBALS["shapeElements"] as $eid => $element) {
+               if ($element->getParent() === $this->getId()) {
+                 $element->cloneAttribute($attribute);
+               }
+            }
+            
+            return $attribute;
+        }
+    }
+
+    /**
+     * Clones a new attribute onto the child
+     * @param type $attribute
+     */
+    function cloneAttribute ($attribute) {
+       $this->attributes[] = clone $attribute; 
+    }
+
+    /**
+     * Clones content  
+     * @param type $content
+     */    
+    function cloneContent ($content) {
+       $this->content[] = clone $content; 
+    }
+    /**
+     * Add Attributes to the Element
+     * @param type $keyName
+     * @param type $keyValue
+     */
+    function addAttribute($keyName, $keyValue) {
+        return $this->setAttribute($keyName, $keyValue);
+    }
+
+    /**
+     * Add Opening and Closing Tags
+     * @param type $openingTag
+     * @param type $closingTag
+     */
+    function setTags($openingTag, $closingTag) {
+        $this->openingTag = $openingTag;
+        $this->closingTag = $closingTag;
+    }
+
 }
 
 /**
@@ -326,6 +419,111 @@ function HTMLtoShape ($content) {
 function createInstance($class, $params) {
     $reflection_class = new ReflectionClass($class);
     return $reflection_class->newInstanceArgs($params);
+}
+
+function getHTMLAttributes($element) {
+    $result = [];
+    if (!empty($element->attributes)) {
+        foreach ($element->attributes as $keyName => $keyValue) {
+            $result[] = [$keyName => $keyValue->value];
+        }
+    }
+    return $result;
+}
+
+function getHTMLText($element) {
+    $result = "";
+    if (!empty($element->childNodes)) {
+        foreach (range(0, $element->childNodes->length - 1) as $idx) {
+            if (!empty($element->childNodes->item($idx))) {
+                if ($element->childNodes->item($idx)->nodeType == 3) {
+                    $result .= $element->childNodes->item($idx)->nodeValue;
+                }
+            }
+        }
+    }
+    return $result;
+}
+
+function traverseDOM($element) {
+    $result = [];
+    foreach ($element as $subelement) {
+        if (!empty($subelement->tagName)) {
+            $result[] = (object) ["tag" => $subelement->tagName, "attributes" => getHTMLAttributes($subelement), "content" => getHTMLText($subelement), "children" => traverseDOM($subelement->childNodes)];
+        }
+    }
+    return $result;
+}
+
+function parseHTMLText($content) {
+    $result = "";
+    if (!empty($content)) {
+        $result = '"' . $content . '"';
+    } else {
+        $result = "\n";
+    }
+    return $result;
+}
+
+/**
+ * Parse all the HTML Attributes
+ * @param type $attributes
+ * @return string
+ */
+function parseHTMLAttributes($attributes) {
+    $result = "";
+    if (!empty($attributes)) {
+        $result = [];
+        foreach ($attributes as $aid => $attribute) {
+            foreach ($attribute as $key => $value) {
+                $result[] = '"' . $key . '"=>"' . $value . '"';
+            }
+        }
+        $result = '[' . join(",", $result) . '],';
+    }
+
+    return $result;
+}
+
+/**
+ * Make Shape code from an Array
+ * @param type $shapeArray
+ * @param type $level
+ * @return string
+ */
+function arrayToShapeCode($shapeArray, $level = 0) {
+    $code = "";
+    $level++;
+    $padding = str_repeat(" ", $level * 2);
+    foreach ($shapeArray as $aid => $shape) {
+        $code .= $padding . $shape->tag . '(' . parseHTMLAttributes($shape->attributes) . parseHTMLText($shape->content) . arrayToShapeCode($shape->children, $level) . $padding . ")";
+        if ($aid < count($shapeArray) - 1) {
+            $code .= ",\n";
+        }
+    }
+
+    $code .= "\n";
+    return $code;
+}
+
+/**
+ * Convert the HTML content to Shape Code
+ * @param String $content HTML from a website 
+ * @return String Shape code
+ */
+function HTMLtoShape($content) {
+    $dom = new DOMDocument;
+    @$dom->loadHTML($content);
+
+    $document = $dom->childNodes;
+
+    $shapeArray = traverseDOM($document);
+
+    $shapeCode = arrayToShapeCode($shapeArray);
+
+
+
+    return $shapeCode;
 }
 
 /**

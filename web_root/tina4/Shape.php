@@ -97,10 +97,19 @@ class htmlElement extends shapeBaseElement {
 
                 if (is_object($content) && get_class($content) === "shapeBaseElement") {
                     if (is_object($content->getValue()) && get_class($content->getValue()) === "htmlElement") {
-
                         $html .= $content->getValue()->compileHTML();
                     } else {
-                        $html .= $content->getValue();
+                        
+                        if (is_array($content->getValue())) {
+                          foreach ($content->getValue() as $ccid => $ccontent) {
+                              if (is_object($ccontent) && get_class($ccontent) === "htmlElement") {
+                                $html .= $ccontent->compileHTML();
+                              }
+                         }                           
+                        }
+                          else {
+                           $html .= $content->getValue();
+                          } 
                     }
                 }
             }

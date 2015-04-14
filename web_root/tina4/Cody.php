@@ -75,24 +75,37 @@ class Cody {
      * @param Array $buttons
      * @param String $hideColumns
      * @param String $toolbar
+     * @param Integer $rowLimit
+     * @param Integer $selected_page
      * @param Array $customfields
      * @param String $name
      * @param String $class
-     * @param Integer $rowLimit
      * @param Boolean $paginate
      * @param Boolean $searchable
      * @param Boolean $checked
      * @param String  $checkPostURL
      * @return type
      */
-    function bootStrapTable($sql = "select * from user_detail", $buttons = "", $hideColumns = "", $toolbar = "My Grid", $customfields = null, $name = "grid", $class = "table table-striped", $rowLimit = 1000, $paginate = true, $searchable = true, $checked=false, $checkedPostURL="", $checkSingleSelect=true, $event="" ) {
-        $html = "";
+    function bootStrapTable($sql = "select * from user_detail", $buttons = "", $hideColumns = "", $toolbar = "My Grid", $rowLimit = 1000, $selected_page = 1, $customfields = null, $name = "grid", $class = "table table-striped", $paginate = true, $searchable = true, $checked=false, $checkedPostURL="", $checkSingleSelect=true, $event="" ) {
+        $html = "<div class='grid_".$name."'>";
         //make the header
 
         $hideColumns = explode(",", strtoupper($hideColumns));
 
-
-        $skiprow = 0;
+        //pagination variables
+        $counter_sql = "select count(*) from ( $sql ) t ";
+        
+        $count = $this->DEB->getRow($counter_sql);//do a count select of the sql statement to get total row count
+        
+        $numRows = $count->COUNT;
+        
+        if($numRows == 0){
+            $paginate = false; //disable pagination if there is no records
+        }
+        
+        $totalpages = ceil($numRows / $rowLimit); //get total pages by dividing total rows by rowlimit
+        
+        $skiprow = ($selected_page - 1) * $rowLimit; // get amount of rows to skip
 
         $sql = "select first {$rowLimit} skip  {$skiprow} * from ( $sql ) t ";
 
@@ -211,13 +224,70 @@ class Cody {
             }
         }
 
-
-
-        $footer = tfoot("");
+        $footer_string = "";
+        $ajaxString = "";
 
         $options = ["id" => $name, "class" => $class, "data-toolbar" => "#toolbar" . $name];
         if ($paginate) {
-            $options["data-pagination"] = "true";
+            //$options["data-pagination"] = "true";
+            
+            $prev_page = $selected_page - 1 >= 1 ? $selected_page - 1 : 1;// get previous page for left arrow of pagination
+            $next_page = $selected_page + 1 <= $totalpages ? $selected_page + 1 : $totalpages;// get right page for right arrow of pagination
+            $maxRows = $rowLimit * $selected_page <= $numRows ? $rowLimit * $selected_page : $numRows;//get row limit value of current page
+            $limitValues = array(5,10,25,50,100,200,500,1000,2000);//row limit drop down list of values
+            
+            //pagination detial
+            $optionString = "";            
+            foreach($limitValues as $limit){
+                $active = "";
+                if($rowLimit == $limit){
+                    $active = ["selected" => "selected"];//selects current rowlimit in dropdown
+                }
+                
+                $optionString .= " ". option(["value" => $limit], $active, $limit);//rowlimit options
+            }
+            //rowlimit dropdown
+            $rowLimitDDL = select (["id" => "rowLimitDrop_".$name], ["onchange" => "ajax_".$name."('".$name."','".$selected_page."');"], $optionString);
+            //pagination dropdown
+            $pageList = span (["class" => "page-list"], span (["class" => "btn-group dropup"], $rowLimitDDL));
+            //pagination detail
+            $paginationDetail = div (["class" => "pull-left pagination-detail"], span (["class" => "pagination-info"],"Showing ".($skiprow + 1)." to ".$maxRows." of ".$numRows." rows ", $pageList, " records per page"));
+            //pagination end
+            
+            //pagination links
+            $active = "";
+            if($selected_page == 1){
+                $active = ["class" => "disabled"];//disable left arrow if page one is current page
+            }
+            $listString = li ($active, a (["href" => "javascript:void(0);"], ["onclick" => "ajax_".$name."('".$name."','".$prev_page."');"], "&laquo;"));
+            
+            //generate pages for selection
+            for($page = 1; $page <= $totalpages; $page++){
+                //$selected_page
+                $active = "";
+                if($page == $selected_page){
+                    $active = ["class" => "active"];//adds active effect to current page
+                }
+                
+                $listString .= li ($active, a (["href" => "javascript:void(0);"], ["onclick" => "ajax_".$name."('".$name."','".$page."');"], $page));
+            }
+            
+            $active = "";
+            if($selected_page == $totalpages || $totalpages == 1){
+                $active = ["class" => "disabled"];//disable left arrow if page one is current page
+            }
+            $listString .= li ($active, a (["href" => "javascript:void(0);"], ["onclick" => "ajax_".$name."('".$name."','".$next_page."');"], "&raquo;"));
+            
+            $paginationList = div (["class" => "pull-right pagination"], ul (["class" => "pagination pagination-lg"], $listString));
+            //pagination links end
+            
+            //pagination div
+            $footer_string = div (["class" => "fixed-table-pagination"], $paginationDetail, $paginationList);
+            
+            //encode function's arguments to pass to ajax command to load the next selected page
+            $object = rawurlencode(json_encode(func_get_args()));
+            //js function that loads the selected page through ajax, show loading message in grid, replaces grid with newly selecyed grid and scrolls to its top - uses /data/ajax/{rowLimit}/{page} route 
+            $ajaxString = script("function ajax_".$name."(gridName, page) { $('#' + gridName).html('<h3>&nbsp;&nbsp;Loading...</h3>'); var rowLimit = $('#rowLimitDrop_".$name."').val();  var object = 'object=".$object."'; $.post('/data/ajax/'+rowLimit+'/'+ page, object, function( data ) { $( '.grid_".$name."' ).html( data ); $('html, body').animate({ scrollTop: ($('.grid_".$name."').offset().top) },500); }, 'html'); }");
         }
 
         if ($searchable) {
@@ -258,14 +328,20 @@ class Cody {
 
         //$html .= div(["id" => "toolbar" . $name], div(["class" => "form-inline", "role" => "form"], $toolbar));
 
-        $html .= $tableHeading.div(["class" => "table-responsive"],  div (["class" => "table-toolbar clearfix"], div(["class" => "toolbar-buttons"],  $toolbarButtons). div(["class" => "toolbar-filters"], $toolbarFilters)  ). table($options, $header, tbody($data), $footer) );
+        $html .= $tableHeading.div(["class" => "table-responsive"],  div (["class" => "table-toolbar clearfix"], div(["class" => "toolbar-buttons"],  $toolbarButtons). div(["class" => "toolbar-filters"], $toolbarFilters)  ). table($options, $header, tbody($data)) );
         
+        $footer = tfoot($footer_string);
+        
+        $html .= $footer;//load pagination html
+        $html .= $ajaxString;//load pagination ajax
 
         $html .= script('$(function () { var $table' . $name . ' = $("#' . $name . '"); $table' . $name . '.bootstrapTable().on(\'check.bs.table\', function (e, row) { console.log(e); '.$event.'}); });');
 
         if ($checked) {
           $html = form(["method" => "post", "action" => $checkedPostURL, "enctype" => "multipart/form-data"], $html);  
-        }    
+        }
+        
+        $html .= "</div><div style='clear:both;'></div>";
         
         return $html;
     }
@@ -584,6 +660,7 @@ class Cody {
     function validateForm($rules, $messages = "", $formId="formInput") {
         $html = script(array("text" => "application/javascript"), "
         \$(document).ready (function () { \$('#$formId').validate({
+                                            ignore: [],    
                                             rules: {
                                             {$rules}
                                             },
@@ -1068,8 +1145,66 @@ class Cody {
 
         return pre(htmlentities($html));
     }
-/**
- * 
- * @return string returns lead info :street address,city,state,nb of baths and beds in a nice format. EXAMPLE-11845 Intermountain Rd, Redding, CA , 3 Beds, 2 Baths
- */
+                       
+    
+    function fileExplorer () {
+        $content = div (["id" => "fileExplorer", "title" => "File Explorer"], "File Explorer");
+        $content .= script ("$(function() {  $('#fileExplorer').dialog({position:{my: 'left top', at: 'left top'}, height: 500}); } );");
+        return $content;
+    }
+    
+    function codeNavigator() {
+        $content = div (["id" => "codeNavigator", "title" => "Navigator"], "");
+        $content .= script ("$(function() {  $('#codeNavigator').dialog({position:{my: '0 0', at: 'left bottom', of: $('#fileExplorer') }, height:400 }); } );");
+        return $content;
+    }
+    
+    function codeWindow($id, $code) {
+        $content  =  script(["src" => "js/ace/ace.js"]);
+        $content .= style("#codeWindow{$id} { position: absolute; top:0; right: 0; bottom: 0; left: 0; min-height: 768px; min-width:1024px; }");
+        $content .= div (["id" => "codeWindow{$id}div", "title" => "Code View"], 
+                    div (["id" => "codeWindow{$id}", "name" => "codeWindow{$id}" ],
+                    htmlentities($code)
+                    ));
+        $content .= script ("$(function() {  
+                                $('#codeWindow{$id}div').dialog({position:{my: 'right top', at: 'right top', of : window},width: '80%', height: '600'});
+                                
+                                console.log(document.getElementById('codeWindow{$id}'));    
+                                var editor = ace.edit('codeWindow{$id}');
+                                 editor.setTheme('ace/theme/monokai');   
+                                 editor.getSession().setMode('ace/mode/php');
+                             } );  
+                            ");
+        return $content;
+    }
+    
+    function codeBuilder() {
+        $links [] = script(["src" => "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"]);
+        $links [] = script(["src"=> "https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"]);
+        //$links [] = alink (["rel"=> "stylesheet",  "href"=> "//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"]);
+        $links [] = alink (["rel"=> "stylesheet",  "href"=> "https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"]);
+        //$links [] = script(["src"=> "//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"]);
+        
+        
+        $content = $this->codeWindow("code1", file_get_contents("index.php"));
+        $content .= $this->fileExplorer();
+        $content .= $this->codeNavigator();
+        
+        
+        $html = shape ( doctype(), 
+                        html (
+                           head(meta(["charset" => "UTF-8"]),
+                                title("Code- Online Developer Editor"), 
+                                $links),
+                           body (
+                               $content
+                                   
+                                   
+                           )     
+                                
+                         )
+                       );
+      
+        return $html;
+    }
 }

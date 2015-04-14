@@ -44,6 +44,8 @@ require_once "Emma.php";
 require_once "Phoebe.php";
 //include Reta for the reporting
 require_once "Reta.php";
+//Include Tessa for the testing
+require_once "Tessa.php";
 
 //Check if we have a config file to work with
 if (file_exists(realpath(__DIR__) . "/config.php")) {
@@ -104,14 +106,29 @@ if (file_exists(realpath(__DIR__ . "/migration"))) {
 
 }
 
+//Check if we have tests existing and then add this path
+if (file_exists(realpath(__DIR__ . "/test"))) {
+    /**
+     * Use Tessa to run selenium tests, selenium server must be downloaded and running on the default port
+     */
+    Ruth::addRoute("GET", "/tessa", function () {
+        require_once realpath(__DIR__ . "/test/runTessa.php");
+        new runTessa("test");
+    });
 
+    Ruth::addRoute("GET", "/tessa/{brower}", function ($browser) {
+        require_once realpath(__DIR__ . "/test/runTessa.php");
+        new runTessa("test", $browser);
+    });
+
+}
 
 /**
  * Add the default PHP info route
  */
 Ruth::addRoute(RUTH_GET, "/phpinfo", function () {
     phpinfo();
-}, RUTH_IGNORE_ROUTE);
+}, null, RUTH_IGNORE_ROUTE);
 
 /**
  * Build a phar file of the project

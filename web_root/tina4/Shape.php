@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The basic shape element class to handle inheritance
  */
@@ -8,6 +9,7 @@ class shapeBaseElement {
     private $parent;
     private $keyValue;
     private $keyName;
+   
 
     function __construct($keyName = "", $keyValue = "") {
         $this->id = uniqid();
@@ -56,8 +58,9 @@ class shapeBaseElement {
     function setKey($value) {
         $this->keyName = $value;
     }
-
+    
 }
+
 /**
  * The htmlElement class which handles the HTML compilation etc
  */
@@ -67,6 +70,9 @@ class htmlElement extends shapeBaseElement {
     private $closingTag = "";
     private $attributes;
     private $content;
+    private $compress;
+    
+    private $DS; //data sources for templating
 
     /**
      * Compile all the Attributes
@@ -77,8 +83,15 @@ class htmlElement extends shapeBaseElement {
         if (!empty($this->attributes)) {
             foreach ($this->attributes as $aid => $attribute) {
                 if (!is_array($attribute->getValue())) {
-                    $html .= ' ' . $attribute->getKey() . '="' . $attribute->getValue() . '"';
-                }
+                  if ($attribute->getKey() !== 0) { 
+                     $html .= ' ' . $attribute->getKey() . '="' . $attribute->getValue() . '"';
+                  } 
+                  else {
+                     
+                     $html .= ' ' . $attribute->getValue();
+                      
+                  }
+                 }
             }
         }
         return $html;
@@ -93,23 +106,20 @@ class htmlElement extends shapeBaseElement {
         $html = "";
         if (!empty($acontent)) {
             foreach ($acontent as $cid => $content) {
-
-
                 if (is_object($content) && get_class($content) === "shapeBaseElement") {
                     if (is_object($content->getValue()) && get_class($content->getValue()) === "htmlElement") {
                         $html .= $content->getValue()->compileHTML();
                     } else {
-                        
+
                         if (is_array($content->getValue())) {
-                          foreach ($content->getValue() as $ccid => $ccontent) {
-                              if (is_object($ccontent) && get_class($ccontent) === "htmlElement") {
-                                $html .= $ccontent->compileHTML();
-                              }
-                         }                           
+                            foreach ($content->getValue() as $ccid => $ccontent) {
+                                if (is_object($ccontent) && get_class($ccontent) === "htmlElement") {
+                                    $html .= $ccontent->compileHTML();
+                                }
+                            }
+                        } else {
+                            $html .= $content->getValue();
                         }
-                          else {
-                           $html .= $content->getValue();
-                          } 
                     }
                 }
             }
@@ -117,6 +127,19 @@ class htmlElement extends shapeBaseElement {
         return $html;
     }
 
+    
+    function templateHTML ($content, $object) {
+        if (is_object ($object) && get_class($object) === "htmlElement") {
+           $object = $object->getAttributes();
+        }
+        foreach ($object as $keyName => $keyValue) {
+         
+            $content = str_ireplace('{'.$keyName.'}', $keyValue, $content);
+         
+        }   
+      return $content;
+    }
+    
     /**
      * Compiling HTML
      * @return type
@@ -125,9 +148,27 @@ class htmlElement extends shapeBaseElement {
         $html = "";
         $attributes = $this->compileAttributes();
         $html .= str_ireplace("[attributes]", $attributes, $this->openingTag);
-        $html .= $this->compileContent($this->content);
+        $content = $this->compileContent($this->content);
+        
+        if (!empty($this->DS)) {
+            foreach ($this->DS as $dsName => $ds) {
+               if (is_array($ds)) {
+                   //not implemented yet
+                   foreach ($ds as $tid => $template) {
+                     $content = $this->templateHTML ($content, $template);
+                   }
+               } 
+                else {
+                 $content = $this->templateHTML ($content, $ds);
+                }
+            }
+        }
+        
+        if ($this->compress) {
+          $content = (new JSmin())->minify($content);  
+        }
+        $html .= $content;
         $html .= str_ireplace("[attributes]", $attributes, $this->closingTag);
-
         return $html;
     }
 
@@ -157,8 +198,12 @@ class htmlElement extends shapeBaseElement {
             foreach ($arg as $keyName => $keyValue) {
                 $this->attributes[] = new shapeBaseElement($keyName, $keyValue);
             }
-        } else {
-            $this->content[] = new shapeBaseElement("content", $arg);
+            
+            } else {
+                
+            $child = new shapeBaseElement("content", $arg);   
+            
+            $this->content[] = $child; 
         }
     }
 
@@ -199,9 +244,9 @@ class htmlElement extends shapeBaseElement {
                 $element->content[$cid] = clone $content;
 
                 if (is_object($content) && get_class($content) === "shapeBaseElement") {
-                   
+
                     if (is_object($element->content[$cid]->getValue()) && get_class($element->content[$cid]->getValue()) == "htmlElement") {
-                        
+
                         $element->content[$cid]->setValue(clone $element->content[$cid]->getValue());
                         $this->cloneChildren($element->content[$cid]->getValue());
                     }
@@ -216,23 +261,21 @@ class htmlElement extends shapeBaseElement {
      */
     function setContent($value) {
         if (count($this->content) == 1) {
-          $this->content[0]->setValue($value);  
-          if (!empty($this->content[0]->getParent())) {
-            
-            $this->content[0]->setParent();  
-          }
-        }
-          else {
-          
-          $content = new shapeBaseElement("content", $value);    
-          $this->content = [$content];
-          //find all the children of this element and add the attribute
-          foreach ($GLOBALS["shapeElements"] as $eid => $element) {
-             if ($element->getParent() === $this->getId()) {
-                 $element->cloneContent($content);
-             }
-          }
-          
+            $this->content[0]->setValue($value);
+            if (!empty($this->content[0]->getParent())) {
+
+                $this->content[0]->setParent();
+            }
+        } else {
+
+            $content = new shapeBaseElement("content", $value);
+            $this->content = [$content];
+            //find all the children of this element and add the attribute
+            foreach ($GLOBALS["shapeElements"] as $eid => $element) {
+                if ($element->getParent() === $this->getId()) {
+                    $element->cloneContent($content);
+                }
+            }
         }
         $this->setInherited();
     }
@@ -256,24 +299,30 @@ class htmlElement extends shapeBaseElement {
     /**
      * BySearch - internal function to find elements
      */
-    function bySearch ($keyName, $keyIndex="id") {
+    function bySearch($keyName, $keyIndex) {
         $result = null;
+        //echo "Searchng for ".$keyName."<br>";
         if (!empty($this->attributes)) {
             foreach ($this->attributes as $aid => $attribute) {
-                if (strtoupper($attribute->getKey()) === strtoupper("id") && $attribute->getValue() === $keyName) {
+                
+                if (strtoupper($attribute->getKey()) === strtoupper($keyIndex) && $attribute->getValue() === $keyName) {
+                  
                     $result = $this;
                 }
             }
         }
-        
         if (empty($result)) {
             if (!empty($this->content)) {
+                
                 foreach ($this->content as $cid => $content) {
-                if (is_object($content) && get_class($content) === "shapeBaseElement") {
+                    if (is_object($content) && get_class($content) === "shapeBaseElement") {
+                       
                         if (is_object($this->content[$cid]->getValue()) && get_class($this->content[$cid]->getValue()) == "htmlElement") {
-                            $result = $this->content[$cid]->getValue()->byId($keyName);
+                            
+                            $result = $this->content[$cid]->getValue()->bySearch($keyName, $keyIndex);
                             if (!empty($result)) {
-                               break;  
+                               
+                                break;
                             }
                         }
                     }
@@ -281,6 +330,38 @@ class htmlElement extends shapeBaseElement {
             }
         }
         return $result;
+    }
+
+    /**
+     * Get the attribute of an element
+     * @param String $keyName
+     * @return type
+     */
+    function getAttribute ($keyName) {
+        if (!empty($this->attributes)) {
+            foreach ($this->attributes as $aid => $attribute) {
+                
+                if (strtoupper($attribute->getKey()) === strtoupper($keyName)) {
+                    return $attribute->getValue();
+                    
+                }
+            }
+        }
+    
+    }
+    
+    /**
+     * Gives a list of the attributes back in a key value pair
+     * @return type
+     */
+    function getAttributes () {
+        $attributes = [];
+        if (!empty($this->attributes)) {
+            foreach ($this->attributes as $aid => $attribute) {
+                $attributes[$attribute->getKey()] = $attribute->getValue();
+            }
+        }
+        return $attributes;
     }
     
     /**
@@ -290,64 +371,65 @@ class htmlElement extends shapeBaseElement {
      * @return \htmlElement
      */
     function byId($keyName) {
-       return $this->bySearch($keyName, "id"); 
+        return $this->bySearch($keyName, "id");
     }
-    
+
     /**
-     * Find and Element by Its HTML Id
+     * Find and Element by Its HTML Class
      * Example: p(["clas" => "Test"])
      * @param type $keyName
      * @return \htmlElement
      */
     function byClass($keyName) {
-       return $this->bySearch($keyName, "class"); 
+        return $this->bySearch($keyName, "class");
+    }
+
+    function byFor($keyName) {
+        return $this->bySearch($keyName, "for");
     }
 
     /**
      * Set inherited properties
      */
     function setInherited() {
-            if (!empty($this->attributes)) {
-                foreach ($this->attributes as $cid => $attribute) {
-                    if (is_object($attribute) && get_class($attribute) === "shapeBaseElement") {
-                        //update all the children to have my value
-                        foreach ($GLOBALS["shapeElements"] as $sid => $element) {
-                           if ($element->getParent() === $attribute->getId()) {
-                               $element->setValue (  $attribute->getValue());
-                           }  
-                        }
-                    }    
-                }
-            }
-            
-            if (!empty($this->content)) {
-                foreach ($this->content as $cid => $content) {
-                    if (is_object($content) && get_class($content) === "shapeBaseElement") {
-                        //update all the children to have my value
-                        foreach ($GLOBALS["shapeElements"] as $sid => $element) {
-                           if ($element->getParent() === $content->getId()) {
-                             if (is_object($element) && get_class($element) == "shapeBaseElement") {
-                                 if (is_object($element->getValue()) && get_class($element->getValue()) === "htmlElement") {
-                                   $this->content[$cid]->getValue()->setInherited();
-                                 }
-                                   else {
-                                     $element->setValue (  $content->getValue());
-                                   }
-                               }
-                           }  
-                        }
-                        
-                        if (is_object($this->content[$cid]->getValue()) && get_class($this->content[$cid]->getValue()) === "htmlElement") {
-                            if ($element->getParent() === $content->getId()) {
-                              
-                            }
+        if (!empty($this->attributes)) {
+            foreach ($this->attributes as $cid => $attribute) {
+                if (is_object($attribute) && get_class($attribute) === "shapeBaseElement") {
+                    //update all the children to have my value
+                    foreach ($GLOBALS["shapeElements"] as $sid => $element) {
+                        if ($element->getParent() === $attribute->getId()) {
+                            $element->setValue($attribute->getValue());
                         }
                     }
                 }
             }
-      
+        }
+        if (!empty($this->content)) {
+            foreach ($this->content as $cid => $content) {
+                if (is_object($content) && get_class($content) === "shapeBaseElement") {
+                    //update all the children to have my value
+                    foreach ($GLOBALS["shapeElements"] as $sid => $element) {
+                        if ($element->getParent() === $content->getId()) {
+                            if (is_object($element) && get_class($element) == "shapeBaseElement") {
+                                if (is_object($element->getValue()) && get_class($element->getValue()) === "htmlElement") {
+                                    $this->content[$cid]->getValue()->setInherited();
+                                } else {
+                                    $element->setValue($content->getValue());
+                                }
+                            }
+                        }
+                    }
+
+                    if (is_object($this->content[$cid]->getValue()) && get_class($this->content[$cid]->getValue()) === "htmlElement") {
+                        if ($element->getParent() === $content->getId()) {
+                            
+                        }
+                    }
+                }
+            }
+        }
     }
-    
+
     /**
      * Set attributes to the Element
      * @param type $keyName
@@ -356,17 +438,17 @@ class htmlElement extends shapeBaseElement {
     function setAttribute($keyName, $keyValue) {
         $wasSet = false;
         if (!empty($this->attributes)) {
-        foreach ($this->attributes as $aid => $attribute) {
-            if ($attribute->getKey() === $keyName) {
-                if (!empty($attribute->getParent())) {
-                    $this->attributes[$aid] = clone $attribute;
+            foreach ($this->attributes as $aid => $attribute) {
+                if ($attribute->getKey() === $keyName) {
+                    if (!empty($attribute->getParent())) {
+                        $this->attributes[$aid] = clone $attribute;
+                    }
+                    $this->attributes[$aid]->setValue($keyValue);
+                    $this->attributes[$aid]->setParent();
+                    $this->setInherited();
+                    $wasSet = true;
                 }
-                $this->attributes[$aid]->setValue($keyValue);
-                $this->attributes[$aid]->setParent();
-                $this->setInherited();
-                $wasSet = true;
             }
-        }
         }
 
         if (!$wasSet) {
@@ -374,11 +456,11 @@ class htmlElement extends shapeBaseElement {
             $this->attributes[] = $attribute;
             //find all the children of this element and add the attribute
             foreach ($GLOBALS["shapeElements"] as $eid => $element) {
-               if ($element->getParent() === $this->getId()) {
-                 $element->cloneAttribute($attribute);
-               }
+                if ($element->getParent() === $this->getId()) {
+                    $element->cloneAttribute($attribute);
+                }
             }
-            
+
             return $attribute;
         }
     }
@@ -387,24 +469,51 @@ class htmlElement extends shapeBaseElement {
      * Clones a new attribute onto the child
      * @param type $attribute
      */
-    function cloneAttribute ($attribute) {
-       $this->attributes[] = clone $attribute; 
+    function cloneAttribute($attribute) {
+        $this->attributes[] = clone $attribute;
     }
 
     /**
      * Clones content  
      * @param type $content
-     */    
-    function cloneContent ($content) {
-       $this->content[] = clone $content; 
+     */
+    function cloneContent($content) {
+        $this->content[] = clone $content;
     }
+
     /**
      * Add Attributes to the Element
      * @param type $keyName
      * @param type $keyValue
      */
     function addAttribute($keyName, $keyValue) {
-        return $this->setAttribute($keyName, $keyValue);
+        $wasSet = false;
+        if (!empty($this->attributes)) {
+            foreach ($this->attributes as $aid => $attribute) {
+                if ($attribute->getKey() === $keyName) {
+                    if (!empty($attribute->getParent())) {
+                        $this->attributes[$aid] = clone $attribute;
+                    }
+                    $this->attributes[$aid]->setValue($this->attributes[$aid]->getValue()." ".$keyValue);
+                    $this->attributes[$aid]->setParent();
+                    $this->setInherited();
+                    $wasSet = true;
+                }
+            }
+        }
+
+        if (!$wasSet) {
+            $attribute = new shapeBaseElement($keyName, $keyValue);
+            $this->attributes[] = $attribute;
+            //find all the children of this element and add the attribute
+            foreach ($GLOBALS["shapeElements"] as $eid => $element) {
+                if ($element->getParent() === $this->getId()) {
+                    $element->cloneAttribute($attribute);
+                }
+            }
+
+            return $attribute;
+        }
     }
 
     /**
@@ -412,11 +521,139 @@ class htmlElement extends shapeBaseElement {
      * @param type $openingTag
      * @param type $closingTag
      */
-    function setTags($openingTag, $closingTag) {
+    function setTags($openingTag, $closingTag, $compress = false) {
         $this->openingTag = $openingTag;
         $this->closingTag = $closingTag;
+        $this->compress = $compress;
     }
 
+    /**
+     * Function to evaluate a key value pair for a IDENTICAL MATCH - if it is true it returns the current object
+     * @param type $args
+     * @return \htmlElement
+     */
+    function whenEqual ($args) {
+        if (is_array($args)) {
+          $isTrue = true;  
+          foreach ($args as $key => $value) {
+            if ($key !== $value) {
+                $isTrue = false;
+                break;
+            }
+            
+          }
+          if ($isTrue) {
+              return $this;  
+            }
+            else {
+              return (new htmlElement());    
+            }
+        }   
+          else {
+          return (new htmlElement());  
+        }
+        
+    }
+    
+    /**
+     * Function to evaluate a key value pair for a LIKE MATCH - if it is true it returns the current object
+     * @param type $args
+     * @return \htmlElement
+     */
+    function whenLike ($args) {
+        if (is_array($args)) {
+          $isTrue = true;  
+          foreach ($args as $key => $value) {
+            if ( stripos($key, $value) === false) {
+                $isTrue = false;
+                break;
+            }
+           
+          }  
+          
+           if ($isTrue) {
+              return $this;  
+            }
+            else {
+              return (shape());    
+            }
+        }   
+          else {
+          return (shape());  
+        }
+        
+    }
+    
+    
+     /**
+     * Function to evaluate a key value pair for any valid boolean expression, all evaluations should be true
+     * @param type $args
+     * @return \htmlElement
+     */
+    function whenOr ($args) {
+       if (is_array($args)) {
+          $isTrue = false;  
+          foreach ($args as $key => $value) {
+            if ($value) {
+                $isTrue = true;
+                break;
+            }
+          }  
+          
+           if ($isTrue) {
+              return $this;  
+            }
+            else {
+              return (shape());    
+            }
+        }   
+          else {
+          return (shape());  
+        }
+        
+    }
+    
+    
+    /**
+     * Function to evaluate a key value pair for any valid boolean expression, all evaluations should be true
+     * @param type $args
+     * @return \htmlElement
+     */
+    function whenAnd ($args) {
+        if (is_array($args)) {
+          $isTrue = true;  
+          foreach ($args as $key => $value) {
+            if (!$value) {
+                $isTrue = false;
+                break;
+            }
+          }  
+          
+           if ($isTrue) {
+              return $this;  
+            }
+            else {
+              return (shape());    
+            }
+        }   
+          else {
+          return (shape());  
+        }
+        
+    }
+    
+    /**
+     * Add a datasource to the shape object for templating
+     * @param type $object
+     */
+    function addDataSource ( $name, $object ) {
+        $this->DS[$name] = $object;
+    }
+    
+    
+    
+  
+    
 }
 
 /**
@@ -523,16 +760,31 @@ function arrayToShapeCode($shapeArray, $level = 0) {
 function HTMLtoShape($content) {
     $dom = new DOMDocument;
     @$dom->loadHTML($content);
-
     $document = $dom->childNodes;
-
     $shapeArray = traverseDOM($document);
-
     $shapeCode = arrayToShapeCode($shapeArray);
-
-
-
     return $shapeCode;
+}
+
+/**
+ * Loop to iterate through a shape template and replace content
+ * Example loop ( $names,  b ("{name}"), "!empty($name),strlen($name) > 5" );
+ * @param type $elements
+ * @param type $shapeTemplate
+ * @param type $expression
+ */
+function loop($shapeTemplate, $elements="",  $expressions = "") {
+    $html = "";
+    if (!empty($shapeTemplate)) {
+        foreach ($elements as $eid => $element) {
+            $template = $shapeTemplate->compileHtml();
+            foreach ($element as $key => $value) {
+                $template = str_ireplace("{{$key}}", $value, $template);
+            }
+            $html .= $template;
+        }
+    }
+    return $html;
 }
 
 /**
@@ -1341,7 +1593,7 @@ function samp() {
 
 function script() {
     $html = createInstance("htmlElement", func_get_args());
-    $html->setTags("<SCRIPT[attributes]>", "</SCRIPT>");
+    $html->setTags("<SCRIPT[attributes]>", "</SCRIPT>", true);
     return $html;
 }
 
@@ -1522,3 +1774,452 @@ function wbr() {
     $html->setTags("<WBR[attributes]>", "</WBR>");
     return $html;
 }
+
+/**
+ * JSMin.php - modified PHP implementation of Douglas Crockford's JSMin.
+ *
+ * <code>
+ * $minifiedJs = JSMin::minify($js);
+ * </code>
+ *
+ * This is a modified port of jsmin.c. Improvements:
+ *
+ * Does not choke on some regexp literals containing quote characters. E.g. /'/
+ *
+ * Spaces are preserved after some add/sub operators, so they are not mistakenly
+ * converted to post-inc/dec. E.g. a + ++b -> a+ ++b
+ *
+ * Preserves multi-line comments that begin with /*!
+ *
+ * PHP 5 or higher is required.
+ *
+ * Permission is hereby granted to use this version of the library under the
+ * same terms as jsmin.c, which has the following license:
+ *
+ * --
+ * Copyright (c) 2002 Douglas Crockford  (www.crockford.com)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do
+ * so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * The Software shall be used for Good, not Evil.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ * --
+ *
+ * @package JSMin
+ * @author Ryan Grove <ryan@wonko.com> (PHP port)
+ * @author Steve Clay <steve@mrclay.org> (modifications + cleanup)
+ * @author Andrea Giammarchi <http://www.3site.eu> (spaceBeforeRegExp)
+ * @copyright 2002 Douglas Crockford <douglas@crockford.com> (jsmin.c)
+ * @copyright 2008 Ryan Grove <ryan@wonko.com> (PHP port)
+ * @license http://opensource.org/licenses/mit-license.php MIT License
+ * @link http://code.google.com/p/jsmin-php/
+ */
+
+class JSMin {
+    const ORD_LF            = 10;
+    const ORD_SPACE         = 32;
+    const ACTION_KEEP_A     = 1;
+    const ACTION_DELETE_A   = 2;
+    const ACTION_DELETE_A_B = 3;
+
+    protected $a           = "\n";
+    protected $b           = '';
+    protected $input       = '';
+    protected $inputIndex  = 0;
+    protected $inputLength = 0;
+    protected $lookAhead   = null;
+    protected $output      = '';
+    protected $lastByteOut  = '';
+    protected $keptComment = '';
+
+    /**
+     * Minify Javascript.
+     *
+     * @param string $js Javascript to be minified
+     *
+     * @return string
+     */
+    public static function minify($js)
+    {
+        $jsmin = new JSMin($js);
+        return $jsmin->min();
+    }
+
+    /**
+     * @param string $input
+     */
+    public function __construct($input="")
+    {
+        $this->input = $input;
+    }
+
+    /**
+     * Perform minification, return result
+     *
+     * @return string
+     */
+    public function min()
+    {
+        if ($this->output !== '') { // min already run
+            return $this->output;
+        }
+
+        $mbIntEnc = null;
+        if (function_exists('mb_strlen') && ((int)ini_get('mbstring.func_overload') & 2)) {
+            $mbIntEnc = mb_internal_encoding();
+            mb_internal_encoding('8bit');
+        }
+        $this->input = str_replace("\r\n", "\n", $this->input);
+        $this->inputLength = strlen($this->input);
+
+        $this->action(self::ACTION_DELETE_A_B);
+
+        while ($this->a !== null) {
+            // determine next command
+            $command = self::ACTION_KEEP_A; // default
+            if ($this->a === ' ') {
+                if (($this->lastByteOut === '+' || $this->lastByteOut === '-')
+                        && ($this->b === $this->lastByteOut)) {
+                    // Don't delete this space. If we do, the addition/subtraction
+                    // could be parsed as a post-increment
+                } elseif (! $this->isAlphaNum($this->b)) {
+                    $command = self::ACTION_DELETE_A;
+                }
+            } elseif ($this->a === "\n") {
+                if ($this->b === ' ') {
+                    $command = self::ACTION_DELETE_A_B;
+
+                    // in case of mbstring.func_overload & 2, must check for null b,
+                    // otherwise mb_strpos will give WARNING
+                } elseif ($this->b === null
+                          || (false === strpos('{[(+-!~', $this->b)
+                              && ! $this->isAlphaNum($this->b))) {
+                    $command = self::ACTION_DELETE_A;
+                }
+            } elseif (! $this->isAlphaNum($this->a)) {
+                if ($this->b === ' '
+                    || ($this->b === "\n"
+                        && (false === strpos('}])+-"\'', $this->a)))) {
+                    $command = self::ACTION_DELETE_A_B;
+                }
+            }
+            $this->action($command);
+        }
+        $this->output = trim($this->output);
+
+        if ($mbIntEnc !== null) {
+            mb_internal_encoding($mbIntEnc);
+        }
+        return $this->output;
+    }
+
+    /**
+     * ACTION_KEEP_A = Output A. Copy B to A. Get the next B.
+     * ACTION_DELETE_A = Copy B to A. Get the next B.
+     * ACTION_DELETE_A_B = Get the next B.
+     *
+     * @param int $command
+     * @throws JSMin_UnterminatedRegExpException|JSMin_UnterminatedStringException
+     */
+    protected function action($command)
+    {
+        // make sure we don't compress "a + ++b" to "a+++b", etc.
+        if ($command === self::ACTION_DELETE_A_B
+            && $this->b === ' '
+            && ($this->a === '+' || $this->a === '-')) {
+            // Note: we're at an addition/substraction operator; the inputIndex
+            // will certainly be a valid index
+            if ($this->input[$this->inputIndex] === $this->a) {
+                // This is "+ +" or "- -". Don't delete the space.
+                $command = self::ACTION_KEEP_A;
+            }
+        }
+
+        switch ($command) {
+            case self::ACTION_KEEP_A: // 1
+                $this->output .= $this->a;
+
+                if ($this->keptComment) {
+                    $this->output = rtrim($this->output, "\n");
+                    $this->output .= $this->keptComment;
+                    $this->keptComment = '';
+                }
+
+                $this->lastByteOut = $this->a;
+
+                // fallthrough intentional
+            case self::ACTION_DELETE_A: // 2
+                $this->a = $this->b;
+                if ($this->a === "'" || $this->a === '"') { // string literal
+                    $str = $this->a; // in case needed for exception
+                    for(;;) {
+                        $this->output .= $this->a;
+                        $this->lastByteOut = $this->a;
+
+                        $this->a = $this->get();
+                        if ($this->a === $this->b) { // end quote
+                            break;
+                        }
+                        if ($this->isEOF($this->a)) {
+                            $byte = $this->inputIndex - 1;
+                            throw new JSMin_UnterminatedStringException(
+                                "JSMin: Unterminated String at byte {$byte}: {$str}");
+                        }
+                        $str .= $this->a;
+                        if ($this->a === '\\') {
+                            $this->output .= $this->a;
+                            $this->lastByteOut = $this->a;
+
+                            $this->a       = $this->get();
+                            $str .= $this->a;
+                        }
+                    }
+                }
+
+                // fallthrough intentional
+            case self::ACTION_DELETE_A_B: // 3
+                $this->b = $this->next();
+                if ($this->b === '/' && $this->isRegexpLiteral()) {
+                    $this->output .= $this->a . $this->b;
+                    $pattern = '/'; // keep entire pattern in case we need to report it in the exception
+                    for(;;) {
+                        $this->a = $this->get();
+                        $pattern .= $this->a;
+                        if ($this->a === '[') {
+                            for(;;) {
+                                $this->output .= $this->a;
+                                $this->a = $this->get();
+                                $pattern .= $this->a;
+                                if ($this->a === ']') {
+                                    break;
+                                }
+                                if ($this->a === '\\') {
+                                    $this->output .= $this->a;
+                                    $this->a = $this->get();
+                                    $pattern .= $this->a;
+                                }
+                                if ($this->isEOF($this->a)) {
+                                    throw new JSMin_UnterminatedRegExpException(
+                                        "JSMin: Unterminated set in RegExp at byte "
+                                            . $this->inputIndex .": {$pattern}");
+                                }
+                            }
+                        }
+
+                        if ($this->a === '/') { // end pattern
+                            break; // while (true)
+                        } elseif ($this->a === '\\') {
+                            $this->output .= $this->a;
+                            $this->a = $this->get();
+                            $pattern .= $this->a;
+                        } elseif ($this->isEOF($this->a)) {
+                            $byte = $this->inputIndex - 1;
+                            throw new JSMin_UnterminatedRegExpException(
+                                "JSMin: Unterminated RegExp at byte {$byte}: {$pattern}");
+                        }
+                        $this->output .= $this->a;
+                        $this->lastByteOut = $this->a;
+                    }
+                    $this->b = $this->next();
+                }
+            // end case ACTION_DELETE_A_B
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isRegexpLiteral()
+    {
+        if (false !== strpos("(,=:[!&|?+-~*{;", $this->a)) {
+            // we obviously aren't dividing
+            return true;
+        }
+
+                // we have to check for a preceding keyword, and we don't need to pattern
+                // match over the whole output.
+                $recentOutput = substr($this->output, -10);
+
+                // check if return/typeof directly precede a pattern without a space
+                foreach (array('return', 'typeof') as $keyword) {
+            if ($this->a !== substr($keyword, -1)) {
+                // certainly wasn't keyword
+                continue;
+            }
+            if (preg_match("~(^|[\\s\\S])" . substr($keyword, 0, -1) . "$~", $recentOutput, $m)) {
+                if ($m[1] === '' || !$this->isAlphaNum($m[1])) {
+                    return true;
+                }
+            }
+        }
+
+                // check all keywords
+                if ($this->a === ' ' || $this->a === "\n") {
+                        if (preg_match('~(^|[\\s\\S])(?:case|else|in|return|typeof)$~', $recentOutput, $m)) {
+                                if ($m[1] === '' || !$this->isAlphaNum($m[1])) {
+                                        return true;
+                                }
+                        }
+        }
+
+        return false;
+    }
+
+    /**
+     * Return the next character from stdin. Watch out for lookahead. If the character is a control character,
+     * translate it to a space or linefeed.
+     *
+     * @return string
+     */
+    protected function get()
+    {
+        $c = $this->lookAhead;
+        $this->lookAhead = null;
+        if ($c === null) {
+            // getc(stdin)
+            if ($this->inputIndex < $this->inputLength) {
+                $c = $this->input[$this->inputIndex];
+                $this->inputIndex += 1;
+            } else {
+                $c = null;
+            }
+        }
+        if (ord($c) >= self::ORD_SPACE || $c === "\n" || $c === null) {
+            return $c;
+        }
+        if ($c === "\r") {
+            return "\n";
+        }
+        return ' ';
+    }
+
+    /**
+     * Does $a indicate end of input?
+     *
+     * @param string $a
+     * @return bool
+     */
+    protected function isEOF($a)
+    {
+        return ord($a) <= self::ORD_LF;
+    }
+
+    /**
+     * Get next char (without getting it). If is ctrl character, translate to a space or newline.
+     *
+     * @return string
+     */
+    protected function peek()
+    {
+        $this->lookAhead = $this->get();
+        return $this->lookAhead;
+    }
+
+    /**
+     * Return true if the character is a letter, digit, underscore, dollar sign, or non-ASCII character.
+     *
+     * @param string $c
+     *
+     * @return bool
+     */
+    protected function isAlphaNum($c)
+    {
+        return (preg_match('/^[a-z0-9A-Z_\\$\\\\]$/', $c) || ord($c) > 126);
+    }
+
+    /**
+     * Consume a single line comment from input (possibly retaining it)
+     */
+    protected function consumeSingleLineComment()
+    {
+        $comment = '';
+        while (true) {
+            $get = $this->get();
+            $comment .= $get;
+            if (ord($get) <= self::ORD_LF) { // end of line reached
+                // if IE conditional comment
+                if (preg_match('/^\\/@(?:cc_on|if|elif|else|end)\\b/', $comment)) {
+                    $this->keptComment .= "/{$comment}";
+                }
+                return;
+            }
+        }
+    }
+
+    /**
+     * Consume a multiple line comment from input (possibly retaining it)
+     *
+     * @throws JSMin_UnterminatedCommentException
+     */
+    protected function consumeMultipleLineComment()
+    {
+        $this->get();
+        $comment = '';
+        for(;;) {
+            $get = $this->get();
+            if ($get === '*') {
+                if ($this->peek() === '/') { // end of comment reached
+                    $this->get();
+                    if (0 === strpos($comment, '!')) {
+                        // preserved by YUI Compressor
+                        if (!$this->keptComment) {
+                            // don't prepend a newline if two comments right after one another
+                            $this->keptComment = "\n";
+                        }
+                        $this->keptComment .= "/*!" . substr($comment, 1) . "*/\n";
+                    } else if (preg_match('/^@(?:cc_on|if|elif|else|end)\\b/', $comment)) {
+                        // IE conditional
+                        $this->keptComment .= "/*{$comment}*/";
+                    }
+                    return;
+                }
+            } elseif ($get === null) {
+                throw new JSMin_UnterminatedCommentException(
+                    "JSMin: Unterminated comment at byte {$this->inputIndex}: /*{$comment}");
+            }
+            $comment .= $get;
+        }
+    }
+
+    /**
+     * Get the next character, skipping over comments. Some comments may be preserved.
+     *
+     * @return string
+     */
+    protected function next()
+    {
+        $get = $this->get();
+        if ($get === '/') {
+            switch ($this->peek()) {
+                case '/':
+                    $this->consumeSingleLineComment();
+                    $get = "\n";
+                    break;
+                case '*':
+                    $this->consumeMultipleLineComment();
+                    $get = ' ';
+                    break;
+            }
+        }
+        return $get;
+    }
+}
+
+class JSMin_UnterminatedStringException extends Exception {}
+class JSMin_UnterminatedCommentException extends Exception {}
+class JSMin_UnterminatedRegExpException extends Exception {}

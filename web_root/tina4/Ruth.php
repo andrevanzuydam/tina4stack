@@ -270,11 +270,43 @@ class Ruth {
         if (empty($keyName)) {
             return self::$REQUEST;
         } else
-        if (!empty(self::$REQUEST[$keyName])) {
+        if (isset(self::$REQUEST[$keyName]) || !empty(self::$REQUEST[$keyName])) {
             return self::$REQUEST[$keyName];
         } else {
             return null;
         }
+    }
+    
+    /**
+     * Function to make request variables into Session variables with a filter array of fields that shouldn't be considered
+     * @param type $filter
+     */
+    public static function requestToSESSION ($filter="") {
+       if ($filter === "") $filter = [];
+       foreach (Ruth::getREQUEST() as $requestName => $requestValue ) {
+          if (!in_array($requestName, $filter)) {
+            Ruth::setSESSION($requestName, $requestValue);    
+          }
+       } 
+    }
+    
+     /**
+     * 
+     * @param String $type, hidden, text
+     * @param Array $filter List of elements not to create
+     * @return type
+     */
+    public static function requestToInput($type="hidden", $filter=null) {
+        if (empty($filter)) {
+          $filter = [];
+        }    
+        $html = [];
+        foreach (Ruth::getREQUEST() as $keyName => $keyValue) {
+           if (!in_array($keyName, $filter)) {             
+             $html[] = input(["type" => $type, "name" => $keyName, "value" => $keyValue]);   
+           }
+        }
+        return shape($html);
     }
     
     /**
@@ -294,7 +326,7 @@ class Ruth {
         if (empty($keyName)) {
             return self::$objects;
         } else
-        if (!empty(self::$objects[$keyName])) {
+        if (!empty(self::$objects[$keyName]) || isset(self::$objects[$keyName]) ) {
             return self::$objects[$keyName];
         } else {
             return null;
@@ -434,7 +466,7 @@ class Ruth {
      * @param type $keyValue The value stored in the session variable
      */
     public static function setSESSION ($keyName="", $keyValue="") {
-        if (!empty($keyName)) {                    
+        if (isset($keyValue) || !empty($keyName)) {                    
           $_SESSION[$keyName] = $keyValue;          
           self::$SESSION = $_SESSION;          
         }
@@ -451,7 +483,7 @@ class Ruth {
             if (empty($keyName)) {
                 return self::$SESSION;
             } else
-            if (!empty(self::$SESSION[$keyName])) {
+            if (isset(self::$SESSION[$keyName]) || !empty(self::$SESSION[$keyName])) {
                 return self::$SESSION[$keyName];
             } else {
                 return null;
@@ -463,7 +495,7 @@ class Ruth {
      * @param String $keyName The name of the session variable
      * @return boolean Was the resseting successful
      */
-    public static function unsetSESSION($keyName) {
+    public static function unsetSESSION($keyName="") {
        if (!empty($_SESSION)) {
             self::$SESSION = $_SESSION;
             if (!empty(self::$SESSION[$keyName])) {
@@ -471,6 +503,7 @@ class Ruth {
                 unset($_SESSION[$keyName]);
                 return true;
             } else {
+                unset($_SESSION);   
                 return false;
             }
         } 
@@ -624,8 +657,8 @@ class Ruth {
      * @param Boolean $routeIgnoreTracking Ruth uses this to give you back the last route but you may not want her to remember all the paths
      * @return Boolean Always returns true
      */
-    public static function addRoute($requestMethod, $routePath, $routeFunction, $routeIgnoreTracking=false) {
-        self::$routes[] = (object) array("requestMethod" => $requestMethod, "routePath" => $routePath, "routeFunction" => $routeFunction, "routeIgnoreTracking" => $routeIgnoreTracking);
+    public static function addRoute($requestMethod, $routePath, $routeFunction, $customParams="", $routeIgnoreTracking=false) {
+        self::$routes[] = (object) array("requestMethod" => $requestMethod, "routePath" => $routePath, "routeFunction" => $routeFunction, "routeParams" => $customParams, "routeIgnoreTracking" => $routeIgnoreTracking);
         return true;
     }
     
@@ -675,7 +708,7 @@ class Ruth {
      */
     public static function createRegEx($routePath) {
         //replace the variables with regex to get them
-        $regEx = preg_replace('/\{(.+)\}/i', '([a-z0-9\_\-\%]+)', explode ("/", $routePath));
+        $regEx = preg_replace('/\{(.+)\}/i', '([a-z0-9\_\-\%\@\.]+)', explode ("/", $routePath));
         $regEx = join ("/", $regEx);
         $regEx = str_replace('/', '\/', $regEx);
         $regEx = str_replace('*', '.*+', $regEx);
@@ -820,12 +853,18 @@ class Ruth {
                         
                       $params = self::getParams($route->routePath, self::$REQUEST_URI);                      
                      
+                      if (!empty($route->routeParams)) {
+                        $params[] = $route->routeParams;  
+                      }
+                      
                       $args = func_get_args ($route->routeFunction);
                       
                       $reflection = new ReflectionFunction ($route->routeFunction);
                       
                       $method_args_count = $reflection->getParameters();
                      
+                      
+                      
                       
                       if (count($params) != count($method_args_count)) {
                           for ($i = 0; $i < count($method_args_count); $i++) {
@@ -849,6 +888,9 @@ class Ruth {
                           $_SESSION["routeLASTPATH"][] = (object) array("routePath" => self::$REQUEST_URI, "requestMethod" => $route->requestMethod);  
                         }
                       }
+                      
+                     
+                      
                       
                       call_user_func_array($route->routeFunction, $params);
                       $found = true;

@@ -1,0 +1,16 @@
+.idea
+bin/behat
+bin/phpcs
+bin/phpunit
+build.properties
+build/*
+.buildpath
+.project
+.settings
+vendor/*
+composer.phar
+data/templates/*
+.vagrant
+/nbproject/private/
+box.phar
+phpunit.xml

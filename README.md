@@ -1,5 +1,7 @@
 # README #
 
+[Download Latest Release](https://github.com/andrevanzuydam/tina4stack/releases)
+
 ### Tina4 ###
 Tina4 - This is not another framework. The download you will get consists of the following technologies:
 * Nginx Webserver

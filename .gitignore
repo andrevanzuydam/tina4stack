@@ -47,7 +47,6 @@ access_log.txt
 !/php/sendmail.exe
 /mailspool/
 /phpdoc/vendor/
-/documentation/
 /web_root/migback/
 Thumbs.db
 *.dcu

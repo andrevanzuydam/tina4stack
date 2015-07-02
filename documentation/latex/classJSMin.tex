@@ -1,0 +1,286 @@
+\hypertarget{classJSMin}{}\section{J\+S\+Min Class Reference}
+\label{classJSMin}\index{J\+S\+Min@{J\+S\+Min}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classJSMin_a9fcb3a53ccc63a886657053d1609fbf6}{\+\_\+\+\_\+construct} (\$\hyperlink{Shape_8php_a6210da308e7ce036a6362dca3018d6db}{input}=\char`\"{}\char`\"{})
+\item 
+\hyperlink{classJSMin_a1b73b6860c523a036772bcdf8c99a6ff}{min} ()
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{classJSMin_a524912007600454e4396aea890384ab6}{minify} (\$js)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const \hyperlink{classJSMin_ac2104a1ac3a1d438c01c88b7bfafd519}{O\+R\+D\+\_\+\+L\+F} = 10
+\item 
+const \hyperlink{classJSMin_acae1641c88dbf4928c4a3c5b2428065c}{O\+R\+D\+\_\+\+S\+P\+A\+C\+E} = 32
+\item 
+const \hyperlink{classJSMin_aadc96fb8e03e7fd45dcc845695db56f6}{A\+C\+T\+I\+O\+N\+\_\+\+K\+E\+E\+P\+\_\+\+A} = 1
+\item 
+const \hyperlink{classJSMin_a034ff6ce80d8eeffb1548c65b907db73}{A\+C\+T\+I\+O\+N\+\_\+\+D\+E\+L\+E\+T\+E\+\_\+\+A} = 2
+\item 
+const \hyperlink{classJSMin_a769648a1f5c364c3d964d12d0b4edb8a}{A\+C\+T\+I\+O\+N\+\_\+\+D\+E\+L\+E\+T\+E\+\_\+\+A\+\_\+\+B} = 3
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classJSMin_afecad9e791629529f6b379bd7b20a4e4}{action} (\$command)
+\item 
+\hyperlink{classJSMin_a487b4b073a8319123317d776feb72f6f}{is\+Regexp\+Literal} ()
+\item 
+\hyperlink{classJSMin_adcd5b6e8efc1792816812168118f49ef}{get} ()
+\item 
+\hyperlink{classJSMin_a450a0756edbd9508745f90ccacd08a27}{is\+E\+O\+F} (\$\hyperlink{Shape_8php_a868083704107d6d05b69983f62cce171}{a})
+\item 
+\hyperlink{classJSMin_ac786ee1b9552762de8fbc7a3a1c22070}{peek} ()
+\item 
+\hyperlink{classJSMin_af54ff87064c2b9f19e4905e511fc83e5}{is\+Alpha\+Num} (\$c)
+\item 
+\hyperlink{classJSMin_ad7f3a27d59bdb92db013a336b1c64f3a}{consume\+Single\+Line\+Comment} ()
+\item 
+\hyperlink{classJSMin_a1bda4db9c558409b8bfc75279a42ca8a}{consume\+Multiple\+Line\+Comment} ()
+\item 
+\hyperlink{classJSMin_a3c4b356d81d5e5ede03f43cf2aec9037}{next} ()
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classJSMin_a2386c0978ac70ac8e9bd592fca835e82}{\$a} = \char`\"{}\textbackslash{}n\char`\"{}
+\item 
+\hyperlink{classJSMin_aafa0d83dd06ede16a81de0441c5eb1ad}{\$b} = \textquotesingle{}\textquotesingle{}
+\item 
+\hyperlink{classJSMin_afc2d10997a7e61c31cc9ed70e414829b}{\$input} = \textquotesingle{}\textquotesingle{}
+\item 
+\hyperlink{classJSMin_a4f772e961c1cd23e3baa6486a2952236}{\$input\+Index} = 0
+\item 
+\hyperlink{classJSMin_adc61bf642369b9d96e4844b2e694cf76}{\$input\+Length} = 0
+\item 
+\hyperlink{classJSMin_ad78bd58d8c2f93286068d85abc0afb57}{\$look\+Ahead} = null
+\item 
+\hyperlink{classJSMin_ab1b9cc7015da8bc3e3cc5edbc60f0ac2}{\$output} = \textquotesingle{}\textquotesingle{}
+\item 
+\hyperlink{classJSMin_aa33e5c3fabce5f410b11880757bd6521}{\$last\+Byte\+Out} = \textquotesingle{}\textquotesingle{}
+\item 
+\hyperlink{classJSMin_ac9f663a3d896ddbce3262eae7f777e94}{\$kept\+Comment} = \textquotesingle{}\textquotesingle{}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classJSMin_a9fcb3a53ccc63a886657053d1609fbf6}{}\index{J\+S\+Min@{J\+S\+Min}!\+\_\+\+\_\+construct@{\+\_\+\+\_\+construct}}
+\index{\+\_\+\+\_\+construct@{\+\_\+\+\_\+construct}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{\+\_\+\+\_\+construct}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::\+\_\+\+\_\+construct (
+\begin{DoxyParamCaption}
+\item[{}]{\$input = {\ttfamily \char`\"{}\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classJSMin_a9fcb3a53ccc63a886657053d1609fbf6}
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$input} & \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classJSMin_afecad9e791629529f6b379bd7b20a4e4}{}\index{J\+S\+Min@{J\+S\+Min}!action@{action}}
+\index{action@{action}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{action}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::action (
+\begin{DoxyParamCaption}
+\item[{}]{\$command}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\label{classJSMin_afecad9e791629529f6b379bd7b20a4e4}
+A\+C\+T\+I\+O\+N\+\_\+\+K\+E\+E\+P\+\_\+\+A = Output A. Copy B to A. Get the next B. A\+C\+T\+I\+O\+N\+\_\+\+D\+E\+L\+E\+T\+E\+\_\+\+A = Copy B to A. Get the next B. A\+C\+T\+I\+O\+N\+\_\+\+D\+E\+L\+E\+T\+E\+\_\+\+A\+\_\+\+B = Get the next B.
+
+
+\begin{DoxyParams}[1]{Parameters}
+int & {\em \$command} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em J\+S\+Min\+\_\+\+Unterminated\+Reg\+Exp\+Exception$\vert$\+J\+S\+Min\+\_\+\+Unterminated\+String\+Exception} & \\
+\hline
+\end{DoxyExceptions}
+\hypertarget{classJSMin_a1bda4db9c558409b8bfc75279a42ca8a}{}\index{J\+S\+Min@{J\+S\+Min}!consume\+Multiple\+Line\+Comment@{consume\+Multiple\+Line\+Comment}}
+\index{consume\+Multiple\+Line\+Comment@{consume\+Multiple\+Line\+Comment}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{consume\+Multiple\+Line\+Comment}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::consume\+Multiple\+Line\+Comment (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\label{classJSMin_a1bda4db9c558409b8bfc75279a42ca8a}
+Consume a multiple line comment from input (possibly retaining it)
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em \hyperlink{classJSMin__UnterminatedCommentException}{J\+S\+Min\+\_\+\+Unterminated\+Comment\+Exception}} & \\
+\hline
+\end{DoxyExceptions}
+\hypertarget{classJSMin_ad7f3a27d59bdb92db013a336b1c64f3a}{}\index{J\+S\+Min@{J\+S\+Min}!consume\+Single\+Line\+Comment@{consume\+Single\+Line\+Comment}}
+\index{consume\+Single\+Line\+Comment@{consume\+Single\+Line\+Comment}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{consume\+Single\+Line\+Comment}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::consume\+Single\+Line\+Comment (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\label{classJSMin_ad7f3a27d59bdb92db013a336b1c64f3a}
+Consume a single line comment from input (possibly retaining it) \hypertarget{classJSMin_adcd5b6e8efc1792816812168118f49ef}{}\index{J\+S\+Min@{J\+S\+Min}!get@{get}}
+\index{get@{get}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{get}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::get (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\label{classJSMin_adcd5b6e8efc1792816812168118f49ef}
+Return the next character from stdin. Watch out for lookahead. If the character is a control character, translate it to a space or linefeed.
+
+\begin{DoxyReturn}{Returns}
+string 
+\end{DoxyReturn}
+\hypertarget{classJSMin_af54ff87064c2b9f19e4905e511fc83e5}{}\index{J\+S\+Min@{J\+S\+Min}!is\+Alpha\+Num@{is\+Alpha\+Num}}
+\index{is\+Alpha\+Num@{is\+Alpha\+Num}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{is\+Alpha\+Num}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::is\+Alpha\+Num (
+\begin{DoxyParamCaption}
+\item[{}]{\$c}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\label{classJSMin_af54ff87064c2b9f19e4905e511fc83e5}
+Return true if the character is a letter, digit, underscore, dollar sign, or non-\/\+A\+S\+C\+I\+I character.
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$c} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool 
+\end{DoxyReturn}
+\hypertarget{classJSMin_a450a0756edbd9508745f90ccacd08a27}{}\index{J\+S\+Min@{J\+S\+Min}!is\+E\+O\+F@{is\+E\+O\+F}}
+\index{is\+E\+O\+F@{is\+E\+O\+F}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{is\+E\+O\+F}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::is\+E\+O\+F (
+\begin{DoxyParamCaption}
+\item[{}]{\$a}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\label{classJSMin_a450a0756edbd9508745f90ccacd08a27}
+Does \$a indicate end of input?
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$a} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool 
+\end{DoxyReturn}
+\hypertarget{classJSMin_a487b4b073a8319123317d776feb72f6f}{}\index{J\+S\+Min@{J\+S\+Min}!is\+Regexp\+Literal@{is\+Regexp\+Literal}}
+\index{is\+Regexp\+Literal@{is\+Regexp\+Literal}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{is\+Regexp\+Literal}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::is\+Regexp\+Literal (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\label{classJSMin_a487b4b073a8319123317d776feb72f6f}
+\begin{DoxyReturn}{Returns}
+bool 
+\end{DoxyReturn}
+\hypertarget{classJSMin_a1b73b6860c523a036772bcdf8c99a6ff}{}\index{J\+S\+Min@{J\+S\+Min}!min@{min}}
+\index{min@{min}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{min}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::min (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classJSMin_a1b73b6860c523a036772bcdf8c99a6ff}
+Perform minification, return result
+
+\begin{DoxyReturn}{Returns}
+string 
+\end{DoxyReturn}
+\hypertarget{classJSMin_a524912007600454e4396aea890384ab6}{}\index{J\+S\+Min@{J\+S\+Min}!minify@{minify}}
+\index{minify@{minify}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{minify}]{\setlength{\rightskip}{0pt plus 5cm}static J\+S\+Min\+::minify (
+\begin{DoxyParamCaption}
+\item[{}]{\$js}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\label{classJSMin_a524912007600454e4396aea890384ab6}
+Minify Javascript.
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$js} & Javascript to be minified\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+string 
+\end{DoxyReturn}
+\hypertarget{classJSMin_a3c4b356d81d5e5ede03f43cf2aec9037}{}\index{J\+S\+Min@{J\+S\+Min}!next@{next}}
+\index{next@{next}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{next}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::next (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\label{classJSMin_a3c4b356d81d5e5ede03f43cf2aec9037}
+Get the next character, skipping over comments. Some comments may be preserved.
+
+\begin{DoxyReturn}{Returns}
+string 
+\end{DoxyReturn}
+\hypertarget{classJSMin_ac786ee1b9552762de8fbc7a3a1c22070}{}\index{J\+S\+Min@{J\+S\+Min}!peek@{peek}}
+\index{peek@{peek}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{peek}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::peek (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}\label{classJSMin_ac786ee1b9552762de8fbc7a3a1c22070}
+Get next char (without getting it). If is ctrl character, translate to a space or newline.
+
+\begin{DoxyReturn}{Returns}
+string 
+\end{DoxyReturn}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classJSMin_a2386c0978ac70ac8e9bd592fca835e82}{}\index{J\+S\+Min@{J\+S\+Min}!\$a@{\$a}}
+\index{\$a@{\$a}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{\$a}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::\$a = \char`\"{}\textbackslash{}n\char`\"{}\hspace{0.3cm}{\ttfamily [protected]}}\label{classJSMin_a2386c0978ac70ac8e9bd592fca835e82}
+\hypertarget{classJSMin_aafa0d83dd06ede16a81de0441c5eb1ad}{}\index{J\+S\+Min@{J\+S\+Min}!\$b@{\$b}}
+\index{\$b@{\$b}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{\$b}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::\$b = \textquotesingle{}\textquotesingle{}\hspace{0.3cm}{\ttfamily [protected]}}\label{classJSMin_aafa0d83dd06ede16a81de0441c5eb1ad}
+\hypertarget{classJSMin_afc2d10997a7e61c31cc9ed70e414829b}{}\index{J\+S\+Min@{J\+S\+Min}!\$input@{\$input}}
+\index{\$input@{\$input}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{\$input}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::\$input = \textquotesingle{}\textquotesingle{}\hspace{0.3cm}{\ttfamily [protected]}}\label{classJSMin_afc2d10997a7e61c31cc9ed70e414829b}
+\hypertarget{classJSMin_a4f772e961c1cd23e3baa6486a2952236}{}\index{J\+S\+Min@{J\+S\+Min}!\$input\+Index@{\$input\+Index}}
+\index{\$input\+Index@{\$input\+Index}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{\$input\+Index}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::\$input\+Index = 0\hspace{0.3cm}{\ttfamily [protected]}}\label{classJSMin_a4f772e961c1cd23e3baa6486a2952236}
+\hypertarget{classJSMin_adc61bf642369b9d96e4844b2e694cf76}{}\index{J\+S\+Min@{J\+S\+Min}!\$input\+Length@{\$input\+Length}}
+\index{\$input\+Length@{\$input\+Length}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{\$input\+Length}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::\$input\+Length = 0\hspace{0.3cm}{\ttfamily [protected]}}\label{classJSMin_adc61bf642369b9d96e4844b2e694cf76}
+\hypertarget{classJSMin_ac9f663a3d896ddbce3262eae7f777e94}{}\index{J\+S\+Min@{J\+S\+Min}!\$kept\+Comment@{\$kept\+Comment}}
+\index{\$kept\+Comment@{\$kept\+Comment}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{\$kept\+Comment}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::\$kept\+Comment = \textquotesingle{}\textquotesingle{}\hspace{0.3cm}{\ttfamily [protected]}}\label{classJSMin_ac9f663a3d896ddbce3262eae7f777e94}
+\hypertarget{classJSMin_aa33e5c3fabce5f410b11880757bd6521}{}\index{J\+S\+Min@{J\+S\+Min}!\$last\+Byte\+Out@{\$last\+Byte\+Out}}
+\index{\$last\+Byte\+Out@{\$last\+Byte\+Out}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{\$last\+Byte\+Out}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::\$last\+Byte\+Out = \textquotesingle{}\textquotesingle{}\hspace{0.3cm}{\ttfamily [protected]}}\label{classJSMin_aa33e5c3fabce5f410b11880757bd6521}
+\hypertarget{classJSMin_ad78bd58d8c2f93286068d85abc0afb57}{}\index{J\+S\+Min@{J\+S\+Min}!\$look\+Ahead@{\$look\+Ahead}}
+\index{\$look\+Ahead@{\$look\+Ahead}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{\$look\+Ahead}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::\$look\+Ahead = null\hspace{0.3cm}{\ttfamily [protected]}}\label{classJSMin_ad78bd58d8c2f93286068d85abc0afb57}
+\hypertarget{classJSMin_ab1b9cc7015da8bc3e3cc5edbc60f0ac2}{}\index{J\+S\+Min@{J\+S\+Min}!\$output@{\$output}}
+\index{\$output@{\$output}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{\$output}]{\setlength{\rightskip}{0pt plus 5cm}J\+S\+Min\+::\$output = \textquotesingle{}\textquotesingle{}\hspace{0.3cm}{\ttfamily [protected]}}\label{classJSMin_ab1b9cc7015da8bc3e3cc5edbc60f0ac2}
+\hypertarget{classJSMin_a034ff6ce80d8eeffb1548c65b907db73}{}\index{J\+S\+Min@{J\+S\+Min}!A\+C\+T\+I\+O\+N\+\_\+\+D\+E\+L\+E\+T\+E\+\_\+\+A@{A\+C\+T\+I\+O\+N\+\_\+\+D\+E\+L\+E\+T\+E\+\_\+\+A}}
+\index{A\+C\+T\+I\+O\+N\+\_\+\+D\+E\+L\+E\+T\+E\+\_\+\+A@{A\+C\+T\+I\+O\+N\+\_\+\+D\+E\+L\+E\+T\+E\+\_\+\+A}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{A\+C\+T\+I\+O\+N\+\_\+\+D\+E\+L\+E\+T\+E\+\_\+\+A}]{\setlength{\rightskip}{0pt plus 5cm}const J\+S\+Min\+::\+A\+C\+T\+I\+O\+N\+\_\+\+D\+E\+L\+E\+T\+E\+\_\+\+A = 2}\label{classJSMin_a034ff6ce80d8eeffb1548c65b907db73}
+\hypertarget{classJSMin_a769648a1f5c364c3d964d12d0b4edb8a}{}\index{J\+S\+Min@{J\+S\+Min}!A\+C\+T\+I\+O\+N\+\_\+\+D\+E\+L\+E\+T\+E\+\_\+\+A\+\_\+\+B@{A\+C\+T\+I\+O\+N\+\_\+\+D\+E\+L\+E\+T\+E\+\_\+\+A\+\_\+\+B}}
+\index{A\+C\+T\+I\+O\+N\+\_\+\+D\+E\+L\+E\+T\+E\+\_\+\+A\+\_\+\+B@{A\+C\+T\+I\+O\+N\+\_\+\+D\+E\+L\+E\+T\+E\+\_\+\+A\+\_\+\+B}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{A\+C\+T\+I\+O\+N\+\_\+\+D\+E\+L\+E\+T\+E\+\_\+\+A\+\_\+\+B}]{\setlength{\rightskip}{0pt plus 5cm}const J\+S\+Min\+::\+A\+C\+T\+I\+O\+N\+\_\+\+D\+E\+L\+E\+T\+E\+\_\+\+A\+\_\+\+B = 3}\label{classJSMin_a769648a1f5c364c3d964d12d0b4edb8a}
+\hypertarget{classJSMin_aadc96fb8e03e7fd45dcc845695db56f6}{}\index{J\+S\+Min@{J\+S\+Min}!A\+C\+T\+I\+O\+N\+\_\+\+K\+E\+E\+P\+\_\+\+A@{A\+C\+T\+I\+O\+N\+\_\+\+K\+E\+E\+P\+\_\+\+A}}
+\index{A\+C\+T\+I\+O\+N\+\_\+\+K\+E\+E\+P\+\_\+\+A@{A\+C\+T\+I\+O\+N\+\_\+\+K\+E\+E\+P\+\_\+\+A}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{A\+C\+T\+I\+O\+N\+\_\+\+K\+E\+E\+P\+\_\+\+A}]{\setlength{\rightskip}{0pt plus 5cm}const J\+S\+Min\+::\+A\+C\+T\+I\+O\+N\+\_\+\+K\+E\+E\+P\+\_\+\+A = 1}\label{classJSMin_aadc96fb8e03e7fd45dcc845695db56f6}
+\hypertarget{classJSMin_ac2104a1ac3a1d438c01c88b7bfafd519}{}\index{J\+S\+Min@{J\+S\+Min}!O\+R\+D\+\_\+\+L\+F@{O\+R\+D\+\_\+\+L\+F}}
+\index{O\+R\+D\+\_\+\+L\+F@{O\+R\+D\+\_\+\+L\+F}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{O\+R\+D\+\_\+\+L\+F}]{\setlength{\rightskip}{0pt plus 5cm}const J\+S\+Min\+::\+O\+R\+D\+\_\+\+L\+F = 10}\label{classJSMin_ac2104a1ac3a1d438c01c88b7bfafd519}
+\hypertarget{classJSMin_acae1641c88dbf4928c4a3c5b2428065c}{}\index{J\+S\+Min@{J\+S\+Min}!O\+R\+D\+\_\+\+S\+P\+A\+C\+E@{O\+R\+D\+\_\+\+S\+P\+A\+C\+E}}
+\index{O\+R\+D\+\_\+\+S\+P\+A\+C\+E@{O\+R\+D\+\_\+\+S\+P\+A\+C\+E}!J\+S\+Min@{J\+S\+Min}}
+\subsubsection[{O\+R\+D\+\_\+\+S\+P\+A\+C\+E}]{\setlength{\rightskip}{0pt plus 5cm}const J\+S\+Min\+::\+O\+R\+D\+\_\+\+S\+P\+A\+C\+E = 32}\label{classJSMin_acae1641c88dbf4928c4a3c5b2428065c}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+web\+\_\+root/tina4/\hyperlink{Shape_8php}{Shape.\+php}\end{DoxyCompactItemize}

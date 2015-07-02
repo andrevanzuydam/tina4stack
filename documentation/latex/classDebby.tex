@@ -1,0 +1,643 @@
+\hypertarget{classDebby}{}\section{Debby Class Reference}
+\label{classDebby}\index{Debby@{Debby}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classDebby_a0480262858a16cfc6e4cfe19b0e29e62}{encode\+Image} (\$imagedata, \$imagestore=\char`\"{}imagestore\char`\"{}, \$size=\char`\"{}\char`\"{}, \$noimage=\char`\"{}/imagestore/noimage.\+jpg\char`\"{})
+\item 
+\hyperlink{classDebby_af57d83562218d3a4b5e1de2f75a24cf0}{embed\+Image} (\$raw\+Image)
+\item 
+\hyperlink{classDebby_a4f0f3450a38e497552248a570b395353}{to\+Array} ()
+\item 
+\hyperlink{classDebby_a07e4bf3f7c9fa77beb52a09a38e936c8}{to\+Request} (\$row, \$prefix=\char`\"{}\char`\"{})
+\item 
+\hyperlink{classDebby_acbb276a47dbcd64d671a673df43be15a}{last\+Error} ()
+\item 
+\hyperlink{classDebby_ae10ec43fb6945948e4c936d798cc3bb3}{get\+Last\+Error} ()
+\item 
+\hyperlink{classDebby_ab4c3e5d14a404d1fdd6bc4ab078d64b8}{get\+Page\+Template} (\$\hyperlink{Shape_8php_ad264ad0cabbe965bf7f7c8a5ed6abebb}{title}=\char`\"{}Default\char`\"{})
+\item 
+\hyperlink{classDebby_a4cf1bbf921e33fee254129eb77fa4854}{create\+Connection} ()
+\item 
+\hyperlink{classDebby_af1c5109d660051d5d1d2f8e88d776cea}{update\+Connection} ()
+\item 
+\hyperlink{classDebby_a2dd53fded0dd64090ac538ef66d15bf1}{\+\_\+\+\_\+construct} (\$dbpath=\char`\"{}\char`\"{}, \$username=\char`\"{}\char`\"{}, \$password=\char`\"{}\char`\"{}, \$dbtype=\char`\"{}sqlite\char`\"{}, \$outputdateformat=\char`\"{}Y\+Y\+Y\+Y-\/mm-\/\hyperlink{Shape_8php_ab8bded9253c481cadc72d4df086e52b7}{dd}\char`\"{}, \$tag=\char`\"{}D\+E\+B\char`\"{}, \$debug=false)
+\item 
+\hyperlink{classDebby_a9f4e15cca354aa036ac823884c69cb61}{connect} (\$dbpath=\char`\"{}\char`\"{}, \$username=\char`\"{}\char`\"{}, \$password=\char`\"{}\char`\"{}, \$dbtype=\char`\"{}sqlite\char`\"{}, \$outputdateformat=\char`\"{}Y\+Y\+Y\+Y-\/mm-\/\hyperlink{Shape_8php_ab8bded9253c481cadc72d4df086e52b7}{dd} h\+:i\+:s\char`\"{})
+\item 
+\hyperlink{classDebby_a06df5effa73c9b99f02d0fdeebecbf0f}{close} ()
+\item 
+\hyperlink{classDebby_ad97845c3825dd2a5c44a8dcfc6bfda65}{start\+Transaction} ()
+\item 
+\hyperlink{classDebby_acbf53661ff480214270460ed6c3c915f}{rollback\+Transaction} (\$handle)
+\item 
+\hyperlink{classDebby_a462573b994e1cd2bdbe58c43232187d3}{set\+Database} (\$dbname)
+\item 
+\hyperlink{classDebby_a84bc3c4e3d17a383ed9d52601307be51}{get\+Instance} (\$word, \$sql)
+\item 
+\hyperlink{classDebby_a158d8946c888e34ad361f91645c21084}{parse\+S\+Q\+L} (\$sql=\char`\"{}\char`\"{}, \$fromdbtype=\char`\"{}generic\char`\"{}, \$todbtype=\char`\"{}generic\char`\"{})
+\item 
+\hyperlink{classDebby_a6bb2e5dfb70e57d980b9141ac44d0899}{escape\+String} (\$data)
+\item 
+\hyperlink{classDebby_a3e22f5b7c5524ca41f92ed4cb4bb50ed}{set\+Params} (\$sql=\char`\"{}\char`\"{}, \$inputvalues=Array())
+\item 
+\hyperlink{classDebby_a246a7d5268c855f26ce31f4088ce56e9}{exec} (\$sql=\char`\"{}\char`\"{})
+\item 
+\hyperlink{classDebby_abd1a0612de8d8558a155fa40754fb2c6}{commit} (\$tran\+Id=null)
+\item 
+\hyperlink{classDebby_aafffcf8afae3d308853f4452cd09babe}{insert} (\$tablename, \$field\+Values)
+\item 
+\hyperlink{classDebby_a482145f057ea4b31d4414d0ea8997244}{update} (\$tablename, \$field\+Values, \$index\+Field\+Value)
+\item 
+\hyperlink{classDebby_a5d6fa243fcf4b98b0c7d295136a32d5e}{delete} (\$tablename, \$field\+Values)
+\item 
+\hyperlink{classDebby_ae9d2704d501f1950be4bf08e4aecc3e7}{get\+Error} ()
+\item 
+\hyperlink{classDebby_ac478861de694f44be2d1caceb24b42da}{get\+Data\+Type} (\$data)
+\item 
+\hyperlink{classDebby_a0f983cda85b634ae248dd528a605ce56}{get\+Rows} (\$sql=\char`\"{}\char`\"{}, \$rowtype=0, \$fetchblob=true, \$calculatedfields=array())
+\item 
+\hyperlink{classDebby_a869768fbe62f60229e62cfe2fce9f1e2}{translate\+Date} (\$\hyperlink{Shape_8php_a6210da308e7ce036a6362dca3018d6db}{input}, \$dbdateformat, \$outputdateformat)
+\item 
+\hyperlink{classDebby_a0c6292e7aae1a2161145246065dd206f}{get\+Blob} (\$column)
+\item 
+\hyperlink{classDebby_a6a77444ee8c09f53fa741ae96b33e55c}{set\+Blob} (\$tablename, \$column, \$blobvalue, \$filter=\char`\"{}fieldname = 0\char`\"{})
+\item 
+\hyperlink{classDebby_ad22b79682ec8b3d4802ed60968249fd6}{get\+Row} (\$sql=\char`\"{}\char`\"{}, \$id=0, \$rowtype=0, \$fetchblob=true)
+\item 
+\hyperlink{classDebby_ab7154d566317a9b0d9c2fbc9365b874f}{get\+Key\+Value} (\$sql=\char`\"{}\char`\"{})
+\item 
+\hyperlink{classDebby_a3db4be991273f352071c85ed7e0ba4ef}{get\+Database} ()
+\item 
+\hyperlink{classDebby_ad32fa25b945f492253439ed78641d469}{get\+Field\+Info} (\$sql=\char`\"{}\char`\"{})
+\item 
+\hyperlink{classDebby_a1659291aeee9847ff87329914a8ac695}{get\+Affected\+Rows} (\$sql=\char`\"{}\char`\"{})
+\item 
+\hyperlink{classDebby_ae3da5f2c30b39f32c11450f95a684613}{get\+Field\+By\+Name} (\$fieldname=\char`\"{}\char`\"{})
+\item 
+\hyperlink{classDebby_a2d73151aa881a7d42dcdf2cd4fd4f2d8}{get\+Random\+Id} (\$noofchars)
+\item 
+\hyperlink{classDebby_af7c384f77a1a616e70b936dd536e6657}{get\+Next\+Id} (\$tablename=\char`\"{}\char`\"{}, \$fieldname=\char`\"{}\char`\"{}, \$filter=\char`\"{}\char`\"{})
+\item 
+\hyperlink{classDebby_a40081a8f7b867ea5c145fd1a69312a5c}{get\+Table\+Exists} (\$tablename=\char`\"{}\char`\"{})
+\item 
+\hyperlink{classDebby_a9cb39569856f66218e9f0bd6271c4f64}{date\+To\+Db} (\$invalue)
+\item 
+\hyperlink{classDebby_a16d70533ec98b133bbedb916e7599176}{get\+Insert\+S\+Q\+L} (\$fieldprefix=\char`\"{}edt\char`\"{}, \$tablename=\char`\"{}\char`\"{}, \$primarykey=\char`\"{}\char`\"{}, \$genkey=true, \$requestvar=\char`\"{}\char`\"{}, \$passwordfields=\char`\"{}\char`\"{}, \$datefields=\char`\"{}\char`\"{}, \$\hyperlink{classDebby_a246a7d5268c855f26ce31f4088ce56e9}{exec}=false, \$arrayindex=0)
+\item 
+\hyperlink{classDebby_a243d5ab95ac9d5857be34a7db4eb6771}{run\+File\+Uploads} (\$fieldprefix=\char`\"{}edt\char`\"{}, \$tablename=\char`\"{}\char`\"{}, \$primarykey\+Value=0, \$primarykey=\char`\"{}I\+D\char`\"{})
+\item 
+\hyperlink{classDebby_a3361696a807a1f5a968db4cb6643c8d6}{get\+Update\+S\+Q\+L} (\$fieldprefix=\char`\"{}edt\char`\"{}, \$tablename=\char`\"{}\char`\"{}, \$primarykey=\char`\"{}\char`\"{}, \$index=\char`\"{}\char`\"{}, \$requestvar=\char`\"{}\char`\"{}, \$passwordfields=\char`\"{}\char`\"{}, \$datefields=\char`\"{}\char`\"{}, \$\hyperlink{classDebby_a246a7d5268c855f26ce31f4088ce56e9}{exec}=false, \$arrayindex=0)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classDebby_aa4930493a32523bb82bf4491e6e48f01}{\$dbh}
+\item 
+\hyperlink{classDebby_a0ac5d819d971fa898a2e88dc5991b008}{\$error}
+\item 
+\hyperlink{classDebby_a4697ceb97e707ab80ae2a215f932b58d}{\$dbtype} = \char`\"{}sqlite3\char`\"{}
+\item 
+\hyperlink{classDebby_a95c130458f29f6c7c240cdc93a071085}{\$dbpath} = \char`\"{}\char`\"{}
+\item 
+\hyperlink{classDebby_afffc183cbae8307150a838bf3a053ca8}{\$tmppath} = \char`\"{}/tmp/\char`\"{}
+\item 
+\hyperlink{classDebby_ae609a3e9058918214dbac27c36381323}{\$lastsql} = Array()
+\item 
+\hyperlink{classDebby_ab74aec371d05b763d7c8123b80621c3d}{\$lasterror} = Array()
+\item 
+\hyperlink{classDebby_a7ff78fa74f4b5822202b30a254600012}{\$debug} = false
+\item 
+\hyperlink{classDebby_ab409e48612acfcba8cf89743b45b4457}{\$affectedrows} = 0
+\item 
+\hyperlink{classDebby_a72634c1e21e0f68c5a69e6a1db478ff5}{\$nooffields} = 0
+\item 
+\hyperlink{classDebby_a7d54dc610647753b09fd501ee0b65f54}{\$fieldinfo}
+\item 
+\hyperlink{classDebby_a378b706b515617c9019b313136e4678c}{\$version} = \char`\"{}1.\+0\char`\"{}
+\item 
+\hyperlink{classDebby_a2f7e21b7f33e7ad7ea66a5f55ad7876a}{\$dbdateformat} = \char`\"{}Y\+Y\+Y\+Y-\/mm-\/\hyperlink{Shape_8php_ab8bded9253c481cadc72d4df086e52b7}{dd} h\+:i\+:s\char`\"{}
+\item 
+\hyperlink{classDebby_a708fea658eab39aad196703f8b8aaa18}{\$outputdateformat} = \char`\"{}dd/mm/Y\+Y\+Y\+Y\char`\"{}
+\item 
+\hyperlink{classDebby_a3e7f1fb2178543ff80e0ce7e7b85e528}{\$updatefieldinfo} = true
+\item 
+\hyperlink{classDebby_a462ad03fefee05b5f763469f8bb5abfc}{\$\+R\+A\+W\+R\+E\+S\+U\+L\+T}
+\item 
+\hyperlink{classDebby_af86fbd6343eccc180f84e816627a5a91}{\$lastrowid}
+\item 
+\hyperlink{classDebby_aaa503bfd657eddafff230f0d49da7cb1}{\$tag}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{classDebby}{Debby} is the database class
+
+\hyperlink{classDebby}{Debby} is for developers just beginning with P\+H\+P database development, it takes the differences between the P\+H\+P database implementations and makes it easy to work and switch between the databases. It also acts as the testing platform for the S\+Q\+L translation tool.
+
+\begin{DoxyAuthor}{Author}
+Andre van Zuydam \href{mailto:andre@xineoh.com}{\tt andre@xineoh.\+com} 
+\end{DoxyAuthor}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classDebby_a2dd53fded0dd64090ac538ef66d15bf1}{}\index{Debby@{Debby}!\+\_\+\+\_\+construct@{\+\_\+\+\_\+construct}}
+\index{\+\_\+\+\_\+construct@{\+\_\+\+\_\+construct}!Debby@{Debby}}
+\subsubsection[{\+\_\+\+\_\+construct}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::\+\_\+\+\_\+construct (
+\begin{DoxyParamCaption}
+\item[{}]{\$dbpath = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$username = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$password = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$dbtype = {\ttfamily \char`\"{}sqlite\char`\"{}}, }
+\item[{}]{\$outputdateformat = {\ttfamily \char`\"{}YYYY-\/mm-\/{\bf dd}\char`\"{}}, }
+\item[{}]{\$tag = {\ttfamily \char`\"{}DEB\char`\"{}}, }
+\item[{}]{\$debug = {\ttfamily false}}
+\end{DoxyParamCaption}
+)}\label{classDebby_a2dd53fded0dd64090ac538ef66d15bf1}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classDebby_a06df5effa73c9b99f02d0fdeebecbf0f}{}\index{Debby@{Debby}!close@{close}}
+\index{close@{close}!Debby@{Debby}}
+\subsubsection[{close}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::close (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classDebby_a06df5effa73c9b99f02d0fdeebecbf0f}
+B\+E\+G\+I\+N Close \hypertarget{classDebby_abd1a0612de8d8558a155fa40754fb2c6}{}\index{Debby@{Debby}!commit@{commit}}
+\index{commit@{commit}!Debby@{Debby}}
+\subsubsection[{commit}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::commit (
+\begin{DoxyParamCaption}
+\item[{}]{\$tran\+Id = {\ttfamily null}}
+\end{DoxyParamCaption}
+)}\label{classDebby_abd1a0612de8d8558a155fa40754fb2c6}
+\hypertarget{classDebby_a9f4e15cca354aa036ac823884c69cb61}{}\index{Debby@{Debby}!connect@{connect}}
+\index{connect@{connect}!Debby@{Debby}}
+\subsubsection[{connect}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::connect (
+\begin{DoxyParamCaption}
+\item[{}]{\$dbpath = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$username = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$password = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$dbtype = {\ttfamily \char`\"{}sqlite\char`\"{}}, }
+\item[{}]{\$outputdateformat = {\ttfamily \char`\"{}YYYY-\/mm-\/{\bf dd}~h\+:i\+:s\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classDebby_a9f4e15cca354aa036ac823884c69cb61}
+\hypertarget{classDebby_a4cf1bbf921e33fee254129eb77fa4854}{}\index{Debby@{Debby}!create\+Connection@{create\+Connection}}
+\index{create\+Connection@{create\+Connection}!Debby@{Debby}}
+\subsubsection[{create\+Connection}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::create\+Connection (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classDebby_a4cf1bbf921e33fee254129eb77fa4854}
+\hypertarget{classDebby_a9cb39569856f66218e9f0bd6271c4f64}{}\index{Debby@{Debby}!date\+To\+Db@{date\+To\+Db}}
+\index{date\+To\+Db@{date\+To\+Db}!Debby@{Debby}}
+\subsubsection[{date\+To\+Db}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::date\+To\+Db (
+\begin{DoxyParamCaption}
+\item[{}]{\$invalue}
+\end{DoxyParamCaption}
+)}\label{classDebby_a9cb39569856f66218e9f0bd6271c4f64}
+B\+E\+G\+I\+N Date to D\+B This function will format the date as needed by the database \hypertarget{classDebby_a5d6fa243fcf4b98b0c7d295136a32d5e}{}\index{Debby@{Debby}!delete@{delete}}
+\index{delete@{delete}!Debby@{Debby}}
+\subsubsection[{delete}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::delete (
+\begin{DoxyParamCaption}
+\item[{}]{\$tablename, }
+\item[{}]{\$field\+Values}
+\end{DoxyParamCaption}
+)}\label{classDebby_a5d6fa243fcf4b98b0c7d295136a32d5e}
+An easy way to write a delete statement and execute it immediatelly 
+\begin{DoxyParams}[1]{Parameters}
+String & {\em \$tablename} & Name of the table to run the delete on \\
+\hline
+Array & {\em \$field\+Values} & The fields to filter by, used in the where statement \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool Success or Failure 
+\end{DoxyReturn}
+\hypertarget{classDebby_af57d83562218d3a4b5e1de2f75a24cf0}{}\index{Debby@{Debby}!embed\+Image@{embed\+Image}}
+\index{embed\+Image@{embed\+Image}!Debby@{Debby}}
+\subsubsection[{embed\+Image}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::embed\+Image (
+\begin{DoxyParamCaption}
+\item[{}]{\$raw\+Image}
+\end{DoxyParamCaption}
+)}\label{classDebby_af57d83562218d3a4b5e1de2f75a24cf0}
+\hypertarget{classDebby_a0480262858a16cfc6e4cfe19b0e29e62}{}\index{Debby@{Debby}!encode\+Image@{encode\+Image}}
+\index{encode\+Image@{encode\+Image}!Debby@{Debby}}
+\subsubsection[{encode\+Image}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::encode\+Image (
+\begin{DoxyParamCaption}
+\item[{}]{\$imagedata, }
+\item[{}]{\$imagestore = {\ttfamily \char`\"{}imagestore\char`\"{}}, }
+\item[{}]{\$size = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$noimage = {\ttfamily \char`\"{}/imagestore/noimage.jpg\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classDebby_a0480262858a16cfc6e4cfe19b0e29e62}
+\hypertarget{classDebby_a6bb2e5dfb70e57d980b9141ac44d0899}{}\index{Debby@{Debby}!escape\+String@{escape\+String}}
+\index{escape\+String@{escape\+String}!Debby@{Debby}}
+\subsubsection[{escape\+String}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::escape\+String (
+\begin{DoxyParamCaption}
+\item[{}]{\$data}
+\end{DoxyParamCaption}
+)}\label{classDebby_a6bb2e5dfb70e57d980b9141ac44d0899}
+\hypertarget{classDebby_a246a7d5268c855f26ce31f4088ce56e9}{}\index{Debby@{Debby}!exec@{exec}}
+\index{exec@{exec}!Debby@{Debby}}
+\subsubsection[{exec}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::exec (
+\begin{DoxyParamCaption}
+\item[{}]{\$sql = {\ttfamily \char`\"{}\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classDebby_a246a7d5268c855f26ce31f4088ce56e9}
+\hypertarget{classDebby_a1659291aeee9847ff87329914a8ac695}{}\index{Debby@{Debby}!get\+Affected\+Rows@{get\+Affected\+Rows}}
+\index{get\+Affected\+Rows@{get\+Affected\+Rows}!Debby@{Debby}}
+\subsubsection[{get\+Affected\+Rows}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::get\+Affected\+Rows (
+\begin{DoxyParamCaption}
+\item[{}]{\$sql = {\ttfamily \char`\"{}\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classDebby_a1659291aeee9847ff87329914a8ac695}
+B\+E\+G\+I\+N Get Affected Rows Get the number of rows changed or retrieved by last S\+Q\+L \hypertarget{classDebby_a0c6292e7aae1a2161145246065dd206f}{}\index{Debby@{Debby}!get\+Blob@{get\+Blob}}
+\index{get\+Blob@{get\+Blob}!Debby@{Debby}}
+\subsubsection[{get\+Blob}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::get\+Blob (
+\begin{DoxyParamCaption}
+\item[{}]{\$column}
+\end{DoxyParamCaption}
+)}\label{classDebby_a0c6292e7aae1a2161145246065dd206f}
+\hypertarget{classDebby_a3db4be991273f352071c85ed7e0ba4ef}{}\index{Debby@{Debby}!get\+Database@{get\+Database}}
+\index{get\+Database@{get\+Database}!Debby@{Debby}}
+\subsubsection[{get\+Database}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::get\+Database (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classDebby_a3db4be991273f352071c85ed7e0ba4ef}
+\hypertarget{classDebby_ac478861de694f44be2d1caceb24b42da}{}\index{Debby@{Debby}!get\+Data\+Type@{get\+Data\+Type}}
+\index{get\+Data\+Type@{get\+Data\+Type}!Debby@{Debby}}
+\subsubsection[{get\+Data\+Type}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::get\+Data\+Type (
+\begin{DoxyParamCaption}
+\item[{}]{\$data}
+\end{DoxyParamCaption}
+)}\label{classDebby_ac478861de694f44be2d1caceb24b42da}
+\hypertarget{classDebby_ae9d2704d501f1950be4bf08e4aecc3e7}{}\index{Debby@{Debby}!get\+Error@{get\+Error}}
+\index{get\+Error@{get\+Error}!Debby@{Debby}}
+\subsubsection[{get\+Error}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::get\+Error (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classDebby_ae9d2704d501f1950be4bf08e4aecc3e7}
+\hypertarget{classDebby_ae3da5f2c30b39f32c11450f95a684613}{}\index{Debby@{Debby}!get\+Field\+By\+Name@{get\+Field\+By\+Name}}
+\index{get\+Field\+By\+Name@{get\+Field\+By\+Name}!Debby@{Debby}}
+\subsubsection[{get\+Field\+By\+Name}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::get\+Field\+By\+Name (
+\begin{DoxyParamCaption}
+\item[{}]{\$fieldname = {\ttfamily \char`\"{}\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classDebby_ae3da5f2c30b39f32c11450f95a684613}
+B\+E\+G\+I\+N Get Field Info By Name Get a fields info by name \hypertarget{classDebby_ad32fa25b945f492253439ed78641d469}{}\index{Debby@{Debby}!get\+Field\+Info@{get\+Field\+Info}}
+\index{get\+Field\+Info@{get\+Field\+Info}!Debby@{Debby}}
+\subsubsection[{get\+Field\+Info}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::get\+Field\+Info (
+\begin{DoxyParamCaption}
+\item[{}]{\$sql = {\ttfamily \char`\"{}\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classDebby_ad32fa25b945f492253439ed78641d469}
+\hypertarget{classDebby_a16d70533ec98b133bbedb916e7599176}{}\index{Debby@{Debby}!get\+Insert\+S\+Q\+L@{get\+Insert\+S\+Q\+L}}
+\index{get\+Insert\+S\+Q\+L@{get\+Insert\+S\+Q\+L}!Debby@{Debby}}
+\subsubsection[{get\+Insert\+S\+Q\+L}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::get\+Insert\+S\+Q\+L (
+\begin{DoxyParamCaption}
+\item[{}]{\$fieldprefix = {\ttfamily \char`\"{}edt\char`\"{}}, }
+\item[{}]{\$tablename = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$primarykey = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$genkey = {\ttfamily true}, }
+\item[{}]{\$requestvar = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$passwordfields = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$datefields = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$exec = {\ttfamily false}, }
+\item[{}]{\$arrayindex = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)}\label{classDebby_a16d70533ec98b133bbedb916e7599176}
+B\+E\+G\+I\+N Get Insert S\+Q\+L This function attempts to eliminate errors by creating the insert statements using prefixed input fields If you have a form with inputs prefixed with \char`\"{}txt\char`\"{} for example it will chop off the txt and make an insert statement Field names need to be in uppercase for better processing
+
+$<$form$>$ $<$input type=\char`\"{}text\char`\"{} name=\char`\"{}txt\+N\+A\+M\+E\char`\"{} value=\char`\"{}\+Andre\char`\"{}$>$ $<$input type=\char`\"{}text\char`\"{} name=\char`\"{}txt\+D\+A\+T\+E\char`\"{} value=\char`\"{}01/10/2010\char`\"{}$>$ $<$/form$>$ \hypertarget{classDebby_a84bc3c4e3d17a383ed9d52601307be51}{}\index{Debby@{Debby}!get\+Instance@{get\+Instance}}
+\index{get\+Instance@{get\+Instance}!Debby@{Debby}}
+\subsubsection[{get\+Instance}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::get\+Instance (
+\begin{DoxyParamCaption}
+\item[{}]{\$word, }
+\item[{}]{\$sql}
+\end{DoxyParamCaption}
+)}\label{classDebby_a84bc3c4e3d17a383ed9d52601307be51}
+\hypertarget{classDebby_ab7154d566317a9b0d9c2fbc9365b874f}{}\index{Debby@{Debby}!get\+Key\+Value@{get\+Key\+Value}}
+\index{get\+Key\+Value@{get\+Key\+Value}!Debby@{Debby}}
+\subsubsection[{get\+Key\+Value}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::get\+Key\+Value (
+\begin{DoxyParamCaption}
+\item[{}]{\$sql = {\ttfamily \char`\"{}\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classDebby_ab7154d566317a9b0d9c2fbc9365b874f}
+This function returns a value key pair of an sql statement based on 2 records. The first record retrieved will be the key and the second will be the value 
+\begin{DoxyParams}[1]{Parameters}
+type & {\em \$sql} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+type Array of Objects 
+\end{DoxyReturn}
+\hypertarget{classDebby_ae10ec43fb6945948e4c936d798cc3bb3}{}\index{Debby@{Debby}!get\+Last\+Error@{get\+Last\+Error}}
+\index{get\+Last\+Error@{get\+Last\+Error}!Debby@{Debby}}
+\subsubsection[{get\+Last\+Error}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::get\+Last\+Error (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classDebby_ae10ec43fb6945948e4c936d798cc3bb3}
+\hypertarget{classDebby_af7c384f77a1a616e70b936dd536e6657}{}\index{Debby@{Debby}!get\+Next\+Id@{get\+Next\+Id}}
+\index{get\+Next\+Id@{get\+Next\+Id}!Debby@{Debby}}
+\subsubsection[{get\+Next\+Id}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::get\+Next\+Id (
+\begin{DoxyParamCaption}
+\item[{}]{\$tablename = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$fieldname = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$filter = {\ttfamily \char`\"{}\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classDebby_af7c384f77a1a616e70b936dd536e6657}
+B\+E\+G\+I\+N Get Next I\+D Get the next id on a table by using the M\+A\+X function and adding 1 \hypertarget{classDebby_ab4c3e5d14a404d1fdd6bc4ab078d64b8}{}\index{Debby@{Debby}!get\+Page\+Template@{get\+Page\+Template}}
+\index{get\+Page\+Template@{get\+Page\+Template}!Debby@{Debby}}
+\subsubsection[{get\+Page\+Template}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::get\+Page\+Template (
+\begin{DoxyParamCaption}
+\item[{}]{\$title = {\ttfamily \char`\"{}Default\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classDebby_ab4c3e5d14a404d1fdd6bc4ab078d64b8}
+The default page template for maggy 
+\begin{DoxyParams}[1]{Parameters}
+type & {\em \$title} & String A title to name the page by \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+type Shape A page template with default bootstrap 
+\end{DoxyReturn}
+\hypertarget{classDebby_a2d73151aa881a7d42dcdf2cd4fd4f2d8}{}\index{Debby@{Debby}!get\+Random\+Id@{get\+Random\+Id}}
+\index{get\+Random\+Id@{get\+Random\+Id}!Debby@{Debby}}
+\subsubsection[{get\+Random\+Id}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::get\+Random\+Id (
+\begin{DoxyParamCaption}
+\item[{}]{\$noofchars}
+\end{DoxyParamCaption}
+)}\label{classDebby_a2d73151aa881a7d42dcdf2cd4fd4f2d8}
+B\+E\+G\+I\+N Get Random I\+D Get a random id function and adding 1 \hypertarget{classDebby_ad22b79682ec8b3d4802ed60968249fd6}{}\index{Debby@{Debby}!get\+Row@{get\+Row}}
+\index{get\+Row@{get\+Row}!Debby@{Debby}}
+\subsubsection[{get\+Row}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::get\+Row (
+\begin{DoxyParamCaption}
+\item[{}]{\$sql = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$id = {\ttfamily 0}, }
+\item[{}]{\$rowtype = {\ttfamily 0}, }
+\item[{}]{\$fetchblob = {\ttfamily true}}
+\end{DoxyParamCaption}
+)}\label{classDebby_ad22b79682ec8b3d4802ed60968249fd6}
+\hypertarget{classDebby_a0f983cda85b634ae248dd528a605ce56}{}\index{Debby@{Debby}!get\+Rows@{get\+Rows}}
+\index{get\+Rows@{get\+Rows}!Debby@{Debby}}
+\subsubsection[{get\+Rows}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::get\+Rows (
+\begin{DoxyParamCaption}
+\item[{}]{\$sql = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$rowtype = {\ttfamily 0}, }
+\item[{}]{\$fetchblob = {\ttfamily true}, }
+\item[{}]{\$calculatedfields = {\ttfamily array()}}
+\end{DoxyParamCaption}
+)}\label{classDebby_a0f983cda85b634ae248dd528a605ce56}
+\hypertarget{classDebby_a40081a8f7b867ea5c145fd1a69312a5c}{}\index{Debby@{Debby}!get\+Table\+Exists@{get\+Table\+Exists}}
+\index{get\+Table\+Exists@{get\+Table\+Exists}!Debby@{Debby}}
+\subsubsection[{get\+Table\+Exists}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::get\+Table\+Exists (
+\begin{DoxyParamCaption}
+\item[{}]{\$tablename = {\ttfamily \char`\"{}\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classDebby_a40081a8f7b867ea5c145fd1a69312a5c}
+B\+E\+G\+I\+N get\+\_\+table\+\_\+exists() See if a certain table exists \hypertarget{classDebby_a3361696a807a1f5a968db4cb6643c8d6}{}\index{Debby@{Debby}!get\+Update\+S\+Q\+L@{get\+Update\+S\+Q\+L}}
+\index{get\+Update\+S\+Q\+L@{get\+Update\+S\+Q\+L}!Debby@{Debby}}
+\subsubsection[{get\+Update\+S\+Q\+L}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::get\+Update\+S\+Q\+L (
+\begin{DoxyParamCaption}
+\item[{}]{\$fieldprefix = {\ttfamily \char`\"{}edt\char`\"{}}, }
+\item[{}]{\$tablename = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$primarykey = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$index = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$requestvar = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$passwordfields = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$datefields = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$exec = {\ttfamily false}, }
+\item[{}]{\$arrayindex = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)}\label{classDebby_a3361696a807a1f5a968db4cb6643c8d6}
+B\+E\+G\+I\+N Get Update S\+Q\+L This function attempts to eliminate errors by creating the update statements using prefixed input fields If you have a form with inputs prefixed with \char`\"{}txt\char`\"{} for example it will chop off the txt and make an update statement Field names need to be in uppercase for better processing
+
+$<$form$>$ $<$input type=\char`\"{}text\char`\"{} name=\char`\"{}txt\+N\+A\+M\+E\char`\"{} value=\char`\"{}\+Andre\char`\"{}$>$ $<$input type=\char`\"{}text\char`\"{} name=\char`\"{}txt\+D\+A\+T\+E\char`\"{} value=\char`\"{}01/10/2010\char`\"{}$>$ $<$/form$>$ \hypertarget{classDebby_aafffcf8afae3d308853f4452cd09babe}{}\index{Debby@{Debby}!insert@{insert}}
+\index{insert@{insert}!Debby@{Debby}}
+\subsubsection[{insert}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::insert (
+\begin{DoxyParamCaption}
+\item[{}]{\$tablename, }
+\item[{}]{\$field\+Values}
+\end{DoxyParamCaption}
+)}\label{classDebby_aafffcf8afae3d308853f4452cd09babe}
+Create insert statement and run it 
+\begin{DoxyParams}[1]{Parameters}
+type & {\em \$tablename} & Table name \\
+\hline
+type & {\em \$field\+Values} & Array value pairs \mbox{[}\char`\"{}field\char`\"{} =$>$ \char`\"{}value\char`\"{}\mbox{]} \\
+\hline
+\end{DoxyParams}
+\hypertarget{classDebby_acbb276a47dbcd64d671a673df43be15a}{}\index{Debby@{Debby}!last\+Error@{last\+Error}}
+\index{last\+Error@{last\+Error}!Debby@{Debby}}
+\subsubsection[{last\+Error}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::last\+Error (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classDebby_acbb276a47dbcd64d671a673df43be15a}
+\hypertarget{classDebby_a158d8946c888e34ad361f91645c21084}{}\index{Debby@{Debby}!parse\+S\+Q\+L@{parse\+S\+Q\+L}}
+\index{parse\+S\+Q\+L@{parse\+S\+Q\+L}!Debby@{Debby}}
+\subsubsection[{parse\+S\+Q\+L}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::parse\+S\+Q\+L (
+\begin{DoxyParamCaption}
+\item[{}]{\$sql = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$fromdbtype = {\ttfamily \char`\"{}generic\char`\"{}}, }
+\item[{}]{\$todbtype = {\ttfamily \char`\"{}generic\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classDebby_a158d8946c888e34ad361f91645c21084}
+\hypertarget{classDebby_acbf53661ff480214270460ed6c3c915f}{}\index{Debby@{Debby}!rollback\+Transaction@{rollback\+Transaction}}
+\index{rollback\+Transaction@{rollback\+Transaction}!Debby@{Debby}}
+\subsubsection[{rollback\+Transaction}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::rollback\+Transaction (
+\begin{DoxyParamCaption}
+\item[{}]{\$handle}
+\end{DoxyParamCaption}
+)}\label{classDebby_acbf53661ff480214270460ed6c3c915f}
+Rollback Transaction
+
+This starts a transaction if you database engine supports it and returns the transaction id The returned transaction id can be used for rolling back a transaction
+
+\begin{DoxyReturn}{Returns}
+Pointer A transaction id pointing to the transaction 
+\end{DoxyReturn}
+\hypertarget{classDebby_a243d5ab95ac9d5857be34a7db4eb6771}{}\index{Debby@{Debby}!run\+File\+Uploads@{run\+File\+Uploads}}
+\index{run\+File\+Uploads@{run\+File\+Uploads}!Debby@{Debby}}
+\subsubsection[{run\+File\+Uploads}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::run\+File\+Uploads (
+\begin{DoxyParamCaption}
+\item[{}]{\$fieldprefix = {\ttfamily \char`\"{}edt\char`\"{}}, }
+\item[{}]{\$tablename = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$primarykey\+Value = {\ttfamily 0}, }
+\item[{}]{\$primarykey = {\ttfamily \char`\"{}ID\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classDebby_a243d5ab95ac9d5857be34a7db4eb6771}
+Function to upload files based on prefixes and column names
+
+
+\begin{DoxyParams}[1]{Parameters}
+String & {\em \$fieldprefix} & The prefix of the form input -\/ example txt\+F\+I\+L\+E \\
+\hline
+String & {\em \$tablename} & The name of the table in the database \\
+\hline
+String & {\em \$primarykey\+Value} & The value of the index in the table \\
+\hline
+String & {\em \$primarykey} & The name of the index field of the table \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+boolean Returns true every time 
+\end{DoxyReturn}
+\hypertarget{classDebby_a6a77444ee8c09f53fa741ae96b33e55c}{}\index{Debby@{Debby}!set\+Blob@{set\+Blob}}
+\index{set\+Blob@{set\+Blob}!Debby@{Debby}}
+\subsubsection[{set\+Blob}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::set\+Blob (
+\begin{DoxyParamCaption}
+\item[{}]{\$tablename, }
+\item[{}]{\$column, }
+\item[{}]{\$blobvalue, }
+\item[{}]{\$filter = {\ttfamily \char`\"{}fieldname~=~0\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classDebby_a6a77444ee8c09f53fa741ae96b33e55c}
+\hypertarget{classDebby_a462573b994e1cd2bdbe58c43232187d3}{}\index{Debby@{Debby}!set\+Database@{set\+Database}}
+\index{set\+Database@{set\+Database}!Debby@{Debby}}
+\subsubsection[{set\+Database}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::set\+Database (
+\begin{DoxyParamCaption}
+\item[{}]{\$dbname}
+\end{DoxyParamCaption}
+)}\label{classDebby_a462573b994e1cd2bdbe58c43232187d3}
+B\+E\+G\+I\+N set\+\_\+database
+
+This is more for a M\+Y\+S\+Q\+L type database where you can choose a different database once a connection has been made \hypertarget{classDebby_a3e22f5b7c5524ca41f92ed4cb4bb50ed}{}\index{Debby@{Debby}!set\+Params@{set\+Params}}
+\index{set\+Params@{set\+Params}!Debby@{Debby}}
+\subsubsection[{set\+Params}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::set\+Params (
+\begin{DoxyParamCaption}
+\item[{}]{\$sql = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$inputvalues = {\ttfamily Array()}}
+\end{DoxyParamCaption}
+)}\label{classDebby_a3e22f5b7c5524ca41f92ed4cb4bb50ed}
+\hypertarget{classDebby_ad97845c3825dd2a5c44a8dcfc6bfda65}{}\index{Debby@{Debby}!start\+Transaction@{start\+Transaction}}
+\index{start\+Transaction@{start\+Transaction}!Debby@{Debby}}
+\subsubsection[{start\+Transaction}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::start\+Transaction (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classDebby_ad97845c3825dd2a5c44a8dcfc6bfda65}
+Start Transaction
+
+This starts a transaction if you database engine supports it and returns the transaction id The returned transaction id can be used for rolling back a transaction
+
+\begin{DoxyReturn}{Returns}
+Pointer A transaction id pointing to the transaction 
+\end{DoxyReturn}
+\hypertarget{classDebby_a4f0f3450a38e497552248a570b395353}{}\index{Debby@{Debby}!to\+Array@{to\+Array}}
+\index{to\+Array@{to\+Array}!Debby@{Debby}}
+\subsubsection[{to\+Array}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::to\+Array (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classDebby_a4f0f3450a38e497552248a570b395353}
+\hypertarget{classDebby_a07e4bf3f7c9fa77beb52a09a38e936c8}{}\index{Debby@{Debby}!to\+Request@{to\+Request}}
+\index{to\+Request@{to\+Request}!Debby@{Debby}}
+\subsubsection[{to\+Request}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::to\+Request (
+\begin{DoxyParamCaption}
+\item[{}]{\$row, }
+\item[{}]{\$prefix = {\ttfamily \char`\"{}\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classDebby_a07e4bf3f7c9fa77beb52a09a38e936c8}
+\hypertarget{classDebby_a869768fbe62f60229e62cfe2fce9f1e2}{}\index{Debby@{Debby}!translate\+Date@{translate\+Date}}
+\index{translate\+Date@{translate\+Date}!Debby@{Debby}}
+\subsubsection[{translate\+Date}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::translate\+Date (
+\begin{DoxyParamCaption}
+\item[{}]{\$input, }
+\item[{}]{\$dbdateformat, }
+\item[{}]{\$outputdateformat}
+\end{DoxyParamCaption}
+)}\label{classDebby_a869768fbe62f60229e62cfe2fce9f1e2}
+\hypertarget{classDebby_a482145f057ea4b31d4414d0ea8997244}{}\index{Debby@{Debby}!update@{update}}
+\index{update@{update}!Debby@{Debby}}
+\subsubsection[{update}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::update (
+\begin{DoxyParamCaption}
+\item[{}]{\$tablename, }
+\item[{}]{\$field\+Values, }
+\item[{}]{\$index\+Field\+Value}
+\end{DoxyParamCaption}
+)}\label{classDebby_a482145f057ea4b31d4414d0ea8997244}
+Create update statement and run it 
+\begin{DoxyParams}[1]{Parameters}
+type & {\em \$tablename} & Table name \\
+\hline
+type & {\em \$field\+Values} & Array value pairs \mbox{[}\char`\"{}field\char`\"{} =$>$ \char`\"{}value\char`\"{}\mbox{]} \\
+\hline
+type & {\em \$index\+Field\+Value} & Array \mbox{[}\char`\"{}index\char`\"{} =$>$ \char`\"{}value\char`\"{}\mbox{]} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000002}{Todo}]prevent updating if index\+Field\+Value is empty \end{DoxyRefDesc}
+\hypertarget{classDebby_af1c5109d660051d5d1d2f8e88d776cea}{}\index{Debby@{Debby}!update\+Connection@{update\+Connection}}
+\index{update\+Connection@{update\+Connection}!Debby@{Debby}}
+\subsubsection[{update\+Connection}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::update\+Connection (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classDebby_af1c5109d660051d5d1d2f8e88d776cea}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classDebby_ab409e48612acfcba8cf89743b45b4457}{}\index{Debby@{Debby}!\$affectedrows@{\$affectedrows}}
+\index{\$affectedrows@{\$affectedrows}!Debby@{Debby}}
+\subsubsection[{\$affectedrows}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::\$affectedrows = 0}\label{classDebby_ab409e48612acfcba8cf89743b45b4457}
+\hypertarget{classDebby_a2f7e21b7f33e7ad7ea66a5f55ad7876a}{}\index{Debby@{Debby}!\$dbdateformat@{\$dbdateformat}}
+\index{\$dbdateformat@{\$dbdateformat}!Debby@{Debby}}
+\subsubsection[{\$dbdateformat}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::\$dbdateformat = \char`\"{}Y\+Y\+Y\+Y-\/mm-\/{\bf dd} h\+:i\+:s\char`\"{}}\label{classDebby_a2f7e21b7f33e7ad7ea66a5f55ad7876a}
+\hypertarget{classDebby_aa4930493a32523bb82bf4491e6e48f01}{}\index{Debby@{Debby}!\$dbh@{\$dbh}}
+\index{\$dbh@{\$dbh}!Debby@{Debby}}
+\subsubsection[{\$dbh}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::\$dbh}\label{classDebby_aa4930493a32523bb82bf4491e6e48f01}
+\hypertarget{classDebby_a95c130458f29f6c7c240cdc93a071085}{}\index{Debby@{Debby}!\$dbpath@{\$dbpath}}
+\index{\$dbpath@{\$dbpath}!Debby@{Debby}}
+\subsubsection[{\$dbpath}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::\$dbpath = \char`\"{}\char`\"{}}\label{classDebby_a95c130458f29f6c7c240cdc93a071085}
+\hypertarget{classDebby_a4697ceb97e707ab80ae2a215f932b58d}{}\index{Debby@{Debby}!\$dbtype@{\$dbtype}}
+\index{\$dbtype@{\$dbtype}!Debby@{Debby}}
+\subsubsection[{\$dbtype}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::\$dbtype = \char`\"{}sqlite3\char`\"{}}\label{classDebby_a4697ceb97e707ab80ae2a215f932b58d}
+\hypertarget{classDebby_a7ff78fa74f4b5822202b30a254600012}{}\index{Debby@{Debby}!\$debug@{\$debug}}
+\index{\$debug@{\$debug}!Debby@{Debby}}
+\subsubsection[{\$debug}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::\$debug = false}\label{classDebby_a7ff78fa74f4b5822202b30a254600012}
+\hypertarget{classDebby_a0ac5d819d971fa898a2e88dc5991b008}{}\index{Debby@{Debby}!\$error@{\$error}}
+\index{\$error@{\$error}!Debby@{Debby}}
+\subsubsection[{\$error}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::\$error}\label{classDebby_a0ac5d819d971fa898a2e88dc5991b008}
+\hypertarget{classDebby_a7d54dc610647753b09fd501ee0b65f54}{}\index{Debby@{Debby}!\$fieldinfo@{\$fieldinfo}}
+\index{\$fieldinfo@{\$fieldinfo}!Debby@{Debby}}
+\subsubsection[{\$fieldinfo}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::\$fieldinfo}\label{classDebby_a7d54dc610647753b09fd501ee0b65f54}
+\hypertarget{classDebby_ab74aec371d05b763d7c8123b80621c3d}{}\index{Debby@{Debby}!\$lasterror@{\$lasterror}}
+\index{\$lasterror@{\$lasterror}!Debby@{Debby}}
+\subsubsection[{\$lasterror}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::\$lasterror = Array()}\label{classDebby_ab74aec371d05b763d7c8123b80621c3d}
+\hypertarget{classDebby_af86fbd6343eccc180f84e816627a5a91}{}\index{Debby@{Debby}!\$lastrowid@{\$lastrowid}}
+\index{\$lastrowid@{\$lastrowid}!Debby@{Debby}}
+\subsubsection[{\$lastrowid}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::\$lastrowid}\label{classDebby_af86fbd6343eccc180f84e816627a5a91}
+\hypertarget{classDebby_ae609a3e9058918214dbac27c36381323}{}\index{Debby@{Debby}!\$lastsql@{\$lastsql}}
+\index{\$lastsql@{\$lastsql}!Debby@{Debby}}
+\subsubsection[{\$lastsql}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::\$lastsql = Array()}\label{classDebby_ae609a3e9058918214dbac27c36381323}
+\hypertarget{classDebby_a72634c1e21e0f68c5a69e6a1db478ff5}{}\index{Debby@{Debby}!\$nooffields@{\$nooffields}}
+\index{\$nooffields@{\$nooffields}!Debby@{Debby}}
+\subsubsection[{\$nooffields}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::\$nooffields = 0}\label{classDebby_a72634c1e21e0f68c5a69e6a1db478ff5}
+\hypertarget{classDebby_a708fea658eab39aad196703f8b8aaa18}{}\index{Debby@{Debby}!\$outputdateformat@{\$outputdateformat}}
+\index{\$outputdateformat@{\$outputdateformat}!Debby@{Debby}}
+\subsubsection[{\$outputdateformat}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::\$outputdateformat = \char`\"{}dd/mm/Y\+Y\+Y\+Y\char`\"{}}\label{classDebby_a708fea658eab39aad196703f8b8aaa18}
+\hypertarget{classDebby_a462ad03fefee05b5f763469f8bb5abfc}{}\index{Debby@{Debby}!\$\+R\+A\+W\+R\+E\+S\+U\+L\+T@{\$\+R\+A\+W\+R\+E\+S\+U\+L\+T}}
+\index{\$\+R\+A\+W\+R\+E\+S\+U\+L\+T@{\$\+R\+A\+W\+R\+E\+S\+U\+L\+T}!Debby@{Debby}}
+\subsubsection[{\$\+R\+A\+W\+R\+E\+S\+U\+L\+T}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::\$\+R\+A\+W\+R\+E\+S\+U\+L\+T}\label{classDebby_a462ad03fefee05b5f763469f8bb5abfc}
+\hypertarget{classDebby_aaa503bfd657eddafff230f0d49da7cb1}{}\index{Debby@{Debby}!\$tag@{\$tag}}
+\index{\$tag@{\$tag}!Debby@{Debby}}
+\subsubsection[{\$tag}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::\$tag}\label{classDebby_aaa503bfd657eddafff230f0d49da7cb1}
+\hypertarget{classDebby_afffc183cbae8307150a838bf3a053ca8}{}\index{Debby@{Debby}!\$tmppath@{\$tmppath}}
+\index{\$tmppath@{\$tmppath}!Debby@{Debby}}
+\subsubsection[{\$tmppath}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::\$tmppath = \char`\"{}/tmp/\char`\"{}}\label{classDebby_afffc183cbae8307150a838bf3a053ca8}
+\hypertarget{classDebby_a3e7f1fb2178543ff80e0ce7e7b85e528}{}\index{Debby@{Debby}!\$updatefieldinfo@{\$updatefieldinfo}}
+\index{\$updatefieldinfo@{\$updatefieldinfo}!Debby@{Debby}}
+\subsubsection[{\$updatefieldinfo}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::\$updatefieldinfo = true}\label{classDebby_a3e7f1fb2178543ff80e0ce7e7b85e528}
+\hypertarget{classDebby_a378b706b515617c9019b313136e4678c}{}\index{Debby@{Debby}!\$version@{\$version}}
+\index{\$version@{\$version}!Debby@{Debby}}
+\subsubsection[{\$version}]{\setlength{\rightskip}{0pt plus 5cm}Debby\+::\$version = \char`\"{}1.\+0\char`\"{}}\label{classDebby_a378b706b515617c9019b313136e4678c}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+web\+\_\+root/tina4/\hyperlink{Debby_8php}{Debby.\+php}\end{DoxyCompactItemize}

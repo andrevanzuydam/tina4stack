@@ -1,0 +1,131 @@
+\hypertarget{classEmma}{}\section{Emma Class Reference}
+\label{classEmma}\index{Emma@{Emma}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classEmma_a41ce44cec1c4b79421b8fe2f0c9dc6b6}{\+\_\+\+\_\+construct} (\$bulk\+S\+M\+S\+Username=\char`\"{}\char`\"{}, \$bulk\+S\+M\+S\+Password=\char`\"{}\char`\"{})
+\item 
+\hyperlink{classEmma_ada88e77bd691cedb6e8ba447d62761f1}{send\+Mail} (\$recipient, \$subject, \$\hyperlink{Tessa_8php_a37ab31c170417027f819bfc053d7cd39}{message}, \$from\+Name, \$from\+Address, \$attachments=null)
+\item 
+\hyperlink{classEmma_ac39507bf1f8d7fd5d5120d2f46910df1}{prepare\+Html\+Mail} (\$\hyperlink{Shape_8php_a8b267aa0adca2018097f6f6f4c804d46}{html}, \$eol, \$boundary\+\_\+rel, \$boundary\+\_\+alt)
+\item 
+\hyperlink{classEmma_a7430964a12c547127331eaf2c8fd3a37}{format\+Mobile} (\$celno, \$country\+Prefix=\char`\"{}27\char`\"{})
+\item 
+\hyperlink{classEmma_adc96eb73ee69ddd33531cd0255ec5c07}{send\+S\+M\+S} (\$mobileno, \$\hyperlink{Tessa_8php_a37ab31c170417027f819bfc053d7cd39}{message}=\char`\"{}\char`\"{}, \$country\+Prefix=\char`\"{}27\char`\"{})
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{classEmma}{Emma} is part of the Tina4 stack which allows you to easily send emails from your system without crazy configuration, emma can also read emails from an inbox you may have \begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000003}{Todo}]Add the ability to parse email addresses\end{DoxyRefDesc}
+
+
+\begin{DoxyAuthor}{Author}
+Andre van Zuydam \href{mailto:andre@xineoh.com}{\tt andre@xineoh.\+com}  G\+P\+L  \href{http://opensource.org/licenses/gpl-license.php}{\tt http\+://opensource.\+org/licenses/gpl-\/license.\+php} G\+N\+U Public License 
+\end{DoxyAuthor}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classEmma_a41ce44cec1c4b79421b8fe2f0c9dc6b6}{}\index{Emma@{Emma}!\+\_\+\+\_\+construct@{\+\_\+\+\_\+construct}}
+\index{\+\_\+\+\_\+construct@{\+\_\+\+\_\+construct}!Emma@{Emma}}
+\subsubsection[{\+\_\+\+\_\+construct}]{\setlength{\rightskip}{0pt plus 5cm}Emma\+::\+\_\+\+\_\+construct (
+\begin{DoxyParamCaption}
+\item[{}]{\$bulk\+S\+M\+S\+Username = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$bulk\+S\+M\+S\+Password = {\ttfamily \char`\"{}\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classEmma_a41ce44cec1c4b79421b8fe2f0c9dc6b6}
+Constructor for \hyperlink{classEmma}{Emma}
+
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000004}{Todo}]Add the ability to talk to a specific email server \end{DoxyRefDesc}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classEmma_a7430964a12c547127331eaf2c8fd3a37}{}\index{Emma@{Emma}!format\+Mobile@{format\+Mobile}}
+\index{format\+Mobile@{format\+Mobile}!Emma@{Emma}}
+\subsubsection[{format\+Mobile}]{\setlength{\rightskip}{0pt plus 5cm}Emma\+::format\+Mobile (
+\begin{DoxyParamCaption}
+\item[{}]{\$celno, }
+\item[{}]{\$country\+Prefix = {\ttfamily \char`\"{}27\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classEmma_a7430964a12c547127331eaf2c8fd3a37}
+Format the Mobile Number 
+\begin{DoxyParams}[1]{Parameters}
+String & {\em \$celno} & Mobile number to send with \\
+\hline
+String & {\em \$country\+Prefix} & 1 -\/ america, 27 -\/ south africa \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+string 
+\end{DoxyReturn}
+\hypertarget{classEmma_ac39507bf1f8d7fd5d5120d2f46910df1}{}\index{Emma@{Emma}!prepare\+Html\+Mail@{prepare\+Html\+Mail}}
+\index{prepare\+Html\+Mail@{prepare\+Html\+Mail}!Emma@{Emma}}
+\subsubsection[{prepare\+Html\+Mail}]{\setlength{\rightskip}{0pt plus 5cm}Emma\+::prepare\+Html\+Mail (
+\begin{DoxyParamCaption}
+\item[{}]{\$html, }
+\item[{}]{\$eol, }
+\item[{}]{\$boundary\+\_\+rel, }
+\item[{}]{\$boundary\+\_\+alt}
+\end{DoxyParamCaption}
+)}\label{classEmma_ac39507bf1f8d7fd5d5120d2f46910df1}
+\hypertarget{classEmma_ada88e77bd691cedb6e8ba447d62761f1}{}\index{Emma@{Emma}!send\+Mail@{send\+Mail}}
+\index{send\+Mail@{send\+Mail}!Emma@{Emma}}
+\subsubsection[{send\+Mail}]{\setlength{\rightskip}{0pt plus 5cm}Emma\+::send\+Mail (
+\begin{DoxyParamCaption}
+\item[{}]{\$recipient, }
+\item[{}]{\$subject, }
+\item[{}]{\$message, }
+\item[{}]{\$from\+Name, }
+\item[{}]{\$from\+Address, }
+\item[{}]{\$attachments = {\ttfamily null}}
+\end{DoxyParamCaption}
+)}\label{classEmma_ada88e77bd691cedb6e8ba447d62761f1}
+A function that will send a confirmation email to the user.
+
+The send\+Mail function takes on a number of params and sends and email to a receipient.
+
+
+\begin{DoxyParams}[1]{Parameters}
+String & {\em \$recipient} & This can be a String or Array, the Array should be ; delimited \\
+\hline
+String & {\em \$subject} & The subject for the email \\
+\hline
+String & {\em \$message} & The message to send to the Receipient \\
+\hline
+String & {\em \$from\+Name} & The name of the person sending the message \\
+\hline
+String & {\em \$from\+Address} & The address of the person sending the message \\
+\hline
+String & {\em \$attachments} & An Array of file paths to be attached in the form array ( array( \char`\"{}filename\char`\"{}, \char`\"{}path\char`\"{} ) ) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+String O\+K or Failed 
+\end{DoxyReturn}
+\hypertarget{classEmma_adc96eb73ee69ddd33531cd0255ec5c07}{}\index{Emma@{Emma}!send\+S\+M\+S@{send\+S\+M\+S}}
+\index{send\+S\+M\+S@{send\+S\+M\+S}!Emma@{Emma}}
+\subsubsection[{send\+S\+M\+S}]{\setlength{\rightskip}{0pt plus 5cm}Emma\+::send\+S\+M\+S (
+\begin{DoxyParamCaption}
+\item[{}]{\$mobileno, }
+\item[{}]{\$message = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$country\+Prefix = {\ttfamily \char`\"{}27\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classEmma_adc96eb73ee69ddd33531cd0255ec5c07}
+Send S\+M\+S 
+\begin{DoxyParams}[1]{Parameters}
+String & {\em \$mobileno} & \\
+\hline
+String & {\em \$message} & \\
+\hline
+String & {\em \$country\+Prefix} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+String Result of S\+M\+S send 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+web\+\_\+root/tina4/\hyperlink{Emma_8php}{Emma.\+php}\end{DoxyCompactItemize}

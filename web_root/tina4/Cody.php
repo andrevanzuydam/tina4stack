@@ -58,11 +58,11 @@ class Cody {
         
     }
     
-    function bootStrapInput($name = "text", $caption = "Label", $placeHolder = "", $defaultValue = "", $type = "text", $colWidth="col-md-12" , $options = "", $step = 1) {
+    function bootStrapInput($name = "text", $caption = "Label", $placeHolder = "", $defaultValue = "", $type = "text", $required = "required", $colWidth="col-md-12" , $options = "", $step = 1) {
         $display = "";
         $onchange = "";
         $script = "";
-        $attributes = ["class" => "form-control", "id" => $name, "name" => $name, "placeholder" => $placeHolder, "type" => $type, "value" => $defaultValue, "required", "onchange" => $onchange];
+        $attributes = ["class" => "form-control", "id" => $name, "name" => $name, "placeholder" => $placeHolder, "type" => $type, "value" => $defaultValue, $required, "onchange" => $onchange];
 
 
         $hidden = "";

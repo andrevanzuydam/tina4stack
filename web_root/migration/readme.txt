@@ -1,1 +1,0 @@
-Use this folder for your database migrations

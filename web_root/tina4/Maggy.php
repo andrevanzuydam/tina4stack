@@ -56,7 +56,8 @@ class Maggy {
         $this->migrationPath = $migrationPath;
 
         if (empty($database["TINA4_MAGGY"]) && empty($database["tina4_maggy"])) {
-            echo "Maggy: I need to create a migration table because it doesn't exist \n";
+            echo ((new Cody())->bootStrapAlert("success", $caption="Success", "Maggy: I need to create a migration table because it doesn't exist \n"));  
+            
             $this->DEB->exec("create table tina4_maggy ("
                     . "migration_id varchar (14) not null,"
                     . "description varchar (1000) default '',"
@@ -102,15 +103,16 @@ class Maggy {
                     
                 );
         
+        if (!empty(Ruth::getSESSION("maggyCreateMessage"))) {
+           $html->addContent ((new Cody())->bootStrapAlert("success", $caption="Success", Ruth::getSESSION("maggyCreateMessage")));  
+           Ruth::setSESSION("maggyCreateMessage", null);
+        }
               
         $form = (new Cody())->bootStrapPanel("Create Migration", $form);
         
         $html->addContent ($form);
         
-        if (!empty(Ruth::getSESSION("maggyCreateMessage"))) {
-           $html->addContent ((new Cody())->bootStrapAlert("success", $caption="Success", Ruth::getSESSION("maggyCreateMessage")));  
-           Ruth::setSESSION("maggyCreateMessage", null);
-        }
+      
         
         return $html;
     }

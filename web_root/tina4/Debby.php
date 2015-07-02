@@ -255,23 +255,56 @@ class Debby {
     
     
     function createConnection() {
+        $dbElements = ["sqlite3" => "SQLite3",
+                       "mysql" => "MySQL",
+                       "firebird" => "Firebird",
+                       "mssql" => "MSSQL",
+                       "postgres" => "PostgreSQL",
+                      ];
+        
+        $dateFormat = [ "mm/dd/YYYY" => "mm/dd/YYYY",
+                        "dd/mm/YYYY" => "dd/mm/YYYY",
+                        "YYYY-mm-dd" => "YYYY-mm-dd"
+                      ];
+        
         $html = $this->getPageTemplate("Create Database Connection");
         $form = form (["class" => "form-group", "method" => "post",  "enctype" => "multipart/form-data"], 
                     (new Cody())->bootStrapInput("txtNAME", $caption = "Connection Name", $placeHolder = "Connection Name", $defaultValue = "connection"),
+                    (new Cody())->bootStrapInput("txtALIAS", $caption = "Connection Alias (DEB)", $placeHolder = "Connection Alias", $defaultValue = "DEB"),
+                    (new Cody())->bootStrapLookup ("txtDBTYPE", $caption = "Database Type", $dbElements , $defaultValue = "sqlite3"),
                     (new Cody())->bootStrapInput("txtDBPATH", $caption = "Database Path", $placeHolder = "hostname:dbname_dbpath", $defaultValue = ""),
-                    (new Cody())->bootStrapInput("txtUSERNAME", $caption = "Username", $placeHolder = "Username", $defaultValue = ""),
-                    (new Cody())->bootStrapInput("txtPASSWORD", $caption = "Password", $placeHolder = "Password", $defaultValue = ""),
-                    
+                    (new Cody())->bootStrapInput("txtUSERNAME", $caption = "Username", $placeHolder = "Username", $defaultValue = "", "text", ""),
+                    (new Cody())->bootStrapInput("txtPASSWORD", $caption = "Password", $placeHolder = "Password", $defaultValue = "", "text", ""),
+                    (new Cody())->bootStrapLookup ("txtDATEFORMAT", $caption = "Date Format", $dateFormat , $defaultValue = "YYYY-mm-dd"),
                     (new Cody())->bootStrapButton("btnCreate", $caption = "Create")
                 );
+        
+        if (!empty(Ruth::getSESSION("debbyCreateMessage"))) {
+           $html->addContent ((new Cody())->bootStrapAlert("success", $caption="Success", Ruth::getSESSION("debbyCreateMessage")));  
+           Ruth::setSESSION("debbyCreateMessage", null);
+        }
+        
         $form = (new Cody())->bootStrapPanel("Create Database Connection", $form);
         $html->addContent ($form);
+        
+       
+        
         return $html;
     }
     
     function updateConnection(){
+        $html = "";
+        $fileName = Ruth::getDOCUMENT_ROOT()."/connections/".Ruth::getREQUEST("txtNAME").".php";
         
+        $codeString = '<?php
+global $'.Ruth::getREQUEST("txtALIAS").'; 
+$'.Ruth::getREQUEST("txtALIAS").' = new Debby( "'.Ruth::getREQUEST("txtDBPATH").'", "'.Ruth::getREQUEST("txtUSERNAME").'", "'.Ruth::getREQUEST("txtPASSWORD").'", "'.Ruth::getREQUEST("txtDBTYPE").'", "'.Ruth::getREQUEST("txtDATEFORMAT").'" );
+Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIAS").');';
         
+        file_put_contents($fileName, $codeString );          
+                
+        Ruth::setSESSION("debbyCreateMessage", "{$fileName} created successfully!");
+        Ruth::redirect("/debby/create");      
         return $html;
     }
 

@@ -5,6 +5,10 @@
  */
 
 /**
+ * Define the release version of the stack
+ */
+define("TINA4_RELEASE", "v1.0.1");
+/**
  * Set default time zone
  */
 date_default_timezone_set('America/Los_Angeles');

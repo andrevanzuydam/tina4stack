@@ -277,6 +277,10 @@ class Ruth {
         }
     }
     
+    public static function getREQUEST_URI () {
+        return self::$REQUEST_URI;
+    }
+    
     /**
      * Function to make request variables into Session variables with a filter array of fields that shouldn't be considered
      * @param type $filter
@@ -608,6 +612,16 @@ class Ruth {
             self::$REQUEST = $_REQUEST;
         }
 
+        //parser for formData from raw AJAX
+        if (!empty($_REQUEST["formData"])) {
+            $formData = urldecode($_REQUEST["formData"]);
+            foreach (explode('&', $formData) as $data) {
+               $param = explode ("=", $data); 
+               self::$REQUEST[$param[0]] = $param[1];  
+               $_REQUEST[$param[0]] = $param[1];
+            }
+        }
+        
         if (!empty($_REQUEST)) {
             self::$REQUEST = array_merge(self::$REQUEST, self::parseParams($_SERVER["REQUEST_URI"]));
         }
@@ -751,6 +765,10 @@ class Ruth {
     }
 
     public static function getParams($routePath, $URI) {
+        //Remove the trailing slash
+        if (substr($routePath,-1,1) === "/") {
+           $routePath = substr($routePath, 0,  -1);
+        }
         $regEx = self::createRegEx($routePath);
         preg_match($regEx, $URI, $matches);
         $params = array();
@@ -904,8 +922,30 @@ class Ruth {
                 }
             }
         }
+        
+        if (defined("ONROUTE") && !empty(ONROUTE)) {
+              $params = ["action" => "route", "server" => Ruth::getSESSION(), "cookies" => Ruth::getCOOKIE(), "session" => Ruth::getSESSION(), "request" => Ruth::getREQUEST()];
+                                    @call_user_func_array(ONROUTE, $params);
+        }
+        
         if (!$found) {
-            self::responseHeader(404);
+            
+            //before we quit, see if Kim can help us!
+            if (class_exists("Kim")) {
+                
+                $pageName = Ruth::$REQUEST_URI;
+                                
+                $html = (new Kim())->getDefaultPage($pageName);
+                if (!empty($html)) {
+                    echo $html;
+                }
+                  else {
+                      self::responseHeader(404);
+                  }
+            }
+              else {            
+                self::responseHeader(404);
+            }
         }
     }
 

@@ -9,7 +9,7 @@
  * 
  * */
 //Default rights which should be allowed in TINA4 if roles are going to be used
-$_TINA4_SYSTEM_ROUTES = ["/cody", "/maggy", "/phpinfo"];
+$_TINA4_SYSTEM_ROUTES = ["/cody/*", "/maggy/*", "/phpinfo", "/kim/*", "/debby/*"];
 $_TINA4_LOAD_PATHS = "";
 
 //Funky output message
@@ -28,6 +28,13 @@ if (file_exists(realpath(__DIR__ . "/tina4") . "/Shape.php")) {
     die();
 }
 
+if (function_exists("xcache_get")) {
+  define("TINA4_HAS_CACHE", true);
+}
+ else {
+  define("TINA4_HAS_CACHE", false);   
+}
+        
 //include shape for the project
 require_once "Shape.php";
 //include Ruth for the routing
@@ -46,18 +53,21 @@ require_once "Phoebe.php";
 require_once "Reta.php";
 //Include Tessa for the testing
 require_once "Tessa.php";
+//Include Kim for the menus and content
+require_once "Kim.php";
+
+//assume things that could be overridden in the config.php file
+date_default_timezone_set('America/Los_Angeles');
 
 //Check if we have a config file to work with
 if (file_exists(realpath(__DIR__) . "/config.php")) {
     require_once "config.php";
 }
-//We assume stuff
-else {
-    date_default_timezone_set('America/Los_Angeles');
-    define("TINA4_INCLUDES", "project");
-    define("TINA4_SESSION", "TINA4");
-    define("TINA4_RUTH_DEBUG", false);
-}
+
+if (!defined ("TINA4_INCLUDES")) define("TINA4_INCLUDES", "project");
+if (!defined ("TINA4_SESSION")) define("TINA4_SESSION", "TINA4");
+if (!defined ("TINA4_RUTH_DEBUG")) define("TINA4_RUTH_DEBUG", false);
+
 
 
 Ruth::autoLoad($_TINA4_LOAD_PATHS . TINA4_INCLUDES, true, true);
@@ -79,6 +89,20 @@ if (!empty(TINA4_SESSION)) {
 //Check if we have a connections folder for database connections and init Debby
 if (file_exists(realpath(__DIR__ . "/connections"))) {
     Ruth::autoLoad(realpath(__DIR__ . "/connections"), false);
+    
+    if ( strpos (Ruth::getREQUEST_URI(), "/debby") !== false ) {
+        Ruth::addRoute(RUTH_GET, "/debby/create", 
+                function () {
+                    echo (new Debby())->createConnection();
+                }
+        );
+
+        Ruth::addRoute(RUTH_POST, "/debby/create", 
+                function () {
+                    (new Debby())->updateConnection();
+                }
+        );
+    }
 }
 
 //Check if the routes folder exists for routing
@@ -96,13 +120,23 @@ if (file_exists(realpath(__DIR__ . "/roles"))) {
 
 //Check if we have a migrations folder and init Maggy
 
-if (file_exists(realpath(__DIR__ . "/migration"))) {
+if (file_exists(realpath(__DIR__ . "/migrations"))) {
     /**
      * Use Maggy to help with database migrations
      */
-    Ruth::addRoute("GET", "/maggy", function () {
-        new Maggy("migration", ";");
-    });
+    if ( strpos (Ruth::getREQUEST_URI(), "/maggy") !== false ) {
+        Ruth::addRoute(RUTH_GET, "/maggy", function () {
+            new Maggy("migrations", ";", true); //we want to run migrations
+        });
+
+        Ruth::addRoute(RUTH_GET, "/maggy/create", function () {
+            echo (new Maggy("migrations", ";"))->createMigration();
+        });
+
+        Ruth::addRoute(RUTH_POST, "/maggy/create", function () {
+            (new Maggy("migrations", ";"))->updateMigration();
+        });
+    }
 
 }
 
@@ -130,6 +164,18 @@ Ruth::addRoute(RUTH_GET, "/phpinfo", function () {
     phpinfo();
 }, null, RUTH_IGNORE_ROUTE);
 
+/** 
+ * Initialize KIM only if needed
+ */
+if ( strpos (Ruth::getREQUEST_URI(), "/kim") !== false || strpos (Ruth::getREQUEST_URI(), "/cody") !== false) {
+    (new Kim());
+}
+
+/**
+ * Initialize the default routes for cody
+ */
+(new Cody());
+
 /**
  * Build a phar file of the project
  */
@@ -142,6 +188,12 @@ Ruth::addRoute(RUTH_GET, "/build", function () {
  * Include all the relevant paths
  */
 Ruth::autoLoad($_TINA4_LOAD_PATHS . TINA4_INCLUDES, false);
+
+
+//We should check to see if we have a kim.db file to load routes from before parsing
+if (file_exists("kim.db")) {
+   (new Kim())->loadRoutes();    
+}
 
 /**
  * Parse all the routes, never delete this code below, you can pass a single variable through to fake the route for testing.

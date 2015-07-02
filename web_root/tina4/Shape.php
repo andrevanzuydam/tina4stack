@@ -9,7 +9,7 @@ class shapeBaseElement {
     private $parent;
     private $keyValue;
     private $keyName;
-   
+    private $parentElement;
 
     function __construct($keyName = "", $keyValue = "") {
         $this->id = uniqid();
@@ -59,6 +59,15 @@ class shapeBaseElement {
         $this->keyName = $value;
     }
     
+    function setParentElement($parentElement) {
+      $this->parentElement = $parentElement;  
+    }
+    
+    function getParentElement() {
+      return $this->parentElement;
+    }
+     
+
 }
 
 /**
@@ -83,15 +92,16 @@ class htmlElement extends shapeBaseElement {
         if (!empty($this->attributes)) {
             foreach ($this->attributes as $aid => $attribute) {
                 if (!is_array($attribute->getValue())) {
-                  if ($attribute->getKey() !== 0) { 
-                     $html .= ' ' . $attribute->getKey() . '="' . $attribute->getValue() . '"';
-                  } 
-                  else {
-                     
-                     $html .= ' ' . $attribute->getValue();
-                      
-                  }
-                 }
+                    
+                   
+                    if ((string)$attribute->getKey() !== "0") {
+                      $html .= ' ' . $attribute->getKey() . '="' . $attribute->getValue() . '"';
+                    }
+                      else {
+                       
+                      $html .= ' '.$attribute->getValue();
+                    }
+                }
             }
         }
         return $html;
@@ -110,7 +120,6 @@ class htmlElement extends shapeBaseElement {
                     if (is_object($content->getValue()) && get_class($content->getValue()) === "htmlElement") {
                         $html .= $content->getValue()->compileHTML();
                     } else {
-
                         if (is_array($content->getValue())) {
                             foreach ($content->getValue() as $ccid => $ccontent) {
                                 if (is_object($ccontent) && get_class($ccontent) === "htmlElement") {
@@ -118,7 +127,15 @@ class htmlElement extends shapeBaseElement {
                                 }
                             }
                         } else {
-                            $html .= $content->getValue();
+                            
+                            if (is_object($content->getValue()) && get_class($content->getValue()) === "htmlElement") {
+                              $html .= $content->getValue();
+                            } 
+                            else {
+                                
+                                $html .= $content->getValue();
+                            }
+                            
                         }
                     }
                 }
@@ -129,15 +146,11 @@ class htmlElement extends shapeBaseElement {
 
     
     function templateHTML ($content, $object) {
-        if (is_object ($object) && get_class($object) === "htmlElement") {
-           $object = $object->getAttributes();
-        }
         foreach ($object as $keyName => $keyValue) {
-         
-            $content = str_ireplace('{'.$keyName.'}', $keyValue, $content);
-         
+          $content = str_ireplace('{'.$keyName.'}', $keyValue, $content);  
         }   
-      return $content;
+        
+        return $content;
     }
     
     /**
@@ -164,9 +177,12 @@ class htmlElement extends shapeBaseElement {
             }
         }
         
-        if ($this->compress) {
-          $content = (new JSmin())->minify($content);  
+        if ($this->closingTag === "</SCRIPT>") {
+            if ($this->compress && $this->closingTag === "</SCRIPT>") {
+                  $content = (new JSmin())->minify($content);  
+            }
         }
+      
         $html .= $content;
         $html .= str_ireplace("[attributes]", $attributes, $this->closingTag);
         return $html;
@@ -202,7 +218,7 @@ class htmlElement extends shapeBaseElement {
             } else {
                 
             $child = new shapeBaseElement("content", $arg);   
-            
+            $child->setParentElement($this);
             $this->content[] = $child; 
         }
     }
@@ -301,27 +317,22 @@ class htmlElement extends shapeBaseElement {
      */
     function bySearch($keyName, $keyIndex) {
         $result = null;
-        //echo "Searchng for ".$keyName."<br>";
         if (!empty($this->attributes)) {
             foreach ($this->attributes as $aid => $attribute) {
-                
+
                 if (strtoupper($attribute->getKey()) === strtoupper($keyIndex) && $attribute->getValue() === $keyName) {
-                  
+
                     $result = $this;
                 }
             }
         }
         if (empty($result)) {
             if (!empty($this->content)) {
-                
                 foreach ($this->content as $cid => $content) {
                     if (is_object($content) && get_class($content) === "shapeBaseElement") {
-                       
                         if (is_object($this->content[$cid]->getValue()) && get_class($this->content[$cid]->getValue()) == "htmlElement") {
-                            
                             $result = $this->content[$cid]->getValue()->bySearch($keyName, $keyIndex);
                             if (!empty($result)) {
-                               
                                 break;
                             }
                         }
@@ -332,38 +343,6 @@ class htmlElement extends shapeBaseElement {
         return $result;
     }
 
-    /**
-     * Get the attribute of an element
-     * @param String $keyName
-     * @return type
-     */
-    function getAttribute ($keyName) {
-        if (!empty($this->attributes)) {
-            foreach ($this->attributes as $aid => $attribute) {
-                
-                if (strtoupper($attribute->getKey()) === strtoupper($keyName)) {
-                    return $attribute->getValue();
-                    
-                }
-            }
-        }
-    
-    }
-    
-    /**
-     * Gives a list of the attributes back in a key value pair
-     * @return type
-     */
-    function getAttributes () {
-        $attributes = [];
-        if (!empty($this->attributes)) {
-            foreach ($this->attributes as $aid => $attribute) {
-                $attributes[$attribute->getKey()] = $attribute->getValue();
-            }
-        }
-        return $attributes;
-    }
-    
     /**
      * Find and Element by Its HTML Id
      * Example: p(["id" => "Test"])
@@ -773,16 +752,14 @@ function HTMLtoShape($content) {
  * @param type $shapeTemplate
  * @param type $expression
  */
-function loop($shapeTemplate, $elements="",  $expressions = "") {
+function loop($elements, $shapeTemplate, $expressions = "") {
     $html = "";
-    if (!empty($shapeTemplate)) {
-        foreach ($elements as $eid => $element) {
-            $template = $shapeTemplate->compileHtml();
-            foreach ($element as $key => $value) {
-                $template = str_ireplace("{{$key}}", $value, $template);
-            }
-            $html .= $template;
+    foreach ($elements as $eid => $element) {
+        $template = $shapeTemplate->compileHtml();
+        foreach ($element as $key => $value) {
+            $template = str_ireplace("{{$key}}", $value, $template);
         }
+        $html .= $template;
     }
     return $html;
 }
@@ -1651,7 +1628,7 @@ function strong() {
 
 function style() {
     $html = createInstance("htmlElement", func_get_args());
-    $html->setTags("<STYLE[attributes]>", "</STYLE>");
+    $html->setTags("<STYLE[attributes]>", "</STYLE>", true);
     return $html;
 }
 
@@ -1772,6 +1749,23 @@ function video() {
 function wbr() {
     $html = createInstance("htmlElement", func_get_args());
     $html->setTags("<WBR[attributes]>", "</WBR>");
+    return $html;
+}
+
+function svg(){
+    $html = createInstance("htmlElement", func_get_args());
+    $html->setTags("<SVG[attributes]>", "</SVG>");
+    return $html;
+}
+function path(){
+    $html = createInstance("htmlElement", func_get_args());
+    $html->setTags("<PATH[attributes] />", "");
+    return $html;
+}
+
+function text(){
+    $html = createInstance("htmlElement", func_get_args());
+    $html->setTags("<TEXT[attributes]>", "</TEXT>");
     return $html;
 }
 

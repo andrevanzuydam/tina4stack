@@ -1,7 +1,0 @@
-#!/usr/bin/env sh
-SRC_DIR="`pwd`"
-cd "`dirname "$0"`"
-cd "../vendor/justinrainbow/json-schema/bin"
-BIN_TARGET="`pwd`/validate-json"
-cd "$SRC_DIR"
-"$BIN_TARGET" "$@"

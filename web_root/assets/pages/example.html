@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TINA4 - Example Kim Language</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h4> Including other code snippets </h4>
+        {{include:snippet/example}}
+        
+        <a target="_blank" href="http://localhost:12345/assets/pages/example.html"> See the code for the example.html file</a>
+        <h2>Calling PHP Built in Functions & User Defined Functions:</h2>
+        <h4>Getting the server variable for document root</h4>
+        <p>
+            The document root is located at {_SERVER["DOCUMENT_ROOT"]}
+        </p>    
+        <h4>Parsing a normal variable</h4>
+        <?php
+            $name = "Jim";
+        ?>
+        <p>
+            His name is {name}
+        </p>
+        <h4>Parsing an object variable</h4>
+        <?php
+            $user = (object)["name" => "Jim", "email" => "jim@somewhere.com"];
+            $pets = ["dog", "cat"];
+        ?>
+        <p>
+            His name is {user->name} and his email address is {user->email}. He has a {pets[0]} and a {pets[1]}.
+        </p>
+        
+        <h2>Calling PHP Built in Functions & User Defined Functions:</h2>
+        <h4> Getting the PHP Version </h4>
+        <p>
+        Version {{call:phpversion}}
+        </p>
+        <h4> Doing a substr of "My name is somename"  </h4>
+        <p>
+        The sub string is  {{call:substr?"My name is somename",10,10}}
+        </p>
+        
+        <h2>Calling Classes defined under project:</h2>
+        <h4> Calling testClass method getDisplay </h4>
+        {{testClass:getDisplay?"Jim",100}}
+        
+        
+        <h2>Recursion, Looping over Data:</h2>
+        <h4> Getting a list of users </h4>
+           <h4> Getting a list of names from the test class</h4>
+            <ul>
+              {{testClass:getNames}}
+                <li>{FIRST_NAME} {LAST_NAME}</li>
+              {{/testClass:getNames}}
+            </ul>
+           
+        <h4> Getting a list of users with pets </h4>
+           <h4> Getting a list of names & pets from the test class</h4>
+            <ul>
+              {{testClass:getNames}}
+                <li>{FIRST_NAME} {LAST_NAME}</li>
+                <ol>
+                {{testClass:getPets?{USER_ID}}}
+                  <li>{PETID} {Type} {Name}</li>    
+                {{/testClass:getPets?{USER_ID}}}    
+                </ol>        
+              {{/testClass:getNames}}
+            </ul>   
+    </body>
+</html>

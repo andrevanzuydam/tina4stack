@@ -27,8 +27,8 @@ class Reta {
         $this->outputPath = Ruth::getDOCUMENT_ROOT()."/".$outputPath;
         $this->iniFile = $iniFile;
         if (empty($retaPath)) {
-           $this->retaPath = realpath( Ruth::getDOCUMENT_ROOT().'..\\..\\').'\reta.exe';            
-           $this->iniFile = realpath( Ruth::getDOCUMENT_ROOT().'..\\..\\reta.ini');
+           $this->retaPath = realpath( Ruth::getDOCUMENT_ROOT().'/../reta').'/reta.exe';            
+           $this->iniFile = realpath( Ruth::getDOCUMENT_ROOT().'/../reta').'/reta.ini';
         }
           else {
           $this->retaPath  = $retaPath;   
@@ -42,9 +42,11 @@ class Reta {
         }
                 
         //Check if we may be on Linux - then we need to run the shell script
-        if (!strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        if (PHP_OS === 'Linux') {
            $this->retaPath = str_replace(".exe", ".sh", $this->retaPath); 
+           $this->iniFile = "z:".$this->iniFile;
         } 
+        
     }   
     
     
@@ -58,19 +60,24 @@ class Reta {
     function generate($reportName="test", $sql, $outputType="pdf,csv", $debug=false) {
       $result = ""; 
       
-      $sql = str_replace ("\n", " ", $sql);
+      if (PHP_OS === 'Linux') {
+	    $this->outputPath = "z:".$this->outputPath;
+            $this->reportPath = "z:".$this->reportPath;
+      }
       
-      $command = $this->retaPath.' -ini "'.$this->iniFile.'" -sql "'.$sql.'" -out "'.$this->outputPath.'" -tem "'.$this->reportPath.'/'.$reportName.'.rep" -typ "'.$outputType.'"';
+      $sql = str_replace ("\n", " ", $sql);
+
+        $command = $this->retaPath.' -ini "'.$this->iniFile.'" -sql "'.$sql.'" -out "'.$this->outputPath.'" -tem "'.$this->reportPath.'/'.$reportName.'.rep" -typ "'.$outputType.'"';
       if ($debug) {
         $command .= " -debug";  
       }
       
       exec ($command, $result);
       
-      return join("\n", $result);
+      $result = join ("\n", $result);
+      $result = str_replace ("z\:", "", $result);
+ 
+      return $result;
     }    
-    
-    
-    
     
 }

@@ -43,7 +43,7 @@ class Maggy {
      * @param String $migrationPath relative path to your web folder
      * @param String $delim A delimiter to say how your SQL is run
      */
-    function __construct($migrationPath = "migration", $delim = ";") {
+    function __construct($migrationPath = "migration", $delim = ";", $runMigrations=false) {
         if (empty(Ruth::getOBJECT("DEB"))) {
             die("You need to declare a database connection using Debby and assign Ruth a DEB object");
         } else {
@@ -66,12 +66,62 @@ class Maggy {
             $this->DEB->commit();
         }
         
-        if (file_exists ($this->migrationPath)) {
+        if ($runMigrations && file_exists ($this->migrationPath)) {
           //Run the migration     
           $this->doMigration();
         }
     }
-
+    
+    /**
+     * The default page template for maggy
+     * @param type $title String A title to name the page by
+     * @return type Shape A page template with default bootstrap
+     */
+    function getPageTemplate($title="Default") {
+       $html = html (
+                    head (
+                            title ($title),
+                            alink (["rel" => "stylesheet", "href"=>"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"]),
+                            alink (["rel" => "stylesheet", "href"=> "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"]),
+                            alink (["rel" => "stylesheet", "href"=> "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css"])
+                            
+                            
+                    ),
+                    body (  ["style" => "padding: 0px 20px 0px", "id" => "content"])
+               
+               );  
+       return $html; 
+    }
+    
+    function createMigration() {
+        $html = $this->getPageTemplate("Create Migration");       
+        $form = form (["class" => "form-group", "method" => "post",  "enctype" => "multipart/form-data"], 
+                    (new Cody())->bootStrapInput("txtDESCRIPTION", $caption = "Description", $placeHolder = "Description", $defaultValue = ""),
+                    (new Cody())->bootStrapTextArea("txtSQL", $caption = "SQL Metadata", $placeHolder = "SQL Text like a create statement", $defaultValue = ""),
+                    (new Cody())->bootStrapButton("btnCreate", $caption = "Create")
+                    
+                );
+        
+              
+        $form = (new Cody())->bootStrapPanel("Create Migration", $form);
+        
+        $html->addContent ($form);
+        
+        if (!empty(Ruth::getSESSION("maggyCreateMessage"))) {
+           $html->addContent ((new Cody())->bootStrapAlert("success", $caption="Success", Ruth::getSESSION("maggyCreateMessage")));  
+           Ruth::setSESSION("maggyCreateMessage", null);
+        }
+        
+        return $html;
+    }
+    
+    function updateMigration() {
+      $fileName = Ruth::getDOCUMENT_ROOT()."/".$this->migrationPath."/".date("Ymdhis")." ".Ruth::getREQUEST("txtDESCRIPTION").".sql";
+      file_put_contents($fileName, Ruth::getREQUEST("txtSQL") );  
+      Ruth::setSESSION("maggyCreateMessage", "{$fileName} created successfully!");
+      Ruth::redirect("/maggy/create");      
+    }
+    
     /**
      * Do Migration
      * 
@@ -115,24 +165,26 @@ class Maggy {
                 
                 $content = file_get_contents(Ruth::getREAL_PATH() . "/" . $this->migrationPath . "/" . $entry);
                 
-                                
+                
+                         
+                $runsql = false;
                 if (empty($record)) {
                     echo "<span style=\"color:orange;\">RUNNING:\"{$migrationId} {$description}\" ...</span>\n";
                     $transId = $this->DEB->startTransaction();
 
-                    $sqlInsert = "INSERT INTO TINA4_MAGGY (MIGRATION_ID, DESCRIPTION, CONTENT, PASSED)
-                                VALUES ('{$migrationId}', '{$description}', ?, 0)";
+                    $sqlInsert = "insert into tina4_maggy (migration_id, description, content, passed)
+                                values ('{$migrationId}', '{$description}', ?, 0)";
                    
                    
                     $this->DEB->exec($sqlInsert, $transId, $content);
                     $this->DEB->commit($transId);                    
                     $runsql = true;
                 } else {
-                    if ($record->PASSED === 0) {
+                    if ($record->PASSED === "0") {
                         echo "<span style=\"color:orange;\">RETRY: \"{$migrationId} {$description}\" ... </span> \n";
                         $runsql = true;
                     } else
-                    if ($record->PASSED === 1) {
+                    if ($record->PASSED === "1") {
                         echo "<span style=\"color:green;\">PASSED:\"{$migrationId} {$description}\"</span>\n";
                         $runsql = false;
                     }

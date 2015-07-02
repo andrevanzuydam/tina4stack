@@ -1,0 +1,28 @@
+{{include:/snippet/header}}
+    
+    <p> The session variable for the session is {TINA4_SESSION} {TINA4_INCLUDES}</p>
+
+    <!--
+    
+    {{Kim:getUserList?user_display2,where user_id <> 0}}
+    
+    {{Kim:getMenuList?where user_id <> 0}}
+    
+    {{Content::getFAQList}}
+    <a href="{{link:pages/about_us}}"> About Us </a>
+    -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 col-md-2 sidebar">
+                <ul class="nav nav-sidebar">
+                    <li><a href="/admin/index"><i class="fa fa-ra"></i> Admin CMS</a></li>
+                    <li><a href="/login"><i class="fa fa-female"></i> Kim</a></li>
+                    <li><a><i class="fa fa-plug"></i> Andre</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{{include:/pages/user_list}}
+
+    
+{{include:/snippet/footer}}

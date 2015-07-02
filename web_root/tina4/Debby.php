@@ -58,42 +58,33 @@ class Debby {
     var $outputdateformat = "dd/mm/YYYY";
     var $updatefieldinfo = true; //this is turned off when doing computed field calculations, internal and expert use only
     var $RAWRESULT;
-    var $lastrowid; //for sqlite autoincrement fields 
-
-    /* function to make it easy to get request variables out of the system */
-
-    function getInputs($prefix = "", $returnwithblanks = true, $requests = "") {
-        $result = array();
-        if ($requests == "") {
-            $requests = $_REQUEST;
-        }
-        foreach ($requests as $rid => $request) {
-            if (substr($rid, 0, strlen($prefix)) == $prefix) {
-                if ($returnwithblanks) {
-                    $result[substr($rid, strlen($prefix))] = $request;
-                } else {
-                    if (trim($request) != "") {
-                        $result[substr($rid, strlen($prefix))] = $request;
-                    }
-                }
-            }
-        }
-
-        return $result;
-    }
-
+    var $lastrowid; //for sqlite autoincrement fields
+    var $tag; //tag for the database to be used in calls
+    
     /*
       Function to encode raw image data
       caches the image into a folder for quick cleanup
       $imagedata = The blob or file contents
       $imagestore = the path to the file where it must be created.
      */
-
-    function encodeImage($imagedata, $imagestore = "imagestore", $size = "", $noimage = "/images/noimage.jpg") {
+    function encodeImage($imagedata, $imagestore = "imagestore", $size = "", $noimage = "/imagestore/noimage.jpg") {
+       
+        if (!file_exists($_SERVER["DOCUMENT_ROOT"].$noimage)) {
+            mkdir ($_SERVER["DOCUMENT_ROOT"]."/".$imagestore);
+            $imagePath = "http://lorempixel.com/200/200/people/".rand(0,10)."/";
+            $image = file_get_contents($imagePath);
+           
+            file_put_contents ($_SERVER["DOCUMENT_ROOT"].$noimage, $image);
+            
+        }
+                
         if ($size != "")
             $createthumbnail = true;
         if ($imagedata == "" && $size != "") {
-            $imagedata = file_get_contents($_SERVER["DOCUMENT_ROOT"] . $noimage);
+            if (strpos($noimage, "http") === false) {
+               $noimage = $_SERVER["DOCUMENT_ROOT"]. $noimage; 
+            }
+            $imagedata = file_get_contents($noimage);
         }
         $imagehash = md5($imagedata);
         if ($createthumbnail == true) {
@@ -118,7 +109,7 @@ class Debby {
                     //we don't know what file it is
                     $makethumbnail = false;
                 }
-                if ($makethumbnail) {
+                if ($makethumbnail) {                    
                     $thumbsize = explode("x", $size);
                     $thumbw = $thumbsize[0];
                     $thumbh = $thumbsize[1];
@@ -137,29 +128,36 @@ class Debby {
                     }
                     $thumbw = (int) ( $thumbw );
                     $thumbh = (int) ( $thumbh );
+                    
                     $imagethumb = imagecreatetruecolor($thumbw, $thumbh);
                     $white = imagecolorallocate($imagethumb, 255, 255, 255);
                     imagefill($imagethumb, 0, 0, $white);
-                    //we need to work out aspect ratio otherwise we stretch
-                    if ($thumbw > $thumbh) { //width greater than height - the width will need to be adjusted on thumbnail
-                        $scaleh = $thumbh / ( $imagesrch - 1 );
-                        $newthumbw = $imagesrcw * $scaleh;
-                        $newthumbh = $thumbh;
-                        $offsety = 0;
-                        $offsetx = ( $thumbw - $newthumbw ) / 2;
-                        $offsetx = (int) ( $offsetx );
-                    } else { //height greater than width
-                        $scalew = $thumbw / ( $imagesrcw - 1 );
-                        $newthumbh = $imagesrch * $scalew;
-                        $newthumbw = $thumbw;
-                        $offsetx = 0;
-                        $offsety = ( $thumbh - $newthumbh ) / 2;
-                        $offsety = (int) ( $offsety );
+                    
+                    //http://php.net/manual/en/function.imagecopyresampled.php - rayg at daylongraphics dot com 
+                    $lowend = 0.8;
+                    $highend = 1.25;
+                    
+                    $scaleX = (float)$thumbw / $imagesrcw;
+                    $scaleY = (float)$thumbh / $imagesrch;
+                    $scale = min($scaleX, $scaleY);
+
+                    $dstW = $thumbw;
+                    $dstH = $thumbh;
+                    $dstX = $dstY = 0;
+
+                    $scaleR = $scaleX / $scaleY;
+                    if($scaleR < $lowend || $scaleR > $highend)
+                    {
+                        $dstW = (int)($scale * $imagesrcw + 0.5);
+                        $dstH = (int)($scale * $imagesrch + 0.5);
+
+                        // Keep pic centered in frame.
+                        $dstX = (int)(0.5 * ($thumbw - $dstW));
+                        $dstY = (int)(0.5 * ($thumbh - $dstH));
                     }
-                    $newthumbw = (int) ( $newthumbw );
-                    $newthumbh = (int) ( $newthumbh );
+                    
                     //echo "copying {$newthumbw}X{$newthumbh} image";		
-                    if (!imagecopyresized($imagethumb, $imagesrc, $offsetx, $offsety, 0, 0, $newthumbw, $newthumbh, $imagesrcw, $imagesrch)) {
+                    if (!imagecopyresampled($imagethumb, $imagesrc, $dstX, $dstY, 0, 0,$dstW, $dstH, $imagesrcw, $imagesrch)) {
                         imagedestroy($imagethumb);
                         imagedestroy($imagesrc);
                     } else {
@@ -187,6 +185,24 @@ class Debby {
             }
         }
     }
+    
+    /*
+      Function to embed raw image as base64
+     */
+    function embedImage($rawImage){
+        if(!empty($rawImage)){
+            if(!function_exists("finfo_open")){
+                die("You need to enable php_fileinfo.dll in your php.ini");
+            }
+            $f = finfo_open();
+            
+            $mime_type = finfo_buffer($f, $rawImage, FILEINFO_MIME_TYPE);
+
+            return '<img src="data:'.$mime_type.';base64,'.base64_encode($rawImage).'"/>';
+        }else{
+            return false;
+        }
+    }
 
     /*
       Function to make an array out of the Debby object
@@ -197,45 +213,78 @@ class Debby {
     }
 
     /* function to take row variables to request variables */
-
     function toRequest($row, $prefix = "") {
         foreach ($row as $name => $value) {
+            if (class_exists("Ruth")) {
+                Ruth::setREQUEST($prefix . $name, $value);
+            }
             $_REQUEST[$prefix . $name] = $value;
         }
     }
 
-    function switchId($name, $prescript = "", $form = "forms[0]") {
-        $html = "";
-        if (empty($_REQUEST[$name])) {
-            $_REQUEST[$name] = "";
-        }
-        $html .= "<input type=\"hidden\" name=\"" . $name . "\" value=\"" . $_REQUEST[$name] . "\">\n";
-        $html .= "<script language=\"Javascript\"> function set" . $name . " (i, canpost) { if (canpost === undefined) {canpost = false;}  $prescript document." . $form . "." . $name . ".value = i; if(canpost) { if (typeof cleanurl == 'function') { cleanurl(); } document." . $form . ".submit();}} </script>\n";
-        if (!function_exists("set" . $name)) {
-            eval('function set' . $name . '($id, $post=false) { $script = "document.' . $form . '.' . $name . '.value = \'$id\';"; if ($post) { return "<script> {$script} if (typeof cleanurl == \'function\') { cleanurl(); } document.' . $form . '.submit(); </script>"; } else { return "<script> {$script} </script>"; }  }');
-        }
-        return $html;
-    }
-
     /* Output the last error */
-
     function lastError() {
         return $this->lasterror[count($this->lasterror) - 1];
     }
 
     /* Output the last error */
-
     function getLastError() {
         return $this->lasterror[count($this->lasterror) - 1];
+    }
+    
+    /**
+     * The default page template for maggy
+     * @param type $title String A title to name the page by
+     * @return type Shape A page template with default bootstrap
+     */
+    function getPageTemplate($title="Default") {
+       $html = html (
+                    head (
+                            title ($title),
+                            alink (["rel" => "stylesheet", "href"=>"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"]),
+                            alink (["rel" => "stylesheet", "href"=> "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"]),
+                            alink (["rel" => "stylesheet", "href"=> "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css"])
+                            
+                            
+                    ),
+                    body (  ["style" => "padding: 0px 20px 0px", "id" => "content"])
+               
+               );  
+       return $html; 
+    }
+    
+    
+    function createConnection() {
+        $html = $this->getPageTemplate("Create Database Connection");
+        $form = form (["class" => "form-group", "method" => "post",  "enctype" => "multipart/form-data"], 
+                    (new Cody())->bootStrapInput("txtNAME", $caption = "Connection Name", $placeHolder = "Connection Name", $defaultValue = "connection"),
+                    (new Cody())->bootStrapInput("txtDBPATH", $caption = "Database Path", $placeHolder = "hostname:dbname_dbpath", $defaultValue = ""),
+                    (new Cody())->bootStrapInput("txtUSERNAME", $caption = "Username", $placeHolder = "Username", $defaultValue = ""),
+                    (new Cody())->bootStrapInput("txtPASSWORD", $caption = "Password", $placeHolder = "Password", $defaultValue = ""),
+                    
+                    (new Cody())->bootStrapButton("btnCreate", $caption = "Create")
+                );
+        $form = (new Cody())->bootStrapPanel("Create Database Connection", $form);
+        $html->addContent ($form);
+        return $html;
+    }
+    
+    function updateConnection(){
+        
+        
+        return $html;
     }
 
     /* Constructor for Debby */
 
-    function __construct($dbpath = "", $username = "", $password = "", $dbtype = "sqlite", $outputdateformat = "YYYY-mm-dd", $debug = false) { //possible options are dd/mm/YYYY dd-mm-YYYY dd.mm.YYYY mm/dd/YYYY ... YYYY-mm-dd etc ...
-        $this->debug = $debug;
-        $this->connect($dbpath, $username, $password, $dbtype, $outputdateformat);
-        //how do we handle dates for different databases
-        $this->outputdateformat = $outputdateformat; //how do we want the dates given back to us ???   
+    function __construct($dbpath = "", $username = "", $password = "", $dbtype = "sqlite", $outputdateformat = "YYYY-mm-dd", $tag="DEB", $debug = false) { //possible options are dd/mm/YYYY dd-mm-YYYY dd.mm.YYYY mm/dd/YYYY ... YYYY-mm-dd etc ...
+        if (!empty($dbpath)) {
+            $this->debug = $debug;
+            $this->tag = $tag;
+            $this->connect($dbpath, $username, $password, $dbtype, $outputdateformat);
+            //how do we handle dates for different databases
+            $this->outputdateformat = $outputdateformat; //how do we want the dates given back to us ???   
+        }
     }
 
     /*     * *************************************************************************** 
@@ -450,9 +499,14 @@ class Debby {
             trigger_error("Needs to be implemented");
         } else /* MySQL */ if ($this->dbtype == "mysql") {
             if (function_exists("mysqli_connect")) {
-                trigger_error("Needs to be implemented");
+                $this->dbh->autocommit(false);
+                $this->dbh->begin_transaction();
+                $result = "Resource id #0";
+                //trigger_error("Needs to be implemented");
             } else {
-                trigger_error("Needs to be implemented");
+                @mysql_query("SET AUTOCOMMIT=0");
+                @mysql_query("START TRANSACTION");
+                $result = "Resource id #0";
             }
         } else /* Postgres */ if ($this->dbtype == "postgres") {
             trigger_error("Needs to be implemented");
@@ -493,9 +547,9 @@ class Debby {
             trigger_error("Needs to be implemented");
         } else /* MySQL */ if ($this->dbtype == "mysql") {
             if (function_exists("mysqli_connect")) {
-                trigger_error("Needs to be implemented");
+                $this->dbh->rollback();
             } else {
-                trigger_error("Needs to be implemented");
+                @mysql_query("ROLLBACK");
             }
         } else /* Postgres */ if ($this->dbtype == "postgres") {
             trigger_error("Needs to be implemented");
@@ -577,8 +631,11 @@ class Debby {
         if ($this->dbtype == "sqlite3") {
             $sql = str_replace("'now'", "datetime('now')", $sql);
         }
+        
         if ($this->dbtype == "mysql") {
+            
             $sql = str_replace("'now'", "CURRENT_TIMESTAMP", $sql);
+            $sql = str_replace("'datetime'", "DATETIME", $sql);
         }
 
         if (( stripos($sql, "update") !== false || stripos($sql, "insert") !== false ) && ( $this->dbtype == "mssql" || $this->dbtype == "mssqlnative" )) {
@@ -618,8 +675,8 @@ class Debby {
                 }
             } else if (( $this->dbtype == "mysql" || $this->dbtype == "sqlite3" ) && stripos($sql, "first ") !== false) {
                 //select first 1 skip 10 must become 
-
-                $firsts = $this->get_instance("first", $parsedsql);
+                 
+                $firsts = $this->getInstance("first", $parsedsql);
 
                 if (count($firsts) > 0) {
                     $icount = 0;
@@ -645,8 +702,8 @@ class Debby {
                 }
             } else if ($this->dbtype == "firebird" && stripos($sql, "limit ") !== false) { //check for MySQL or ORacle limit
                 //find all the selects
-                $selects = $this->get_instance("select", $parsedsql);
-                $limits = $this->get_instance("limit ", $parsedsql);
+                $selects = $this->getInstance("select", $parsedsql);
+                $limits = $this->getInstance("limit ", $parsedsql);
                 if (count($limits) > 0) {
                     //remove all the limits & parse for skip & first
                     $icount = 0;
@@ -710,7 +767,7 @@ class Debby {
         }
 
         $this->lastsql[count($this->lastsql)] = $parsedsql; // save the last sql  
-
+        
         return $parsedsql;
     }
 
@@ -722,7 +779,7 @@ class Debby {
      */
 
     function escapeString($data) {
-        if (!isset($data) or empty($data))
+        if ($data != 0 and (!isset($data) or empty($data)))
             return '';
         if (is_numeric($data))
             return $data;
@@ -752,6 +809,9 @@ class Debby {
         $count = 0;
         for ($i = 1; $i < sizeof($inputvalues); $i++) {
             $tryme = $inputvalues[$i];
+            if (strpos($tryme."", "Resource id #") !== false) {
+              continue;  
+            }           
             if ($this->dbtype != "CUBRID")
                 $inputvalues[$i] = str_replace("'", "''", $inputvalues[$i]); //some strings have single ' which make it break on replacing!
             if ($this->dbtype == "mysql") {
@@ -765,10 +825,10 @@ class Debby {
                 $inputvalues[$i] = sqlite_escape_string($inputvalues[$i]);
             } else
             if ($this->dbtype == "sqlite3") {
-                $inputvalues[$i] = $this->escape_string($inputvalues[$i]);
+                $inputvalues[$i] = $this->escapeString($inputvalues[$i]);
             } else
             if ($this->dbtype == "CUBRID") {
-                $inputvalues[$i] = $this->escape_string($inputvalues[$i]);
+                $inputvalues[$i] = $this->escapeString($inputvalues[$i]);
             }
             $inputvalues[$i] = "'" . $inputvalues[$i] . "'";
             $lastpos = 1;
@@ -796,9 +856,14 @@ class Debby {
 
     function exec($sql = "") {
         $inputvalues = func_get_args();
+        
+        
         $this->error = ""; // reset the last error;   
         $result = false;
-        $this->lastsql[count($this->lastsql)] = "preparse: " . $sql;
+
+        $sqlParse = $this->setParams($sql, $inputvalues);
+
+        $this->lastsql[count($this->lastsql)] = "preparse: " . $sqlParse;
         $sql = $this->parseSQL($sql);
 
         if (!$this->dbh) {
@@ -863,10 +928,8 @@ class Debby {
                         $params[$i] = func_get_arg($i);
                     }
 
-
                     foreach ($params as $pid => $param) {
-                        if (!preg_match('^(\P{Cc}|[\t\n])*$', $param)) { // preg_match $param)) {
-                            if (is_float($param)) {
+                        if (is_float($param)) {
                                 //echo "binding {$pid} float"; 
                                 $statement->bindValue($pid, $param, SQLITE3_FLOAT);
                             } else
@@ -875,10 +938,10 @@ class Debby {
                                 $statement->bindValue($pid, $param, SQLITE3_INTEGER);
                             } else
                             if (is_string($param)) {
-                                //echo "binding text"; 
+                                //echo "binding  {$pid} text"; 
                                 $statement->bindValue($pid, $param, SQLITE3_TEXT);
                             }
-                        } else {
+                         else {
                             //echo "binding blob  ";
                             $statement->bindValue($pid, $param, SQLITE3_BLOB);
                         }
@@ -903,7 +966,7 @@ class Debby {
             $tranID = "";
             for ($i = 1; $i < func_num_args(); $i++) {
 
-                if (strpos(func_get_arg($i) . " ", "Resource") !== false) {
+                if (strpos(func_get_arg($i)."", "Resource id #") !== false) {
                     $tranID = func_get_arg($i);
                 } else {
                     $params[] = func_get_arg($i);
@@ -923,7 +986,8 @@ class Debby {
             } else {
                 $result = @ibase_execute($query);
             }
-                        
+
+
             if (strpos ($result." ", "Resource") !== false ) {
                 $result = $this->getRow($result);
             }
@@ -1015,9 +1079,9 @@ class Debby {
             $result = @oci_commit($this->dbh);
         } else /* MySQL */ if ($this->dbtype == "mysql") {
             if (function_exists("mysqli_connect")) {
-                $this->dbh->commit();
+                $result = $this->dbh->commit();
             } else {
-                trigger_error("Unsupported feature in " . __METHOD__ . " for " . $this->dbtype, E_USER_NOTICE);
+                @mysql_query("COMMIT");
                 $result = true;
             }
         } else /* Postgres */ if ($this->dbtype == "postgres") {
@@ -1040,12 +1104,44 @@ class Debby {
 
     
     /**
+     * Create insert statement and run it
+     * @param type $tablename Table name
+     * @param type $fieldValues Array value pairs ["field" => "value"]
+     */    
+    function insert ($tablename, $fieldValues) {
+        $sqlInsert = "insert into {$tablename} ";
+        foreach ($fieldValues as $field => $value) {
+          $columnNames[] = strtolower($field);      
+          //ignore the defaults for timestamps
+          if ($value !== "'now'" && $value !== "current_timestamp") {
+            $columnValues[] = "?";
+          }
+           else {
+            $columnValues[] = $value;    
+          }
+        }
+        $sqlInsert .= "( ".join(",", $columnNames).") ";
+        $sqlInsert .= "values ( ".join(",", $columnValues).");";
+        
+        $params[] = $sqlInsert;
+        foreach ($fieldValues as $field => $value) {
+            if ($value !== "'now'" && $value !== "current_timestamp") {
+                 $params[] = $value;
+            }
+        }
+                        
+        return @call_user_func_array([$this, "exec"], $params);
+    }
+    
+    /**
      * Create update statement and run it
      * @param type $tablename Table name
      * @param type $fieldValues Array value pairs ["field" => "value"]
      * @param type $indexFieldValue Array ["index" => "value"]
+     * @todo prevent updating if indexFieldValue is empty
      */
     function update ($tablename, $fieldValues, $indexFieldValue) {
+
         $sqlUpdate = "update {$tablename} set ";
         foreach ($fieldValues as $field => $value) {
             $sqlUpdate .= " {$field} = '".$this->escapeString($value)."',";
@@ -1060,6 +1156,26 @@ class Debby {
         }        
        
         return $this->exec ($sqlUpdate);
+        
+    }
+    
+    /**
+     * An easy way to write a delete statement and execute it immediatelly
+     * @param String $tablename Name of the table to run the delete on
+     * @param Array $fieldValues The fields to filter by, used in  the where statement
+     * @return bool Success or Failure
+     */
+    function delete ($tablename, $fieldValues) {
+        $sqlDelete = "delete from {$tablename} ";
+                
+        $count = 0;
+        foreach ($fieldValues as $field => $value) {
+         if ($count == 0) { $sqlDelete .= " where "; } else { $sqlDelete .= " and "; }  
+         $sqlDelete .=  " {$field} = '".$this->escapeString($value)."'";
+         $count++;
+        }        
+        
+        return $this->exec ($sqlDelete);
         
     }
     
@@ -1117,7 +1233,6 @@ class Debby {
 
     function getDataType($data) {
         if (!function_exists("is_datetime")) {
-
             function is_datetime($data) {
                 if (date('Y-m-d H:i:s', strtotime($data)) == $data) {
                     return true;
@@ -1144,6 +1259,7 @@ class Debby {
             $type = "VARCHAR";
         }
 
+        
         return $type;
     }
 
@@ -1413,6 +1529,10 @@ class Debby {
                             unset($row);
                             $row = (object) [];
                             foreach ($temprow as $fieldname => $fieldvalue) {
+                                if (empty($fieldvalue)) {
+                                  $fieldvalue = ""; 
+                                }
+                                
                                 $row->$fieldname = $fieldvalue;
                             }
                             $result[$icount] = $row;
@@ -1437,11 +1557,12 @@ class Debby {
                 
                 if (is_object ($query)) {   
                     for ($i = 0; $i < $nooffields; $i++) {
-                        $this->fieldinfo[$i]["name"] = $query->columnName($i);
+                        $this->fieldinfo[$i]["name"] = (string) $query->columnName($i);
                         $this->fieldinfo[$i]["alias"] = ucwords(strtolower($this->fieldinfo[$i]["name"]));
-                       
-                        if (!empty ($result) > 0 ) {
-                         eval('$this->fieldinfo[$i]["type"] = $this->getDataType ($result[0]->' . $query->columnName($i) . ');');
+                    
+                        if (!empty ($result) > 0)  {
+                            
+                          eval('$this->fieldinfo[$i]["type"] = @$this->getDataType ($result[0]->' . $this->fieldinfo[$i]["name"] . ');');
                         }
                             else {
                               $this->fieldinfo[$i]["type"] = ""; 
@@ -1533,7 +1654,11 @@ class Debby {
         } else /* My SQL */ if ($this->dbtype == "mysql") {
             //build an array of results
             if (function_exists("mysqli_connect")) {
+                
+                
+                
                 $query = $this->dbh->query($sql);
+                
                 if (is_object($query)) {
                     $fields = $query->fetch_fields();
                     $this->nooffields = count($fields);
@@ -1570,6 +1695,7 @@ class Debby {
                         $this->fieldinfo[$i][4] = $mysql_data_type_hash[$field->type];
                         $i++;
                     }
+                  
                     $icount = 0;
                     switch ($rowtype) {
                         case 0: //Object
@@ -1736,6 +1862,7 @@ class Debby {
             trigger_error("Please implement " . __METHOD__ . " for " . $this->dbtype, E_USER_ERROR);
         }
 
+        
         //create the field information based on the select statement    
         foreach ($this->fieldinfo as $id => $field) {
             if (strpos(strtoupper($field[4]), "NUMERIC") !== false || strpos(strtoupper($field[4]), "DECIMAL") !== false || strpos(strtoupper($field[4]), "INTEGER") !== false || strpos(strtoupper($field[4]), "INT") !== false) {
@@ -1856,7 +1983,7 @@ class Debby {
                 foreach ($result as $id => $value) {
                     $newresult[$id] = [];
                     foreach ($value as $field => $fieldvalue) {
-                        $fieldinfo = $this->get_field_by_name($field);
+                        $fieldinfo = $this->getFieldByName($field);
                         if ($this->dbtype == "CUBRID" && $fieldinfo["type"] == "BLOB") {
                             //file:/root/CUBRID/databases/FILEOMINT/lob/ces_058/sw_script.00001335346225392229_6061
                             $table = explode(".", $fieldvalue);
@@ -2079,96 +2206,30 @@ class Debby {
       END  Get Value
      * *************************************************************************** */
 
-    /*     * *************************************************************************** 
-      BEGIN Get Record - Fetch a row in a number of formats with prefix
+    /**
+     * This function returns a value key pair of an sql statement based on 2 records. The first record retrieved will be the key and the second will be the value
+     * @param type $sql
+     * @return type Array of Objects
      */
-
-    function getRecord($sql = "", $prefix = "", $rowtype = 0, $fetchblob = true) {
-        $result = false;
-        //Dont matter if there is no sql - use the last one.
-        if ($sql == "")
-            $sql = $this->lastsql[count($this->lastsql) - 1];
-
-        $sql = $this->parseSQL($sql);
-        $result = $this->getRows($sql, $rowtype, $fetchblob);
-        $result = $result[0]; //return the first value
-
-
-        if ($prefix != "") {
-            $newobject = null;
-            foreach ($result as $key => $value) {
-                $newkey = $prefix . $key;
-                //check for serialized data
-                if (unserialize($value) !== false) {
-                    $value = unserialize($value);
-                }
-                $newobject->$newkey = $value;
-            }
-
-            if ($rowtype == 1 || $rowtype == 2) {
-                $result = (array) $newobject;
-            } else {
-                $result = $newobject;
+    function getKeyValue ($sql="") {
+        $results = $this->getRows($sql, DEB_ARRAY);
+        $keyValues = array();
+        
+        if(!empty($results)){
+            foreach ($results as $rid => $result) {
+              $keyValues[$result[0]] = $result[1];  
             }
         }
-
-        return $result;
+                      
+        return $keyValues;
     }
-
-    /*
-      END  Get Record
-     * *************************************************************************** */
-
-
-    /*     * *************************************************************************** 
-      BEGIN Get Records - Fetch a row in a number of formats with prefix
-     */
-
-    function getRecords($sql = "", $prefix = "", $rowtype = 0, $fetchblob = true) {
-        $result = false;
-        //Dont matter if there is no sql - use the last one.
-        if ($sql == "")
-            $sql = $this->lastsql[count($this->lastsql) - 1];
-
-        $sql = $this->parseSQL($sql);
-        $result = $this->getRows($sql, $rowtype, $fetchblob);
-
-        $newresult = array();
-        foreach ($result as $rid => $record) {
-            $aresult = $record; //return the first value
-            $newobject = null;
-            foreach ($aresult as $key => $value) {
-                $newkey = $prefix . $key;
-                if (unserialize($value) !== false) {
-                    $value = unserialize($value);
-                }
-                $newobject->$newkey = $value;
-            }
-            $newresult[] = $newobject;
-        }
-
-        //fix up the field info
-        $fieldinfo = $this->fieldinfo;
-        foreach ($fieldinfo as $fid => $field) {
-            $this->fieldinfo[$fid]["name"] = $prefix . strtoupper($fieldinfo[$fid]["name"]);
-            $this->fieldinfo[$fid][1] = $fieldinfo[$fid]["name"];
-        }
-
-
-
-        return $newresult;
-    }
-
-    /*
-      END  Get Records
-     * *************************************************************************** */
-
+    
     /*     * *************************************************************************** 
       BEGIN get_database
       Returns the layout of the whole database in an easy to use array
 
       Need to add support for views & stored procedures later on
-     */
+    */
 
     function getDatabase() {
         $result = false;
@@ -2204,7 +2265,6 @@ class Debby {
                      where type='table'
                   order by name";
             $tables = $this->getRows($sqltables);
-            
             
             if (!empty($tables)) {
                 foreach ($tables as $id => $record) {
@@ -2291,30 +2351,37 @@ class Debby {
                      WHERE upper(table_schema) = upper('{$dbpath[1]}')
                      ORDER BY table_type ASC, table_name DESC";
             $tables = $this->getRows($sqltables);
-            foreach ($tables as $id => $record) {
-                $sqlinfo = 'show columns from ' . $record->TABLE_NAME;
-                $tableinfo = $this->getRows($sqlinfo);
-                //Go through the tables and extract their column information
-                foreach ($tableinfo as $tid => $trecord) {
-                    //split the length & type for field
-                    if (strpos($trecord->TYPE, "(") !== false) {
-                        $type = substr($trecord->TYPE, 0, strpos($trecord->TYPE, "("));
-                        $length = substr($trecord->TYPE, strpos($trecord->TYPE, "(") + 1, strpos($trecord->TYPE, ")") - strpos($trecord->TYPE, "(") - 1);
-                    } else {
-                        $type = $trecord->TYPE;
+            if (!empty($tables)) {
+                foreach ($tables as $id => $record) {
+                    $sqlinfo = 'show columns from ' . $record->TABLE_NAME;
+                    $tableinfo = $this->getRows($sqlinfo);
+                    //Go through the tables and extract their column information
+                    foreach ($tableinfo as $tid => $trecord) {
+                        //split the length & type for field
+                        if (strpos($trecord->TYPE, "(") !== false) {
+                            $type = substr($trecord->TYPE, 0, strpos($trecord->TYPE, "("));
+                            $length = substr($trecord->TYPE, strpos($trecord->TYPE, "(") + 1, strpos($trecord->TYPE, ")") - strpos($trecord->TYPE, "(") - 1);
+                        } else {
+                            $type = $trecord->TYPE;
+                        }
+                        $database[trim($record->TABLE_NAME)][$tid]["column"] = $tid;
+                        $database[trim($record->TABLE_NAME)][$tid]["field"] = trim($trecord->FIELD);
+                        $database[trim($record->TABLE_NAME)][$tid]["description"] = trim($trecord->EXTRA);
+                        $database[trim($record->TABLE_NAME)][$tid]["type"] = trim($type);
+                        $database[trim($record->TABLE_NAME)][$tid]["length"] = trim($length);
+                        $database[trim($record->TABLE_NAME)][$tid]["precision"] = "";
+                        $database[trim($record->TABLE_NAME)][$tid]["default"] = trim($trecord->DEFAULT);
+                        $database[trim($record->TABLE_NAME)][$tid]["notnull"] = trim($trecord->NULL);
+                        $database[trim($record->TABLE_NAME)][$tid]["pk"] = trim($trecord->KEY);
                     }
-                    $database[trim($record->TABLE_NAME)][$tid]["column"] = $tid;
-                    $database[trim($record->TABLE_NAME)][$tid]["field"] = trim($trecord->FIELD);
-                    $database[trim($record->TABLE_NAME)][$tid]["description"] = trim($trecord->EXTRA);
-                    $database[trim($record->TABLE_NAME)][$tid]["type"] = trim($type);
-                    $database[trim($record->TABLE_NAME)][$tid]["length"] = trim($length);
-                    $database[trim($record->TABLE_NAME)][$tid]["precision"] = "";
-                    $database[trim($record->TABLE_NAME)][$tid]["default"] = trim($trecord->DEFAULT);
-                    $database[trim($record->TABLE_NAME)][$tid]["notnull"] = trim($trecord->NULL);
-                    $database[trim($record->TABLE_NAME)][$tid]["pk"] = trim($trecord->KEY);
                 }
+                $result = $database;
             }
-            $result = $database;
+                else {
+                    $result = null;
+                }
+            
+            
         } else /* Postgres */ if ($this->dbtype == "postgres") {
             $dbpath = explode(":", $this->dbpath);
             $sqltables = "SELECT table_name
@@ -2445,7 +2512,7 @@ class Debby {
         if ($row->NEXTID == "") {
             $row->NEXTID = 0;
         }
-        //echo "<pre>".print_r ($this->RAWRESULT, 1)." {$sql} - ".print_r ($this->fieldinfo, 1). "\n</pre>";
+        
         $result = $row->NEXTID;
         return $result;
     }
@@ -2499,7 +2566,7 @@ class Debby {
             $datefields = "", //Fields that may be seen as date fields and converted accordingly
             $exec = false, 
             $arrayindex = 0) {
-        error_reporting(0);
+        //error_reporting(0);
         //Get the length of field prefix
         $prefixlen = strlen($fieldprefix);
         //Start the insert statement      
@@ -2543,7 +2610,7 @@ class Debby {
                 $tempfields = explode(",", $datefields);
                 foreach ($tempfields as $id => $fieldname) { //Look for date fields and convert them
                     if ($name == $fieldprefix . strtoupper($fieldname)) {
-                        $value = $this->date_to_db($value);
+                        $value = $this->dateToDb($value);
                     }
                 }
                 $sqlinsert .= ", '" . $value . "'";
@@ -2553,6 +2620,7 @@ class Debby {
         //Clean up the sql
         $sqlinsert = str_replace("(,", "(", $sqlinsert);
         $sqlinsert = str_replace("'null'", "null", $sqlinsert);
+        
         if (!$exec) { //Do we run the procedure execution 
             return $sqlinsert;
         } else {
@@ -2593,7 +2661,7 @@ class Debby {
                         
                         if (substr($name, 0, $prefixlen) == $fieldprefix) {
                             //upload the file correctly into a blob field
-                            $this->setBlob($tablename, strtoupper(substr($name, $prefixlen, strlen($name) - $prefixlen)), file_get_contents($value["tmp_name"]), $filter = "$primarykey = '" .$primarykeyValue. "'");
+                            $this->setBlob($tablename, strtoupper(substr($name, $prefixlen, strlen($name) - $prefixlen)), file_get_contents($value["tmp_name"]), $filter = "$primarykey = '" .$primarykeyValue. "'");                                                    
                         }
                     }
                 }
@@ -2687,38 +2755,6 @@ class Debby {
             
             return $error;
         }
-    }
-
-    /**
-      BEGIN Template
-      Template function to add your own things
-     */
-    function template() {
-        $result = false;
-        if (!$this->dbh) {
-            trigger_error("No database handle, use connect first in " . __METHOD__ . " for " . $this->dbtype, E_USER_WARNING);
-        } else /* SQLite */ if ($this->dbtype == "sqlite") {
-            $result = true;
-        } else /* Firebird */ if ($this->dbtype == "firebird") {
-            $result = true;
-        } else /* Oracle */ if ($this->dbtype == "oracle") {
-            $result = true;
-        } else /* MySQL */ if ($this->dbtype == "mysql") {
-            $result = true;
-        } else /* Postgres */ if ($this->dbtype == "postgres") {
-            $result = true;
-        } else /* Microsoft SQL Server */ if ($this->dbtype == "mssql") {
-            $result = true;
-        } else {
-            trigger_error("Please implement " . __METHOD__ . " for " . $this->dbtype, E_USER_ERROR);
-        }
-        /* Debugging for Close */
-        if ($result) {
-            $this->dbh = "";
-        } else {
-            trigger_error("Cant close $this->dbpath in " . __METHOD__ . " for " . $this->dbtype, E_USER_NOTICE);
-        }
-        return $result;
     }
 
 }

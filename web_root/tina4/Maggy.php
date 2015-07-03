@@ -155,12 +155,15 @@ class Maggy {
         
         asort ($fileArray);
         
+     
         foreach ( $fileArray as $fid => $entry ) {
                
                 $fileParts = explode(".", $entry);
                 $fileParts = explode(" ", $fileParts[0]);
                 $sqlCheck = "select * from tina4_maggy where migration_id = '{$fileParts[0]}'";
                 $record = $this->DEB->getRow($sqlCheck);
+                
+                
                 $migrationId = $fileParts[0];
                 unset($fileParts[0]);
                 $description = join(" ", $fileParts);
@@ -182,11 +185,12 @@ class Maggy {
                     $this->DEB->commit($transId);                    
                     $runsql = true;
                 } else {
-                    if ($record->PASSED === "0") {
+                   
+                    if ($record->PASSED === "0" || $record->PASSED === "") {
                         echo "<span style=\"color:orange;\">RETRY: \"{$migrationId} {$description}\" ... </span> \n";
                         $runsql = true;
                     } else
-                    if ($record->PASSED === "1") {
+                    if ($record->PASSED === "1" || $record->PASSED == 1 ) {
                         echo "<span style=\"color:green;\">PASSED:\"{$migrationId} {$description}\"</span>\n";
                         $runsql = false;
                     }
@@ -208,6 +212,7 @@ class Maggy {
                     foreach ($content as $cid => $sql) {
                         if (!empty(trim($sql))) {
                             $success = $this->DEB->exec($sql, $transId);
+                                                       
                             if (!$success) {
                                 echo "<span style=\"color:red;\">FAILED: \"{$migrationId} {$description}\"</span>\nQUERY:{$sql}\nERROR:".$this->DEB->getError()."\n";
                                 $error = true;

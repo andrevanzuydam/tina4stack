@@ -192,7 +192,8 @@ Ruth::autoLoad($_TINA4_LOAD_PATHS . TINA4_INCLUDES, false);
 
 //We should check to see if we have a kim.db file to load routes from before parsing
 if (file_exists("kim.db")) {
-   (new Kim())->loadRoutes();    
+   (new Kim())->loadDefines(); //these come from global settings
+   (new Kim())->loadRoutes();   
 }
 
 /**

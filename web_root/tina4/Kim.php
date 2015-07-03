@@ -1342,7 +1342,9 @@ ul.tree > li > ul > li > ul > li > a > label:before {
             }
 
             if (empty($defines)) {
-                $defines = Ruth::getOBJECT("DEB")->getRows("select global_name, global_value from global_setting");
+                
+                $defines = @Ruth::getOBJECT("DEB")->getRows("select global_name, global_value from global_setting");
+                
                 if (TINA4_HAS_CACHE) {
                     xcache_set(md5("defines"), serialize($defines));
                 }

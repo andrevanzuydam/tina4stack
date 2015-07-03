@@ -813,13 +813,13 @@ class Cody {
         }
 
 
-        $data = $DEB->getRow("select first 1 * from ({$sql}) t ");
+        $data = @$DEB->getRow("select first 1 * from ({$sql}) t ");
             
         
-        $fieldInfo = $DEB->fieldinfo;
+        $fieldInfo = @$DEB->fieldinfo;
 
         if (empty($fieldInfo)) {
-            die("Perhaps the SQL for this query is broken {$sql} or the table does not exist, have you specified the correct database in your Cody initialization");
+            die("Perhaps the SQL for this query is broken {$sql} or the table does not exist, have you specified the correct database in your Cody initialization, Try running migrations with maggy");
         }
         
         $header = "";

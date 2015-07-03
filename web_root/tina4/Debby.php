@@ -70,7 +70,9 @@ class Debby {
     function encodeImage($imagedata, $imagestore = "imagestore", $size = "", $noimage = "/imagestore/noimage.jpg") {
        
         if (!file_exists($_SERVER["DOCUMENT_ROOT"].$noimage)) {
-            mkdir ($_SERVER["DOCUMENT_ROOT"]."/".$imagestore);
+            if (!file_exists($_SERVER["DOCUMENT_ROOT"]."/".$imagestore)) {
+              mkdir ($_SERVER["DOCUMENT_ROOT"]."/".$imagestore);
+            }
             $imagePath = "http://lorempixel.com/200/200/people/".rand(0,10)."/";
             $image = file_get_contents($imagePath);
            
@@ -525,7 +527,8 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         } else /* SQLite */ if ($this->dbtype == "sqlite") {
             trigger_error("Needs to be implemented");
         } else /* SQLite3 */ if ($this->dbtype == "sqlite3") {
-            trigger_error("Needs to be implemented");
+            //No transaction handling in this driver as of yet
+            $result = "Resource id #0"; 
         } else /* Firebird */ if ($this->dbtype == "firebird") {
             $result = @ibase_trans(IBASE_DEFAULT, $this->dbh);
         } else /* Oracle */ if ($this->dbtype == "oracle") {
@@ -662,7 +665,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             $sql = str_replace("timestamp", "datetime", $sql);
         }
         if ($this->dbtype == "sqlite3") {
-            $sql = str_replace("'now'", "datetime('now')", $sql);
+            $sql = str_replace("'now'", "current_timestamp", $sql);
         }
         
         if ($this->dbtype == "mysql") {
@@ -958,7 +961,11 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
 
                     $params = array();
                     for ($i = 1; $i < func_num_args(); $i++) {
-                        $params[$i] = func_get_arg($i);
+                        if (strpos(func_get_arg($i)."", "Resource id #") !== false) {
+                            $tranID = func_get_arg($i);
+                        } else {
+                            $params[] = func_get_arg($i);
+                        }
                     }
 
                     foreach ($params as $pid => $param) {

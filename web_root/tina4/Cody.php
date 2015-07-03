@@ -1536,19 +1536,41 @@ class Cody {
         //  $html = form(["method" => "post", "action" => $submitAction, "enctype" => "multipart/form-data"], $html, $custombuttons);
     }
 
+    
+    function codeHandler ($action) {
+        $html = "";
+        switch ($action) {
+           case "loadFile":
+             $html .= $this->getCodeWindow ("1", file_get_contents(Ruth::getREQUEST("fileName")));
+        
+               
+           break;    
+           default:
+               $html = "Unknown {$action} ".print_r (Ruth::getREQUEST(), 1);
+           break;    
+        }
+               
+        return $html;
+    }
+    
     function codeBuilder() {
         $links [] = script(["src" => "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"]);
         $links [] = script(["src" => "https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"]);
         $links [] = alink(["rel" => "stylesheet", "href" => "https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"]);
         
-
-        $content = $this->getCodeWindow("code1", file_get_contents("index.php"));
+        $content = $this->ajaxHandler("", "", "ajaxCode", "", "post", false);
+        $content .= script ("
+        function loadFileCode (aFileName) {
+            ajaxCode ('/cody/loadFile', 'codeArea', {fileName: aFileName});
+        }
+        ");
         $content .= $this->getFileExplorer();
-        $content .= $this->getCodeNavigator();
-
-
+        $content .= div (["id" => "codeArea"], $this->getCodeWindow("1", file_get_contents("index.php")));
+        
         $html = shape(doctype(), html(
-                        head(meta(["charset" => "UTF-8"]), title("Code- Online Developer Editor"), $links), body(
+                        head(meta(["charset" => "UTF-8"]), title("Code- Online Developer Editor"), $links), 
+                        
+                        body(
                                 $content
                         )
                 )
@@ -1559,29 +1581,46 @@ class Cody {
 
     function getCodeWindow($id, $code) {
         $content = script(["src" => "https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/ace.js"]);
-        $content .= style("#codeWindow{$id} { position: absolute; top:0; right: 0; bottom: 0; left: 0; min-height: 768px; min-width:1024px; }");
-        $content .= div(["id" => "codeWindow{$id}div", "title" => "Code View"], div(["id" => "codeWindow{$id}", "name" => "codeWindow{$id}"], htmlentities($code)
-        ));
+        $content .= script(["src" => "https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/mode-php.js"]);
+        
+        $content .=  div(["id" => "codeWindow{$id}", "style" => "min-width: 0px; max-height: 600px; min-height: 600px", "name" => "codeWindow{$id}"], htmlentities($code));
         $content .= script("$(function() {
-                                $('#codeWindow{$id}div').dialog({position:{my: 'right top', at: 'right top', of : window},width: '80%', height: '600'});
-
-                                console.log(document.getElementById('codeWindow{$id}'));
                                 var editor = ace.edit('codeWindow{$id}');
-                                 editor.setTheme('ace/theme/monokai');
-                                 editor.getSession().setMode('ace/mode/php');
+                                    editor.getSession().setMode('ace/mode/php');
                              } );
                             ");
         return $content;
     }
 
     function getFileExplorer() {
-        $content = div(["id" => "fileExplorer", "title" => "File Explorer"], "File Explorer");
-        $content .= script("$(function() {  $('#fileExplorer').dialog({position:{my: 'left top', at: 'left top'}, height: 500}); } );");
+        $content = div(["id" => "fileExplorer","style" => "float: left; width: 300px; overflow: auto; max-height: 600px; min-height: 600px", "title" => "File Explorer"], $this->getFileTree(Ruth::getDOCUMENT_ROOT(), "loadFileCode", true));
         return $content;
     }
 
+    
+    function getFileTree($path="", $callBack="", $root=false) {
+        $content = ul(["class" => "tree"], "");
+        $files = scandir($path);
+        foreach ($files as $fid => $file) {
+            if ($file != "." && $file != "..") {
+                $fileName = str_replace ('\\', '/', $path."/".$file);
+                if (is_dir($path."/".$file)) {
+                  $content->addContent ( $list = li (a (["href" => "#"], $file )) );
+                } else {
+                  $content->addContent ( $list = li (a (["href" => "#", "onclick" => "{$callBack}('{$fileName}')"], $file )) );
+                }
+                if (is_dir($path."/".$file)) {
+                    $list->addContent ($this->getFileTree($path."/".$file, $callBack));
+                }
+            }
+        }
+        
+        return $content;
+    }
+    
     function getCodeNavigator() {
-        $content = div(["id" => "codeNavigator", "title" => "Navigator"], "");
+        
+        $content = div(["id" => "codeNavigator", "title" => "Navigator"], $this->getFileTree (Ruth::getDOCUMENT_ROOT()));
         $content .= script("$(function() {  $('#codeNavigator').dialog({position:{my: '0 0', at: 'left bottom', of: $('#fileExplorer') }, height:400 }); } );");
         return $content;
     }
@@ -1707,6 +1746,7 @@ class Cody {
                                   } else {
 
                                     jsonData[elem.id] = elem.value;
+                         
                                   }
                                   
                                 }
@@ -1743,6 +1783,7 @@ class Cody {
                                         }  
                                           else {
                                           jsonData[elem.name] = elem.value;
+                                          
                                         }    
                                     }
                                 }

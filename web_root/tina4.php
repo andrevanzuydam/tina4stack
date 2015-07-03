@@ -191,7 +191,17 @@ Ruth::addRoute(RUTH_GET, "/build", function () {
 Ruth::autoLoad($_TINA4_LOAD_PATHS . TINA4_INCLUDES, false);
 
 if ( strpos (Ruth::getREQUEST_URI(), "/cody") !== false ) {
-    echo (new Cody())->codeBuilder();
+    
+    Ruth::addRoute(RUTH_GET, "/cody", function() {
+            echo (new Cody())->codeBuilder();
+        }
+    );
+    
+    Ruth::addRoute(RUTH_POST, "/cody/{action}", function($action) {
+            echo (new Cody())->codeHandler($action);
+        }
+    );
+    
 }
 
 //We should check to see if we have a kim.db file to load routes from before parsing

@@ -614,17 +614,18 @@ class Ruth {
 
         //parser for formData from raw AJAX
         if (!empty($_REQUEST["formData"])) {
-            $formData = urldecode($_REQUEST["formData"]);
-            //TODO: see why this is not working
-            $formData = html_entity_decode($formData, ENT_QUOTES);
+            $formData = rawurldecode($_REQUEST["formData"]);
+            //make sure we get the correct strings
+            $formData =  html_entity_decode($formData, ENT_QUOTES);
 
-            //print_r ($formData);
-            //file_put_contents ("data.txt", print_r (explode('&', $formData), 1));
             foreach (explode('&', $formData) as $data) {
-               $param = explode ("=", $data, 2);
-                self::$REQUEST[$param[0]] = $param[1];
+                $param = explode ("=", $data, 2);
+               
+                self::setREQUEST($param[0], addslashes($param[1]));
                 $_REQUEST[$param[0]] = $param[1];
             }
+            unset($_REQUEST["formData"]);
+            unset(Ruth::$REQUEST["formData"]);
         }
         
         if (!empty($_REQUEST)) {

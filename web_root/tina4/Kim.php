@@ -460,7 +460,9 @@ class Kim {
             
             //Match all if conditions to see what todo with them
             $ifElements = $this->matchConditions($modifiedTemplate);
-            
+
+
+
             $controls = [];
             
             
@@ -685,14 +687,16 @@ class Kim {
                     
                      $found = false;
                      foreach ($control["if"] as $ifId => $ifStatement) {
-                        
+
+
                         $myIf = '$expression = ('.$ifStatement["expression"].');';
                         if (!empty($data)) {
                             foreach ($data as $dName => $dValue ) {
+
                                 $myIf = str_replace ("{".$dName."}", $dValue, $myIf);
                             }
                         }
-                                                
+
                         @eval ($myIf);
                         if (!empty($expression)) {
                             if ($expression) {
@@ -843,8 +847,8 @@ class Kim {
                             script(["src" => "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.js"]),
                             script(["src" => "http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"]),
                             script(["src" => "http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/additional-methods.min.js"]),
-                            script(["src" => "http://cdnjs.buttflare.com/ajax/libs/interact.js/1.2.4/interact.min.js" ])
-                            
+                            script(["src" => "http://cdnjs.buttflare.com/ajax/libs/interact.js/1.2.4/interact.min.js" ]),
+                            script(["src" => "//cdn.ckeditor.com/4.5.1/standard/ckeditor.js"])
                     ),
                     body (["style" => "padding: 0px 20px 0px"],
                             
@@ -980,10 +984,11 @@ class Kim {
         if($this->KIM->update ("menu", [
                 "name" => Ruth::getREQUEST("txtNAME"), 
                 "target" => Ruth::getREQUEST("txtTARGET"), 
-                "path" => Ruth::getREQUEST("txtPATH"), 
+                "path" => Ruth::getREQUEST("txtPATH"),
+                "order_index" => Ruth::getREQUEST("txtORDER_INDEX"),
                 "parent_id" => empty(Ruth::getREQUEST("txtPARENT_ID")) ? '0' : Ruth::getREQUEST("txtPARENT_ID"),
-                "system_menu" => 0,
-            ], ["system_menu" => 0, "menu_id" => Ruth::getREQUEST("intMENU_ID")]   
+
+            ], ["menu_id" => Ruth::getREQUEST("intMENU_ID")]
         )){
             
             return (new Cody())->bootStrapAlert("success", "Updated", "Menu Item Updated Successfully");
@@ -1011,8 +1016,8 @@ class Kim {
                         (new Cody())->bootStrapInput("txtNAME", "Menu Name", "The name for the menu", $menu->NAME),
                         (new Cody())->bootStrapLookup("txtTARGET", "Menu Target", ["_self" => "Self", "_blank" => "Blank ( New Tab )"], $menu->TARGET),
                         (new Cody())->bootStrapInput("txtPATH", "Menu Path", "The path for the menu", $menu->PATH),
+                        (new Cody())->bootStrapInput("txtORDER_INDEX", "Order Index", "The order index for the menu", $menu->ORDER_INDEX),
                         (new Cody())->bootStrapLookup("txtPARENT_ID", "Menu Parent", $this->KIM->getKeyValue("select menu_id, name from menu where (system_menu = 0 or menu_id = 0) "), $menu->PARENT_ID),
-                        (new Cody())->bootStrapCheckbox("cbROLE", $this->KIM->getKeyValue("select role_id, name from role")),
                         (new Cody())->bootStrapButton("btnDelete", "Delete", "$('#formMenu').submit(); if ( confirm('Delete this menu item?') ) { callAjax('/kim/menu/delete', 'right_nav', null, 'post');}", "btn btn-danger pull-right", "col-md-12", true),
                         (new Cody())->bootStrapButton("btnUpdate", "Save", "$('#formMenu').submit(); if ( $('#formMenu').validate().errorList.length == 0 ) { callAjax('/kim/menu/update', 'left_nav', null, 'post');}", "btn btn-primary pull-right", "col-md-12", true)
                     )
@@ -1022,8 +1027,8 @@ class Kim {
         
     }
     
-    function getMenuTree($filter = "where system_menu <> 1 and parent_id = 0", $menuId=0) {
-        $menus = $this->KIM->getRows("select m.*, (select count(menu_id) from menu where parent_id = m.menu_id ) as count_children from menu m {$filter}");
+    function getMenuTree($filter = "where parent_id = 0 and menu_id <> 0", $menuId=0) {
+        $menus = $this->KIM->getRows("select m.*, (select count(menu_id) from menu where parent_id = m.menu_id ) as count_children from menu m {$filter} order by order_index");
         $style = style ('@import "http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css";
 
                               ul.tree {
@@ -1153,7 +1158,7 @@ ul.tree > li > ul > li > ul > li > a > label:before {
                 }
                 
                 if ($menu->COUNT_CHILDREN > 0) {
-                    $html->byId("menu{$menu->MENU_ID}")->addContent ( $this->getMenuTree("where system_menu <> 1 and parent_id = {$menu->MENU_ID}", $menu->MENU_ID) );
+                    $html->byId("menu{$menu->MENU_ID}")->addContent ( $this->getMenuTree("where parent_id = {$menu->MENU_ID}", $menu->MENU_ID) );
                 }
                 
             }
@@ -1291,7 +1296,7 @@ ul.tree > li > ul > li > ul > li > a > label:before {
                        $customFields, 
                        "Route", 
                        $tableInfo, 
-                       $formHideColumns=""); 
+                       $formHideColumns="route_id");
         
         //update cache
        $this->cacheRoutes();
@@ -1329,7 +1334,29 @@ ul.tree > li > ul > li > ul > li > a > label:before {
             
         return $routes;
     }
-    
+
+    function loadDefines() {
+        if (!empty(Ruth::getOBJECT("DEB"))) {
+            if (TINA4_HAS_CACHE) {
+                $defines = unserialize(xcache_get(md5("defines")));
+            }
+
+            if (empty($defines)) {
+                $defines = Ruth::getOBJECT("DEB")->getRows("select global_name, global_value from global_setting");
+                if (TINA4_HAS_CACHE) {
+                    xcache_set(md5("defines"), serialize($defines));
+                }
+            }
+
+            if (!empty($defines)) {
+                foreach ($defines as $did => $define) {
+                    define($define->GLOBAL_NAME, $define->GLOBAL_VALUE);
+                }
+            }
+
+        }
+    }
+
     function loadRoutes () {
         if (TINA4_HAS_CACHE) {
             $routes = unserialize(xcache_get (md5("routes")));
@@ -1338,7 +1365,6 @@ ul.tree > li > ul > li > ul > li > a > label:before {
         if (empty($routes)) {
             $routes = $this->cacheRoutes();
         }
-
 
         if (!empty($routes)) {
             foreach ($routes as $rid => $route) {

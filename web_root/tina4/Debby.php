@@ -2768,10 +2768,12 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         $sqlupdate = str_replace("0=0 ,", "", $sqlupdate);
         $sqlupdate = str_replace("'null'", "null", $sqlupdate);
         $this->lastsql[count($this->lastsql)] = $sqlupdate;
-        if (!$exec) { //Do we run the procedure execution 
+
+        if (!$exec) { //Do we run the procedure execution
             return $sqlupdate;
         } else {
             //Run the insert statement and upload files while we are at it.
+            //file_put_contents ("sql.txt", $sqlupdate);
             $error = $this->exec($sqlupdate);
             
             if (!$error) {

@@ -171,14 +171,15 @@ class Cody {
         }        
                 
         $closeAction = "$('#{$name}Target').html('');";
-                
+
+        $ckeditorCheck = " if (CKEDITOR !== undefined) {  } ";
         switch ($action) {
             case "insert":
-                $customButtons = $this->bootStrapButton("btnInsert", "OK", "$('#form{$name}').submit(); if ( $('#form{$name}').validate().errorList.length == 0 ) {  call{$name}Ajax('/cody/form/insert/post','{$name}Target', {object : a{$name}object, record: null, db: '{$db}' }) } ", "btn btn-success", "", true);                
+                $customButtons = $this->bootStrapButton("btnInsert", "OK", " {$ckeditorCheck} $('#form{$name}').submit(); if ( $('#form{$name}').validate().errorList.length == 0 ) {  call{$name}Ajax('/cody/form/insert/post','{$name}Target', {object : a{$name}object, record: null, db: '{$db}' }) } ", "btn btn-success", "", true);
                 $customButtons .= $this->bootStrapButton("btnInsert", "Cancel", $closeAction, "btn btn-warning", "", true);                
             break;    
             case "update":
-                $customButtons = $this->bootStrapButton("btnUpdate", "OK", "$('#form{$name}').submit(); if ( $('#form{$name}').validate().errorList.length == 0 ) {  call{$name}Ajax('/cody/form/update/post','{$name}Target', {object : a{$name}object, record: '".  urlencode(json_encode($record) )."', db: '{$db}' }) } ", "btn btn-success", "", true);                
+                $customButtons = $this->bootStrapButton("btnUpdate", "OK", "  {$ckeditorCheck} $('#form{$name}').submit(); if ( $('#form{$name}').validate().errorList.length == 0 ) {  call{$name}Ajax('/cody/form/update/post','{$name}Target', {object : a{$name}object, record: '".  urlencode(json_encode($record) )."', db: '{$db}' }) } ", "btn btn-success", "", true);
                 $customButtons .= $this->bootStrapButton("btnUpdate", "Cancel", $closeAction, "btn btn-warning", "", true);                
             break;    
             default:
@@ -397,7 +398,9 @@ class Cody {
                                 }    
                             break;    
                             case "update":
+
                                 $sqlUpdate = $DEB->getUpdateSQL("txt", $tableName, $keyName, $record->$keyName, "{$action}{$name}", $passwordFields, $dateFields, true);
+
                                 if ( $sqlUpdate ) {
                                      echo $this->bootStrapAlert("success", $caption="Success", "Record was updated successfully"); 
                                      echo script ('$table'.$name.'.bootstrapTable("refresh");' );

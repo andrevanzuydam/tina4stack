@@ -145,16 +145,17 @@ if (file_exists(realpath(__DIR__ . "/test"))) {
     /**
      * Use Tessa to run selenium tests, selenium server must be downloaded and running on the default port
      */
-    Ruth::addRoute("GET", "/tessa", function () {
-        require_once realpath(__DIR__ . "/test/runTessa.php");
-        new runTessa("test");
-    });
+    if ( strpos (Ruth::getREQUEST_URI(), "/tessa") !== false ) {
+        Ruth::addRoute("GET", "/tessa", function () {
+            require_once realpath(__DIR__ . "/test/runTessa.php");
+            new runTessa("test");
+        });
 
-    Ruth::addRoute("GET", "/tessa/{brower}", function ($browser) {
-        require_once realpath(__DIR__ . "/test/runTessa.php");
-        new runTessa("test", $browser);
-    });
-
+        Ruth::addRoute("GET", "/tessa/{brower}", function ($browser) {
+            require_once realpath(__DIR__ . "/test/runTessa.php");
+            new runTessa("test", $browser);
+        });
+    }
 }
 
 /**
@@ -189,6 +190,9 @@ Ruth::addRoute(RUTH_GET, "/build", function () {
  */
 Ruth::autoLoad($_TINA4_LOAD_PATHS . TINA4_INCLUDES, false);
 
+if ( strpos (Ruth::getREQUEST_URI(), "/cody") !== false ) {
+    echo (new Cody())->codeBuilder();
+}
 
 //We should check to see if we have a kim.db file to load routes from before parsing
 if (file_exists("kim.db")) {

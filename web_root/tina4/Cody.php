@@ -1037,81 +1037,7 @@ class Cody {
         return $html;
     }
 
-    /**
-     * The CRUD code generation tool of cody
-     */
-    function display() {
-        $tables = $this->DEB->getDatabase();
-        $tableData = h1(" Tables ");
-        foreach ($tables as $tableName => $tableFields) {
-            $tableData .= li(area(["href" => "?tablename={$tableName}"], $tableName));
-        }
-
-        $html = html(
-                head(
-                        title("Cody - Generation of Code")
-                ), body(
-                        style("   .tables {
-                               border: 1px solid pink;
-                               width: 20%;
-                               float: left;
-
-                            }
-
-                            .code {
-                               border : 1px solid orange;
-                               width: 75%;
-                               float: left;
-                            }
-
-                            body {
-                              border: 0px;
-                              margin: 0px;
-                            }
-
-                            .sql {
-                               width: 100%;
-                               height: 200px;
-                            }
-
-                        "
-                        ), div(["class" => "tables"], ul($tableData)
-                        ), div(["class" => "code"], $this->getCode(Ruth::getREQUEST("tablename"))
-                        )
-                )
-        );
-        return $html->compile_html();
-    }
-
-    /**
-     * Get the code from a tablename
-     */
-    function getCode($tablename = "") {
-        $html = h1($tablename);
-        $sql = "select\n";
-        if (!empty($tablename)) {
-            $tables = $this->DEB->getDatabase();
-            $fields = $tables[$tablename];
-
-            foreach ($fields as $fid => $field) {
-                $sql .= "  " . $field["field"] . ",\n";
-                $html .= label(input(["type" => "checkbox", "checked" => "checked"]), $field["field"] . " " . $field["type"]) . br();
-            }
-
-            $sql = substr($sql, 0, -2);
-
-            $sql .= "\n from " . $tablename;
-
-            $html .= textarea(["class" => "sql"], $sql);
-        } else {
-            $html .= h2("Choose a table from the left") . hr();
-        }
-
-        $html .= div(["style" => "overflow: auto"], pre($this->bootstrapForm($sql) . "\n" . $this->kendoGrid($sql)));
-
-        return $html;
-    }
-
+    
     /**
      * A function to create a valid Bootstrap Form
      * @param String $sql A valid SQL statement for the selected database
@@ -1613,10 +1539,8 @@ class Cody {
     function codeBuilder() {
         $links [] = script(["src" => "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"]);
         $links [] = script(["src" => "https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"]);
-        //$links [] = alink (["rel"=> "stylesheet",  "href"=> "//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"]);
         $links [] = alink(["rel" => "stylesheet", "href" => "https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"]);
-        //$links [] = script(["src"=> "//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"]);
-
+        
 
         $content = $this->getCodeWindow("code1", file_get_contents("index.php"));
         $content .= $this->getFileExplorer();
@@ -1634,7 +1558,7 @@ class Cody {
     }
 
     function getCodeWindow($id, $code) {
-        $content = script(["src" => "js/ace/ace.js"]);
+        $content = script(["src" => "https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/ace.js"]);
         $content .= style("#codeWindow{$id} { position: absolute; top:0; right: 0; bottom: 0; left: 0; min-height: 768px; min-width:1024px; }");
         $content .= div(["id" => "codeWindow{$id}div", "title" => "Code View"], div(["id" => "codeWindow{$id}", "name" => "codeWindow{$id}"], htmlentities($code)
         ));

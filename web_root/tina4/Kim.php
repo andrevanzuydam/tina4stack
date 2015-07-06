@@ -34,7 +34,7 @@ class Kim {
         }
         
         if (Ruth::getOBJECT("DEB")) {
-            if (!file_exists ( Ruth::getDOCUMENT_ROOT()."/migrations/19000101100000 initial_kim_global_settings.sql" )) {
+            if (!file_exists ( Ruth::getDOCUMENT_ROOT()."/migrations/19000101100000 initial_kim_global_settings.sql" ) || !file_exists ( Ruth::getDOCUMENT_ROOT()."/migrations/19000101100001 initial_kim_content_table.sql" )) {
                 
                 $sqlGlobalSettings = "create table global_setting (
                                             global_setting_id integer default 0 not null,
@@ -45,7 +45,20 @@ class Kim {
                                             updated timestamp default 'now',
                                             primary key (global_setting_id)
                                         );";
+                              
                 file_put_contents (Ruth::getDOCUMENT_ROOT()."/migrations/19000101100000 initial_kim_global_settings.sql", $sqlGlobalSettings );
+                
+                $sqlContentTable = "create table content (
+                                            content_id integer default 0 not null,
+                                            title varchar (200) default '',
+                                            description varchar (1000) default '',
+                                            content blob,
+                                            status varchar (20) default 'Active',
+                                            order_index integer default 0,
+                                            primary key (content_id)
+                                        )";
+                
+                file_put_contents (Ruth::getDOCUMENT_ROOT()."/migrations/19000101100001 initial_kim_content_table.sql", $sqlContentTable );
             }
         }
                 
@@ -187,13 +200,11 @@ class Kim {
         
         $this->KIM->insert ("role", ["role_id" => 0, 
                                     "name" => "Public", 
-                                    "description" => "The role which is set for public use", 
-                                    "created" => "current_timestamp"
+                                    "description" => "The role which is set for public use"
                                     ]);
         $this->KIM->insert ("role", ["role_id" => 1, 
                                     "name" => "System", 
-                                    "description" => "The system role which handles the menu creation and everything", 
-                                    "created" => "current_timestamp"
+                                    "description" => "The system role which handles the menu creation and everything"
                                     ]);
         
         $sqlUser = "create table if not exists user (
@@ -300,6 +311,14 @@ class Kim {
                                     "parent_id" => 3,
                                     "path" => "/kim/menus",
                                     "order_index" => 100    
+                                    ]);
+        $this->KIM->insert("menu", ["menu_id" => 12,
+                                    "name" => "Content",
+                                    "created" => "current_timestamp",
+                                    "status" => 'Active',
+                                    "parent_id" => 3,
+                                    "path" => "/kim/content",
+                                    "order_index" => 110    
                                     ]);
         $this->KIM->insert("menu", ["menu_id" => 7,
                                     "name" => "Users",
@@ -878,25 +897,27 @@ class Kim {
         
         $html = ul (["class" => "nav navbar-nav"]);
         
-        foreach ($menus as $mid => $menu) {
-            
-            if (empty($menu->PATH)) $menu->PATH = "#"; 
-            $html->addContent( $subMenu = li ( $subLink = a(["href" => $menu->PATH], $menu->NAME ) ) ); 
-           
-            //get sub menus for this menu if possible
-            $subMenus = $this->getSubMenus($menu->MENU_ID, $systemMenu);
-            
-            //only add the elements if needed
-            if (!empty($subMenus)) {
-                $subLink->addAttribute("class", "dropdown-toggle");
-                $subLink->addAttribute("data-toggle", "dropdown");
-                $subLink->addAttribute("role", "button");
-                $subLink->addAttribute("aria-haspopup", "true"); 
-                $subLink->addAttribute("aria-expanded", "false"); 
-                $subLink->addContent (span(["class" => "caret"]));
+        if (!empty($menus)) {
+            foreach ($menus as $mid => $menu) {
 
-                $subMenu->addAttribute ("class", "dropdown");
-                $subMenu->addContent ($subMenus);
+                if (empty($menu->PATH)) $menu->PATH = "#"; 
+                $html->addContent( $subMenu = li ( $subLink = a(["href" => $menu->PATH], $menu->NAME ) ) ); 
+
+                //get sub menus for this menu if possible
+                $subMenus = $this->getSubMenus($menu->MENU_ID, $systemMenu);
+
+                //only add the elements if needed
+                if (!empty($subMenus)) {
+                    $subLink->addAttribute("class", "dropdown-toggle");
+                    $subLink->addAttribute("data-toggle", "dropdown");
+                    $subLink->addAttribute("role", "button");
+                    $subLink->addAttribute("aria-haspopup", "true"); 
+                    $subLink->addAttribute("aria-expanded", "false"); 
+                    $subLink->addContent (span(["class" => "caret"]));
+
+                    $subMenu->addAttribute ("class", "dropdown");
+                    $subMenu->addContent ($subMenus);
+                }
             }
         }
         
@@ -1260,9 +1281,9 @@ ul.tree > li > ul > li > ul > li > a > label:before {
         return $content;
     }
     
-    function getRouteTarget($recordValue=null) {
+    function getRouteTarget($recordValue=null, $fieldName) {
    
-        $html = textarea(["name" => "txtTARGET", "style" => "width: 100%; color: #fff; background: black"], $recordValue);
+        $html = textarea(["name" => "txt".$fieldName, "style" => "width: 100%; color: #fff; background: black"], $recordValue);
         return $html;  
     }
     
@@ -1716,6 +1737,53 @@ ul.tree > li > ul > li > ul > li > a > label:before {
             
     }
     
+    
+    function getEditor($recordValue=null, $fieldName) {
+   
+        $content = script(["src" => "//cdn.ckeditor.com/4.5.1/standard/ckeditor.js"]);
+
+        $content .= textarea (["name" => "txt{$fieldName}", "id" => "txt{$fieldName}"], $recordValue);
+        $content .= script("$(document).ready ( function() {
+                                var myEditor = CKEDITOR.replace ('txt{$fieldName}', {allowedContent: true, extraAllowedContent : '*(*)'});
+                                myEditor.on( 'change', function( evt ) {
+                                    evt.editor.updateElement();
+                                });
+                            });");
+        return $content;
+        
+    }
+    
+    function getContent () {
+        $DEB = Ruth::getObject ("DEB");
+        $buttons = "update,delete";
+        
+        $buttons = "update,delete";
+        $toolBar["caption"] = "Content";
+
+        $customFields["TITLE"] = ["validation" => "required:true"];
+        $customFields["DESCRIPTION"] = ["type" => "text"];
+        $customFields["IMAGE_PATH"] = ["type" => "text", "validation" => "required:false"];
+        $customFields["CONTENT"] = ["type" => "custom", "call" => "(new Kim())->getEditor"];
+        $customFields["STATUS"] = ["type" => "lookup", "list" => ["Active" => "Active", "Disabled" => "Disabled"]];
+        $customFields["ORDER_INDEX"] = ["validation" => "required:true", "defaultValue" => 100];
+
+        $tableInfo = ["table" => "content", "primarykey" => "content_id"];
+        $html  = (new Cody())->bootStrapTable(
+            $sql="select content_id, title, description from content order by order_index",
+            $buttons,
+            $hideColumns="content_id",
+            $toolBar,
+            $customFields,
+            "Content",
+            $tableInfo,
+            $formHideColumns="content_id");
+
+      
+        
+        return $html;   
+        
+        
+    }
         
     
     /**
@@ -1757,6 +1825,9 @@ ul.tree > li > ul > li > ul > li > a > label:before {
                 break;    
                 case "/kim/profile":
                     $content .= $this->getProfileUpdate();
+                break;    
+                case "/kim/content":
+                    $content .= $this->getContent();                    
                 break;    
                 default:
                    $content .= "Please implement the menu option ".Ruth::getPATH();  

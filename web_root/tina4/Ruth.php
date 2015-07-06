@@ -598,7 +598,7 @@ class Ruth {
         session_name($sessionName);
         session_start();
         
-        $URL = explode ("?", $_SERVER["REQUEST_URI"]);
+        $URL = explode ("?", $_SERVER["REQUEST_URI"], 2);
         self::$REQUEST_METHOD = $_SERVER["REQUEST_METHOD"];
         self::$REQUEST_URI = $URL[0];
         self::$DOCUMENT_ROOT = realpath(__DIR__."/../");
@@ -618,12 +618,15 @@ class Ruth {
             //make sure we get the correct strings
             $formData =  html_entity_decode($formData, ENT_QUOTES);
 
-            foreach (explode('&', $formData) as $data) {
+            
+            foreach (explode('¿', $formData) as $data) {
                 $param = explode ("=", $data, 2);
                
-                self::setREQUEST($param[0], addslashes($param[1]));
+                self::setREQUEST($param[0], $param[1]);
                 $_REQUEST[$param[0]] = $param[1];
             }
+                        
+        
             unset($_REQUEST["formData"]);
             unset(Ruth::$REQUEST["formData"]);
         }

@@ -1132,7 +1132,7 @@ class Cody {
                                 $call = $customField->call;
                             }
                             
-                            $input = div(call_user_func($call, $record[$fid]));  
+                            $input = div(call_user_func($call, $record[$fid], strtoupper($field["name"])));  
                         break;    
                         case "password":
                             $input = input(["class" => "form-control", "type" => "password", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => "txt" . strtoupper($field["name"]), "id" => "txt" . strtoupper($field["name"])], "");
@@ -1646,7 +1646,7 @@ class Cody {
                   if (obj.hasOwnProperty(p)) {
                     str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
                   }
-                return str.join('&');
+                return str.join('¿');
               }    
 
             // function to check if object or variable/array/string empty : like php empty function

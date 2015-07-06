@@ -951,10 +951,12 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                 $result .= "No Errors\n";
             }
         } else /* SQLite3 */ if ($this->dbtype == "sqlite3") {
-
+            
             if (strpos($sql, "?") !== false) {
                 //echo "here";
+                
                 $statement = $this->dbh->prepare($sql);
+                         
 
                 //print_r ($this->dbh);
                 if ($statement) {
@@ -967,7 +969,8 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                             $params[] = func_get_arg($i);
                         }
                     }
-
+                        
+                    
                     foreach ($params as $pid => $param) {
                         if (is_float($param)) {
                                 //echo "binding {$pid} float"; 
@@ -986,6 +989,8 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                             $statement->bindValue($pid, $param, SQLITE3_BLOB);
                         }
                     }
+                    
+                   
                     $result = $statement->execute();
                 } else {
                     echo $result = "Failed to run script {$sql}";
@@ -1169,8 +1174,9 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                  $params[] = $value;
             }
         }
-                        
-        return @call_user_func_array([$this, "exec"], $params);
+                       
+       
+        return call_user_func_array([$this, "exec"], $params);
     }
     
     /**

@@ -5,8 +5,6 @@
 \item 
 \hyperlink{classKim_a23fe2ba2b5a76fe09200e2f0fbded794}{\+\_\+\+\_\+construct} ()
 \item 
-\hyperlink{classKim_a98cd6f87644136345cd5203952f4ddbb}{link\+Array} (\$m)
-\item 
 \hyperlink{classKim_a8a754c69958e71d159e6808f83f12cfe}{get\+Default\+Page} (\$page\+Name)
 \item 
 \hyperlink{classKim_ae9db930151f99235866c68fd96208cd8}{create\+Database} ()
@@ -37,7 +35,7 @@
 \item 
 \hyperlink{classKim_a2a73684a878eac950d34f15ce674f194}{get\+Menu\+Item\+Form} (\$menu\+Id)
 \item 
-\hyperlink{classKim_a7f493912f2db5510a30faebd9b553162}{get\+Menu\+Tree} (\$filter=\char`\"{}where system\+\_\+menu $<$$>$ 1 and parent\+\_\+id = 0\char`\"{}, \$menu\+Id=0)
+\hyperlink{classKim_acb9933ffdc95c3caab1c94c47d5f4e13}{get\+Menu\+Tree} (\$filter=\char`\"{}where parent\+\_\+id = 0 and menu\+\_\+id $<$$>$ 0\char`\"{}, \$menu\+Id=0)
 \item 
 \hyperlink{classKim_afce7f678a883aab27b976429e8248d79}{get\+User\+List} (\$filter=\char`\"{}\char`\"{})
 \item 
@@ -52,6 +50,8 @@
 \hyperlink{classKim_a1e3ce6c13bf4c0b488ff07ddfe95c0ac}{get\+Routes} ()
 \item 
 \hyperlink{classKim_a5fcd3a64ecd0f244e9db70f0c007b6ba}{cache\+Routes} ()
+\item 
+\hyperlink{classKim_a8a657ebf9637c9d007c2c66654bf2a6d}{load\+Defines} ()
 \item 
 \hyperlink{classKim_a99011f068ed5a1f55fd8c5cf2b1aac43}{load\+Routes} ()
 \item 
@@ -69,9 +69,9 @@
 \item 
 \hyperlink{classKim_a3725ce24c9501992a03e6386423e447c}{update\+P\+O\+S\+T} ()
 \item 
-\hyperlink{classKim_a1187d9c11984f0daf1f6fa983378d4e7}{clean\+Up\+Conditions} (\$\hyperlink{Shape_8php_a868083704107d6d05b69983f62cce171}{a})
-\item 
 \hyperlink{classKim_a06415955f55535b121470e7779e92168}{match\+Conditions} (\$string)
+\item 
+\hyperlink{classKim_a3fe85e0bf7c92053e0a4c3b76dba7259}{sort\+Conditions} (\$original\+String, \$matches)
 \item 
 \hyperlink{classKim_ae017a30aaa5b1f6e470de679142b7f02}{display} ()
 \end{DoxyCompactItemize}
@@ -116,21 +116,6 @@ Create a database connection for \hyperlink{classKim}{Kim} to use. Check if we n
 {}
 \end{DoxyParamCaption}
 )}\label{classKim_a5fcd3a64ecd0f244e9db70f0c007b6ba}
-\hypertarget{classKim_a1187d9c11984f0daf1f6fa983378d4e7}{}\index{Kim@{Kim}!clean\+Up\+Conditions@{clean\+Up\+Conditions}}
-\index{clean\+Up\+Conditions@{clean\+Up\+Conditions}!Kim@{Kim}}
-\subsubsection[{clean\+Up\+Conditions}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::clean\+Up\+Conditions (
-\begin{DoxyParamCaption}
-\item[{}]{\$a}
-\end{DoxyParamCaption}
-)}\label{classKim_a1187d9c11984f0daf1f6fa983378d4e7}
-Cleans up the input String of a Condition 
-\begin{DoxyParams}[1]{Parameters}
-type & {\em \$input\+String} & \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-type 
-\end{DoxyReturn}
 \hypertarget{classKim_ae9db930151f99235866c68fd96208cd8}{}\index{Kim@{Kim}!create\+Database@{create\+Database}}
 \index{create\+Database@{create\+Database}!Kim@{Kim}}
 \subsubsection[{create\+Database}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::create\+Database (
@@ -254,14 +239,14 @@ type & {\em \$menu\+Id} & \\
 \item[{}]{\$system\+Menu = {\ttfamily 1}}
 \end{DoxyParamCaption}
 )}\label{classKim_ad7f2c106626bd9e83f1a4f76303a6e45}
-\hypertarget{classKim_a7f493912f2db5510a30faebd9b553162}{}\index{Kim@{Kim}!get\+Menu\+Tree@{get\+Menu\+Tree}}
+\hypertarget{classKim_acb9933ffdc95c3caab1c94c47d5f4e13}{}\index{Kim@{Kim}!get\+Menu\+Tree@{get\+Menu\+Tree}}
 \index{get\+Menu\+Tree@{get\+Menu\+Tree}!Kim@{Kim}}
 \subsubsection[{get\+Menu\+Tree}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::get\+Menu\+Tree (
 \begin{DoxyParamCaption}
-\item[{}]{\$filter = {\ttfamily \char`\"{}where~system\+\_\+menu~$<$$>$~1~and~parent\+\_\+id~=~0\char`\"{}}, }
+\item[{}]{\$filter = {\ttfamily \char`\"{}where~parent\+\_\+id~=~0~and~menu\+\_\+id~$<$$>$~0\char`\"{}}, }
 \item[{}]{\$menu\+Id = {\ttfamily 0}}
 \end{DoxyParamCaption}
-)}\label{classKim_a7f493912f2db5510a30faebd9b553162}
+)}\label{classKim_acb9933ffdc95c3caab1c94c47d5f4e13}
 \hypertarget{classKim_a3cb9fd00227b180b8118257b85acf6ff}{}\index{Kim@{Kim}!get\+Page\+Template@{get\+Page\+Template}}
 \index{get\+Page\+Template@{get\+Page\+Template}!Kim@{Kim}}
 \subsubsection[{get\+Page\+Template}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::get\+Page\+Template (
@@ -371,21 +356,13 @@ type
 {}
 \end{DoxyParamCaption}
 )}\label{classKim_a03aa4a733e4539d175df84011ad1cb9a}
-\hypertarget{classKim_a98cd6f87644136345cd5203952f4ddbb}{}\index{Kim@{Kim}!link\+Array@{link\+Array}}
-\index{link\+Array@{link\+Array}!Kim@{Kim}}
-\subsubsection[{link\+Array}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::link\+Array (
+\hypertarget{classKim_a8a657ebf9637c9d007c2c66654bf2a6d}{}\index{Kim@{Kim}!load\+Defines@{load\+Defines}}
+\index{load\+Defines@{load\+Defines}!Kim@{Kim}}
+\subsubsection[{load\+Defines}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::load\+Defines (
 \begin{DoxyParamCaption}
-\item[{}]{\$m}
+{}
 \end{DoxyParamCaption}
-)}\label{classKim_a98cd6f87644136345cd5203952f4ddbb}
-Function to link Array by Element I\+Ds for the preg match all function 
-\begin{DoxyParams}[1]{Parameters}
-type & {\em \$m} & \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-type 
-\end{DoxyReturn}
+)}\label{classKim_a8a657ebf9637c9d007c2c66654bf2a6d}
 \hypertarget{classKim_a99011f068ed5a1f55fd8c5cf2b1aac43}{}\index{Kim@{Kim}!load\+Routes@{load\+Routes}}
 \index{load\+Routes@{load\+Routes}!Kim@{Kim}}
 \subsubsection[{load\+Routes}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::load\+Routes (
@@ -400,6 +377,14 @@ type
 \item[{}]{\$string}
 \end{DoxyParamCaption}
 )}\label{classKim_a06415955f55535b121470e7779e92168}
+
+\begin{DoxyParams}[1]{Parameters}
+type & {\em \$string} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+array 
+\end{DoxyReturn}
 \hypertarget{classKim_a960a80702fe7dd134adbfeea34ccfcfa}{}\index{Kim@{Kim}!parse\+Snippets@{parse\+Snippets}}
 \index{parse\+Snippets@{parse\+Snippets}!Kim@{Kim}}
 \subsubsection[{parse\+Snippets}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::parse\+Snippets (
@@ -432,6 +417,24 @@ type
 \item[{}]{\$data = {\ttfamily \char`\"{}\char`\"{}}}
 \end{DoxyParamCaption}
 )}\label{classKim_a635cc5c4509bd3ac1c578ccfe62c623b}
+\hypertarget{classKim_a3fe85e0bf7c92053e0a4c3b76dba7259}{}\index{Kim@{Kim}!sort\+Conditions@{sort\+Conditions}}
+\index{sort\+Conditions@{sort\+Conditions}!Kim@{Kim}}
+\subsubsection[{sort\+Conditions}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::sort\+Conditions (
+\begin{DoxyParamCaption}
+\item[{}]{\$original\+String, }
+\item[{}]{\$matches}
+\end{DoxyParamCaption}
+)}\label{classKim_a3fe85e0bf7c92053e0a4c3b76dba7259}
+
+\begin{DoxyParams}[1]{Parameters}
+type & {\em \$original\+String} & \\
+\hline
+type & {\em \$matches} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+type 
+\end{DoxyReturn}
 \hypertarget{classKim_a1c8f6358dbec4612dd880ae09cb4a74e}{}\index{Kim@{Kim}!update\+Menu\+Item@{update\+Menu\+Item}}
 \index{update\+Menu\+Item@{update\+Menu\+Item}!Kim@{Kim}}
 \subsubsection[{update\+Menu\+Item}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::update\+Menu\+Item (

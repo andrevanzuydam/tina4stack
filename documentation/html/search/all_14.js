@@ -30,6 +30,7 @@ var searchData=
   ['shape_2ephp',['Shape.php',['../Shape_8php.html',1,'']]],
   ['shapebaseelement',['shapeBaseElement',['../classshapeBaseElement.html',1,'']]],
   ['small',['small',['../Shape_8php.html#aaed83ade759242d86639d6f446573a0d',1,'Shape.php']]],
+  ['sortconditions',['sortConditions',['../classKim.html#a3fe85e0bf7c92053e0a4c3b76dba7259',1,'Kim']]],
   ['source',['source',['../Shape_8php.html#a6cfde826a3d3092bd8a3a636e2336bbb',1,'Shape.php']]],
   ['span',['span',['../Shape_8php.html#a16385bc84d7bf1a538aab9351a59630a',1,'Shape.php']]],
   ['starttransaction',['startTransaction',['../classDebby.html#ad97845c3825dd2a5c44a8dcfc6bfda65',1,'Debby']]],

@@ -25,10 +25,6 @@
 \item 
 \hyperlink{classCody_a91baebb215438e27a00b211a2e352b14}{boot\+Strap\+Tabs} (\$tabs=array())
 \item 
-\hyperlink{classCody_a64eb434d16338231fbfc99e4a4e3ead1}{display} ()
-\item 
-\hyperlink{classCody_aec8a678a0829fbcf887a06bf0cb079fc}{get\+Code} (\$tablename=\char`\"{}\char`\"{})
-\item 
 \hyperlink{classCody_aa9b7f95b58c305f6eac09e3ed24c5dfe}{boot\+Strap\+Form} (\$sql=\char`\"{}\char`\"{}, \$hide\+Columns=\char`\"{}\char`\"{}, \$custombuttons=null, \$custom\+Fields=null, \$submit\+Action=\char`\"{}\char`\"{}, \$form\+Id=\char`\"{}form\+Id\char`\"{})
 \item 
 \hyperlink{classCody_a9190879d7bba88107875e2fe4723804c}{get\+Field\+Info} (\$sql)
@@ -45,11 +41,15 @@
 \item 
 \hyperlink{classCody_a8518bcc95441b4c3e7fbae070c0402fb}{boot\+Strap\+View} (\$sql=\char`\"{}\char`\"{}, \$hide\+Columns=\char`\"{}\char`\"{}, \$custombuttons=null, \$custom\+Fields=null, \$submit\+Action=\char`\"{}\char`\"{})
 \item 
+\hyperlink{classCody_a9d96d2252b6a5ae82ebeeb6fffcfdb58}{code\+Handler} (\$action)
+\item 
 \hyperlink{classCody_a993ccef820ff205c9a96511a473ff9f7}{code\+Builder} ()
 \item 
 \hyperlink{classCody_a4b33bd3c589058703a35914506890293}{get\+Code\+Window} (\$id, \$\hyperlink{Shape_8php_ab09356b52e00cf46f1ee5be7344c9139}{code})
 \item 
 \hyperlink{classCody_a5737b5a18b58d98dc4a6f8ebc9053d3b}{get\+File\+Explorer} ()
+\item 
+\hyperlink{classCody_aff64a768f79ea2641d2a1ac1b5a976a5}{get\+File\+Tree} (\$\hyperlink{Shape_8php_a3b05eec13add53df44e232273d718ae4}{path}=\char`\"{}\char`\"{}, \$call\+Back=\char`\"{}\char`\"{}, \$root=false)
 \item 
 \hyperlink{classCody_aba8685265ba1d7dc8bae6250242a7956}{get\+Code\+Navigator} ()
 \item 
@@ -407,6 +407,13 @@ type
 {}
 \end{DoxyParamCaption}
 )}\label{classCody_a993ccef820ff205c9a96511a473ff9f7}
+\hypertarget{classCody_a9d96d2252b6a5ae82ebeeb6fffcfdb58}{}\index{Cody@{Cody}!code\+Handler@{code\+Handler}}
+\index{code\+Handler@{code\+Handler}!Cody@{Cody}}
+\subsubsection[{code\+Handler}]{\setlength{\rightskip}{0pt plus 5cm}Cody\+::code\+Handler (
+\begin{DoxyParamCaption}
+\item[{}]{\$action}
+\end{DoxyParamCaption}
+)}\label{classCody_a9d96d2252b6a5ae82ebeeb6fffcfdb58}
 \hypertarget{classCody_a6ffe5d421ef90aebaedeb33bcc6bcc3e}{}\index{Cody@{Cody}!create\+Table\+Form@{create\+Table\+Form}}
 \index{create\+Table\+Form@{create\+Table\+Form}!Cody@{Cody}}
 \subsubsection[{create\+Table\+Form}]{\setlength{\rightskip}{0pt plus 5cm}Cody\+::create\+Table\+Form (
@@ -417,21 +424,7 @@ type
 \item[{}]{\$db = {\ttfamily \char`\"{}\char`\"{}}}
 \end{DoxyParamCaption}
 )}\label{classCody_a6ffe5d421ef90aebaedeb33bcc6bcc3e}
-\hypertarget{classCody_a64eb434d16338231fbfc99e4a4e3ead1}{}\index{Cody@{Cody}!display@{display}}
-\index{display@{display}!Cody@{Cody}}
-\subsubsection[{display}]{\setlength{\rightskip}{0pt plus 5cm}Cody\+::display (
-\begin{DoxyParamCaption}
-{}
-\end{DoxyParamCaption}
-)}\label{classCody_a64eb434d16338231fbfc99e4a4e3ead1}
-The C\+R\+U\+D code generation tool of cody \hypertarget{classCody_aec8a678a0829fbcf887a06bf0cb079fc}{}\index{Cody@{Cody}!get\+Code@{get\+Code}}
-\index{get\+Code@{get\+Code}!Cody@{Cody}}
-\subsubsection[{get\+Code}]{\setlength{\rightskip}{0pt plus 5cm}Cody\+::get\+Code (
-\begin{DoxyParamCaption}
-\item[{}]{\$tablename = {\ttfamily \char`\"{}\char`\"{}}}
-\end{DoxyParamCaption}
-)}\label{classCody_aec8a678a0829fbcf887a06bf0cb079fc}
-Get the code from a tablename \hypertarget{classCody_aba8685265ba1d7dc8bae6250242a7956}{}\index{Cody@{Cody}!get\+Code\+Navigator@{get\+Code\+Navigator}}
+\hypertarget{classCody_aba8685265ba1d7dc8bae6250242a7956}{}\index{Cody@{Cody}!get\+Code\+Navigator@{get\+Code\+Navigator}}
 \index{get\+Code\+Navigator@{get\+Code\+Navigator}!Cody@{Cody}}
 \subsubsection[{get\+Code\+Navigator}]{\setlength{\rightskip}{0pt plus 5cm}Cody\+::get\+Code\+Navigator (
 \begin{DoxyParamCaption}
@@ -468,6 +461,15 @@ Field\+Info An Array of Field Objects
 {}
 \end{DoxyParamCaption}
 )}\label{classCody_a5737b5a18b58d98dc4a6f8ebc9053d3b}
+\hypertarget{classCody_aff64a768f79ea2641d2a1ac1b5a976a5}{}\index{Cody@{Cody}!get\+File\+Tree@{get\+File\+Tree}}
+\index{get\+File\+Tree@{get\+File\+Tree}!Cody@{Cody}}
+\subsubsection[{get\+File\+Tree}]{\setlength{\rightskip}{0pt plus 5cm}Cody\+::get\+File\+Tree (
+\begin{DoxyParamCaption}
+\item[{}]{\$path = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$call\+Back = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$root = {\ttfamily false}}
+\end{DoxyParamCaption}
+)}\label{classCody_aff64a768f79ea2641d2a1ac1b5a976a5}
 \hypertarget{classCody_a6a0695d4357474925cd6f42e5ce5b248}{}\index{Cody@{Cody}!get\+Template@{get\+Template}}
 \index{get\+Template@{get\+Template}!Cody@{Cody}}
 \subsubsection[{get\+Template}]{\setlength{\rightskip}{0pt plus 5cm}Cody\+::get\+Template (

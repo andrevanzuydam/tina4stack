@@ -28,6 +28,7 @@ var searchData=
   ['setvalue',['setValue',['../classshapeBaseElement.html#a6353680d2dc0774c53f18050d8bf0df3',1,'shapeBaseElement\setValue()'],['../classTestElement.html#ae61d3f666ac5c098dec914bcb7fdeaf6',1,'TestElement\setValue()']]],
   ['shape',['shape',['../Shape_8php.html#ab368453b0c090b56770786d4b48c1571',1,'Shape.php']]],
   ['small',['small',['../Shape_8php.html#aaed83ade759242d86639d6f446573a0d',1,'Shape.php']]],
+  ['sortconditions',['sortConditions',['../classKim.html#a3fe85e0bf7c92053e0a4c3b76dba7259',1,'Kim']]],
   ['source',['source',['../Shape_8php.html#a6cfde826a3d3092bd8a3a636e2336bbb',1,'Shape.php']]],
   ['span',['span',['../Shape_8php.html#a16385bc84d7bf1a538aab9351a59630a',1,'Shape.php']]],
   ['starttransaction',['startTransaction',['../classDebby.html#ad97845c3825dd2a5c44a8dcfc6bfda65',1,'Debby']]],

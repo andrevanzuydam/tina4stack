@@ -17,7 +17,7 @@ var searchData=
   ['details',['details',['../Shape_8php.html#aa0c43d17f37908e525a61168ae0c5b26',1,'Shape.php']]],
   ['dfn',['dfn',['../Shape_8php.html#aae4fc7a0c1013a99c1c2dd2285a8e4b1',1,'Shape.php']]],
   ['dialog',['dialog',['../Shape_8php.html#aa7456f9aedcb2877831cb6b65d93c3d2',1,'Shape.php']]],
-  ['display',['display',['../classCody.html#a64eb434d16338231fbfc99e4a4e3ead1',1,'Cody\display()'],['../classKim.html#ae017a30aaa5b1f6e470de679142b7f02',1,'Kim\display()']]],
+  ['display',['display',['../classKim.html#ae017a30aaa5b1f6e470de679142b7f02',1,'Kim']]],
   ['div',['div',['../Shape_8php.html#ad35bb3b018fe080a0f250d388322f851',1,'Shape.php']]],
   ['dl',['dl',['../Shape_8php.html#ac8ca848cbcb03d01ca6b2e45d5ae0148',1,'Shape.php']]],
   ['doctype',['doctype',['../Shape_8php.html#a598525592b24959b145b8638c1c0b2ef',1,'Shape.php']]],

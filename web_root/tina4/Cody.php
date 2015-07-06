@@ -1667,7 +1667,7 @@ class Cody {
                 return false;
             }
             
-            //function for minifiedjs to run scripts
+            //function to run our own scripts
             function parse{$name}Script(_source) {
                     var source = _source;
                     var scripts = new Array();
@@ -1683,6 +1683,7 @@ class Cody {
                     }
 
                     // Loop through every script collected and eval it
+                   
                     for(var i=0; i<scripts.length; i++) {
                         try {
                           if (scripts[i] != '') {
@@ -1692,7 +1693,7 @@ class Cody {
                             catch(ex) {
                                 window.eval(scripts[i]);
                             }
-
+                                
                             }
                         }
                         catch(e) {
@@ -1717,7 +1718,7 @@ class Cody {
                 
                 var formData = new FormData();
                 
-                targetElement = $('#'+newTarget);
+                targetElement = document.getElementById (newTarget);
                 //add the json information as an object key value
                 if (document.forms) {
                     for (iform = 0; iform < document.forms.length; iform++) {
@@ -1792,65 +1793,46 @@ class Cody {
                     }
                 }
 
-                //try jQuery
-                if (window.jQuery) {
-
+                //try some normal AJAX stuff
+                try {
                     formData.append ('formData', serialize(jsonData));
                     
-                    if(empty(formData['formData']) && newMethod == 'get'){ formData = null; }
-                    
-                    var ajxReq = $.ajax ({
-                        method: newMethod,
-                        url: newRoute,
-                        data: formData,                        
-                        processData: false,
-                        contentType: false,
-                    }).done (function (result) {
-                    
-                       //see if the target is an input, else parse the input for scripts
-                       
-                       if (targetElement.prop('tagName') !== undefined && newTarget != null) {
-                           tagTarget = targetElement.prop('tagName').toUpperCase();
-
-                           if (tagTarget === 'INPUT' || tagTarget === 'TEXTAREA') {
-                                console.log ('Tina4 - Target is input:'+tagTarget.name);
-                                targetElement.val(result);
-                           }  else {
-                                console.log ('Tina4 - Target is HTML element'+tagTarget.name);
-                                targetElement.html(result);
-                           }
-                       }
-                         else {
-                          console.log ('Tina4 - parse script');
-                          parse{$name}Script(result);
-                       }
-                   });
-               } else {
-                    $.request (newMethod, newRoute, jsonData
-                    ).then (
-                        function success (result) {
-                            if (targetElement.get('tagName') !== undefined && newTarget != null) {
-                               tagTarget = targetElement.get('tagName').toUpperCase();
+                    xhr = new XMLHttpRequest();
+                    xhr.open (newMethod, newRoute);
+                    xhr.onload = function () {
+                        if (xhr.status == 200) {
+                            result = xhr.responseText;
+                            
+                         
+                            if (targetElement.tagName !== undefined && newTarget != null) {
+                               tagTarget = targetElement.tagName.toUpperCase();
+                              
+                               
                                if (tagTarget === 'INPUT' || tagTarget === 'TEXTAREA') {
-                                    console.log ('Tina4 - Target is input:'+tagTarget.name);
-                                    targetElement.set({value: result});
+                                    console.log ('Tina4 - Target is input:'+targetElement.id);
+                                    targetElement.value = result;
                                }  else {
-                                    console.log ('Tina4 - Target is HTML element'+tagTarget.name);
-                                    targetElement.set('innerHTML', result);
+                                    console.log ('Tina4 - Target is HTML element'+targetElement.id);
+                                    targetElement.innerHTML = result;
                                }
+                               
+                                parse{$name}Script(result);
                             }
                               else {
                               console.log ('Tina4 - parse script');
                               parse{$name}Script(result);
                             }
-
-
                         }
-                    );
-
-                    return false;
-               }
-
+                          else {
+                          console.log('Failed to get route'+newRoute);   
+                        }    
+                    }
+                    xhr.send(formData);
+                } 
+                catch (e) {
+                    console.log ('Tina4 ajaxHandler Error: ', e);
+                }
+            
 
             }
 

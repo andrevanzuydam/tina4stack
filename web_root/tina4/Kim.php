@@ -550,7 +550,8 @@ class Kim {
                 else {
                     if (!empty($data)) {
                         foreach ($data as $index => $record) {
-                            $elements[$eid][0] = str_replace ("{".$index."}", $record, $elements[$eid][0]);
+                            
+                            $elements[$eid][0] = $this->parseValue("{".$index."}", $record, $elements[$eid][0]);
                             //replace in the template the occurance
                             $modifiedTemplate = preg_replace ("{".str_replace ("?", '\?', $element[0])."}", $elements[$eid][0] , $modifiedTemplate, 1);
                         }
@@ -561,6 +562,20 @@ class Kim {
         return ["elements" => $elements, "controls" => $controls, "template" => $modifiedTemplate];
     }
     
+   
+    function parseValue ($search, $value, $template) {
+        
+        if (class_exists ("finfo")) {
+            $fi = new finfo(FILEINFO_MIME);
+            $mimeType = explode (";", $fi->buffer($value));
+            if ($mimeType[0] !== "text/plain" && $mimeType[0] !== "application/octet-stream") {
+                $value = "data:".$mimeType[0].";base64,".base64_encode($value);
+            }
+        }
+        
+        $template = str_replace ($search, $value, $template);    
+        return $template;
+    }
     
     /**
      * The template parser of kim is quite important for rendering content, she takes a string of template and optionally record / object / array of data to use for parsing.
@@ -647,11 +662,11 @@ class Kim {
                  if (!is_object($varValue) && $varName !== "template" && $varName !== "data" && $varName !== "originalTemplate" ) {
                      if (is_array($varValue)) {
                          foreach ($varValue as $vName => $vValue) {
-                             $template = str_replace ("{".$vName."}", $vValue, $template);
+                             $template = $this->parseValue("{".$vName."}", $vValue, $template);
                          }
                      }
                          else {
-                             $template = str_replace ("{".$varName."}", $varValue, $template);
+                             $template = $this->parseValue("{".$varName."}", $varValue, $template);
                          }
                  }    
             }
@@ -661,11 +676,12 @@ class Kim {
                  if (!is_object($varValue)) {
                      if (is_array($varValue)) {
                          foreach ($varValue as $vName => $vValue) {
-                             $template = str_replace ("{".$vName."}", $vValue, $template);
+                             $template = $this->parseValue("{".$vName."}", $vValue, $template);
                          }
                      }
                          else {
-                             $template = str_replace ("{".$varName."}", $varValue, $template);
+                             
+                             $template = $this->parseValue("{".$varName."}", $varValue, $template);
                          }
                  }    
             }
@@ -702,8 +718,7 @@ class Kim {
                         
                         if (!empty($data)) {
                             foreach ($data as $dName => $dValue ) {
-
-                                $myIf = str_replace ("{".$dName."}", $dValue, $myIf);
+                                $myIf = $this->parseValue("{".$dName."}", $dValue, $myIf);
                             }
                         }
 
@@ -816,7 +831,8 @@ class Kim {
             //see if we can parse the data variable
             if (!empty($data)) {
                 foreach ($data as $name => $value) {
-                    $template = str_replace ("{".$name."}", $value, $template);
+                    
+                    $template = $this->parseValue("{".$name."}", $value, $template);
                 }
             } 
             //any variables that could not be found in the form {variable}
@@ -1743,17 +1759,27 @@ ul.tree > li > ul > li > ul > li > a > label:before {
         $content = script(["src" => "//cdn.ckeditor.com/4.5.1/standard/ckeditor.js"]);
 
         $content .= textarea (["name" => "txt{$fieldName}", "id" => "txt{$fieldName}"], $recordValue);
-        $content .= script("$(document).ready ( function() {
+        $content .= script("    
                                 var myEditor = CKEDITOR.replace ('txt{$fieldName}', {allowedContent: true, extraAllowedContent : '*(*)'});
                                 myEditor.on( 'change', function( evt ) {
                                     evt.editor.updateElement();
                                 });
-                            });");
+                           ");
         return $content;
         
     }
     
-    function getContent () {
+    
+    function getContent($contentId="") {
+       $DEB = Ruth::getObject ("DEB");
+       return $this->DEB->getRows ("select * from content where content_id = {$contentId}");
+    }
+    
+    /**
+     * This code returns a grid for editing WYSIWYG content.
+     * @return type
+     */
+    function getContentEditor () {
         $DEB = Ruth::getObject ("DEB");
         $buttons = "update,delete";
         
@@ -1771,7 +1797,7 @@ ul.tree > li > ul > li > ul > li > a > label:before {
         $html  = (new Cody())->bootStrapTable(
             $sql="select content_id, title, description from content order by order_index",
             $buttons,
-            $hideColumns="content_id",
+            $hideColumns="",
             $toolBar,
             $customFields,
             "Content",
@@ -1827,7 +1853,7 @@ ul.tree > li > ul > li > ul > li > a > label:before {
                     $content .= $this->getProfileUpdate();
                 break;    
                 case "/kim/content":
-                    $content .= $this->getContent();                    
+                    $content .= $this->getContentEditor();                    
                 break;    
                 default:
                    $content .= "Please implement the menu option ".Ruth::getPATH();  

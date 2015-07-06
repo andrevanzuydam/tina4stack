@@ -64,7 +64,7 @@ and open the template in the editor.
            <h4> Getting a list of names & pets from the test class</h4>
             <ul>
               {{testClass:getNames}}
-                <li>{FIRST_NAME} {LAST_NAME}</li>
+              <li>{FIRST_NAME} {LAST_NAME}</li>
                 <ol>
                 {{testClass:getPets?{USER_ID}}}
                   <li>{PETID} {Type} {Name}</li>    
@@ -72,5 +72,15 @@ and open the template in the editor.
                 </ol>        
               {{/testClass:getNames}}
             </ul>   
+           
+        <h4> A list of admin users with pictures </h4>
+        <ul>
+        {{Kim:getUserList}}
+            <li>{FIRST_NAME} {LAST_NAME} <img src="{PHOTO}"></li>
+        
+        {{/Kim:getUserList}}
+        </ul>
+           
+           
     </body>
 </html>

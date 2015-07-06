@@ -12,6 +12,7 @@ and open the template in the editor.
     </head>
     <body>
         <h1>Some control structure FUN!</h1>
+        {{if(1 == 1)}} IF {{else}} ELSE {{endif}}
         {{testClass:getNames}}
             {{if ({USER_ID} == 2)}}
                 <h2>I know {FIRST_NAME} </h2>
@@ -24,6 +25,26 @@ and open the template in the editor.
                 <h2> Hi {FIRST_NAME}, I don t know what your name is </h2>
                 {{include:snippet/snippet_control}}
             {{endif}}
+            {{if(1 == 3)}} IF 3 {{else}} ELSE 3 {{endif}}
         {{/testClass:getNames}}
+        {{if(1 == 2)}} IF 2 {{else}} ELSE 2 {{endif}}
+        
+        {{if(6 == 6)}}
+            <h1>6 == 6</h1>
+            {{if(1 == 1)}}
+                {{if ('a' == 'a')}} <h3>AAAAAAAAAAAAAAAAAAAAAAAAAAAAA</h3> 
+                {{endif}}
+                <h2>1 == 1</h2>
+            {{elseif(3 == 3)}}
+                <h2>3 == 3</h2>
+            {{else}}
+                <h2>2nd Else</h2>
+            {{endif}}
+            
+            {{if(1 == 1)}}
+                <h2>6 == 26</h2>
+            {{endif}}
+        {{endif}}
+        
     </body>
 </html>

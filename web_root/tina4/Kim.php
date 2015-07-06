@@ -129,24 +129,6 @@ class Kim {
     }
     
     /**
-     * Function to link Array by Element IDs for the preg match all function
-     * @param type $m
-     * @return type
-     */
-    function linkArray($m){ 
-        $rt = [];
-        for ($z = 0;$z < count($m);$z++){ 
-            for ($x = 0;$x < count($m[$z]);$x++) { 
-                $rt[$x][$z] = $m[$z][$x]; 
-            } 
-        }
-        return $rt; 
-    } 
-    
- 
-
-    
-    /**
      * Gets the default page to display where possible which will be found under assets
      * @param String $pageName The page to try and load or the path to load
      * @return type
@@ -459,17 +441,18 @@ class Kim {
             $modifiedTemplate = $template;
             
             //Match all if conditions to see what todo with them
-            $ifElements = $this->matchConditions($modifiedTemplate);
-
-
+            $ifElements = $this->sortConditions($modifiedTemplate, $this->matchConditions($modifiedTemplate));
 
             $controls = [];
             
-            
             if (count($ifElements) > 0) {
+                
+                $ifCounter = 1;
+                
                 foreach ($ifElements as $ifeid => $ifElementResult) {
 
-                   $ifTag = "[[if".$ifeid."]]"; 
+                   $ifTag = "[[if".$ifCounter."]]"; 
+                   $ifCounter++;
                    $snippetLength = $ifElementResult["coords"]["end"] - $ifElementResult["coords"]["start"] - strlen($ifTag);
                    $modifiedTemplate = substr_replace ($modifiedTemplate, 
                                                                     $ifTag.str_repeat (" ", $snippetLength ), 
@@ -479,6 +462,7 @@ class Kim {
 
                    $controls[] = ["ifTag" => $ifTag, "if" => $ifElementResult["if"], "else" => $ifElementResult["else"]];
                 }
+                
             }
            
             $lookup = $elements;
@@ -668,6 +652,10 @@ class Kim {
             }
             
             $elements = null;
+            
+            $template = str_replace(" {{", "\n{{", $template);
+            $template = str_replace("}} ", "}}\n", str_replace("}}\n", "}} ", $template));
+            
             preg_match_all ('/{{(.*)}}/i', $template, $elements, PREG_OFFSET_CAPTURE);
             //then see about parsing methods & functions
                        
@@ -680,16 +668,19 @@ class Kim {
              $template = $parsedSnippets["template"];
              
              if (!empty($controls)) {
+ 
                  $ifResult = "";
                  foreach ($controls as $cid => $control) {
                      //go through all the ifs
+                     
                      if (empty($control["if"])) continue;
-                    
+                     
                      $found = false;
                      foreach ($control["if"] as $ifId => $ifStatement) {
 
 
                         $myIf = '$expression = ('.$ifStatement["expression"].');';
+                        
                         if (!empty($data)) {
                             foreach ($data as $dName => $dValue ) {
 
@@ -702,18 +693,22 @@ class Kim {
                             if ($expression) {
                               $found = true;
                               $ifResult = $this->parseTemplate($ifStatement["code"], $data);
+                              break;
                             }
                         }
                      }
                      
-                     if (!$found) {
+                     if (!$found && !empty($control["else"]["code"])) {
                        
                        $ifResult = $this->parseTemplate($control["else"]["code"], $data);
+                       
                      }
                      //if we didn't get a true above then result as else
+                     
+                     $template = str_replace ($control["ifTag"], $ifResult, $template );
+                     
                  }
-                 
-                 $template = str_replace ($control["ifTag"], $ifResult, $template );
+ 
              }
              
              if (!empty($elements)) {
@@ -1525,77 +1520,200 @@ ul.tree > li > ul > li > ul > li > a > label:before {
     }
     
     /**
-     * Cleans up the input String of a Condition
-     * @param type $inputString
-     * @return type
+     * 
+     * @param type $string
+     * @return array
      */
-    function cleanUpConditions($a){
-        //TODO: clean up stuff in future
-        return true;
-    }
-    
     function matchConditions($string){
-        // set array
-        $ifExpressions = array();//["match" => ["if" => array(), "else" => array(), "coords" => array("start" => null, "end" => null)]];
+
+        //
+        $matchesCount = 0;
+        //
+        $counter = 0;
+        //
+        $found = false;
+        //
+        $tempMatches = array();
+        //
+        $results = array();
 
         // set pattern for regex
-        $pattern = "/(?:{{(if)\\s*\\((.+?)\\)}}(.*?)){1}(?:{{(elseif)\\s*\\((.*?)\\)}}(.+?))?(?:{{(else)}}(.+?))?{{endif}}/si";
+        $pattern = "/(?:{{(if)\\s*\\((.+?)\\)}}(.*?))*(?:{{(elseif)\\((.*?)\\)}}(.+?))?(?:{{(else)}}(.+?))?({{endif}})/si";
 
         preg_match_all($pattern, $string, $matches, PREG_OFFSET_CAPTURE);
-
-        $matches = $this->linkArray($matches);
-
-        foreach($matches as  $match_id => $match){
-            $matches[$match_id] = array_values(array_filter($matches[$match_id], function($tempEntry){
-                if(!is_array($tempEntry)){
-                    return false;
-                }
-                array_map("trim", $tempEntry);
-                return $this->cleanUpConditions(trim($tempEntry[0]));
-            }));
+        
+        if(empty($matches)){
+            return $results;
         }
+        
+        //
+        $endIfsArray = end($matches);
+        //
+        $totalIfCount = count($endIfsArray);
+        
+        if($totalIfCount === 0){
+            return $results;
+        }
+        
+        $startString = isset($matches[0][0][1]) ? $matches[0][0][1] : 0;
 
-        foreach($matches as $match_id => $match){
+        // first if match till last if match
+        $content = substr($string, $startString, $endIfsArray[$totalIfCount - 1][1] + 10);
+        //
+        $contentLines = explode("\n", $content);
 
-            foreach($match as $key => $value){
+        foreach($contentLines as $line_id => $line){
+             
+            if(strpos($line, "{{if") !== false){
+                $found = true;
+                $counter++;
+            }
+            
+            if(strpos($line, "{{endif}}") !== false){
+                $found = true;
+                $counter--;
+            }
 
-                if($value[0] == 'if' || $value[0] == 'elseif'){
+            if($found === false){
+                continue;
+            }
+            
+            $tempMatches[] = $line;
+            
+            if($counter == 0){
 
-                    if($value[0] == 'if'){ $ifExpressions[$match_id]["coords"]["start"] = $value[1] - 2;}
+                $results[$matchesCount] = $tempMatches;
+                
+                $found = false;
+                $tempMatches = array();
+                $matchesCount++;
+                
+            }
 
-                    //parse the code for more ifelse ?
+        }
+        
+        return $results;
+
+    }
+    
+    /**
+     * 
+     * @param type $originalString
+     * @param type $matches
+     * @return type
+     */
+    function sortConditions($originalString, $matches){
+        
+        $results = array();
+        
+        if(empty($matches)){
+            return $results;
+        }
+        
+        foreach($matches as $matchId => $match){
+   
+            //
+            $matchString = implode("\n", $match);
+            //
+            $coordsStart = strpos($originalString, $matchString);
+            //
+            $coordsEnd = $coordsStart + strlen($matchString);
+            //
+            $conditionString = substr($originalString, $coordsStart, strlen($matchString));
+            //
+            $nestedMatches = $this->matchConditions($conditionString);
+            
+            if(empty($nestedMatches)){
+                continue;
+            }
+            
+            //
+            $ifCounter = 0;
+            $elseCounter = 0;
+            //
+            $ifArray = array();
+            //
+            $elseArray = array();
+            //
+            $index = 0;
+            //
+            $matchIndex = 0;
+
+            foreach($nestedMatches[0] as $nestedId => $nestedMatch){
+
+                if(strpos($nestedMatch, "{{if") !== false){
+
+                    $results[$matchId]['coords']['start'] = $coordsStart;
+                    $results[$matchId]['coords']['end'] = $coordsEnd;
+
+                    $ifCounter++;
                     
-                    // set if statements
-                    $ifExpressions[$match_id]["if"][] = array(
-                        "statement" => $value[0],
-                        "expression" => $match[$key + 1][0],
-                        "code"  => trim($match[$key + 2][0])
-                    );
+                    if($ifCounter == 1){
+                        $matchIndex = $nestedId + 1;
+                        $ifArray[$index]['statement'] = 'if';
+                        $ifArray[$index]['expression'] = trim(preg_replace("/({{(if|elseif)\s*\((.+?)\)}})/", "$3", $nestedMatch));
+                        $ifArray[$index]['code'] = "";
+                    }
+                    
+                }
 
-                } else if($value[0] == 'else'){
+                if(strpos($nestedMatch, "{{elseif") !== false){
+                    
+                    if($ifCounter == 1){
 
-                    // set else code
-                    $ifExpressions[$match_id]["else"] = array(
-                        "code"  => trim($match[$key + 1][0])
-                    );
+                        $ifArray[$index]['code'] = ltrim(join("\n", array_slice($nestedMatches[0], $matchIndex, $nestedId - $matchIndex)));
 
-                } else {
-                    // do nothing
-                    continue;
+                        $index++;
+                        $matchIndex = $nestedId + 1;
+
+                        $ifArray[$index]['statement'] = 'elseif';
+                        $ifArray[$index]['expression'] = trim(preg_replace("/({{(if|elseif)\s*\((.+?)\)}})/", "$3", $nestedMatch));
+                        $ifArray[$index]['code'] = "";
+                        
+                    }
+                    
+                }
+
+                if(strpos($nestedMatch, "{{else}}") !== false){
+                    
+                    $elseCounter++;
+                    
+                    if($ifCounter == 1){
+
+                        $ifArray[$index]['code'] = ltrim(join("\n", array_slice($nestedMatches[0], $matchIndex, $nestedId - $matchIndex)));
+                        
+                        $index++;
+
+                        $matchIndex = $nestedId + 1;
+
+                        $elseArray['code'] = "";
+
+                    }
+                    
+                }
+
+                if(strpos($nestedMatch, "{{endif") !== false){
+
+                    if($ifCounter == 1 && $elseCounter == 1){
+                        $elseArray['code'] = join("\n", array_slice($nestedMatches[0], $matchIndex, $nestedId - $matchIndex));
+                    } else {
+                        $ifArray[$index]['code'] = ltrim(join("\n", array_slice($nestedMatches[0], $matchIndex, $nestedId - $matchIndex)));
+                    }
+                    
+                    $ifCounter--;
+                    $elseCounter--;
                 }
 
             }
 
-            // set last coords
-            $start = $ifExpressions[$match_id]["coords"]["start"];
-            $ifExpressions[$match_id]["coords"]["end"] = strpos(substr($string, $start), "{{endif}}") + $start + 10;
+            // add results
+            $results[$matchId]['if'] = $ifArray;
+            $results[$matchId]['else'] = $elseArray;
 
         }
-
         
-        
-        return $ifExpressions;
-    
+        return $results;
+            
     }
     
         

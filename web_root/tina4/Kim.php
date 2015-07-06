@@ -569,7 +569,8 @@ class Kim {
             $fi = new finfo(FILEINFO_MIME);
             $mimeType = explode (";", $fi->buffer($value));
             if ($mimeType[0] !== "text/plain" && $mimeType[0] !== "application/octet-stream") {
-                $value = "data:".$mimeType[0].";base64,".base64_encode($value);
+                $value = (new Debby())->encodeImage($value, $imagestore = "/imagestore", $size = "", $noimage = "/imagestore/noimage.jpg");
+                //$value = "data:".$mimeType[0].";base64,".base64_encode($value);
             }
         }
         
@@ -1770,9 +1771,11 @@ ul.tree > li > ul > li > ul > li > a > label:before {
     }
     
     
-    function getContent($contentId="") {
+    function getContent($contentId="0") {
        $DEB = Ruth::getObject ("DEB");
-       return $this->DEB->getRows ("select * from content where content_id = {$contentId}");
+       
+       
+       return $DEB->getRows ("select * from content where content_id = {$contentId}");
     }
     
     /**

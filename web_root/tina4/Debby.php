@@ -80,6 +80,7 @@ class Debby {
             
         }
                 
+        $createthumbnail = false;
         if ($size != "")
             $createthumbnail = true;
         if ($imagedata == "" && $size != "") {

@@ -956,9 +956,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                 //echo "here";
                 
                 $statement = $this->dbh->prepare($sql);
-                         
 
-                //print_r ($this->dbh);
                 if ($statement) {
 
                     $params = array();
@@ -966,32 +964,38 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                         if (strpos(func_get_arg($i)."", "Resource id #") !== false) {
                             $tranID = func_get_arg($i);
                         } else {
-                            $params[] = func_get_arg($i);
+                            $params[$i] = func_get_arg($i);
                         }
                     }
                         
                     
                     foreach ($params as $pid => $param) {
+                        
                         if (is_float($param)) {
                                 //echo "binding {$pid} float"; 
-                                $statement->bindValue($pid, $param, SQLITE3_FLOAT);
+                                $statement->bindValue($pid, $param, \SQLITE3_FLOAT);
                             } else
                             if (is_int($param)) {
                                 //echo "binding {$pid} int"; 
-                                $statement->bindValue($pid, $param, SQLITE3_INTEGER);
+                                $statement->bindValue($pid,  $param, \SQLITE3_INTEGER);
                             } else
                             if (is_string($param)) {
                                 //echo "binding  {$pid} text"; 
-                                $statement->bindValue($pid, $param, SQLITE3_TEXT);
+                                $statement->bindValue($pid, $param, \SQLITE3_TEXT);
                             }
                          else {
                             //echo "binding blob  ";
-                            $statement->bindValue($pid, $param, SQLITE3_BLOB);
+                            $statement->bindValue($pid, $param, \SQLITE3_BLOB);
                         }
                     }
                     
+                    
                    
                     $result = $statement->execute();
+                    
+                    if (!empty($result)) {
+                        $result = true;
+                    }
                 } else {
                     echo $result = "Failed to run script {$sql}";
                 }

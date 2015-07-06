@@ -621,7 +621,6 @@ class Ruth {
             
             foreach (explode('¿', $formData) as $data) {
                 $param = explode ("=", $data, 2);
-               
                 self::setREQUEST($param[0], $param[1]);
                 $_REQUEST[$param[0]] = $param[1];
             }

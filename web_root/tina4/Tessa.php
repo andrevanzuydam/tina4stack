@@ -38,15 +38,16 @@ function IWantTo ($msg) {
  */
 function IExpectToSee ($text) {
 
-    $pageText = byPath("/html")->getText();
+    $pageText = byPath("//*")->getText();
 
     echo "I expected to see \"".$text."\"...\n";
 
-    if (stripos($pageText, $text) == 0) {
-       die("And I did <b>NOT</b> see <b>\"".$text."\"</b>");
+    
+    if (stripos($pageText, "{$text}") == 0) {
+       die("And I did <b>NOT</b> see <b>\"".$text."\"</b>". screenShot());
     }
       else {
-      echo "And I saw \"".substr($pageText, stripos($pageText, $text), strlen($text))."\"...\n";
+      echo "And I saw \"".substr($pageText, stripos($pageText, "{$text}"), strlen("{$text}"))."\"...\n";
    }
 
 }
@@ -187,6 +188,26 @@ function checkDB($tablename, $fieldname, $value) {
     return $TESSA->checkDB($tablename, $fieldname, $value);
 }
 
+/**
+* Function to retrieve records from the database
+* @param String $sql
+* @return Object
+*/
+function fetchRecords ($sql) {
+   global $TESSA;
+   return $TESSA->fetchRecords($sql);
+}
+
+/**
+* Function to retrieve a record from the database
+* @param String $sql
+* @return Object
+*/
+function fetchRecord ($sql) {
+   global $TESSA;
+   return $TESSA->fetchRecord($sql);
+}
+
 
 /**
  *  Creates a screen shot of the page where the error occured
@@ -209,6 +230,7 @@ function equals($test1, $test2) {
 
 
 /**
+ * 
  * @param $URL
  * @return mixed
  */
@@ -216,6 +238,19 @@ function openSite($URL) {
     global $TESSA;
     return $TESSA->openSite($URL);
 }
+
+/**
+ * 
+ * @global type $TESSA
+ * @param type $URL
+ * @return type
+ */
+function navigateTo ($URL) {
+    global $TESSA;
+    return $TESSA->navigateTo ($URL);
+}
+
+
 
 /**
  * @return mixed
@@ -288,21 +323,43 @@ class Tessa {
     }
 
     /**
-     * @param $tablename
-     * @param $fieldname
-     * @param $value
-     * @return mixed
+     * Retrieves a record from the database based on the table, fieldname and value
+     * @param String $tablename The name of the table
+     * @param String $fieldname The name of the field
+     * @param String $value The expected value
+     * @return Object
      */
     function checkDB ($tablename, $fieldname, $value) {
         $this->DEB->commit();
         $sql = "select * from {$tablename} where {$fieldname} = '{$value}'";
         $record = $this->DEB->getRow($sql);
-        //print_r ($record);
         return $record;
     }
-
+    
     /**
-     * @return string
+     * Function to retrieve records from the database
+     * @param String $sql
+     * @return Object
+     */
+    function fetchRecords ($sql) {
+        $this->DEB->commit();
+        return $this->DEB->getRows($sql);
+    }
+    
+    /**
+     * Function to retrieve a record from the database
+     * @param String $sql
+     * @return Object
+     */
+    function fetchRecord ($sql) {
+        $this->DEB->commit();
+        return $this->DEB->getRow($sql);
+    }
+    
+    
+    /**
+     * A function to create screenshots when something fails
+     * @return String The HTML path to the screen shot
      */
     function screenShot () {
         $imgData = base64_decode($this->session->screenshot());
@@ -312,6 +369,7 @@ class Tessa {
     }
 
     /**
+     * Display a message on the screen
      * @param $msg
      */
     function message ($msg) {
@@ -319,6 +377,7 @@ class Tessa {
     }
 
     /**
+     * Display a message on the screen prefixed with Trying to
      * @param $msg
      */
     function tryingTo ($msg) {
@@ -326,6 +385,7 @@ class Tessa {
     }
 
     /**
+     * Display a message on the screen prefixed with I want to 
      * @param $msg
      */
     function IWantTo ($msg) {
@@ -473,6 +533,17 @@ class Tessa {
         $this->session->window()->maximize();
         return true;
     }
+    
+    /**
+     * @param $URL
+     * @return bool
+     */
+    function navigateTo($URL) {
+        //this is the default port for testing
+        $this->session->open($URL);
+        
+        return true;
+    }
 
     /**
      * @param string $testDir
@@ -487,6 +558,8 @@ class Tessa {
         if (!file_exists (dirname(__FILE__)."/../selenium/PHPWebDriver/__init__.php")) {
           die ("Please download the selenium driver for PHP and deploy in the web_root folder");
         }
+        
+        
         require_once dirname(__FILE__)."/../selenium/PHPWebDriver/__init__.php";
 
         if (empty(Ruth::getOBJECT("DEB"))) {
@@ -534,7 +607,6 @@ class Tessa {
         $wd_host = 'http://localhost:4444/wd/hub';
         $this->message("Initialize testing on ".$wd_host." for ".$this->testServer);
         $this->message("Test Path: ".Ruth::getREAL_PATH() . "/" . $this->testDir);
-
         $this->message("Loading test methods into class");
 
         //include all the files , append all the functions / methods
@@ -581,15 +653,26 @@ class Tessa {
 
         $web_driver = new PHPWebDriver_WebDriver($wd_host);
 
-        if (!empty(Ruth::getSESSION("tessaSession"))) {
-            $this->session = unserialize(Ruth::getSESSION("tessaSession"));
-        }
-          else {
-              $this->session = $web_driver->session($this->browser);
-              Ruth::setSESSION("tessaSession", serialize($this->session));
-        }
+          
+            if (!empty(Ruth::getSESSION("tessaSession"))) {
+                $this->session = unserialize(Ruth::getSESSION("tessaSession"));
+            }
+              else {
+                  $browser_profile = new PHPWebDriver_WebDriverFirefoxProfile(dirname(dirname(__FILE__))."/selenium/firefox-profile");
+                  $this->session = $web_driver->session($this->browser,array(),array(),$browser_profile);
+                  Ruth::setSESSION("tessaSession", serialize($this->session));
+            }
+        
         //this is the default port for testing
-        $this->session->open($this->testServer);
+        try {        
+            $this->session->open($this->testServer);
+        }
+        catch(Exception $e) {
+              $browser_profile = new PHPWebDriver_WebDriverFirefoxProfile(dirname(dirname(__FILE__))."/selenium/firefox-profile");
+              $this->session = $web_driver->session($this->browser,array(),array(),$browser_profile);
+              Ruth::setSESSION("tessaSession", serialize($this->session));
+              $this->session->open($this->testServer);
+        }
 
         $this->session->window()->maximize();
 

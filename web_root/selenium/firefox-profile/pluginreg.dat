@@ -1,0 +1,176 @@
+Generated File. Do not edit.
+
+[HEADER]
+Version|0.17|$
+Arch|x86-msvc|$
+
+[PLUGINS]
+nppdf32.dll|$
+C:\Program Files (x86)\Adobe\Reader 11.0\Reader\browser\nppdf32.dll|$
+11.0.11.18|$
+1430503842000|0|0|0|$
+Adobe PDF Plug-In For Firefox and Netscape 11.0.11|$
+Adobe Acrobat|$
+7
+0|application/pdf|Acrobat Portable Document Format|pdf|$
+1|application/vnd.adobe.pdfxml|Adobe PDF in XML Format|pdfxml|$
+2|application/vnd.adobe.x-mars|Adobe PDF in XML Format|mars|$
+3|application/vnd.fdf|Acrobat Forms Data Format|fdf|$
+4|application/vnd.adobe.xfdf|XML Version of Acrobat Forms Data Format|xfdf|$
+5|application/vnd.adobe.xdp+xml| Acrobat XML Data Package|xdp|$
+6|application/vnd.adobe.xfd+xml|Adobe FormFlow99 Data File|xfd|$
+nppdf32.dll|$
+C:\Program Files (x86)\Adobe\Reader 11.0\Reader\AIR\nppdf32.dll|$
+11.0.11.18|$
+1430503842000|0|0|0|$
+Adobe PDF Plug-In For Firefox and Netscape 11.0.11|$
+Adobe Acrobat|$
+7
+0|application/pdf|Acrobat Portable Document Format|pdf|$
+1|application/vnd.adobe.pdfxml|Adobe PDF in XML Format|pdfxml|$
+2|application/vnd.adobe.x-mars|Adobe PDF in XML Format|mars|$
+3|application/vnd.fdf|Acrobat Forms Data Format|fdf|$
+4|application/vnd.adobe.xfdf|XML Version of Acrobat Forms Data Format|xfdf|$
+5|application/vnd.adobe.xdp+xml| Acrobat XML Data Package|xdp|$
+6|application/vnd.adobe.xfd+xml|Adobe FormFlow99 Data File|xfd|$
+npGoogleUpdate3.dll|$
+C:\Program Files (x86)\Google\Update\1.3.27.5\npGoogleUpdate3.dll|$
+1.3.27.5|$
+1431683187858|0|0|0|$
+Google Update|$
+Google Update|$
+2
+0|application/x-vnd.google.update3webcontrol.3|||$
+1|application/x-vnd.google.oneclickctrl.9|||$
+NPAUTHZ.DLL|$
+C:\PROGRA~2\MIF5BA~1\Office14\NPAUTHZ.DLL|$
+14.0.4730.1010|$
+1263066138000|0|0|0|$
+Office Authorization plug-in for NPAPI browsers|$
+Microsoft Office 2010|$
+1
+0|application/x-msoffice14|14.0.4730.1010|*|$
+NPSPWRAP.DLL|$
+C:\PROGRA~2\MIF5BA~1\Office14\NPSPWRAP.DLL|$
+14.0.4761.1000|$
+1269454958000|0|0|0|$
+The plug-in allows you to open and edit files using Microsoft Office applications|$
+Microsoft Office 2010|$
+1
+0|application/x-sharepoint|SharePoint Plug-in for Firefox||$
+npctrl.dll|$
+c:\Program Files (x86)\Microsoft Silverlight\5.1.40416.0\npctrl.dll|$
+5.1.40416.0|$
+1429132690000|0|0|0|$
+5.1.40416.0|$
+Silverlight Plug-In|$
+2
+0|application/x-silverlight|npctrl|scr|$
+1|application/x-silverlight-2|||$
+npjp2.dll|$
+C:\Program Files (x86)\Java\jre1.8.0_25\bin\plugin2\npjp2.dll|$
+11.25.2.18|$
+1413527980468|0|0|0|$
+Next Generation Java Plug-in 11.25.2 for Mozilla browsers|$
+Java(TM) Platform SE 8 U25|$
+38
+0|application/x-java-applet|Java Applet||$
+1|application/x-java-bean|JavaBeans||$
+2|application/x-java-vm|||$
+3|application/x-java-applet;version=1.1.1|||$
+4|application/x-java-bean;version=1.1.1|||$
+5|application/x-java-applet;version=1.1|||$
+6|application/x-java-bean;version=1.1|||$
+7|application/x-java-applet;version=1.2|||$
+8|application/x-java-bean;version=1.2|||$
+9|application/x-java-applet;version=1.1.3|||$
+10|application/x-java-bean;version=1.1.3|||$
+11|application/x-java-applet;version=1.1.2|||$
+12|application/x-java-bean;version=1.1.2|||$
+13|application/x-java-applet;version=1.3|||$
+14|application/x-java-bean;version=1.3|||$
+15|application/x-java-applet;version=1.2.2|||$
+16|application/x-java-bean;version=1.2.2|||$
+17|application/x-java-applet;version=1.2.1|||$
+18|application/x-java-bean;version=1.2.1|||$
+19|application/x-java-applet;version=1.3.1|||$
+20|application/x-java-bean;version=1.3.1|||$
+21|application/x-java-applet;version=1.4|||$
+22|application/x-java-bean;version=1.4|||$
+23|application/x-java-applet;version=1.4.1|||$
+24|application/x-java-bean;version=1.4.1|||$
+25|application/x-java-applet;version=1.4.2|||$
+26|application/x-java-bean;version=1.4.2|||$
+27|application/x-java-applet;version=1.5|||$
+28|application/x-java-bean;version=1.5|||$
+29|application/x-java-applet;version=1.6|||$
+30|application/x-java-bean;version=1.6|||$
+31|application/x-java-applet;version=1.7|||$
+32|application/x-java-bean;version=1.7|||$
+33|application/x-java-applet;jpi-version=1.8.0_25|||$
+34|application/x-java-bean;jpi-version=1.8.0_25|||$
+35|application/x-java-vm-npruntime|||$
+36|application/x-java-applet;deploy=11.25.2|||$
+37|application/x-java-applet;javafx=8.0.25|||$
+npdeployJava1.dll|$
+C:\Program Files (x86)\Java\jre1.8.0_25\bin\dtplugin\npdeployJava1.dll|$
+11.25.2.18|$
+1413527977318|0|0|0|$
+NPRuntime Script Plug-in Library for Java(TM) Deploy|$
+Java Deployment Toolkit 8.0.250.18|$
+1
+0|application/java-deployment-toolkit|||$
+npgeplugin.dll|$
+C:\Program Files (x86)\Google\Google Earth\plugin\npgeplugin.dll|$
+7.1.2.2041|$
+1381174441923|0|0|0|$
+GEPlugin|$
+Google Earth Plugin|$
+1
+0|application/geplugin|GEPlugin||$
+npitunes.dll|$
+C:\Program Files (x86)\iTunes\Mozilla Plugins\npitunes.dll|$
+1.0.1.1|$
+1392959648000|0|0|0|$
+iTunes Detector Plug-in|$
+iTunes Application Detector|$
+1
+0|application/itunes-plugin|This plug-in detects the presence of iTunes when opening iTunes Store URLs in a web page with Firefox.||$
+NPSWF32_17_0_0_188.dll|$
+C:\Windows\SysWOW64\Macromed\Flash\NPSWF32_17_0_0_188.dll|$
+17.0.0.188|$
+1431588081255|0|0|0|$
+Shockwave Flash 17.0 r0|$
+Shockwave Flash|$
+2
+0|application/x-shockwave-flash|Adobe Flash movie|swf|$
+1|application/futuresplash|FutureSplash movie|spl|$
+npGoogleUpdate3.dll|$
+C:\Users\Raymond\AppData\Local\Google\Update\1.3.27.5\npGoogleUpdate3.dll|$
+1.3.27.5|$
+1431989369391|0|0|0|$
+Google Update|$
+Google Update|$
+2
+0|application/x-vnd.google.update3webcontrol.3|||$
+1|application/x-vnd.google.oneclickctrl.9|||$
+npgoogletalk.dll|$
+C:\Users\Raymond\AppData\Roaming\Mozilla\plugins\npgoogletalk.dll|$
+5.41.2.0|$
+1429278952000|0|0|0|$
+Version 5.41.2.0|$
+Google Talk Plugin|$
+1
+0|application/googletalk|Google voice and video chat|googletalk|$
+npo1d.dll|$
+C:\Users\Raymond\AppData\Roaming\Mozilla\plugins\npo1d.dll|$
+5.41.2.0|$
+1429278952000|0|0|0|$
+Version 5.41.2.0|$
+Google Talk Plugin Video Renderer|$
+1
+0|application/o1d|Google Talk Plugin Video Renderer|o1d|$
+
+[INVALID]
+c:\Program Files (x86)\Microsoft Silverlight\5.1.40416.0\npctrlui.dll|$
+1429132690000|$

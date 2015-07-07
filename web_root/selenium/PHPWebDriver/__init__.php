@@ -28,4 +28,5 @@ require_once('WebDriverSession.php');
 require_once('WebDriverSimpleItem.php');
 require_once('WebDriverStorage.php');
 require_once('WebDriverWait.php');
+require_once('WebDriverFirefoxProfile.php');
 

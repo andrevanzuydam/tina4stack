@@ -1646,7 +1646,7 @@ class Cody {
                   if (obj.hasOwnProperty(p)) {
                     str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
                   }
-                return str.join('¿');
+                return str.join('┼');
               }    
 
             // function to check if object or variable/array/string empty : like php empty function

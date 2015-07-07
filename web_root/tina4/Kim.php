@@ -2044,8 +2044,6 @@ ul.tree > li > ul > li > ul > li > a > label:before {
       
         
         return $html;   
-        
-        
     }
         
     

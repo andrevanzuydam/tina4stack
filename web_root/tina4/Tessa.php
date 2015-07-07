@@ -37,14 +37,10 @@ function IWantTo ($msg) {
  * @param string $text The text you wish to see on the screen
  */
 function IExpectToSee ($text) {
-
     $pageText = byPath("//*")->getText();
-
     echo "I expected to see \"".$text."\"...\n";
-
-    
     if (stripos($pageText, "{$text}") == 0) {
-       die("And I did <b>NOT</b> see <b>\"".$text."\"</b>". screenShot());
+       die("And I did <b>NOT</b> see <b>\"".$text."\"</b>, here is what I saw:<br>". screenShot());
     }
       else {
       echo "And I saw \"".substr($pageText, stripos($pageText, "{$text}"), strlen("{$text}"))."\"...\n";

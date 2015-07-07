@@ -73,7 +73,6 @@ function ISee ($text) {
     }
 }
 
-
 /**
  * A function that waits for 2 seconds
  */

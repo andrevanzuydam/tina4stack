@@ -796,7 +796,16 @@ class Kim {
                                     $params = [];
                                 }
 
-                                $result = @call_user_func_array(array($classObject, $callParts[0]), $params);
+                                try {
+                                    if (method_exists($classObject, $callParts[0])) {
+                                        $result = call_user_func_array(array($classObject, $callParts[0]), $params);
+                                    }
+                                      else {
+                                          $result = "[Could not call \"{$callParts[0]}\" on \"{$elementParts[0]}\"]";
+                                      }
+                                } catch (Exception $e) {
+                                    $result = "[Could not call \"{$callParts[0]}\" on \"{$elementParts[0]}\"]";
+                                }
 
                                 if (is_array($result)) {
                                     $result = (object) $result;

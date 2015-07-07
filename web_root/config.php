@@ -20,7 +20,7 @@ define("TINA4_INCLUDES", "project".PATH_SEPARATOR."other");
 /**
  * A standard way of operating a PHP website is to specify a session name for the site, Ruth needs a session to be set before she can operate otherwise she will call her sessions TINA4
  */
-define("TINA4_SESSION", "NDIRA");
+define("TINA4_SESSION", "TINA4");
 /**
  * Set ruth debugging on for better debugging
  */

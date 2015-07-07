@@ -564,16 +564,6 @@ class Kim {
     
    
     function parseValue ($search, $value, $template) {
-        
-        if (class_exists ("finfo")) {
-            $fi = new finfo(FILEINFO_MIME);
-            $mimeType = explode (";", $fi->buffer($value));
-            if ($mimeType[0] !== "text/plain" && $mimeType[0] !== "application/octet-stream") {
-                $value = (new Debby())->encodeImage($value, $imagestore = "/imagestore", $size = "", $noimage = "/imagestore/noimage.jpg");
-                //$value = "data:".$mimeType[0].";base64,".base64_encode($value);
-            }
-        }
-        
         $template = str_replace ($search, $value, $template);    
         return $template;
     }
@@ -608,8 +598,12 @@ class Kim {
     }
     
     function parseTemplate ($template, $data="") {
+                
         
         try {
+            
+           
+
             //get a checksum for the template
             $checkSum = "template".md5 ($template);
             if (TINA4_HAS_CACHE && !empty(xcache_get($checkSum))) {
@@ -632,6 +626,8 @@ class Kim {
             }
             $originalTemplate = $template;
             //get PHP code snippets
+            
+            //We can parse out all the stuff on the first run
             
             if (strpos($template, "<?php") !== false) { 
                  $code = explode ("<?php", $template);
@@ -658,35 +654,38 @@ class Kim {
                  eval ($snippets);
             }
 
-            //then variables, global & local, local will be first
-            foreach (get_defined_vars() as $varName => $varValue) {
-                 if (!is_object($varValue) && $varName !== "template" && $varName !== "data" && $varName !== "originalTemplate" ) {
-                     if (is_array($varValue)) {
-                         foreach ($varValue as $vName => $vValue) {
-                             $template = $this->parseValue("{".$vName."}", $vValue, $template);
+            if (strpos($template, "{") !== false) { 
+                //then variables, global & local, local will be first
+                foreach (get_defined_vars() as $varName => $varValue) {
+                     if (!is_object($varValue) && $varName !== "template" && $varName !== "data" && $varName !== "originalTemplate" ) {
+                         if (is_array($varValue)) {
+                             foreach ($varValue as $vName => $vValue) {
+                                 $template = $this->parseValue("{".$vName."}", $vValue, $template);
+                             }
                          }
-                     }
-                         else {
-                             $template = $this->parseValue("{".$varName."}", $varValue, $template);
-                         }
-                 }    
-            }
-
-            //then defines
-            foreach (get_defined_constants() as $varName => $varValue) {
-                 if (!is_object($varValue)) {
-                     if (is_array($varValue)) {
-                         foreach ($varValue as $vName => $vValue) {
-                             $template = $this->parseValue("{".$vName."}", $vValue, $template);
-                         }
-                     }
-                         else {
-                             
-                             $template = $this->parseValue("{".$varName."}", $varValue, $template);
-                         }
-                 }    
-            }
+                             else {
+                                 $template = $this->parseValue("{".$varName."}", $varValue, $template);
+                             }
+                     }    
+                }
             
+
+                //then defines
+                foreach (get_defined_constants() as $varName => $varValue) {
+                     if (!is_object($varValue)) {
+                         if (is_array($varValue)) {
+                             foreach ($varValue as $vName => $vValue) {
+                                 $template = $this->parseValue("{".$vName."}", $vValue, $template);
+                             }
+                         }
+                             else {
+
+                                 $template = $this->parseValue("{".$varName."}", $varValue, $template);
+                             }
+                     }    
+                }
+            
+            }
             $elements = null;
             
             $template = str_replace(" {{", "\n{{", $template);
@@ -727,6 +726,8 @@ class Kim {
                         if (!empty($expression)) {
                             if ($expression) {
                               $found = true;
+                              
+                              //TODO: Optimize
                               $ifResult = $this->parseTemplate($ifStatement["code"], $data);
                               break;
                             }
@@ -734,7 +735,7 @@ class Kim {
                      }
                      
                      if (!$found && !empty($control["else"]["code"])) {
-                       
+                       //TODO: Optimize
                        $ifResult = $this->parseTemplate($control["else"]["code"], $data);
                        
                      }
@@ -776,7 +777,6 @@ class Kim {
                          case "include":
                              //include a template file.
                              $response[$eid] = $this->parseTemplate($elementParts[1], $data);
-                          
                          break;   
                          default:
                              if (class_exists($elementParts[0])) {
@@ -831,11 +831,36 @@ class Kim {
 
             //see if we can parse the data variable
             if (!empty($data)) {
+                if (TINA4_HAS_CACHE && empty(xcache_get(md5(print_r($data,1))))) {
+                //Parse through the data variables
+                    foreach ($data as $keyName => $keyValue) {
+                        if (class_exists ("finfo")) {
+                            $fi = new finfo(FILEINFO_MIME);
+                            $mimeType = explode (";", $fi->buffer($keyValue));
+                            if ($mimeType[0] !== "text/plain" && $mimeType[0] !== "application/octet-stream") {
+                                
+                                if (is_object($data)) {
+                                  $data->$keyName = (new Debby())->encodeImage($keyValue, $imagestore = "/imagestore", $size = "", $noimage = "/imagestore/noimage.jpg");
+                                } else {
+                                  $data[$keyName] = (new Debby())->encodeImage($keyValue, $imagestore = "/imagestore", $size = "", $noimage = "/imagestore/noimage.jpg");  
+                                }
+                                //$value = "data:".$mimeType[0].";base64,".base64_encode($value);
+                            }
+                        }
+                    }
+                    xcache_set (md5(print_r($data,1)), serialize($data));
+                } 
+                  else 
+                if (TINA4_HAS_CACHE && !empty(xcache_get(md5(print_r($data,1))))) {    
+                  
+                    $data = unserialize(xcache_get (md5(print_r($data,1))));                    
+                }
+ 
                 foreach ($data as $name => $value) {
-                    
                     $template = $this->parseValue("{".$name."}", $value, $template);
                 }
             } 
+            
             //any variables that could not be found in the form {variable}
             preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"]+)}/i', $template, $elements);
             if (!empty($elements[1])) {

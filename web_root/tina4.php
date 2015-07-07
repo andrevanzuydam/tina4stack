@@ -9,7 +9,7 @@
  * 
  * */
 //Default rights which should be allowed in TINA4 if roles are going to be used
-$_TINA4_SYSTEM_ROUTES = ["/cody/*", "/maggy/*", "/phpinfo", "/kim/*", "/debby/*"];
+$_TINA4_SYSTEM_ROUTES = ["/cody/*", "/maggy/*", "/phpinfo", "/kim/*", "/debby/*", "/tessa/*"];
 $_TINA4_LOAD_PATHS = "";
 
 //Funky output message
@@ -151,10 +151,13 @@ if (file_exists(realpath(__DIR__ . "/test"))) {
             new runTessa("test");
         });
 
-        Ruth::addRoute("GET", "/tessa/{brower}", function ($browser) {
+        Ruth::addRoute("GET", "/tessa/{browser}", function ($browser) {
             require_once realpath(__DIR__ . "/test/runTessa.php");
             new runTessa("test", $browser);
         });
+        
+        
+        
     }
 }
 

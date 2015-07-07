@@ -39,8 +39,9 @@ class PHPWebDriver_WebDriverFirefoxProfile {
         $zip = new \ZipArchive();
 
         $filename = $this->profile_dir . '.zip';
-        if(($zip->open($filename, \ZipArchive::OVERWRITE)) !== true) {
-            throw new \SaunterPHP_Framework_Exception("Unable to create profile zip ${$profile_path}");
+        
+        if(($zip->open($filename, \ZipArchive::CREATE)) !== true) {
+            throw new Exception("Unable to create profile zip $filename");
         }
 
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->profile_dir, $flags = \FilesystemIterator::KEY_AS_PATHNAME | \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::SKIP_DOTS));

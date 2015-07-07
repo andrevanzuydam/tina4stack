@@ -1059,6 +1059,10 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                     //add the last error message
                     $this->lasterror[count($this->lasterror)] = $this->dbh->error;
                 }
+                
+                if ($result === "No Errors") {
+                  $this->lastrowid = $this->dbh->insert_id;
+                }        
             } else {
                 $sql = $this->setParams($sql, $inputvalues);
                 $result = @mysql_query($sql, $this->dbh);

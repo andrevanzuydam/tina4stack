@@ -1,0 +1,2 @@
+services.addons.mozilla.org:HSTS	0	16596	1465457208650,1,0
+addons.cdn.mozilla.net:HSTS	0	16596	1465457202843,1,0

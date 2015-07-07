@@ -31,10 +31,12 @@ and open the template in the editor.
         
         {{if(6 == 6)}}
             <h1>6 == 6</h1>
-            {{if(1 == 1)}}
+            {{if(1 == 2)}}
                 {{if ('a' == 'a')}} <h3>AAAAAAAAAAAAAAAAAAAAAAAAAAAAA</h3> 
                 {{endif}}
                 <h2>1 == 1</h2>
+            {{elseif(3 == 3)}}
+                <h2>3 == 3</h2>
             {{elseif(3 == 3)}}
                 <h2>3 == 3</h2>
             {{else}}
@@ -45,6 +47,36 @@ and open the template in the editor.
                 <h2>6 == 26</h2>
             {{endif}}
         {{endif}}
+        
+        <h3>Switch Statements 1</h3>
+        {{switch(1)}}
+            {{case '1'}}
+                I am case one
+                <b>This is bold</b>
+                {{include:snippet/snippet_control}}
+            {{case '2'}}
+                I am case two 12
+                <h3>I am also case</h3>
+            {{case '3'}}
+                I am case three
+            {{default}}
+                I am Default
+        {{endswitch}}
+        
+        <h3>Switch Statements 2</h3>
+        {{switch(3)}}
+            {{case '1'}}
+                I am case one
+                {{include:snippet/snippet_control}}
+                {{if(1 == 2)}}
+                    If in switch
+                    {{else}}
+                    Meh
+                    {{include:snippet/snippet_control}}
+                {{endif}}
+            {{default}}
+                I am Default
+        {{endswitch}}
         
     </body>
 </html>

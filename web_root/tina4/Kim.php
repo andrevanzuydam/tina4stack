@@ -461,6 +461,9 @@ class Kim {
             
             //Match all if conditions to see what todo with them
             $ifElements = $this->sortConditions($modifiedTemplate, $this->matchConditions($modifiedTemplate));
+            $switchElements = $this->sortSwitchConditions($modifiedTemplate, $this->matchSwitchConditions($modifiedTemplate));
+
+            $ifElements = array_merge($ifElements, $switchElements);
 
             $controls = [];
             
@@ -701,7 +704,7 @@ class Kim {
              $elements = $parsedSnippets["elements"];
              $controls = $parsedSnippets["controls"];                          
              $template = $parsedSnippets["template"];
-             
+
              if (!empty($controls)) {
  
                  $ifResult = "";
@@ -1779,6 +1782,212 @@ ul.tree > li > ul > li > ul > li > a > label:before {
             
     }
     
+    /**
+     * Match switch conditions
+     * @param type $string
+     * @return array
+     */
+    function matchSwitchConditions($string){
+        
+        $results = array();
+        
+        $matchesCount = 0;
+        //
+        $counter = 0;
+        //
+        $found = false;
+        //
+        $tempMatches = array();
+        
+        // set pattern for regex
+        $pattern = "/{{switch\\((.*?)\\)}}(.*?)({{endswitch}})/si"; 
+
+        preg_match_all($pattern, $string, $matches, PREG_OFFSET_CAPTURE);
+
+        if(empty($matches[0][0][1])){
+            return $results;
+        }
+
+        $endIfsArray = end($matches);
+        $totalSwitchCount = count($endIfsArray);
+        
+        $startString = $matches[0][0][1];
+
+        // first if match till last if match
+        $content = substr($string, $startString, $endIfsArray[$totalSwitchCount - 1][1] + 14);
+
+        $contentLines = explode("\n", $content);
+        
+        foreach($contentLines as $line_id => $line){
+             
+            if(strpos($line, "{{switch") !== false){
+                $found = true;
+                $counter++;
+            }
+            
+            if(strpos($line, "{{endswitch}}") !== false){
+                $found = true;
+                $counter--;
+            }
+
+            if($found === false){
+                continue;
+            }
+            
+            $tempMatches["content"][] = $line;
+            
+            if($counter == 0){
+
+                $tempMatches["variable"] = $matches[1][$matchesCount][0];
+                
+                $results[$matchesCount] = $tempMatches;
+                
+                $found = false;
+                $tempMatches = array();
+                $matchesCount++;
+                
+            }
+
+        }
+        
+        return $results;
+        
+    }
+    
+    /**
+     * Sort Switch cases and convert to If-Else Statement
+     * @param type $originalString
+     * @param type $matches
+     * @return type
+     */
+    function sortSwitchConditions($originalString, $matches){
+            
+        $results = array();
+        
+        $ifArray = array();
+        $elseArray = array();
+        
+        // get case statements
+        foreach($matches as $matchId => $match){
+            
+            $matchString = implode("\n", $match['content']);
+            //
+            $coordsStart = strpos($originalString, $matchString);
+            //
+            $coordsEnd = $coordsStart + strlen($matchString);
+            //
+            $conditionString = substr($originalString, $coordsStart, strlen($matchString));
+            
+            $case = array();
+            
+            $caseIndex = 0;
+            
+            if(empty($case[$caseIndex]['variable'])){
+
+                $case[$caseIndex]["variable"] = $matches[$matchId]['variable'];
+
+                $caseIndex++;
+
+            }
+                
+            $counter= 0;
+            
+            //echo "<pre>";
+            //print_r($match['content']);
+            
+            foreach($match["content"] as $lineId => $line){
+                
+               
+                if(strpos($line, "{{switch") !== false){
+                    $counter++;
+                }
+                
+                if(strpos($line, "{{endswitch") !== false){
+                    $counter--;
+                }
+                
+                 
+                 
+                if($counter == 1 && strpos($line, "{{case") !== false){
+                    
+                    $caseIndex++;
+                    
+                    if(empty($case[$caseIndex]["case"])){
+                        
+                         $case[$caseIndex]["case"] = trim(preg_replace("/{{case\s*(\\()?(.+?)(\\))?}}/si", "$2", $line));
+                         
+                    }      
+                      
+                } elseif($counter <= 1 && strpos($line, "{{default") !== false){ 
+
+                    $caseIndex++;
+                    
+                    $case[$caseIndex]["default"] = "default";
+                            
+                } elseif(strpos($line, "{{switch") === false && strpos($line, "{{endswitch}}") === false){
+                    
+                    // add code to case array
+                    if(!empty($case[$caseIndex]["case"]) || !empty($case[$caseIndex]["default"])){
+                        $case[$caseIndex]["code"][] = $line;
+                    }
+                    
+                } else {
+
+                    if($counter != 0){
+                        $case[$caseIndex]["code"][] = $line;
+                    }
+                     
+                    continue;
+                    
+                }
+
+            }
+            
+            $results[$matchId]['coords']['start'] = $coordsStart;
+            $results[$matchId]['coords']['end'] = $coordsEnd;
+            
+            $results[$matchId]['case'] = $case;  
+          
+
+        }
+        
+        $ifElements = array();
+        
+        $ifCounter = 0;
+        
+        //convert switch to if
+        foreach($results as $resultId => $result){
+            
+            foreach($result['case'] as $key => $value){
+                if(!empty($value['case'])){
+                    
+                    $ifArray[] = array(
+                        'statement' => $ifCounter == 0 ? 'if' : 'elseif',
+                        'expression' => $result['case'][0]['variable'] . " == " . $value['case'],
+                        'code' => join("\n", $value['code'])
+                    );
+                    
+                    $ifCounter++;
+                } elseif(!empty($value['default'])){
+                    $elseArray['code'] = join("\n", $value['code']);
+                } else {
+                    continue;
+                }
+                
+            }
+            // set if elements
+            $ifElements[$resultId]['coords'] = $result['coords'];
+            $ifElements[$resultId]['if'] = $ifArray;
+            $ifElements[$resultId]['else'] = $elseArray;
+            // reset variables
+            $ifCounter = 0;
+            $ifArray = array();
+            $elseArray = array();
+        }
+
+        return $ifElements;
+        
+    }
     
     function getEditor($recordValue=null, $fieldName) {
    

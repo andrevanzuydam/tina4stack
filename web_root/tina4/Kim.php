@@ -447,8 +447,8 @@ class Kim {
      * @return type
      */
     function parseSnippets ($elements, $template, $data) {
-        
-        
+
+
         $checkSum = "element".md5($template.print_r($elements,1).print_r($data,1));
 
         if (TINA4_HAS_CACHE && !empty($elements)) {
@@ -544,11 +544,11 @@ class Kim {
                 else {
                     if (!empty($data)) {
                         //get the variables out
-                        
+
                         preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"]+)}/i', $template, $variables);
                         foreach ($variables[1] as $index => $variable) {
                             if (!empty($data->$variable)) {
-                                $varValue = $data->$variable;    
+                                $varValue = $data->$variable;
                                 if (!empty ($varValue)) {
                                     $elements[$eid][0] = $this->parseValue("{".$variable."}", $varValue, $elements[$eid][0]);
                                     //replace in the template the occurance
@@ -615,20 +615,20 @@ class Kim {
         try {
             //get a checksum for the template
             $checkSum = "template".md5 ($template.print_r ($data,1));
-                  
-            
-            
-           
+
+
+
+
             if (TINA4_HAS_CACHE && !empty(xcache_get($checkSum)) && !empty($data)) {
                 //echo "Loading from Cache <br>";
                 $template = xcache_get ($checkSum);
-                
+
                 //echo "Getting template for ".print_r ($data);
                 if (strpos("{", $template) === false ) {
-                    
+
                     return $template;
-                    
-                    
+
+
                 }
                 //TODO: work out how to refresh cache dynamically
             }
@@ -645,10 +645,10 @@ class Kim {
                         break;
                     }
                 }
-               
+
             }
-            
-            
+
+
             $originalTemplate = $template;
             //get PHP code snippets
 
@@ -720,14 +720,16 @@ class Kim {
 
 
             $parsedSnippets = $this->parseSnippets ($elements[1], $template, $data);
-            
-           
+
+
 
             //Reset the elements & template to the parsed elements
             $elements = $parsedSnippets["elements"];
             $controls = $parsedSnippets["controls"];
             $template = $parsedSnippets["template"];
 
+
+            //print_r ($controls);
             if (!empty($controls)) {
                 $ifResult = "";
                 foreach ($controls as $cid => $control) {
@@ -737,18 +739,18 @@ class Kim {
 
                     $found = false;
                     foreach ($control["if"] as $ifId => $ifStatement) {
-
                         if (!empty( $ifStatement["expression"] )) {
                             $myIf = '$expression = (' . $ifStatement["expression"] . ');';
-
                             if (!empty($data)) {
-                                preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"]+)}/i', $template, $variables);
+                                preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"]+)}/i', $myIf, $variables);
                                 foreach ($variables[1] as $index => $variable) {
-                                    if (!empty($data->$variable)) {    
-                                        $myIf = $this->parseValue("{" . $variable . "}", $data->$variable, $myIf);
+                                    if (!empty($data->$variable)) {
+                                        $varValue = $data->$variable;
+                                        $myIf = $this->parseValue("{" . $variable . "}", $varValue , $myIf);
                                     }
                                 }
                             }
+
                             @eval ($myIf);
                             if (!empty($expression)) {
                                 if ($expression) {
@@ -774,19 +776,19 @@ class Kim {
                 }
 
             }
-               
-            
+
+
             if (!empty($elements)) {
-                
+
                 $response = [];
                 foreach ($elements as $eid => $element) {
-                   
+
                     $elementParts = explode (":", $element[0]);
-                    
+
                     $elementHash = md5(print_r($element[0],1));
-                    
-                    $response[$elementHash] = "";        
-                    
+
+                    $response[$elementHash] = "";
+
                     switch ($elementParts[0]) {
                         case "call":
                             $callParts = explode("?", $elementParts[1]);
@@ -824,9 +826,9 @@ class Kim {
                                     if (method_exists($classObject, $callParts[0])) {
                                         $result = call_user_func_array(array($classObject, $callParts[0]), $params);
                                     }
-                                      else {
-                                          $result = "[Could not call \"{$callParts[0]}\" on \"{$elementParts[0]}\"]";
-                                      }
+                                    else {
+                                        $result = "[Could not call \"{$callParts[0]}\" on \"{$elementParts[0]}\"]";
+                                    }
                                 } catch (Exception $e) {
                                     $result = "[Could not call \"{$callParts[0]}\" on \"{$elementParts[0]}\"]";
                                 }
@@ -838,21 +840,21 @@ class Kim {
                                 if (is_object ($result) && get_class($result) !== "htmlElement") {
 
                                     $html = "";
-                                   
+
                                     foreach ($result as $rid => $resultData) {
-                                        
-                                        
+
+
                                         if (!empty($element["snippet"])) {
-                                           
+
                                             $html .= $this->parseTemplate($element["snippet"], $resultData);
                                         }
                                     }
-                                    
+
                                     $response[$elementHash] = $html;
 
                                 }
                                 else {
-                                   
+
                                     $response[$elementHash] = $result;
                                 }
 
@@ -864,32 +866,32 @@ class Kim {
                             break;
                     }
                 }
-                
-                
-                
+
+
+
                 if (strpos($template, "{{") !== false) {
-                   
+
                     if (!empty($data)) {
-                                preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"]+)}/i', $template, $variables);
-                                foreach ($variables[1] as $index => $variable) {
-                                    if (!empty($data->$variable)) {    
-                                        $template = $this->parseValue("{" . $variable . "}", $data->$variable, $template);
-                                    }
-                                }
+                        preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"]+)}/i', $template, $variables);
+                        foreach ($variables[1] as $index => $variable) {
+                            if (!empty($data->$variable)) {
+                                $template = $this->parseValue("{" . $variable . "}", $data->$variable, $template);
+                            }
+                        }
                     }
-                    
-                    
-                    
+
+
+
                     foreach ($elements as $eid => $element) {
                         $elementHash = md5(print_r ($element[0], 1));
                         $element[0] = str_replace ("?", '\?', $element[0]);
-                        
+
                         $template = preg_replace ('{{{'.$element[0].'}}}', $response[$elementHash], $template, 1);
-                        
+
                     }
-                    
-                    
-                    
+
+
+
                 }
 
             }
@@ -944,9 +946,9 @@ class Kim {
                     }
                 }
             }
-            
+
             if (TINA4_HAS_CACHE && strpos($template, "{") === false) {
-              xcache_set ($checkSum, $template);
+                xcache_set ($checkSum, $template);
             }
 
         } catch (Exception $error) {

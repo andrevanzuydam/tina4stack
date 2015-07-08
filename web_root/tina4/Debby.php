@@ -462,6 +462,10 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
       BEGIN Close
      */
     function close() {
+        if (defined("TINA4_HAS_CACHE")) {
+            xcache_clear_cache(1);
+        }
+        
         $result = false;
         if (!$this->dbh) {
             trigger_error("No database handle, use connect first in " . __METHOD__ . " for " . $this->dbtype, E_USER_WARNING);
@@ -893,6 +897,9 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
 
     function exec($sql = "") {
         $inputvalues = func_get_args();
+        if (defined("TINA4_HAS_CACHE")) {
+            xcache_clear_cache(1);
+        }
         
         
         $this->error = ""; // reset the last error;   
@@ -1111,6 +1118,11 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
       BEGIN Commit
      */
     function commit($tranId = null) {
+        if (defined("TINA4_HAS_CACHE")) {
+            xcache_clear_cache(1);
+        }
+        
+        
         if (!$this->dbh) {
             trigger_error("No database handle, use connect first in " . __METHOD__ . " for " . $this->dbtype, E_USER_WARNING);
         } else /* ODBC Connection */ if ($this->dbtype == "odbc") {
@@ -1336,6 +1348,14 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
      */
 
     function getRows($sql = "", $rowtype = 0, $fetchblob = true, $calculatedfields = array()) {
+        $dataCheckSum = md5($sql.$rowtype);
+        if (defined("TINA4_HAS_CACHE")) {
+            if (!empty(xcache_get($dataCheckSum))) {
+               $data = unserialize(xcache_get ($dataCheckSum));
+               $this->fieldinfo = $data["fieldInfo"];
+               return $data["resultSet"]; 
+            }
+        }
         //parse the calculated fields to normalize array
         $newarr = array();
         foreach ($calculatedfields as $cid => $calcfield) {
@@ -2087,6 +2107,12 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             $this->fieldinfo = $tempfieldinfo;
         }
 
+        if (defined("TINA4_HAS_CACHE")) {
+            
+            xcache_set($dataCheckSum, serialize( ["fieldInfo" => $this->fieldinfo, "resultSet" => $result ] ) );
+        }
+        
+        
         return $result;
     }
 

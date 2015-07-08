@@ -809,7 +809,7 @@ class Kim {
                         case "include":
                             //include a template file.
                             $response[$elementHash] = $this->parseTemplate($elementParts[1], $data);
-                        break;
+                            break;
                         default:
                             if (class_exists($elementParts[0])) {
                                 $callParts = explode("?", $elementParts[1]);

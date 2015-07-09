@@ -1804,7 +1804,7 @@ class Cody {
                             result = xhr.responseText;
                             
                          
-                            if (targetElement.tagName !== undefined && newTarget != null) {
+                            if (targetElement != null && targetElement.tagName !== undefined && newTarget != null) {
                                tagTarget = targetElement.tagName.toUpperCase();
                               
                                

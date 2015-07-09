@@ -2685,7 +2685,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
 
                 foreach ($tempfields as $id => $fieldname) { //Look for password fields
                     if (trim(strtoupper($name)) === trim(strtoupper($fieldprefix . $fieldname))) {
-                        $value = crypt($value);
+                        $value = password_hash($value);
                     }
                 }
                 $tempfields = explode(",", $datefields);
@@ -2793,7 +2793,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                 foreach ($tempfields as $id => $fieldname) { //Look for password fields
                     if ($name == $fieldprefix . strtoupper($fieldname)) {
                         if ($value != "") { //only if there is a password do we encrypt it
-                            $value = crypt($value);
+                            $value = password_hash($value);
                         } else {
                             $dontupdate = true; //we must not update an empty password
                         }

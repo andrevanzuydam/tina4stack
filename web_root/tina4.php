@@ -208,7 +208,7 @@ if ( strpos (Ruth::getREQUEST_URI(), "/cody") !== false ) {
 }
 
 //We should check to see if we have a kim.db file to load routes from before parsing
-if (file_exists("kim.db")) {
+if (file_exists("kim.db") && strpos(Ruth::getREQUEST_URI(), "/maggy") === false) {
    (new Kim())->loadDefines(); //these come from global settings
    (new Kim())->loadRoutes();   
 }

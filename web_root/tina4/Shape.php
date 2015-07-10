@@ -1078,7 +1078,7 @@ function dd() {
  * The <dl> tag defines a description list.
  * @return type
  */
-function dl() {
+function adl() {
     $html = createInstance("htmlElement", func_get_args());
     $html->setTags("<DL[attributes]>", "</DL>");
     return $html;

@@ -470,9 +470,15 @@ class Ruth {
      * @param type $keyValue The value stored in the session variable
      */
     public static function setSESSION ($keyName="", $keyValue="") {
-        if (isset($keyValue) || !empty($keyName)) {                    
-          $_SESSION[$keyName] = $keyValue;          
-          self::$SESSION = $_SESSION;          
+        if (isset($keyValue) || !empty($keyName)) {
+            
+            if(is_null($keyValue)){
+                unset($_SESSION[$keyName]);
+            } else {
+                $_SESSION[$keyName] = $keyValue;          
+            }
+          
+            self::$SESSION = $_SESSION;          
         }
     }
     
@@ -858,14 +864,13 @@ class Ruth {
     }
     
     public static function parseRoutes($customPath="") {
-        if (defined("ONROUTE") && !empty(ONROUTE)) {
-         $params = ["action" => "route_start", "server" => Ruth::getSESSION(), "cookies" => Ruth::getCOOKIE(), "session" => Ruth::getSESSION(), "request" => Ruth::getREQUEST()];
-                                    @call_user_func_array(ONROUTE, $params);    
-        }
         
+        self::$PATH = self::$REQUEST_URI;
+
         if ($customPath) {
            self::$REQUEST_URI = $customPath;   
         }
+        
         //Choose the correct route
         $found = false;
         foreach (self::$routes as $rid => $route) {
@@ -937,8 +942,10 @@ class Ruth {
         }
         
         if (defined("ONROUTE") && !empty(ONROUTE)) {
-              $params = ["action" => "route_found", "server" => Ruth::getSESSION(), "cookies" => Ruth::getCOOKIE(), "session" => Ruth::getSESSION(), "request" => Ruth::getREQUEST()];
-                                    @call_user_func_array(ONROUTE, $params);
+            
+            $params = ["action" => "route", "server" => Ruth::getSERVER(), "cookies" => Ruth::getCOOKIE(), "session" => Ruth::getSESSION(), "request" => Ruth::getREQUEST()];
+            @call_user_func_array(ONROUTE, $params);
+            
         }
         
         if (!$found) {

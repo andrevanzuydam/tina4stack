@@ -858,6 +858,11 @@ class Ruth {
     }
     
     public static function parseRoutes($customPath="") {
+        if (defined("ONROUTE") && !empty(ONROUTE)) {
+         $params = ["action" => "route_start", "server" => Ruth::getSESSION(), "cookies" => Ruth::getCOOKIE(), "session" => Ruth::getSESSION(), "request" => Ruth::getREQUEST()];
+                                    @call_user_func_array(ONROUTE, $params);    
+        }
+        
         if ($customPath) {
            self::$REQUEST_URI = $customPath;   
         }
@@ -932,7 +937,7 @@ class Ruth {
         }
         
         if (defined("ONROUTE") && !empty(ONROUTE)) {
-              $params = ["action" => "route", "server" => Ruth::getSESSION(), "cookies" => Ruth::getCOOKIE(), "session" => Ruth::getSESSION(), "request" => Ruth::getREQUEST()];
+              $params = ["action" => "route_found", "server" => Ruth::getSESSION(), "cookies" => Ruth::getCOOKIE(), "session" => Ruth::getSESSION(), "request" => Ruth::getREQUEST()];
                                     @call_user_func_array(ONROUTE, $params);
         }
         

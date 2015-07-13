@@ -462,7 +462,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
       BEGIN Close
      */
     function close() {
-        if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE == true) {
+        if (defined("TINA4_HAS_CACHE")) {
             xcache_clear_cache(1);
         }
         
@@ -897,7 +897,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
 
     function exec($sql = "") {
         $inputvalues = func_get_args();
-        if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE == true) {
+        if (defined("TINA4_HAS_CACHE")) {
             xcache_clear_cache(1);
         }
         
@@ -1118,7 +1118,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
       BEGIN Commit
      */
     function commit($tranId = null) {
-        if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE == true) {
+        if (defined("TINA4_HAS_CACHE")) {
             xcache_clear_cache(1);
         }
         
@@ -1349,7 +1349,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
 
     function getRows($sql = "", $rowtype = 0, $fetchblob = true, $calculatedfields = array()) {
         $dataCheckSum = md5($sql.$rowtype);
-        if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE == true) {
+        if (defined("TINA4_HAS_CACHE")) {
             if (!empty(xcache_get($dataCheckSum))) {
                $data = unserialize(xcache_get ($dataCheckSum));
                $this->fieldinfo = $data["fieldInfo"];
@@ -1938,30 +1938,32 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         }
 
         
-        //create the field information based on the select statement    
-        foreach ($this->fieldinfo as $id => $field) {
-            if (strpos(strtoupper($field[4]), "NUMERIC") !== false || strpos(strtoupper($field[4]), "DECIMAL") !== false || strpos(strtoupper($field[4]), "INTEGER") !== false || strpos(strtoupper($field[4]), "INT") !== false) {
-                if (strpos(strtoupper($field[4]), "NUMERIC") !== false || strpos(strtoupper($field[4]), "DECIMAL") !== false) {
-                    $field[4] = "CURRENCY";
-                    $field["type"] = "CURRENCY";
+        if (!empty($this->fieldinfo)) {
+            //create the field information based on the select statement    
+            foreach ($this->fieldinfo as $id => $field) {
+                if (strpos(strtoupper($field[4]), "NUMERIC") !== false || strpos(strtoupper($field[4]), "DECIMAL") !== false || strpos(strtoupper($field[4]), "INTEGER") !== false || strpos(strtoupper($field[4]), "INT") !== false) {
+                    if (strpos(strtoupper($field[4]), "NUMERIC") !== false || strpos(strtoupper($field[4]), "DECIMAL") !== false) {
+                        $field[4] = "CURRENCY";
+                        $field["type"] = "CURRENCY";
+                    }
+                    $field[5] = "right";
+                    $field["align"] = "right";
+                } else {
+                    $field[5] = "left";
+                    $field["align"] = "left";
                 }
-                $field[5] = "right";
-                $field["align"] = "right";
-            } else {
-                $field[5] = "left";
-                $field["align"] = "left";
+                if ($field[3] >= 200) {
+                    $field[6] = 180;
+                    $field["htmllength"] = 180;
+                } else if ($field[3] <= 100) {
+                    $field[6] = 120;
+                    $field["htmllength"] = 120;
+                } else {
+                    $field[6] = $field[3];
+                    $field["htmllength"] = $field[3];
+                }
+                $this->fieldinfo[$id] = $field;
             }
-            if ($field[3] >= 200) {
-                $field[6] = 180;
-                $field["htmllength"] = 180;
-            } else if ($field[3] <= 100) {
-                $field[6] = 120;
-                $field["htmllength"] = 120;
-            } else {
-                $field[6] = $field[3];
-                $field["htmllength"] = $field[3];
-            }
-            $this->fieldinfo[$id] = $field;
         }
         $this->RAWRESULT = $result;
 
@@ -2107,12 +2109,9 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             $this->fieldinfo = $tempfieldinfo;
         }
 
-        if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE == true) {
-            
+        if (defined("TINA4_HAS_CACHE") && !empty($this->fieldinfo)) {
             xcache_set($dataCheckSum, serialize( ["fieldInfo" => $this->fieldinfo, "resultSet" => $result ] ) );
         }
-        
-        
         return $result;
     }
 
@@ -2165,7 +2164,6 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
     /*     * *************************************************************************** 
       BEGIN Get Blob - Get the data from a blob like in Firebird - System function
      */
-
     function getBlob($column) {
         $content = "";
         if ($column && $this->dbtype == "CUBRID") {
@@ -2685,7 +2683,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
 
                 foreach ($tempfields as $id => $fieldname) { //Look for password fields
                     if (trim(strtoupper($name)) === trim(strtoupper($fieldprefix . $fieldname))) {
-                        $value = password_hash($value);
+                        $value = crypt($value);
                     }
                 }
                 $tempfields = explode(",", $datefields);
@@ -2793,7 +2791,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                 foreach ($tempfields as $id => $fieldname) { //Look for password fields
                     if ($name == $fieldprefix . strtoupper($fieldname)) {
                         if ($value != "") { //only if there is a password do we encrypt it
-                            $value = password_hash($value);
+                            $value = crypt($value);
                         } else {
                             $dontupdate = true; //we must not update an empty password
                         }
@@ -2840,7 +2838,14 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         }
     }
     
-    function generateCsv($sql, $filename = "temp.csv"){
+    /**
+     * A function to generate a CSV from an SQL statement
+     * @param String $sql An SQL string
+     * @param String $filename The name of the file you want
+     * @param String $delim An optional delimeter - default is ','
+     * @return String CSV file
+     */
+    function generateCsv($sql, $filename = "temp.csv", $delim=","){
         
         $results = $this->getRows($sql, DEB_ARRAY);
         
@@ -2852,20 +2857,18 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             
             $fh = fopen("php://output", "w");
 
-            fputcsv($fh, array_map(function($element) { return $element['alias']; }, $this->fieldinfo), ","); 
+            fputcsv($fh, array_map(function($element) { return $element['alias']; }, $this->fieldinfo), $delim); 
             
             foreach($results as $result){
                  
-                fputcsv($fh, $result, ","); 
+                fputcsv($fh, $result, $delim); 
 
             }
             
             fclose($fh);
             
         }
-        
         return;
-        
     }
 
 }

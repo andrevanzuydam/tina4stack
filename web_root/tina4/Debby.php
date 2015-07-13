@@ -2839,5 +2839,33 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             return $error;
         }
     }
+    
+    function generateCsv($sql, $filename = "temp.csv"){
+        
+        $results = $this->getRows($sql, DEB_ARRAY);
+        
+        if(!empty($results)){
+
+            // make csv file
+            header("Content-Type: text/csv");
+            header("Content-Disposition: attachment; filename = {$filename}");
+            
+            $fh = fopen("php://output", "w");
+
+            fputcsv($fh, array_map(function($element) { return $element['alias']; }, $this->fieldinfo), ","); 
+            
+            foreach($results as $result){
+                 
+                fputcsv($fh, $result, ","); 
+
+            }
+            
+            fclose($fh);
+            
+        }
+        
+        return;
+        
+    }
 
 }

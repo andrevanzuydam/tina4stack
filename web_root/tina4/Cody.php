@@ -180,6 +180,9 @@ class Cody {
                }
             }  else {
                 $keyName = strtoupper($tableInfo->primarykey);   
+                if (empty($record)) {
+                    $record = (object)[$keyName => ""];
+                }
                 $filterKey = "{$tableInfo->primarykey} = '".$record->$keyName."'";
                 if ($action === "insert") {
                     $record = (object) [$keyName => ""];

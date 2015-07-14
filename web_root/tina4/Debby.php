@@ -2810,7 +2810,14 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                 }
             }
         }
-        $sqlupdate .= " where $primarykey = '" . $index . "'";
+        
+        if (!empty($index)) {
+          $sqlupdate .= " where $primarykey = '" . $index . "'";
+        }
+          else {
+            $sqlupdate .= " where $primarykey";  
+          }      
+        
         $sqlupdate = str_replace("0=0 ,", "", $sqlupdate);
         $sqlupdate = str_replace("'null'", "null", $sqlupdate);
         $this->lastsql[count($this->lastsql)] = $sqlupdate;

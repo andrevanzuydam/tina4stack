@@ -462,7 +462,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
       BEGIN Close
      */
     function close() {
-        if (defined("TINA4_HAS_CACHE")) {
+        if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false) {
             xcache_clear_cache(1);
         }
         
@@ -897,7 +897,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
 
     function exec($sql = "") {
         $inputvalues = func_get_args();
-        if (defined("TINA4_HAS_CACHE")) {
+        if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false) {
             xcache_clear_cache(1);
         }
         
@@ -1118,7 +1118,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
       BEGIN Commit
      */
     function commit($tranId = null) {
-        if (defined("TINA4_HAS_CACHE")) {
+        if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false) {
             xcache_clear_cache(1);
         }
         
@@ -1349,7 +1349,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
 
     function getRows($sql = "", $rowtype = 0, $fetchblob = true, $calculatedfields = array()) {
         $dataCheckSum = md5($sql.$rowtype);
-        if (defined("TINA4_HAS_CACHE")) {
+        if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false) {
             if (!empty(xcache_get($dataCheckSum))) {
                $data = unserialize(xcache_get ($dataCheckSum));
                $this->fieldinfo = $data["fieldInfo"];
@@ -2109,7 +2109,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             $this->fieldinfo = $tempfieldinfo;
         }
 
-        if (defined("TINA4_HAS_CACHE") && !empty($this->fieldinfo)) {
+        if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false && !empty($this->fieldinfo)) {
             xcache_set($dataCheckSum, serialize( ["fieldInfo" => $this->fieldinfo, "resultSet" => $result ] ) );
         }
         return $result;

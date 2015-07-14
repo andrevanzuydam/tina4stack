@@ -351,6 +351,7 @@ class Cody {
                             $DEB = Ruth::getOBJECT(Ruth::getREQUEST("db"));
                             
                             $DEB->delete($tableName, [$keyName => $record->$keyName]);
+                           
                                                    
                             if (!empty(ONDELETE)) {
                                                 $params = ["action" => $action, "table" => $tableName, $keyName => $record->$keyName, "session" => Ruth::getSESSION(), "request" => Ruth::getREQUEST()];
@@ -410,7 +411,11 @@ class Cody {
                                } 
                             }  else {
                                 $keyName = strtoupper($tableInfo->primarykey);   
-                                $filterKey = "{$tableInfo->primarykey} = '".$record->$keyName."'";
+                                if (!empty($record)) {
+                                    $filterKey = "{$tableInfo->primarykey} = '".$record->$keyName."'";
+                                }  else {
+                                    $filterKey = "{$tableInfo->primarykey} = ''";  
+                                }
                             }
 
                             
@@ -614,174 +619,176 @@ class Cody {
             $value = "";
             $calcField = null;
 
-            foreach ($records as $rid => $record) {
-                $row = null;
-                $rowButtons = $buttons."";
-                
-                
-                foreach ($fieldInfo as $fid => $field) {
-
-                    if ($fid == 0) {
-                        $field["align"] = "left";
-                    }
+            if (!empty($records)) {
+                foreach ($records as $rid => $record) {
+                    $row = null;
+                    $rowButtons = $buttons."";
 
 
-                    if (!in_array(strtoupper($field["name"]), $hideColumns)) {
+                    foreach ($fieldInfo as $fid => $field) {
 
-                        $fieldName = strtoupper($field["name"]);
-                        $fid = strtoupper($field["name"]);
-                        
-                        if (isset($customFields->$fieldName)) {
-                            $customField = $customFields->$fieldName;
-
-                            //Populate variables in URL path
-                            if (!empty($customField->url)) {
-                                $urlPath = $customField->url;
-                                foreach ($fieldInfo as $fid2 => $field2) {
-                                    $urlPath = str_ireplace("{" . $field2["name"] . "}", $record[$field2["name"]], $urlPath);
-                                }
-                            } else {
-                                $urlPath = "";
-                            }
-
-                            //Populate variables in Onclick event
-                            if (!empty($customField->onclick)) {
-                                $onClickEvent = $customField->onclick;
-                                foreach ($fieldInfo as $fid2 => $field2) {
-                                    $onClickEvent = str_ireplace("{" . $field2["name"] . "}", $record[$field2["name"]], $onClickEvent);
-                                }
-                            } else {
-                                $onClickEvent = "";
-                            }
-
-
-                            $uniq = "";
-                            //Populate variables in Onclick event
-                            if (!empty($customField->id)) {
-                                $parsedId = $customField->id;
-                                foreach ($fieldInfo as $fid2 => $field2) {
-                                    $parsedId = str_ireplace("{" . $field2["name"] . "}", $record[$field2["name"]], $parsedId);
-                                }
-                                $uniq = $parsedId;
-                            } else {
-                                $parsedId = "";
-                            }
-
-                            //Populate variables in comment field
-                            if (!empty($customField->comment)) {
-                                $comment = $customField->comment;
-                                foreach ($fieldInfo as $fid2 => $field2) {
-                                    $comment = str_ireplace("{" . $field2["name"] . "}", $record[$field2["name"]], $comment);
-                                }
-                            } else {
-                                $comment = "";
-                            }
-
-                            //Populate variables in Dropdown SQL
-                            if (!empty($customField->lookup)) {
-                                $dropDownSql = $customField->lookup;
-                                foreach ($fieldInfo as $fid2 => $field2) {
-                                    $dropDownSql = str_ireplace("{" . $field2["name"] . "}", $record[$field2["name"]], $dropDownSql);
-                                }
-                            } else {
-                                $dropDownSql = "";
-                            }
-                            //check to see if we have a custom class and add it to the container
-                            if (empty($customField->class) ? $extraclass = "" : $extraclass = $customField->class);
-                            
-                            
-                            if (empty($customField->disabled))
-                                $customField->disabled = false;
-
-                            if (!empty($customField->list)) {
-                                if (is_object($customField->list)) {
-                                  $customField->list = get_object_vars($customField->list);
-                                }
-                               
-                            }
-                                
-                            
-                            if (empty($customField->type)) {
-                                $customField->type = "text";
-                            }
-                           
-                            switch ($customField->type) {
-                                case "hidden":
-                                    $row[$field["name"]] = $record[$fid];
-                                    break;
-                                case "lookup":
-                                  if (!empty($customField->list[$record[$fid]])) {  
-                                    $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], "" . $customField->list[$record[$fid]]. "");  
-                                  }
-                                    else {
-                                        $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], "Unknown Lookup");  
-                                    }
-                                break;    
-                                case "link":
-                                    $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], area(["id" => $parsedId, "href" => $urlPath, "onclick" => $onClickEvent], "" . $record[$fid] . ""));
-                                    break;
-                                case "checkbox":
-                                    $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], "" . $record[$fid] . "");
-                                    break;
-                                case "calculated":
-                                    eval('$value = ' . $customField->formula . ';');
-                                    $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], "" . $value . "");
-                                break;
-                                case "image":
-                                    if (empty($customField->size)) {
-                                        $customField->size = "100x100";
-                                    }
-                                    
-                                    $size = explode ("x", $customField->size);
-                                    $styleWidth = $size[0];
-                                    $styleHeight = $size[1];
-                                    
-                                    $row[$field["name"]] = "" .img(["class" => "thumbnail", "style" => "height: {$styleHeight}px; width: {$styleWidth}px", "src" => $DEB->encodeImage($record[$fid], "/imagestore", $customField->size), "alt" => ucwords(str_replace("_", " ", strtolower($field["alias"])))]);
-                                    //we need to make the record happy as well;
-                                    $record[$fid] = "[image]";
-                                   
-                                break;    
-                                case "dropdown":
-                                    if (empty($uniq)) {
-                                        $uniq = $customField["id"] . uniqid();
-                                    }
-                                    $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], div(["class" => "dropdown"], button(["class" => "btn btn-default dropdown-toggle", "style" => "width:100%", "type" => "button", "id" => $uniq, "data-toggle" => "dropdown", "aria-expanded" => "true"], "" . $record[$fid] . " " . span(["class" => "caret"])), ul(["class" => "dropdown-menu", "role" => "menu", "aria-labelledby" => "dropdownMenu1"], (new Cody($DEB))->populateDropDownItems($dropDownSql, $onClickEvent, $uniq)
-                                                            )
-                                                    )
-                                    );
-                                    break;
-                                default :
-
-                                    $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], "" . $record[$fid] . "");
-                                    break;
-                            }
-                        } else {
-
-                            $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"]], "" . $record[$fid] . "");
+                        if ($fid == 0) {
+                            $field["align"] = "left";
                         }
+
+
+                        if (!in_array(strtoupper($field["name"]), $hideColumns)) {
+
+                            $fieldName = strtoupper($field["name"]);
+                            $fid = strtoupper($field["name"]);
+
+                            if (isset($customFields->$fieldName)) {
+                                $customField = $customFields->$fieldName;
+
+                                //Populate variables in URL path
+                                if (!empty($customField->url)) {
+                                    $urlPath = $customField->url;
+                                    foreach ($fieldInfo as $fid2 => $field2) {
+                                        $urlPath = str_ireplace("{" . $field2["name"] . "}", $record[$field2["name"]], $urlPath);
+                                    }
+                                } else {
+                                    $urlPath = "";
+                                }
+
+                                //Populate variables in Onclick event
+                                if (!empty($customField->onclick)) {
+                                    $onClickEvent = $customField->onclick;
+                                    foreach ($fieldInfo as $fid2 => $field2) {
+                                        $onClickEvent = str_ireplace("{" . $field2["name"] . "}", $record[$field2["name"]], $onClickEvent);
+                                    }
+                                } else {
+                                    $onClickEvent = "";
+                                }
+
+
+                                $uniq = "";
+                                //Populate variables in Onclick event
+                                if (!empty($customField->id)) {
+                                    $parsedId = $customField->id;
+                                    foreach ($fieldInfo as $fid2 => $field2) {
+                                        $parsedId = str_ireplace("{" . $field2["name"] . "}", $record[$field2["name"]], $parsedId);
+                                    }
+                                    $uniq = $parsedId;
+                                } else {
+                                    $parsedId = "";
+                                }
+
+                                //Populate variables in comment field
+                                if (!empty($customField->comment)) {
+                                    $comment = $customField->comment;
+                                    foreach ($fieldInfo as $fid2 => $field2) {
+                                        $comment = str_ireplace("{" . $field2["name"] . "}", $record[$field2["name"]], $comment);
+                                    }
+                                } else {
+                                    $comment = "";
+                                }
+
+                                //Populate variables in Dropdown SQL
+                                if (!empty($customField->lookup)) {
+                                    $dropDownSql = $customField->lookup;
+                                    foreach ($fieldInfo as $fid2 => $field2) {
+                                        $dropDownSql = str_ireplace("{" . $field2["name"] . "}", $record[$field2["name"]], $dropDownSql);
+                                    }
+                                } else {
+                                    $dropDownSql = "";
+                                }
+                                //check to see if we have a custom class and add it to the container
+                                if (empty($customField->class) ? $extraclass = "" : $extraclass = $customField->class);
+
+
+                                if (empty($customField->disabled))
+                                    $customField->disabled = false;
+
+                                if (!empty($customField->list)) {
+                                    if (is_object($customField->list)) {
+                                      $customField->list = get_object_vars($customField->list);
+                                    }
+
+                                }
+
+
+                                if (empty($customField->type)) {
+                                    $customField->type = "text";
+                                }
+
+                                switch ($customField->type) {
+                                    case "hidden":
+                                        $row[$field["name"]] = $record[$fid];
+                                        break;
+                                    case "lookup":
+                                      if (!empty($customField->list[$record[$fid]])) {  
+                                        $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], "" . $customField->list[$record[$fid]]. "");  
+                                      }
+                                        else {
+                                            $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], "Unknown Lookup");  
+                                        }
+                                    break;    
+                                    case "link":
+                                        $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], area(["id" => $parsedId, "href" => $urlPath, "onclick" => $onClickEvent], "" . $record[$fid] . ""));
+                                        break;
+                                    case "checkbox":
+                                        $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], "" . $record[$fid] . "");
+                                        break;
+                                    case "calculated":
+                                        eval('$value = ' . $customField->formula . ';');
+                                        $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], "" . $value . "");
+                                    break;
+                                    case "image":
+                                        if (empty($customField->size)) {
+                                            $customField->size = "100x100";
+                                        }
+
+                                        $size = explode ("x", $customField->size);
+                                        $styleWidth = $size[0];
+                                        $styleHeight = $size[1];
+
+                                        $row[$field["name"]] = "" .img(["class" => "thumbnail", "style" => "height: {$styleHeight}px; width: {$styleWidth}px", "src" => $DEB->encodeImage($record[$fid], "/imagestore", $customField->size), "alt" => ucwords(str_replace("_", " ", strtolower($field["alias"])))]);
+                                        //we need to make the record happy as well;
+                                        $record[$fid] = "[image]";
+
+                                    break;    
+                                    case "dropdown":
+                                        if (empty($uniq)) {
+                                            $uniq = $customField["id"] . uniqid();
+                                        }
+                                        $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], div(["class" => "dropdown"], button(["class" => "btn btn-default dropdown-toggle", "style" => "width:100%", "type" => "button", "id" => $uniq, "data-toggle" => "dropdown", "aria-expanded" => "true"], "" . $record[$fid] . " " . span(["class" => "caret"])), ul(["class" => "dropdown-menu", "role" => "menu", "aria-labelledby" => "dropdownMenu1"], (new Cody($DEB))->populateDropDownItems($dropDownSql, $onClickEvent, $uniq)
+                                                                )
+                                                        )
+                                        );
+                                        break;
+                                    default :
+
+                                        $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], "" . $record[$fid] . "");
+                                        break;
+                                }
+                            } else {
+
+                                $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"]], "" . $record[$fid] . "");
+                            }
+                        }
+
+
+                        if ($rowButtons !== "") {
+
+                            $rowButtons = str_ireplace("{" . $field["name"] . "}", $record[strtoupper($field["name"])], $rowButtons."");
+                        }    
+
+
+                        $rows[$rid] = $row;
                     }
-                    
-                    
+
                     if ($rowButtons !== "") {
-                        
-                        $rowButtons = str_ireplace("{" . $field["name"] . "}", $record[strtoupper($field["name"])], $rowButtons."");
-                    }    
+
+                            $rowButtons = str_replace ("{record}", rawurlencode(json_encode($record)), $rowButtons);
+                            $rowButtons = str_replace ("{recordid}", $rid, $rowButtons);
+                    }
+
+                    if ($rowButtons !== "") {
+                        $rows[$rid]["BUTTONS"] = "" . div($rowButtons);
+                    }
 
 
-                    $rows[$rid] = $row;
                 }
-                
-                if ($rowButtons !== "") {
-                 
-                        $rowButtons = str_replace ("{record}", rawurlencode(json_encode($record)), $rowButtons);
-                        $rowButtons = str_replace ("{recordid}", $rid, $rowButtons);
-                }
-                
-                if ($rowButtons !== "") {
-                    $rows[$rid]["BUTTONS"] = "" . div($rowButtons);
-                }
-                
-                
             }
             $result = ["total" => $recordCount, "rows" => $rows, "sql" => $sql];
 

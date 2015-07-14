@@ -1122,7 +1122,6 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             xcache_clear_cache(1);
         }
         
-        
         if (!$this->dbh) {
             trigger_error("No database handle, use connect first in " . __METHOD__ . " for " . $this->dbtype, E_USER_WARNING);
         } else /* ODBC Connection */ if ($this->dbtype == "odbc") {
@@ -1242,7 +1241,11 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
          $count++;
         }        
         
-        return $this->exec ($sqlDelete);
+        $result = $this->exec ($sqlDelete);
+        
+        $this->commit();
+        
+        return $result;
         
     }
     

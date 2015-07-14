@@ -2736,6 +2736,8 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
      */
 
     function runFileUploads($fieldprefix="edt", $tablename="", $primarykeyValue=0, $primarykey="ID") {
+        
+     
         if ($_FILES) {
             $prefixlen = strlen ($fieldprefix);    
             foreach ($_FILES as $name => $value) {

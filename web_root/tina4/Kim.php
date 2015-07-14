@@ -40,7 +40,7 @@ class Kim {
                                             global_setting_id integer default 0 not null,
                                             global_name varchar (100) default 'ENVIRONMENT',
                                             global_value varchar (200) default 'Development',
-                                            description text default '',
+                                            description text,
                                             created timestamp default 'now',
                                             updated timestamp default 'now',
                                             primary key (global_setting_id)
@@ -48,7 +48,7 @@ class Kim {
 
                 file_put_contents (Ruth::getDOCUMENT_ROOT()."/migrations/19000101100000 initial_kim_global_settings.sql", $sqlGlobalSettings );
 
-                $sqlContentTable = "create table content (
+                $sqlContentTable = "create table kim_content (
                                             content_id integer default 0 not null,
                                             title varchar (200) default '',
                                             description varchar (1000) default '',
@@ -545,7 +545,7 @@ class Kim {
                     if (!empty($data)) {
                         //get the variables out
 
-                        preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"]+)}/i', $template, $variables);
+                        preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"\|]+)}/i', $template, $variables);
                         foreach ($variables[1] as $index => $variable) {
                             if (!empty($data->$variable)) {
                                 $varValue = $data->$variable;
@@ -729,12 +729,13 @@ class Kim {
             $template = $parsedSnippets["template"];
 
 
+            
             //print_r ($controls);
             if (!empty($controls)) {
-                $ifResult = "";
+                
                 foreach ($controls as $cid => $control) {
                     //go through all the ifs
-
+                    $ifResult = "";
                     if (empty($control["if"])) continue;
 
                     $found = false;
@@ -742,7 +743,7 @@ class Kim {
                         if (!empty( $ifStatement["expression"] )) {
                             $myIf = '$expression = (' . $ifStatement["expression"] . ');';
                             if (!empty($data)) {
-                                preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"]+)}/i', $myIf, $variables);
+                                preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"\|]+)}/i', $myIf, $variables);
                                 foreach ($variables[1] as $index => $variable) {
                                     if (!empty($data->$variable)) {
                                         $varValue = $data->$variable;
@@ -750,7 +751,6 @@ class Kim {
                                     }
                                 }
                             }
-
                             @eval ($myIf);
                             if (!empty($expression)) {
                                 if ($expression) {
@@ -777,6 +777,7 @@ class Kim {
 
             }
 
+      
 
             if (!empty($elements)) {
 
@@ -822,6 +823,8 @@ class Kim {
                                 else {
                                     $params = [];
                                 }
+                                
+                               
                                 try {
                                     if (method_exists($classObject, $callParts[0])) {
                                         $result = call_user_func_array(array($classObject, $callParts[0]), $params);
@@ -842,10 +845,10 @@ class Kim {
                                     $html = "";
 
                                     foreach ($result as $rid => $resultData) {
-
-
                                         if (!empty($element["snippet"])) {
-
+                                            if (!empty($data)) { //merge the looped data with the initial seeded data
+                                                $resultData = (object) array_merge((array) $resultData, (array) $data);
+                                            }    
                                             $html .= $this->parseTemplate($element["snippet"], $resultData);
                                         }
                                     }
@@ -872,7 +875,7 @@ class Kim {
                 if (strpos($template, "{{") !== false) {
 
                     if (!empty($data)) {
-                        preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"]+)}/i', $template, $variables);
+                        preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"\|]+)}/i', $template, $variables);
                         foreach ($variables[1] as $index => $variable) {
                             if (!empty($data->$variable)) {
                                 $template = $this->parseValue("{" . $variable . "}", $data->$variable, $template);
@@ -885,7 +888,8 @@ class Kim {
                     foreach ($elements as $eid => $element) {
                         $elementHash = md5(print_r ($element[0], 1));
                         $element[0] = str_replace ("?", '\?', $element[0]);
-
+                        $element[0] = str_replace ("|", '\|', $element[0]);
+                        
                         $template = preg_replace ('{{{'.$element[0].'}}}', $response[$elementHash], $template, 1);
 
                     }
@@ -930,7 +934,7 @@ class Kim {
             }
 
             //any variables that could not be found in the form {variable}
-            preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"]+)}/i', $template, $elements);
+            preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"\|]+)}/i', $template, $elements);
             if (!empty($elements[1])) {
                 foreach ($elements[1] as $eid => $element) {
                     $testVar = explode ("->", $element);
@@ -1596,6 +1600,7 @@ ul.tree > li > ul > li > ul > li > a > label:before {
 
     function authenticate() {
         $user = $this->KIM->getRow("select * from user where email = '".Ruth::getREQUEST("txtEMAIL")."'");
+		
         if (password_verify(Ruth::getREQUEST("txtPASSWORD"), $user->PASSWD)) {
             Ruth::setSESSION("KIM", ["loggedin" => 1, "user" => $user]);
             Ruth::redirect("/kim/routes");
@@ -2076,7 +2081,7 @@ ul.tree > li > ul > li > ul > li > a > label:before {
         $DEB = Ruth::getObject ("DEB");
 
 
-        return $DEB->getRows ("select * from content where content_id = {$contentId}");
+        return $DEB->getRows ("select * from kim_content where content_id = {$contentId}");
     }
 
     /**
@@ -2097,9 +2102,9 @@ ul.tree > li > ul > li > ul > li > a > label:before {
         $customFields["STATUS"] = ["type" => "lookup", "list" => ["Active" => "Active", "Disabled" => "Disabled"]];
         $customFields["ORDER_INDEX"] = ["validation" => "required:true", "defaultValue" => 100];
 
-        $tableInfo = ["table" => "content", "primarykey" => "content_id"];
+        $tableInfo = ["table" => "kim_content", "primarykey" => "content_id"];
         $html  = (new Cody())->bootStrapTable(
-            $sql="select content_id, title, description from content order by order_index",
+            $sql="select content_id, title, description from kim_content order by order_index",
             $buttons,
             $hideColumns="",
             $toolBar,

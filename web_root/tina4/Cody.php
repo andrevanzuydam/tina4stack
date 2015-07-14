@@ -158,12 +158,43 @@ class Cody {
         if (!empty($object[6])) {
             
             $tableInfo = $object[6];
-            $keyName = strtoupper($tableInfo->primarykey);             
+            $keyName = strtoupper($tableInfo->primarykey);   
+            $keyName = explode (",", $keyName);
+            if (count($keyName) > 1) {
+               $filterKey = "";
+               $recordsVal = [];
+               foreach ($keyName as $id => $key) {
+                  if ($id != 0) $filterKey .= " and "; 
+                  if (!empty($record->$key)) {
+                    $filterKey .= "{$key} = '".$record->$key."'";
+                    $recordsVal[] = $record->$key;
+                  }
+                    else {
+                      $filterKey .= "{$key} = ''";  
+                      $recordsVal[] = "";
+                  }
+                  
+               }
+               if ($action === "insert") {
+                  $record = (object) $recordsVal;  
+               }
+            }  else {
+                $keyName = strtoupper($tableInfo->primarykey);   
+                $filterKey = "{$tableInfo->primarykey} = '".$record->$keyName."'";
+                if ($action === "insert") {
+                    $record = (object) [$keyName => ""];
+                }     
+            }
             
-            if ($action === "insert") {
-                $record = (object) [$keyName => ""];
-            }            
-            $sql = "select * from {$tableInfo->table} where {$tableInfo->primarykey} = '".$record->$keyName."'";
+            
+                   
+            
+            $selectFields = "*";
+            if (!empty($tableInfo->fields)) {
+                $selectFields = $tableInfo->fields;
+            }
+            
+            $sql = "select {$selectFields} from {$tableInfo->table} where {$filterKey}";
         }
           else {
            $keyName = key($record);             
@@ -366,7 +397,20 @@ class Cody {
                         
                         if (!empty($object[6])) {
                             $tableInfo = $object[6];
-                            $keyName = strtoupper($tableInfo->primarykey);             
+                            $keyName = strtoupper($tableInfo->primarykey);       
+                            $keyName = explode (",", $keyName);
+                            if (count($keyName) > 1) {
+                               $filterKey = "";
+                               foreach ($keyName as $id => $key) {
+                                  if ($id != 0) $filterKey .= " and "; 
+                                  $filterKey .= "{$key} = '".$record->$key."'";
+                               } 
+                            }  else {
+                                $keyName = strtoupper($tableInfo->primarykey);   
+                                $filterKey = "{$tableInfo->primarykey} = '".$record->$keyName."'";
+                            }
+
+                            
                             $tableName = $tableInfo->table; 
                         }
                           else {
@@ -399,7 +443,7 @@ class Cody {
                             break;    
                             case "update":
 
-                                $sqlUpdate = $DEB->getUpdateSQL("txt", $tableName, $keyName, $record->$keyName, "{$action}{$name}", $passwordFields, $dateFields, true);
+                                $sqlUpdate = $DEB->getUpdateSQL("txt", $tableName, $filterKey, "", "{$action}{$name}", $passwordFields, $dateFields, true);
 
                                 if ( $sqlUpdate ) {
                                      echo $this->bootStrapAlert("success", $caption="Success", "Record was updated successfully"); 
@@ -1803,10 +1847,8 @@ class Cody {
                         if (xhr.status == 200) {
                             result = xhr.responseText;
                             
-                         
                             if (targetElement != null && targetElement.tagName !== undefined && newTarget != null) {
-                               tagTarget = targetElement.tagName.toUpperCase();
-                              
+                               tagTarget = targetElement.tagName.toUpperCase();                              
                                
                                if (tagTarget === 'INPUT' || tagTarget === 'TEXTAREA') {
                                     console.log ('Tina4 - Target is input:'+targetElement.id);
@@ -1817,6 +1859,8 @@ class Cody {
                                }
                                
                                 parse{$name}Script(result);
+                            } else if(typeof window[newTarget] === 'function'){//if target is a function pass it the results
+                                window[newTarget](result);
                             }
                               else {
                               console.log ('Tina4 - parse script');

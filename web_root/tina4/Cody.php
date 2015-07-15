@@ -337,7 +337,26 @@ class Cody {
 
                             if (!empty($object[6])) {
                                 $tableInfo = $object[6];
-                                $keyName = strtoupper($tableInfo->primarykey);             
+                                $keyName = explode (",", $tableInfo->primarykey);
+                                if (count($keyName) > 1) {
+                                   $filterKey = "";
+                                   foreach ($keyName as $id => $key) {
+                                      $key = strtoupper($key);   
+                                      if ($id != 0) $filterKey .= " and "; 
+                                      if (!empty($record)) {
+                                        $filterKey .= "{$key} = '".$record->$key."'";  
+                                      } else {
+                                        $filterKey .= "{$key} = ''";
+                                      }
+                                   } 
+                                }  else {
+                                    $keyName = strtoupper($tableInfo->primarykey);   
+                                    if (!empty($record)) {
+                                        $filterKey = "{$tableInfo->primarykey} = '".$record->$keyName."'";
+                                    }  else {
+                                        $filterKey = "{$tableInfo->primarykey} = ''";  
+                                    }
+                                }
                                 $tableName = $tableInfo->table; 
                             }
                               else {
@@ -350,14 +369,23 @@ class Cody {
                             }        
                             $DEB = Ruth::getOBJECT(Ruth::getREQUEST("db"));
                             
-                            $DEB->delete($tableName, [$keyName => $record->$keyName]);
-                           
-                                                   
+                            if (is_array($keyName)) {
+                                
+                                $DEB->exec ("delete from {$tableName} where {$filterKey}");
+                                $DEB->commit();
+                            }    
+                                else {
+                                    $DEB->delete($tableName, [$keyName => $record->$keyName]);
+                                }
+
                             if (!empty(ONDELETE)) {
-                                                $params = ["action" => $action, "table" => $tableName, $keyName => $record->$keyName, "session" => Ruth::getSESSION(), "request" => Ruth::getREQUEST()];
-                                                @call_user_func_array(ONINSERT, $params);
-                                            }    
-                            
+                                if (is_array($keyName)) { $keyName = join("-", $keyName);
+                                    $record->$keyName = $filterKey;
+                                }
+                                $params = ["action" => $action, "table" => $tableName, $keyName => $record->$keyName, "session" => Ruth::getSESSION(), "request" => Ruth::getREQUEST()];
+                                @call_user_func_array(ONINSERT, $params);
+                            }    
+
                             echo $this->bootStrapAlert("success", $caption="Success", "Record deleted");  
                             echo script ('$table'.$name.'.bootstrapTable("refresh");' );
                                 
@@ -401,13 +429,17 @@ class Cody {
                         
                         if (!empty($object[6])) {
                             $tableInfo = $object[6];
-                            $keyName = strtoupper($tableInfo->primarykey);       
-                            $keyName = explode (",", $keyName);
+                            $keyName = explode (",", $tableInfo->primarykey);
                             if (count($keyName) > 1) {
                                $filterKey = "";
                                foreach ($keyName as $id => $key) {
+                                  $key = strtoupper($key);   
                                   if ($id != 0) $filterKey .= " and "; 
-                                  $filterKey .= "{$key} = '".$record->$key."'";
+                                  if (!empty($record)) {
+                                    $filterKey .= "{$key} = '".$record->$key."'";  
+                                  } else {
+                                    $filterKey .= "{$key} = ''";
+                                  }
                                } 
                             }  else {
                                 $keyName = strtoupper($tableInfo->primarykey);   
@@ -417,8 +449,6 @@ class Cody {
                                     $filterKey = "{$tableInfo->primarykey} = ''";  
                                 }
                             }
-
-                            
                             $tableName = $tableInfo->table; 
                         }
                           else {
@@ -444,13 +474,13 @@ class Cody {
                                         echo $this->bootStrapAlert("danger", $caption="Failure", "Record could not be updated");              
                                     }
 
-                                if (!empty(ONINSERT)) {
+                                if (defined ("ONINSERT") && !empty(ONINSERT)) {
+                                    if (is_array($keyName)) $keyName = join("-", $keyName);
                                     $params = ["action" => $action, "table" => $tableName, $keyName => $_REQUEST["{$action}{$name}"], "session" => Ruth::getSESSION(), "request" => Ruth::getREQUEST()];
                                     @call_user_func_array(ONINSERT, $params);
                                 }    
                             break;    
                             case "update":
-
                                 $sqlUpdate = $DEB->getUpdateSQL("txt", $tableName, $filterKey, "", "{$action}{$name}", $passwordFields, $dateFields, true);
 
                                 if ( $sqlUpdate ) {
@@ -461,7 +491,8 @@ class Cody {
                                         echo $this->bootStrapAlert("danger", $caption="Failure", "Record could not be updated");              
                                     }
 
-                                if (!empty(ONUPDATE)) {
+                                if (defined ("ONUPDATE") && !empty(ONUPDATE)) {
+                                    if (is_array($keyName)) $keyName = join("-", $keyName);
                                     $params = ["action" => $action, "table" => $tableName, $keyName => $record->$keyName, "session" => Ruth::getSESSION(), "request" => Ruth::getREQUEST()];
                                     @call_user_func_array(ONUPDATE, $params);
                                 }        
@@ -1899,7 +1930,6 @@ class Cody {
     }
 
     function bootStrapMenuTree(){
-        
         $html = "";
         
         
@@ -1909,13 +1939,7 @@ class Cody {
     }
     
     function bootStrapLookup($name, $caption, $elements, $value="", $onclick= "", $readonly = "",  $colWidth="col-md-12", $nochoose = false) {
-
-       
-      
         $html = div(["class" => "form-group ".$colWidth], label(["for" => $name], $caption), $this->select($name, $caption, "array", $elements, $value, $onclick, $name, $readonly, $nochoose));
-      
-
-
         return $html;
     }
 

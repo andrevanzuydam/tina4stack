@@ -2587,15 +2587,17 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         $result = "";
         if ($filter != "")
             $filter = " where $filter"; //we may need to filter our tables
-        $sql = "select max($fieldname)+1 as \"NEXTID\" from $tablename $filter";
-        $sql = $this->parseSQL($sql);
-        $row = $this->getRow($sql);
-        $row = $this->RAWRESULT[0];
-        if ($row->NEXTID == "") {
-            $row->NEXTID = 0;
+        if (is_string($fieldname)) {
+            $sql = "select max($fieldname)+1 as \"NEXTID\" from $tablename $filter";
+            $sql = $this->parseSQL($sql);
+            $row = $this->getRow($sql);
+            $row = $this->RAWRESULT[0];
+            if ($row->NEXTID == "") {
+                $row->NEXTID = 0;
+            }
+
+            $result = $row->NEXTID;
         }
-        
-        $result = $row->NEXTID;
         return $result;
     }
 
@@ -2652,15 +2654,23 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         //Get the length of field prefix
         $prefixlen = strlen($fieldprefix);
         //Start the insert statement      
-        if ($genkey) {
+        
+        if ( is_string($primarykey) && $genkey) {
             $newid = $this->getNextId($tablename, $primarykey);
             $_REQUEST[$requestvar] = $newid;
             $sqlinsert = "insert into $tablename ($primarykey";
         } else {
-            $newid = $_REQUEST[$fieldprefix . strtoupper($primarykey)];
+            $newid = "";
+            if ( is_string($primarykey) ) {
+                $newid = $_REQUEST[$fieldprefix . strtoupper($primarykey)];
+                
+            }
             $_REQUEST[$requestvar] = $newid;
+            
             $sqlinsert = "insert into $tablename (";
         }
+        
+      
         //Search all the fields on the form
         foreach ($_REQUEST as $name => $value) {
             if (substr($name, 0, $prefixlen) == $fieldprefix) {
@@ -2736,8 +2746,6 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
      */
 
     function runFileUploads($fieldprefix="edt", $tablename="", $primarykeyValue=0, $primarykey="ID") {
-        
-     
         if ($_FILES) {
             $prefixlen = strlen ($fieldprefix);    
             foreach ($_FILES as $name => $value) {

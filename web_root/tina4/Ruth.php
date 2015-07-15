@@ -958,13 +958,11 @@ class Ruth {
         }
         
         if (defined("ONROUTE") && !empty(ONROUTE)) {
-            
             $params = ["action" => "route", "server" => Ruth::getSERVER(), "cookies" => Ruth::getCOOKIE(), "session" => Ruth::getSESSION(), "request" => Ruth::getREQUEST()];
             @call_user_func_array(ONROUTE, $params);
-            
         }
         
-        if (!$found) {
+        if (!$found) { 
             
             //before we quit, see if Kim can help us!
             if (class_exists("Kim")) {

@@ -779,7 +779,7 @@ class Kim {
                 $response = [];
                 foreach ($elements as $eid => $element) {
 
-                    $elementParts = explode (":", $element[0]);
+                    $elementParts = explode (":", $element[0], 2);
 
                     $elementHash = md5(print_r($element[0],1));
 

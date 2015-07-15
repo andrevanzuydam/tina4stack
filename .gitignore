@@ -59,3 +59,5 @@ reportengine/src/reta.~dsk
 .idea/workspace.xml
 .idea/
 web_root/images/
+/web_root/migrations/19000101100000 initial_kim_global_settings.sql
+/web_root/migrations/19000101100001 initial_kim_content_table.sql

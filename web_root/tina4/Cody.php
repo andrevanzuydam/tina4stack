@@ -838,7 +838,7 @@ class Cody {
      * @param String $checkPostURL
      * @return type
      */
-    function bootStrapTable($sql = "select * from user_detail", $buttons = "", $hideColumns = "", $toolbar = "My Grid", $customFields = null, $name = "grid", $tableInfo="", $formHideFields="", $class = "table table-striped",$rowLimit = 10, $paginate = true, $searchable = true, $checked = false, $selected_page = 1, $checkedPostURL = "", $checkSingleSelect = true, $event = "", $mobiletooltip = "") {
+    function bootStrapTable($sql = "select * from user_detail", $buttons = "", $hideColumns = "", $toolbar = "My Grid", $customFields = null, $name = "grid", $tableInfo="", $formHideFields="", $class = "table table-striped",$rowLimit = 5, $paginate = true, $searchable = true, $checked = false, $selected_page = 1, $checkedPostURL = "", $checkSingleSelect = true, $event = "", $mobiletooltip = "") {
         $DEB = $this->DEB;
         $hideColumns = explode(",", strtoupper($hideColumns));
         $object = rawurlencode(json_encode(func_get_args()));
@@ -850,7 +850,6 @@ class Cody {
             "data-pagination" => "{$paginating}",
             "data-side-pagination" => "server",
             "data-search" => "false",
-            "data-height" => "400",        
             "data-page-list" => "[5, 10, 20, 50, 100, 200]",
             "data-page-size" => $rowLimit
         ];

@@ -114,7 +114,12 @@ class Ruth {
      * @var String
      */
     private static $POST_DATA; 
-    
+        
+    /**
+    * This is for the default life time of a session in minutes
+    * @var Integer 
+    */
+    private static $lifeTime;
     
     
     /**
@@ -551,12 +556,17 @@ class Ruth {
     public static function setAuthorization ($roleName="", $authDATA="", $lifeTime=30) {
        if ($roleName != "") {
           if (array_key_exists ($roleName, self::$ROLES)) {
-             $expiryTime = new DateTime (Date("Y-m-d h:i:s"));
-             $expiryTime->add (new DateInterval ("PT".$lifeTime."M") );
-             $_SESSION["authToken"] = md5($roleName.print_r ($authDATA, 1).$lifeTime);
-             $_SESSION["authData"] = $authDATA;
-             $_SESSION["roleName"] = $roleName;
-             $_SESSION["expires"] = $expiryTime;
+            
+            Ruth::$lifeTime = $lifeTime;  
+             
+            $_SESSION["authToken"] = md5($roleName.print_r ($authDATA, 1).$lifeTime);
+            $_SESSION["authData"] = $authDATA;
+            $_SESSION["roleName"] = $roleName;
+             
+            $expiryTime = new DateTime (Date("Y-m-d h:i:s"));
+            $expiryTime->add (new DateInterval ("PT".$lifeTime."M") );
+            $_SESSION["expires"] = $expiryTime;
+             
              self::$SESSION = $_SESSION;
           } 
             else {
@@ -824,10 +834,19 @@ class Ruth {
                 $interval = $_SESSION["expires"]->diff($expiryTime);
                 $minutes = $interval->format("%i");
                 if ($minutes > 0) {
-                    
                     if (!empty($_SESSION["roleName"])) {
                       $roleName = $_SESSION["roleName"];
                     }
+                    
+                    if (empty(Ruth::$lifeTime)) {
+                        Ruth::$lifeTime = 30;
+                    }
+                    
+                    //update the session again
+                    $expiryTime = new DateTime (Date("Y-m-d h:i:s"));
+                    $expiryTime->add (new DateInterval ("PT".Ruth::$lifeTime."M") );
+                    $_SESSION["expires"] = $expiryTime;
+                    
                 } else {
                     $roleName = self::$DEFAULT_ROLE;
                     Ruth::delAuthorization();
@@ -924,10 +943,7 @@ class Ruth {
                           $_SESSION["routeLASTPATH"][] = (object) array("routePath" => self::$REQUEST_URI, "requestMethod" => $route->requestMethod);  
                         }
                       }
-                      
                      
-                      
-                      
                       call_user_func_array($route->routeFunction, $params);
                       $found = true;
                       
@@ -967,6 +983,29 @@ class Ruth {
                 self::responseHeader(404);
             }
         }
+    }
+    
+    /**
+     * Still need some work - NOT FINISHED
+     * @param type $pageLoadingTime
+     */
+    public static function getTraffic($pageLoadingTime){
+        
+        $trafficId = Ruth::getOBJECT("DEB")->getNextId("traffic", "traffic_id");
+        
+        $traffic = array(
+            "traffic_id" => $trafficId,
+            "ad_param" => json_encode(self::$REQUEST),
+            "ip" => Ruth::getSERVER("REMOTE_ADDR"),
+            "referer" => Ruth::getSERVER("HTTP_REFERER"),
+            "ua" => Ruth::getSERVER("HTTP_USER_AGENT"), // user agent
+            "load_time" => $pageLoadingTime,
+            "audit_trail_id" => Ruth::getSESSION("route_audit_trail_id"),
+            "is_mobile" => Ruth::getSESSION("isMobile")
+        );
+        
+        Ruth::getOBJECT("DEB")->insert ("traffic", $traffic);
+
     }
 
 }

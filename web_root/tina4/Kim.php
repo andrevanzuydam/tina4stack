@@ -72,11 +72,6 @@ class Kim {
             }
         );
 
-
-
-
-
-
         Ruth::addRoute (RUTH_GET,
             "/kim/menu/get/{menuId}",
             function($menuId) {
@@ -451,7 +446,7 @@ class Kim {
 
         $checkSum = "element".md5($template.print_r($elements,1).print_r($data,1));
 
-        if (TINA4_HAS_CACHE && !empty($elements)) {
+        if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false && !empty($elements)) {
             $tempElements = xcache_get ($checkSum);
         }
 
@@ -560,7 +555,7 @@ class Kim {
             }
 
             //Store the elements in a cache
-            if (TINA4_HAS_CACHE ) {
+            if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false ) {
                 xcache_set ($checkSum, ["elements" => $elements,  "controls" => $controls, "modifiedTemplate" => $modifiedTemplate]);
             }
         }
@@ -619,7 +614,7 @@ class Kim {
 
 
 
-            if (TINA4_HAS_CACHE && !empty(xcache_get($checkSum)) && !empty($data)) {
+            if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false && !empty(xcache_get($checkSum)) && !empty($data)) {
                 //echo "Loading from Cache <br>";
                 $template = xcache_get ($checkSum);
 
@@ -639,7 +634,7 @@ class Kim {
                     if (file_exists($assetFolder.$template.$extension)) {
 
                         $template = file_get_contents($assetFolder.$template.$extension);
-                        if (TINA4_HAS_CACHE  && !empty($data) && strpos($template, "{{") === false) {
+                        if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false  && !empty($data) && strpos($template, "{{") === false) {
                             xcache_set ($checkSum, $template);
                         }
                         break;
@@ -902,7 +897,7 @@ class Kim {
 
             //see if we can parse the data variable
             if (!empty($data)) {
-                if (TINA4_HAS_CACHE && empty(xcache_get(md5(print_r($data,1))))) {
+                if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false && empty(xcache_get(md5(print_r($data,1))))) {
                     //Parse through the data variables
                     foreach ($data as $keyName => $keyValue) {
                         if (class_exists ("finfo")) {
@@ -923,10 +918,27 @@ class Kim {
                     xcache_set (md5(print_r($data,1)), serialize($data));
                 }
                 else
-                    if (TINA4_HAS_CACHE && !empty(xcache_get(md5(print_r($data,1))))) {
+                if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false && !empty(xcache_get(md5(print_r($data,1))))) {
 
                         $data = unserialize(xcache_get (md5(print_r($data,1))));
-                    }
+                } else { 
+                    foreach ($data as $keyName => $keyValue) {
+                        if (class_exists ("finfo")) {
+                            $fi = new finfo(FILEINFO_MIME);
+                            $mimeType = explode (";", $fi->buffer($keyValue));
+
+                            if ($mimeType[0] !== "text/html" && $mimeType[0] !== "text/plain" && $mimeType[0] !== "application/octet-stream" && $mimeType[0] !== "application/x-empty") {
+
+                                if (is_object($data)) {
+                                    $data->$keyName = (new Debby())->encodeImage($keyValue, $imagestore = "/imagestore", $size = "", $noimage = "/imagestore/noimage.jpg");
+                                } else {
+                                    $data[$keyName] = (new Debby())->encodeImage($keyValue, $imagestore = "/imagestore", $size = "", $noimage = "/imagestore/noimage.jpg");
+                                }
+                                //$value = "data:".$mimeType[0].";base64,".base64_encode($value);
+                            }
+                        }
+                    }    
+                }    
 
                 foreach ($data as $name => $value) {
                     $template = $this->parseValue("{".$name."}", $value, $template);
@@ -951,7 +963,7 @@ class Kim {
                 }
             }
 
-            if (TINA4_HAS_CACHE && strpos($template, "{") === false) {
+            if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false && strpos($template, "{") === false) {
                 xcache_set ($checkSum, $template);
             }
 
@@ -1463,7 +1475,7 @@ ul.tree > li > ul > li > ul > li > a > label:before {
             }
         }
 
-        if (TINA4_HAS_CACHE) {
+        if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false && TINA4_HAS_CACHE !== false) {
             xcache_set (md5("routes"), serialize($routes));
         }
 
@@ -1472,7 +1484,7 @@ ul.tree > li > ul > li > ul > li > a > label:before {
 
     function loadDefines() {
         if (!empty(Ruth::getOBJECT("DEB"))) {
-            if (TINA4_HAS_CACHE) {
+            if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false) {
                 $defines = unserialize(xcache_get(md5("defines")));
             }
 
@@ -1480,7 +1492,7 @@ ul.tree > li > ul > li > ul > li > a > label:before {
 
                 $defines = @Ruth::getOBJECT("DEB")->getRows("select global_name, global_value from global_setting");
 
-                if (TINA4_HAS_CACHE) {
+                if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false) {
                     xcache_set(md5("defines"), serialize($defines));
                 }
             }
@@ -1495,7 +1507,7 @@ ul.tree > li > ul > li > ul > li > a > label:before {
     }
 
     function loadRoutes () {
-        if (TINA4_HAS_CACHE) {
+        if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false) {
             $routes = unserialize(xcache_get (md5("routes")));
         }
 

@@ -28,12 +28,7 @@ if (file_exists(realpath(__DIR__ . "/tina4") . "/Shape.php")) {
     die();
 }
 
-if (function_exists("xcache_get")) {
-  define("TINA4_HAS_CACHE", true);
-}
- else {
-  define("TINA4_HAS_CACHE", false);   
-}
+
         
 //include shape for the project
 require_once "Shape.php";
@@ -64,15 +59,28 @@ if (file_exists(realpath(__DIR__) . "/config.php")) {
     require_once "config.php";
 }
 
+if (function_exists("xcache_get")) {
+  if (defined("TINA4_DISABLE_CACHE") && TINA4_DISABLE_CACHE === true) {
+     define("TINA4_HAS_CACHE", false);
+  }
+    else {
+       define("TINA4_HAS_CACHE", true);  
+    }
+  
+}
+ else {
+  define("TINA4_HAS_CACHE", false);   
+}
+
+
+
 if (!defined ("TINA4_INCLUDES")) define("TINA4_INCLUDES", "project");
 if (!defined ("TINA4_SESSION")) define("TINA4_SESSION", "TINA4");
 if (!defined ("TINA4_RUTH_DEBUG")) define("TINA4_RUTH_DEBUG", false);
-
-
-
+    
 Ruth::autoLoad($_TINA4_LOAD_PATHS . TINA4_INCLUDES, true, true);
 
-/**
+/*
  * Initialize the TIN4 session
  */
 if (!empty(TINA4_SESSION)) {
@@ -84,6 +92,19 @@ if (!empty(TINA4_SESSION)) {
     }
 } else {
     tina4Message("TINA4_SESSION variable is not set", "Config Error");
+}
+
+/**
+ * Check for mobile device
+ */
+if(class_exists("MobileDetect", true)){
+    
+    $mobile = new MobileDetect();
+    $isMobile = $mobile->isMobile() !== false && $mobile->isTablet() !== true ? 1 : 0 ;
+    
+    Ruth::setSESSION("isMobile", $isMobile);
+    define("ISMOBILE", $isMobile);
+   
 }
 
 //Check if we have a connections folder for database connections and init Debby

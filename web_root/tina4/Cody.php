@@ -572,20 +572,20 @@ class Cody {
                 $tempButtons = explode (",", strtolower($buttons));
                 
                 if (is_array($tempButtons)) {
-                    $buttons = script ("var a{recordid}record = '{record}';");
+                    $buttons = script ("var a{recordid}{$name}record = '{record}';");
                     foreach ($tempButtons as $bid => $button) {
                         switch ($button) {
                             case "insert":
-                                $buttons .= (new Cody())->bootStrapButton("btnInsert", "Add", "call{$name}Ajax('/cody/form/insert','{$name}Target', {object : a{$name}object, record: a{recordid}record, db: '{$db}' })", "btn btn-success", "", true);
+                                $buttons .= (new Cody())->bootStrapButton("btnInsert", "Add", "call{$name}Ajax('/cody/form/insert','{$name}Target', {object : a{$name}object, record: a{recordid}{$name}record, db: '{$db}' })", "btn btn-success", "", true);
                             break;
                             case "update":
-                                $buttons .= (new Cody())->bootStrapButton("btnEdit", "Edit", "call{$name}Ajax('/cody/form/update','{$name}Target', {object : a{$name}object, record: a{recordid}record, db: '{$db}' })", "btn btn-primary", "", true);
+                                $buttons .= (new Cody())->bootStrapButton("btnEdit", "Edit", "call{$name}Ajax('/cody/form/update','{$name}Target', {object : a{$name}object, record: a{recordid}{$name}record, db: '{$db}' })", "btn btn-primary", "", true);
                             break;
                             case "delete":
                                 $buttons .= (new Cody())->bootStrapButton("btnDelete", "Del", "if (confirm('Are you sure you want to delete this record ?')) { call{$name}Ajax('/cody/form/delete','{$name}Target', {object : a{$name}object, record: a{recordid}record, db: '{$db}' }) }", "btn btn-danger", "", true);
                             break;
                             case "view":
-                                $buttons .= (new Cody())->bootStrapButton("btnInsert", "View", "call{$name}Ajax('/cody/form/view','{$name}Target', {object : a{$name}object, record: a{recordid}record, db: '{$db}' })", "btn btn-warning", "", true);
+                                $buttons .= (new Cody())->bootStrapButton("btnInsert", "View", "call{$name}Ajax('/cody/form/view','{$name}Target', {object : a{$name}object, record: a{recordid}{$name}record, db: '{$db}' })", "btn btn-warning", "", true);
                             break;
                         }    
                     }               
@@ -897,8 +897,10 @@ class Cody {
         }
 
 
+      
         $data = @$DEB->getRow("select first 1 * from ({$sql}) t ");
-            
+         
+    
         
         $fieldInfo = @$DEB->fieldinfo;
 
@@ -1161,9 +1163,13 @@ class Cody {
                         $customField = (object) $customField;
                     }
                     
-                     if (!empty($customField->defaultValue) && empty($record[$fid])) {
+                    if (!empty($customField->defaultValue) && empty($record[$fid])) {
                                 $record[$fid] = $customField->defaultValue;
-                            }
+                    }
+                    
+                    if (!empty($customField->constantValue)) {
+                                $record[$fid] = $customField->constantValue;
+                    }
                     
                     if (!empty($customField->list)) {
                                 if (is_object($customField->list)) {
@@ -1803,6 +1809,7 @@ class Cody {
                 var formData = new FormData();
                 
                 targetElement = document.getElementById (newTarget);
+                
                 //add the json information as an object key value
                 if (document.forms) {
                     for (iform = 0; iform < document.forms.length; iform++) {

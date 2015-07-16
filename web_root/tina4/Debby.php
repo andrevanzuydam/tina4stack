@@ -685,7 +685,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             $sql = str_replace("'now'", "CURRENT_TIMESTAMP()", $sql);
         }
 
-        if (stripos($sql, "update") === false && stripos($sql, "insert") === false && stripos($sql, "delete") === false) {
+        if (stripos($sql, "update ") === false && stripos($sql, "insert ") === false && stripos($sql, "delete ") === false) {
 
             $sql = str_replace("\r", "", $sql);
             $sql = str_replace("\n", " ", $sql);
@@ -1353,10 +1353,12 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
     function getRows($sql = "", $rowtype = 0, $fetchblob = true, $calculatedfields = array()) {
         $dataCheckSum = md5($sql.$rowtype);
         if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false) {
-            if (!empty(xcache_get($dataCheckSum))) {
-               $data = unserialize(xcache_get ($dataCheckSum));
-               $this->fieldinfo = $data["fieldInfo"];
-               return $data["resultSet"]; 
+            if (defined("TINA4_DISABLE_CACHE") && TINA4_DISABLE_CACHE === false) {
+                if (!empty(xcache_get($dataCheckSum))) {
+                   $data = unserialize(xcache_get ($dataCheckSum));
+                   $this->fieldinfo = $data["fieldInfo"];
+                   return $data["resultSet"]; 
+                }
             }
         }
         //parse the calculated fields to normalize array
@@ -1732,10 +1734,9 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         } else /* My SQL */ if ($this->dbtype == "mysql") {
             //build an array of results
             if (function_exists("mysqli_connect")) {
-                
-                
-                
                 $query = $this->dbh->query($sql);
+                
+               
                 
                 if (is_object($query)) {
                     $fields = $query->fetch_fields();
@@ -1773,6 +1774,8 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                         $this->fieldinfo[$i][4] = $mysql_data_type_hash[$field->type];
                         $i++;
                     }
+                    
+                    
                   
                     $icount = 0;
                     switch ($rowtype) {
@@ -1943,6 +1946,8 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         
         if (!empty($this->fieldinfo)) {
             //create the field information based on the select statement    
+           
+            
             foreach ($this->fieldinfo as $id => $field) {
                 if (strpos(strtoupper($field[4]), "NUMERIC") !== false || strpos(strtoupper($field[4]), "DECIMAL") !== false || strpos(strtoupper($field[4]), "INTEGER") !== false || strpos(strtoupper($field[4]), "INT") !== false) {
                     if (strpos(strtoupper($field[4]), "NUMERIC") !== false || strpos(strtoupper($field[4]), "DECIMAL") !== false) {
@@ -1968,6 +1973,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                 $this->fieldinfo[$id] = $field;
             }
         }
+        
         $this->RAWRESULT = $result;
 
         /* Debugging for getRows */
@@ -2107,13 +2113,14 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             }
         }
 
-
         if (!$this->updatefieldinfo) {
             $this->fieldinfo = $tempfieldinfo;
         }
-
+        
         if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false && !empty($this->fieldinfo)) {
-            xcache_set($dataCheckSum, serialize( ["fieldInfo" => $this->fieldinfo, "resultSet" => $result ] ) );
+            if (defined("TINA4_DISABLE_CACHE") && TINA4_DISABLE_CACHE === false) {
+                xcache_set($dataCheckSum, serialize( ["fieldInfo" => $this->fieldinfo, "resultSet" => $result ] ) );
+            }
         }
         return $result;
     }

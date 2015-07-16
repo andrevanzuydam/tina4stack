@@ -1101,7 +1101,7 @@ class Kim {
                 "target" => Ruth::getREQUEST("txtTARGET"),
                 "path" => Ruth::getREQUEST("txtPATH"),
                 "parent_id" => empty(Ruth::getREQUEST("txtPARENT_ID")) ? 0 : Ruth::getREQUEST("txtPARENT_ID"),
-                "system_menu" => 0,
+                "system_menu" => 1,
             ]
         );
 

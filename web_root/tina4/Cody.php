@@ -378,12 +378,12 @@ class Cody {
                                     $DEB->delete($tableName, [$keyName => $record->$keyName]);
                                 }
 
-                            if (!empty(ONDELETE)) {
+                            if (!defined ("ONDELETE") && !empty(ONDELETE)) {
                                 if (is_array($keyName)) { $keyName = join("-", $keyName);
                                     $record->$keyName = $filterKey;
                                 }
                                 $params = ["action" => $action, "table" => $tableName, $keyName => $record->$keyName, "session" => Ruth::getSESSION(), "request" => Ruth::getREQUEST()];
-                                @call_user_func_array(ONINSERT, $params);
+                                @call_user_func_array(ONDELETE, $params);
                             }    
 
                             echo $this->bootStrapAlert("success", $caption="Success", "Record deleted");  
@@ -482,7 +482,7 @@ class Cody {
                             break;    
                             case "update":
                                 $sqlUpdate = $DEB->getUpdateSQL("txt", $tableName, $filterKey, "", "{$action}{$name}", $passwordFields, $dateFields, true);
-
+                                
                                 if ( $sqlUpdate ) {
                                      echo $this->bootStrapAlert("success", $caption="Success", "Record was updated successfully"); 
                                      echo script ('$table'.$name.'.bootstrapTable("refresh");' );

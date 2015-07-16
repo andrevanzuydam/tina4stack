@@ -116,7 +116,7 @@ class Kim {
                         break;
                     default:
                         echo "{$controller} not found";
-                        break;
+                    break;
                 }
             }
         );
@@ -135,7 +135,8 @@ class Kim {
             }
         );
     }
-
+    
+    
     /**
      * Gets the default page to display where possible which will be found under assets
      * @param String $pageName The page to try and load or the path to load
@@ -145,11 +146,15 @@ class Kim {
         $assetFolder = Ruth::getDOCUMENT_ROOT()."/assets";
         $html = "";
         $fileName = "";
-
+        $found = false;
+        
+        
+        
         if ($pageName === "/") {
             foreach ($this->defaultPages as $id => $page) {
                 if (file_exists($assetFolder."/pages/".$page)) {
                     $fileName = $assetFolder."/pages/".$page;
+                    $found = true;
                     break;
                 }
             }
@@ -158,10 +163,24 @@ class Kim {
             foreach ($this->defaultExtensions as $eid => $extension) {
                 if (file_exists($assetFolder.$pageName.$extension)) {
                     $fileName = $assetFolder.$pageName.$extension;
-
+                    $found = true;
                     break;
                 }
             }
+        }
+        
+        //last attempt
+        if (!$found) {
+            if (strpos($pageName, "pages") === false) {
+                $pageName = "/pages".$pageName;
+                foreach ($this->defaultExtensions as $eid => $extension) {
+                    if (file_exists($assetFolder.$pageName.$extension)) {
+                        $fileName = $assetFolder.$pageName.$extension;
+                        $found = true;
+                        break;
+                    }
+                }      
+           } 
         }
 
         if (file_exists($fileName)) {
@@ -573,6 +592,7 @@ class Kim {
 
     function parseValue ($search, $value, $template) {
         $template = str_replace ($search, $value, $template);
+ 
         return $template;
     }
 
@@ -612,7 +632,9 @@ class Kim {
             $checkSum = "template".md5 ($template.print_r ($data,1));
 
 
-
+            if (is_array($data)) {
+                $data = (object) $data;
+            }
 
             if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false && !empty(xcache_get($checkSum)) && !empty($data)) {
                 //echo "Loading from Cache <br>";
@@ -771,9 +793,7 @@ class Kim {
                 }
 
             }
-
-      
-
+          
             if (!empty($elements)) {
 
                 $response = [];
@@ -810,6 +830,18 @@ class Kim {
                             break;
                         default:
                             if (class_exists($elementParts[0])) {
+                                //check if we don't need variables for the element parts
+                                if (strpos($elementParts[1], "{") !== false) {
+                                    if (!empty($data)) {
+                                        preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"\|]+)}/i', $elementParts[1], $variables);
+                                        foreach ($variables[1] as $index => $variable) {
+                                            
+                                            if (!empty($data->$variable)) {
+                                                echo "Parsing ".$elementParts[1] = $this->parseValue("{" . $variable . "}", $data->$variable, $elementParts[1]);
+                                            }
+                                        }
+                                    }
+                                }
                                 $callParts = explode("?", $elementParts[1]);
                                 eval ('$classObject = new '.$elementParts[0].'();');
                                 if (!empty($callParts[1])) {
@@ -818,6 +850,8 @@ class Kim {
                                 else {
                                     $params = [];
                                 }
+                                
+                                
                                 
                                
                                 try {
@@ -840,6 +874,7 @@ class Kim {
                                     $html = "";
 
                                     foreach ($result as $rid => $resultData) {
+                                        
                                         if (!empty($element["snippet"])) {
                                             if (!empty($data)) { //merge the looped data with the initial seeded data
                                                 $resultData = (object) array_merge((array) $resultData, (array) $data);

@@ -48,8 +48,14 @@ class Emma {
 		$headers .= "--{$boundary_rel}{$eol}Content-Type: multipart/alternative; boundary={$boundary_alt}{$eol}{$eol}";
 		
         $message = $this->prepareHtmlMail($message, $eol, "--".$boundary_rel, "--".$boundary_alt);	
-        
-        $mail_sent = mail( $recipient, $subject, $message, $headers);
+                       
+        try {        
+            $mail_sent = @mail( $recipient, $subject, $message, $headers);
+            file_put_contents(Ruth::getDOCUMENT_ROOT()."/../mailspool/email_".date("d_m_Y_h_i_s").".eml", $headers.$message);
+        } catch(Exception $e) {
+            $mail_sent =  false;
+                    
+        }
 		
         //if the message is sent successfully print "Mail sent". Otherwise print "Mail failed" 
         return $mail_sent ? "OK" : "Failed";        
@@ -80,7 +86,10 @@ class Emma {
         $multipart .= "{$html}{$eol}{$eol}";
 		$multipart .= "{$boundary_alt}--{$eol}";
 		
+        
         foreach ($paths as $key => $path) {
+                        $message_part = "";    
+                   
 			$img_data = explode(",",$path["img"]);
 			
 			$imgdata = base64_decode($img_data[1]);

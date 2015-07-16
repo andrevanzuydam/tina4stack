@@ -222,7 +222,15 @@ function equals($test1, $test2) {
     global $TESSA;
     return $TESSA->equals($test1, $test2);
 }
-
+/**
+ * @param $test1
+ * @param $test2
+ * @return mixed
+ */
+function IsDifferent($test1, $test2) {
+    global $TESSA;
+    return $TESSA->IsDifferent($test1, $test2);
+}
 
 /**
  * 
@@ -516,6 +524,18 @@ class Tessa {
        if ($test1 !== $test2) {
            $this->failed("Found ".$test1." expected ".$test2);
        }
+    }
+
+    /**
+     * Reuben --- Check if two test cases are different
+     * @param $test1
+     * @param $test2
+     */
+    function IsDifferent($test1, $test2) {
+        $this->message ("Checking: '{$test1}' !== '{$test2}'");
+        if ($test1 == $test2) {
+            $this->failed("Found ".$test1." is the same as ".$test2);
+        }
     }
 
     /**

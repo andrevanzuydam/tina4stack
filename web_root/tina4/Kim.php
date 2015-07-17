@@ -679,16 +679,18 @@ class Kim {
                 foreach ($code as $cid => $codeValue) {
 
                     $codeValue = explode ('?>', $codeValue);
-
+                   
                     if (count($codeValue) > 1) {
                         $snippets .= $codeValue[0]."\n";
                     }
                     else {
-                        $template .= $codeValue[0];
+                        if (trim($codeValue[0]) !== "") {
+                            $template .= $codeValue[0];
+                        }
                     }
 
                     if (!empty($codeValue[1])) {
-                        $template .= $codeValue[1];
+                        $template .= trim($codeValue[1]);
                     }
                 }
 
@@ -843,28 +845,44 @@ class Kim {
                                     }
                                 }
                                 $callParts = explode("?", $elementParts[1]);
-                                eval ('$classObject = new '.$elementParts[0].'();');
+                                
                                 if (!empty($callParts[1])) {
                                     $params = $this->getCallParams($callParts[1]);
                                 }
-                                else {
-                                    $params = [];
+                                  else {
+                                      $params = [];
                                 }
                                 
+                              
                                 
                                 
-                               
-                                try {
-                                    if (method_exists($classObject, $callParts[0])) {
-                                        $result = call_user_func_array(array($classObject, $callParts[0]), $params);
+                                if (strpos($callParts[0], ":") !== false) {
+                                    try {
+                                        if (method_exists($elementParts[0], str_replace(":", "", $callParts[0]))) {
+                                            $result = call_user_func_array(array($elementParts[0],  str_replace(":", "", $callParts[0])), $params);
+                                        }
+                                            else {
+                                                $result = "[Could not call static \"".str_replace(":", "", $callParts[0])."\" on \"{$elementParts[0]}\"]";  
+                                            }
+                                    } catch (Exception $e) {
+                                      $result = "[Could not call static \"{$callParts[0]}\" on \"{$elementParts[0]}\"]";  
                                     }
-                                    else {
+                                    
+                                } else {
+                                    eval ('$classObject = new '.$elementParts[0].'();');
+                                    try {
+                                        if (method_exists($classObject, $callParts[0])) {
+                                            $result = call_user_func_array(array($classObject, $callParts[0]), $params);
+                                        }
+                                        else {
+                                            $result = "[Could not call \"{$callParts[0]}\" on \"{$elementParts[0]}\"]";
+                                        }
+                                    } catch (Exception $e) {
                                         $result = "[Could not call \"{$callParts[0]}\" on \"{$elementParts[0]}\"]";
                                     }
-                                } catch (Exception $e) {
-                                    $result = "[Could not call \"{$callParts[0]}\" on \"{$elementParts[0]}\"]";
+                                
                                 }
-
+                                
                                 if (is_array($result)) {
                                     $result = (object) $result;
                                 }
@@ -985,12 +1003,12 @@ class Kim {
             if (!empty($elements[1])) {
                 foreach ($elements[1] as $eid => $element) {
                     $testVar = explode ("->", $element);
-                    if (count($testVar) > 1) {
+                    if (count($testVar) > 1 && strpos($testVar[0], "[") === false) {
                         eval('if (empty($'.$testVar[0].')) { global $'.$testVar[0].'; }');
                     }
                     eval ('if (!empty($'.$element.')) { $var = $'.$element.'; }');
                     if (empty($var)) {
-                        $template = str_replace ("{".$element."}", "<span style=\"color:red; font-weight:bold\">[{$element} is not defined, please check your template]</span>", $template);
+                        $template = str_replace ("{".$element."}", "", $template);
                     }
                     else {
                         $template = str_replace ("{".$element."}", $var, $template);

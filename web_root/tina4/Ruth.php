@@ -415,7 +415,16 @@ class Ruth {
         return self::$PATH;
     }
     
-     /**
+    
+    /**
+     * Get the request method that was used
+     * @return String The request method used - either POST or GET
+     */ 
+    public static function getRequestMethod() {
+        return self::$REQUEST_METHOD;
+    }
+    
+    /**
      * Get the real path to where ruth is running form
      * @return String return the real path
      */ 

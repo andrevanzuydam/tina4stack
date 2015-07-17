@@ -2309,7 +2309,6 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
               $keyValues[$result[0]] = $result[1];  
             }
         }
-                      
         return $keyValues;
     }
     
@@ -2600,7 +2599,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             $row = $this->getRow($sql);
             $row = $this->RAWRESULT[0];
             if ($row->NEXTID == "") {
-                $row->NEXTID = 0;
+                $row->NEXTID = 1;
             }
 
             $result = $row->NEXTID;

@@ -109,6 +109,27 @@ class Cody {
         return $html;
     }
     
+    /**
+     * The default page template for maggy
+     * @param type $title String A title to name the page by
+     * @return type Shape A page template with default bootstrap
+     */
+    function getPageTemplate($title="Default") {
+       $html = html (
+                    head (
+                            title ($title),
+                            alink (["rel" => "stylesheet", "href"=>"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"]),
+                            alink (["rel" => "stylesheet", "href"=> "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"]),
+                            alink (["rel" => "stylesheet", "href"=> "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css"])
+                            
+                            
+                    ),
+                    body (  ["style" => "padding: 0px 20px 0px", "id" => "content"])
+               
+               );  
+       return $html; 
+    }
+    
     
     function getTemplate ($name="", $type="form") {
         $assetFolder = Ruth::getDOCUMENT_ROOT()."/assets/";
@@ -317,6 +338,90 @@ class Cody {
 
         $this->DEB = $DEB;
         
+        Ruth::addRoute(RUTH_GET, "/cody/create/{tableName}" ,
+                function ($tableName) {
+                    $html = $this->getPageTemplate("Generate Code for {$tableName}");
+                    $database = Ruth::getOBJECT("DEB")->getDatabase();
+                    $table = $database[$tableName];
+                    $code = '';
+                    $code .= '<code><pre>'."\n";
+                    $code .= '$toolBar = ["caption" => "'.$tableName.'"];'."\n";
+                    $code .= ''."\n";
+                    $code .= '//Code for '.$tableName."\n";
+                    $code .= '$buttons = "insert,view,update,delete";'."\n";
+                    $code .= ''."\n";
+                   
+                    
+                    foreach ($table as $field) {
+                        
+                        $fieldType = "";
+                        if (strtoupper($field["type"]) === "VARCHAR") {
+                            $fieldType = "text:true";
+                        }    
+                        
+                        if (!empty($field["pk"])) {
+                            $primaryKeys[] = $field["field"];
+                        }
+                        
+                        $fieldNames[] = $field["field"];
+                        $code .= '$customFields["'.strtoupper($field["field"]).'"] = ["type" => "text", "validation" => "'.$fieldType.',required:true,maxlength:'.$field["length"].'"];'."\n";
+                        
+                    }
+                    $code .= ''."\n";
+                    $code .= '//Table information for '.$tableName."\n";
+                    $code .= '$tableInfo = ["table" => "'.$tableName.'", "primarykey" => "'.join(",", $primaryKeys).'", "fields" => "'.join(",", $fieldNames).'"];'."\n";
+                   
+                    $code .= ''."\n";
+                    $code .= '//Implementation for '.$tableName."\n";
+                    
+                    $code .= '$content = (new Cody($this->DEB))->bootStrapTable(
+            $sql="select '.join(",", $fieldNames).' from '.$tableName.'", 
+            $buttons, 
+            $hideColumns="'.join(",", $primaryKeys).'", 
+            $toolBar, 
+            $customFields, 
+            "grid'.str_replace (" ", "", ucwords(strtolower(str_replace ("_", " ", $tableName)))).'", 
+            $tableInfo, 
+            $formHideColumns="'.join(",", $primaryKeys).'");'."\n";  
+                    
+                    $code .= ''."\n";
+                    $code .= '//HTML code for a form'."\n";
+                    
+                    
+                                        
+                    $code .= '</pre></code>'."\n";
+                    
+                    
+                    $html->byId("content")->addContent($code);
+            
+                    echo $html;
+                }
+        );        
+        
+        Ruth::addRoute(RUTH_GET, "/cody/create" ,
+                function () {
+                    //get the tables from the default database
+                    $html = $this->getPageTemplate("Code Creator");
+                    
+                    
+                    $database = Ruth::getOBJECT("DEB")->getDatabase();
+                    
+                    
+                    foreach ($database as $table => $fields) {
+                       $li[] = li (["role"=>"presentation"], a(["href" => "/cody/create/{$table}"], $table ) );
+                    } 
+                    $html->byId("content")->addContent( h1("Tables") );
+                    $html->byId("content")->addContent( h3("Click on a table to get code") );
+                    $html->byId("content")->addContent( ul (["id" => "tables", "class" => "nav nav-pills"],  $li  ) );
+                     
+                    echo $html;            
+                }
+                
+        );
+        
+        
+        
+        
         Ruth::addRoute(RUTH_POST, "/cody/form/{action}" ,
                     function ($action) {
                         $object = json_decode(rawurldecode(Ruth::getREQUEST("object")));
@@ -412,6 +517,7 @@ class Cody {
                         
                         //TODO: determine the password and date fields            
                         foreach ($fieldInfo as $fid => $field) {
+                            
                             if ($field["type"] === "DATETIME" || $field["type"] === "DATE") {
                                 $dateFields[] = $field["name"];
                             }
@@ -465,7 +571,7 @@ class Cody {
                         switch ($action) {
                             case "insert":
                                 $sqlInsert = $DEB->getInsertSQL("txt", $tableName, $keyName, true, "{$action}{$name}", $passwordFields, $dateFields, true);
-
+                                
                                 if ( $sqlInsert ) {
                                      echo $this->bootStrapAlert("success", $caption="Success", "Record was updated successfully");  
                                      echo script ('$table'.$name.'.bootstrapTable("refresh");' );

@@ -181,7 +181,7 @@ class Maggy {
                                 values ('{$migrationId}', '{$description}', ?, 0)";
                    
                    
-                    $this->DEB->exec($sqlInsert, $transId, $content);
+                    $this->DEB->exec($sqlInsert, $transId, substr($content, 0, 10000));
                     $this->DEB->commit($transId);                    
                     $runsql = true;
                 } else {

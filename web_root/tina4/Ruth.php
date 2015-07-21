@@ -115,6 +115,12 @@ class Ruth {
      */
     private static $POST_DATA; 
     
+     /**
+    * This is for the default life time of a session in minutes
+    * @var Integer 
+    */
+    private static $lifeTime;
+    
     
     
     /**
@@ -560,12 +566,17 @@ class Ruth {
     public static function setAuthorization ($roleName="", $authDATA="", $lifeTime=30) {
        if ($roleName != "") {
           if (array_key_exists ($roleName, self::$ROLES)) {
-             $expiryTime = new DateTime (Date("Y-m-d h:i:s"));
-             $expiryTime->add (new DateInterval ("PT".$lifeTime."M") );
-             $_SESSION["authToken"] = md5($roleName.print_r ($authDATA, 1).$lifeTime);
-             $_SESSION["authData"] = $authDATA;
-             $_SESSION["roleName"] = $roleName;
-             $_SESSION["expires"] = $expiryTime;
+              
+             Ruth::$lifeTime = $lifeTime;    
+              
+            $_SESSION["authToken"] = md5($roleName.print_r ($authDATA, 1).$lifeTime);
+            $_SESSION["authData"] = $authDATA;
+            $_SESSION["roleName"] = $roleName;
+             
+            $expiryTime = new DateTime (Date("Y-m-d h:i:s"));
+            $expiryTime->add (new DateInterval ("PT".$lifeTime."M") );
+            $_SESSION["expires"] = $expiryTime;
+             
              self::$SESSION = $_SESSION;
           } 
             else {
@@ -837,6 +848,17 @@ class Ruth {
                     if (!empty($_SESSION["roleName"])) {
                       $roleName = $_SESSION["roleName"];
                     }
+                    
+                    if (empty(Ruth::$lifeTime)) {
+                        Ruth::$lifeTime = 30;
+                    }
+                    
+                    //update the session again
+                    $expiryTime = new DateTime (Date("Y-m-d h:i:s"));
+                    $expiryTime->add (new DateInterval ("PT".Ruth::$lifeTime."M") );
+                    $_SESSION["expires"] = $expiryTime;
+                    
+                    
                 } else {
                     $roleName = self::$DEFAULT_ROLE;
                     Ruth::delAuthorization();

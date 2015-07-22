@@ -591,8 +591,7 @@ class Kim {
 
 
     function parseValue ($search, $value, $template) {
-        $template = str_replace ($search, $value, $template);
- 
+        $template = str_replace ($search, $value."", $template);
         return $template;
     }
 
@@ -746,8 +745,6 @@ class Kim {
             $elements = $parsedSnippets["elements"];
             $controls = $parsedSnippets["controls"];
             $template = $parsedSnippets["template"];
-
-
             
             //print_r ($controls);
             if (!empty($controls)) {
@@ -764,10 +761,12 @@ class Kim {
                             if (!empty($data)) {
                                 preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"\|]+)}/i', $myIf, $variables);
                                 foreach ($variables[1] as $index => $variable) {
-                                    if (!empty($data->$variable)) {
-                                        $varValue = $data->$variable;
-                                        $myIf = $this->parseValue("{" . $variable . "}", $varValue , $myIf);
-                                    }
+                                    
+                                   
+                                    eval ('if (isset($data->'.$variable.')) { $variableValue = "{$data->'.$variable.'}";  }');
+                                    if ((isset($variableValue) && !empty($variableValue)) || (isset($variableValue) && $variableValue === "0")) {
+                                        $myIf = $this->parseValue("{" . $variable . "}", $variableValue , $myIf);
+                                    } 
                                 }
                             }
                             @eval ($myIf);
@@ -838,8 +837,9 @@ class Kim {
                                         preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"\|]+)}/i', $elementParts[1], $variables);
                                         foreach ($variables[1] as $index => $variable) {
                                             
-                                            if (!empty($data->$variable)) {
-                                                echo "Parsing ".$elementParts[1] = $this->parseValue("{" . $variable . "}", $data->$variable, $elementParts[1]);
+                                            eval ('if (isset($data->'.$variable.')) { $variableValue = "{$data->'.$variable.'}";  }');
+                                            if ((isset($variableValue) && !empty($variableValue)) || (isset($variableValue) && $variableValue === "0")) {
+                                              $elementParts[1] = $this->parseValue("{" . $variable . "}", $variableValue, $elementParts[1]);
                                             }
                                         }
                                     }
@@ -925,8 +925,11 @@ class Kim {
                     if (!empty($data)) {
                         preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"\|]+)}/i', $template, $variables);
                         foreach ($variables[1] as $index => $variable) {
-                            if (!empty($data->$variable)) {
-                                $template = $this->parseValue("{" . $variable . "}", $data->$variable, $template);
+                            
+                            if (property_exists($data, $variable)) {
+                                if (!empty($data->$variable."")) {
+                                    $template = $this->parseValue("{" . $variable . "}", $data->$variable, $template);
+                                }
                             }
                         }
                     }
@@ -1008,7 +1011,7 @@ class Kim {
                     }
                     eval ('if (!empty($'.$element.')) { $var = $'.$element.'; }');
                     if (empty($var)) {
-                        $template = str_replace ("{".$element."}", "", $template);
+                        $template = str_replace ("{".$element."}", "{".$element."}", $template);
                     }
                     else {
                         $template = str_replace ("{".$element."}", $var, $template);
@@ -1552,7 +1555,9 @@ ul.tree > li > ul > li > ul > li > a > label:before {
 
             if (!empty($defines)) {
                 foreach ($defines as $did => $define) {
-                    define($define->GLOBAL_NAME, $define->GLOBAL_VALUE);
+                    if (!defined($define->GLOBAL_NAME)) {
+                        define($define->GLOBAL_NAME, $define->GLOBAL_VALUE);
+                    }
                 }
             }
 

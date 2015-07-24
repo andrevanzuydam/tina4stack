@@ -2264,7 +2264,11 @@ ul.tree > li > ul > li > ul > li > a > label:before {
                     break;
                 case "/kim/content":
                     $content .= $this->getContentEditor();
-                    break;
+                break;
+                case "/kim/login":
+                   Ruth::setSESSION("KIM", ["loggedin" => 0]);
+                   Ruth::redirect("/kim"); 
+                break;    
                 default:
                     $content .= "Please implement the menu option ".Ruth::getPATH();
                     break;

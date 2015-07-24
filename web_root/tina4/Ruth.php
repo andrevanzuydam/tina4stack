@@ -209,6 +209,28 @@ class Ruth {
         
     }
     
+    
+     /**
+     * The default page template for Ruth so she can make routes
+     * @param type $title String A title to name the page by
+     * @return type Shape A page template with default bootstrap
+     */
+    public static function getPageTemplate($title="Default") {
+       $html = html (
+                    head (
+                            title ($title),
+                            alink (["rel" => "stylesheet", "href"=>"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"]),
+                            alink (["rel" => "stylesheet", "href"=> "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"]),
+                            alink (["rel" => "stylesheet", "href"=> "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css"])
+                            
+                            
+                    ),
+                    body (  ["style" => "padding: 0px 20px 0px", "id" => "content"])
+               
+               );  
+       return $html; 
+    }
+        
     /**
      * Auto Load tries to include new class requires automatically
      */

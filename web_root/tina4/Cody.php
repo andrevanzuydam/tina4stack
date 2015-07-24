@@ -258,15 +258,17 @@ class Cody {
            $record = $this->DEB->getRow($sql); 
           
            //Apply the constant values to the record
-           foreach ($customFields as $field => $fieldValues) {
-               if (empty($record)) {
-                   $record = (object)[];
-               }
-            
-               if (!empty($fieldValues->constantValue)) {
-                   $record->$field = $fieldValues->constantValue;
-               }
-           }
+            if (!empty($customFields)) {
+                foreach ($customFields as $field => $fieldValues) {
+                    if (empty($record)) {
+                        $record = (object)[];
+                    }
+
+                    if (!empty($fieldValues->constantValue)) {
+                        $record->$field = $fieldValues->constantValue;
+                    }
+                }
+            }
            
            
            //parse the template

@@ -425,7 +425,7 @@ class Kim {
 
         if (strpos($input, '",')) {
             $result = explode ('",', $input);
-
+            
             foreach ($result as $rid => $resultValue){
                 if (trim($resultValue)[0] === '"') {
                     $result[$rid] = substr ( trim($resultValue), 1 );
@@ -444,7 +444,30 @@ class Kim {
         else {
             $result = explode (",", $input);
         }
-
+        
+        // foreach result check if array
+        foreach($result as $key => $value){
+            // is array
+            if(strpos($value, '[') == 0 && strpos($value, ']') == strlen($value) - 1){
+                $array = array();
+                $temp = explode('|', substr($value, 1, -1));
+                foreach($temp as $t){
+                    $keyValue = explode('=', $t);
+                    if(count($keyValue) == 2){
+                        $array[$keyValue[0]] = $keyValue[1];
+                    }
+                }
+                
+                if(!empty($array)){
+                    $result[$key] = $array;
+                }
+            }else{
+                $result[$key] = $this->parseTemplate($value);
+            }
+        }
+        
+        
+        
         return $result;
     }
 
@@ -624,7 +647,7 @@ class Kim {
         return $this->parseTemplate($template, $data);
     }
 
-    function parseTemplate ($template, $data="", $respond=false) {
+    function parseTemplate ($template, $data="", $nullVars=true) {
         //echo "Parsing {$template} <br>";
         try {
             //get a checksum for the template
@@ -808,7 +831,7 @@ class Kim {
 
                     switch ($elementParts[0]) {
                         case "call":
-                            $callParts = explode("?", $elementParts[1]);
+                            $callParts = explode("?", $elementParts[1], 2);
 
                             if (!empty($callParts[1])) {
 
@@ -834,7 +857,7 @@ class Kim {
                                 //check if we don't need variables for the element parts
                                 if (strpos($elementParts[1], "{") !== false) {
                                     if (!empty($data)) {
-                                        preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"\|]+)}/i', $elementParts[1], $variables);
+                                        preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"\|\=]+)}/i', $elementParts[1], $variables);
                                         foreach ($variables[1] as $index => $variable) {
                                             
                                             eval ('if (isset($data->'.$variable.')) { $variableValue = "{$data->'.$variable.'}";  }');
@@ -873,6 +896,7 @@ class Kim {
                                     try {
                                         if (method_exists($classObject, $callParts[0])) {
                                             $result = call_user_func_array(array($classObject, $callParts[0]), $params);
+                                           
                                         }
                                         else {
                                             $result = "[Could not call \"{$callParts[0]}\" on \"{$elementParts[0]}\"]";
@@ -905,7 +929,7 @@ class Kim {
 
                                 }
                                 else {
-
+                                   
                                     $response[$elementHash] = $result;
                                 }
 
@@ -923,6 +947,7 @@ class Kim {
                 if (strpos($template, "{{") !== false) {
 
                     if (!empty($data)) {
+                        
                         preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"\|]+)}/i', $template, $variables);
                         foreach ($variables[1] as $index => $variable) {
                             
@@ -935,11 +960,14 @@ class Kim {
                     }
 
 
-
+                 
                     foreach ($elements as $eid => $element) {
                         $elementHash = md5(print_r ($element[0], 1));
                         $element[0] = str_replace ("?", '\?', $element[0]);
                         $element[0] = str_replace ("|", '\|', $element[0]);
+                        $element[0] = str_replace ("=", '\=', $element[0]);
+                        $element[0] = str_replace ("[", '\[', $element[0]);
+                        $element[0] = str_replace ("]", '\]', $element[0]);
                         
                         $template = preg_replace ('{{{'.$element[0].'}}}', $response[$elementHash], $template, 1);
 
@@ -1011,7 +1039,12 @@ class Kim {
                     }
                     eval ('if (!empty($'.$element.')) { $var = $'.$element.'; }');
                     if (empty($var)) {
-                        $template = str_replace ("{".$element."}", "{".$element."}", $template);
+                        if ($nullVars) {
+                            $template = str_replace ("{".$element."}", "", $template);
+                        }
+                            else {
+                                $template = str_replace ("{".$element."}", "{".$element."}", $template);
+                            }
                     }
                     else {
                         $template = str_replace ("{".$element."}", $var, $template);

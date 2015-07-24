@@ -43,9 +43,9 @@ class Emma {
 		$boundary_rel = md5(uniqid(time()));
 		$boundary_alt = md5(uniqid(time()));
 		$eol = PHP_EOL;
-		$headers = "MIME-Version: 1.0 {$eol}From:{$fromName}{$eol}Reply-To:{$fromAddress}{$eol}";
-        $headers .= "Content-Type: multipart/related; boundary={$boundary_rel}{$eol}{$eol}";		
-		$headers .= "--{$boundary_rel}{$eol}Content-Type: multipart/alternative; boundary={$boundary_alt}{$eol}{$eol}";
+		$headers = "MIME-Version: 1.0 {$eol}From:{$fromName}<{$fromAddress}>{$eol}Reply-To:{$fromAddress}{$eol}";
+        $headers .= "Content-Type: multipart/related; boundary={$boundary_rel}{$eol}";		
+		$headers .= "--{$boundary_rel}{$eol}Content-Type: multipart/alternative; boundary={$boundary_alt}{$eol}";
 		
         $message = $this->prepareHtmlMail($message, $eol, "--".$boundary_rel, "--".$boundary_alt);	
                        

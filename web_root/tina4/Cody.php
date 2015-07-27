@@ -40,7 +40,7 @@ class Cody {
         }
         
         if ($noFormGroup) {
-            return button (["id" => "button", "onclick" => $onclick, "class" => $style], $caption);
+            return button (["id" => str_replace(" ", "_", $name), "onclick" => $onclick, "class" => $style], $caption);
         } else {
             return div (["class" => "form-group {$colWidth}"], button (["id" => "button", "onclick" => $onclick, "class" => $style], $caption) );
         }
@@ -345,7 +345,7 @@ class Cody {
            return $this->bootStrapModal(ucwords($action)." ". $toolBar->caption,  $html, $customButtons, $closeAction);  
         }
             else {
-                return $this->bootStrapModal(ucwords($action)." ". $toolBar->caption,  $this->bootStrapForm($sql, $hideColumns, "", $customFields, $submitAction="", "form{$name}" ), $customButtons, $closeAction);
+                return $this->bootStrapModal(ucwords($action)." ". $toolBar->caption, div (["class" => "row"], $this->bootStrapForm($sql, $hideColumns, "", $customFields, $submitAction="", "form{$name}" )), $customButtons, $closeAction);
             }
     }
 
@@ -400,7 +400,7 @@ class Cody {
                     
                     $code .= ''."\n";
                     $code .= '//Table information for '.$tableName."\n";
-                    $code .= '$tableInfo = ["table" => "'.$tableName.'", form=> "'.$tableName.'", "primarykey" => "'.join(",", $primaryKeys).'", "fields" => "'.join(",", $fieldNames).'"];'."\n";
+                    $code .= '$tableInfo = ["table" => "'.$tableName.'", "form"=> "'.$tableName.'", "primarykey" => "'.join(",", $primaryKeys).'", "fields" => "'.join(",", $fieldNames).'"];'."\n";
                    
                     $code .= ''."\n";
                     $code .= '//Events which happen on the table'."\n";
@@ -424,7 +424,8 @@ class Cody {
             $customFields, 
             "grid'.str_replace (" ", "", ucwords(strtolower(str_replace ("_", " ", $tableName)))).'", 
             $tableInfo, 
-            $formHideColumns="'.join(",", $primaryKeys).'");'."\n";  
+            $formHideColumns="'.join(",", $primaryKeys).'",
+            $events);'."\n";  
                     
                     $code .= ''."\n";
                     $code .= '//HTML code for a form'."\n";
@@ -797,16 +798,16 @@ class Cody {
                     foreach ($tempButtons as $bid => $button) {
                         switch ($button) {
                             case "insert":
-                                $buttons .= (new Cody())->bootStrapButton("btnInsert", "Add", "{$beforeInsert} call{$name}Ajax('/cody/form/insert','{$name}Target', {object : a{$name}object, record: a{recordid}{$name}record, db: '{$db}' })", "btn btn-success", "", true);
+                                $buttons .= (new Cody())->bootStrapButton("btnInsertGrid".$name, "Add", "{$beforeInsert} call{$name}Ajax('/cody/form/insert','{$name}Target', {object : a{$name}object, record: a{recordid}{$name}record, db: '{$db}' })", "btn btn-success", "", true);
                             break;
                             case "update":
-                                $buttons .= (new Cody())->bootStrapButton("btnEdit", "Edit", "{$beforeUpdate} call{$name}Ajax('/cody/form/update','{$name}Target', {object : a{$name}object, record: a{recordid}{$name}record, db: '{$db}' })", "btn btn-primary", "", true);
+                                $buttons .= (new Cody())->bootStrapButton("btnEditGrid".$name, "Edit", "{$beforeUpdate} call{$name}Ajax('/cody/form/update','{$name}Target', {object : a{$name}object, record: a{recordid}{$name}record, db: '{$db}' })", "btn btn-primary", "", true);
                             break;
                             case "delete":
-                                $buttons .= (new Cody())->bootStrapButton("btnDelete", "Del", "{$beforeDelete} if (confirm('Are you sure you want to delete this record ?')) { call{$name}Ajax('/cody/form/delete','{$name}Target', {object : a{$name}object, record: a{recordid}{$name}record, db: '{$db}' }) }", "btn btn-danger", "", true);
+                                $buttons .= (new Cody())->bootStrapButton("btnDeleteGrid".$name, "Del", "{$beforeDelete} if (confirm('Are you sure you want to delete this record ?')) { call{$name}Ajax('/cody/form/delete','{$name}Target', {object : a{$name}object, record: a{recordid}{$name}record, db: '{$db}' }) }", "btn btn-danger", "", true);
                             break;
                             case "view":
-                                $buttons .= (new Cody())->bootStrapButton("btnInsert", "View", "{$beforeView} call{$name}Ajax('/cody/form/view','{$name}Target', {object : a{$name}object, record: a{recordid}{$name}record, db: '{$db}' })", "btn btn-warning", "", true);
+                                $buttons .= (new Cody())->bootStrapButton("btnViewGrid".$name, "View", "{$beforeView} call{$name}Ajax('/cody/form/view','{$name}Target', {object : a{$name}object, record: a{recordid}{$name}record, db: '{$db}' })", "btn btn-warning", "", true);
                             break;
                         }    
                     }               
@@ -823,15 +824,11 @@ class Cody {
                 $customFields = $object[4];
             }
 
-
-
-
             if (!empty($object[15])) {
                 $mtooltip = $object[15];
             } else {
                 $mtooltip = "";
             }
-            
             
             $hideColumns = explode(",", strtoupper($hideColumns));
 
@@ -843,13 +840,15 @@ class Cody {
                 $filter = [];
                 foreach ($fieldInfo as $cid => $field) {
                     if ($field["type"] === "DATE") {
-                        $filter[] = "cast(\"{$field["alias"]}\" as varchar(20)) like '%" . strtoupper($search) . "%'";
+                        if($this->IsDate($search)){
+                            $filter[] = "cast({$field["name"]} as char) like '%" . $DEB->translateDate($search, $DEB->outputdateformat, $DEB->dbdateformat) . "%'";
+                        }
                     } else
                     if ($field["type"] === "VARCHAR") {
-                        $filter[] = "upper({$field["alias"]}) like '" . strtoupper($search) . "%'";
+                        $filter[] = "upper({$field["name"]}) like '%" . strtoupper($search) . "%'";
                     } else {
                         if (is_numeric($search)) {
-                            $filter[] = "\"{$field["alias"]}\" = '{$search}'";
+                            $filter[] = "{$field["name"]} = '{$search}'";
                         }
                     }
                 }
@@ -1181,7 +1180,7 @@ class Cody {
         
         
         
-        $insertButton = $this->bootStrapButton("btnInsert", "Add", " {$beforeInsert}  call{$name}Ajax('/cody/form/insert','{$name}Target', {object : a{$name}object, record: null, db: '{$DEB->tag}' })", "btn btn-success pull-left", "", true);
+        $insertButton = $this->bootStrapButton("btnInsert".$name, "Add", " {$beforeInsert}  call{$name}Ajax('/cody/form/insert','{$name}Target', {object : a{$name}object, record: null, db: '{$DEB->tag}' })", "btn btn-success pull-left", "", true);
         
         if (empty($toolbar["buttons"])) {
             $toolbar["buttons"] = "";
@@ -1554,16 +1553,24 @@ class Cody {
                             $html .= $input;
                             break;
                         default:
+                            $colWidth = "col-md-6";
+                            
+                            if (strtoupper($customField->type) === "IMAGE" || strtoupper($customField->type) === "TEXTAREA" || strtoupper($customField->type) === "CUSTOM") {
+                                $colWidth = "col-md-12";
+                              
+                            }
+                                
                             if (!empty($customField->help)) {
                                 $html .= div(["class" => "form-group", "id" => "form-group" . $field["name"]], label(["id" => "label" . $field["name"], "for" => "txt" . strtoupper($field["name"])], ucwords(str_replace("_", " ", strtolower($field["alias"])))), span(["id" => "help" . $field["name"], "class" => "icon-x-info info-icon", "data-toggle" => "tooltip", "data-placement" => "right", "title" => $customField["help"]]), $input);
                                 $html .= script("$('#help{$field["name"]}').tooltip({ trigger: 'hover' });");
                             } else {
-                                $html .= div(["class" => "form-group", "id" => "form-group" . $field["name"]], label(["id" => "label" . $field["name"], "for" => "txt" . strtoupper($field["name"])], ucwords(str_replace("_", " ", strtolower($field["alias"])))), $input);
+                                $html .= div(["class" => "form-group {$colWidth}", "id" => "form-group" . $field["name"]], label(["id" => "label" . $field["name"], "for" => "txt" . strtoupper($field["name"])], ucwords(str_replace("_", " ", strtolower($field["alias"])))), $input);
                             }
                         break;
                     }
                 } else {
-                    $html .= div(["class" => "form-group", "id" => "form-group" . $field["name"]], label(["id" => "label" . $field["name"], "for" => $field["name"]], ucwords(str_replace("_", " ", strtolower($field["alias"])))), $input);
+                    $colWidth = "col-md-6";
+                    $html .= div(["class" => "form-group", "id" => "form-group {$colWidth}" . $field["name"]], label(["id" => "label" . $field["name"], "for" => $field["name"]], ucwords(str_replace("_", " ", strtolower($field["alias"])))), $input);
                 }
             }
         }
@@ -2187,6 +2194,17 @@ class Cody {
     function bootStrapLookup($name, $caption, $elements, $value="", $onclick= "", $readonly = "",  $colWidth="col-md-12", $nochoose = false) {
         $html = div(["class" => "form-group ".$colWidth], label(["for" => $name], $caption), $this->select($name, $caption, "array", $elements, $value, $onclick, $name, $readonly, $nochoose));
         return $html;
+    }
+    
+    function IsDate( $Str ){
+        $Stamp = strtotime( $Str );
+        if(!$Stamp){
+            return $Stamp;
+        }
+        $Month = date( 'm', $Stamp );
+        $Day   = date( 'd', $Stamp );
+        $Year  = date( 'Y', $Stamp );
+        return checkdate( $Month, $Day, $Year );        
     }
 
 }

@@ -1194,7 +1194,8 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                  $params[] = $value;
             }
         }
-                       
+          
+        
        
         return call_user_func_array([$this, "exec"], $params);
     }
@@ -2753,13 +2754,26 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
 
     function runFileUploads($fieldprefix="edt", $tablename="", $primarykeyValue=0, $primarykey="ID") {
         if ($_FILES) {
+          
+            
+            
+            
             $prefixlen = strlen ($fieldprefix);    
             foreach ($_FILES as $name => $value) {
                     if ($value["tmp_name"] != "") {
                         
                         if (substr($name, 0, $prefixlen) == $fieldprefix) {
                             //upload the file correctly into a blob field
-                            $this->setBlob($tablename, strtoupper(substr($name, $prefixlen, strlen($name) - $prefixlen)), file_get_contents($value["tmp_name"]), $filter = "$primarykey = '" .$primarykeyValue. "'");                                                    
+                            
+                            if (!empty($primarykeyValue)) {
+                                
+                                $filter = "$primarykey = '" .$primarykeyValue. "'";
+                            }
+                              else {
+                                $filter = "$primarykey";
+                              }    
+                            
+                            $this->setBlob($tablename, strtoupper(substr($name, $prefixlen, strlen($name) - $prefixlen)), file_get_contents($value["tmp_name"]), $filter);                                                    
                         }
                     }
                 }
@@ -2831,14 +2845,15 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         }
         
         if (!empty($index)) {
-          $sqlupdate .= " where $primarykey = '" . $index . "'";
+            $sqlupdate .= " where $primarykey = '" . $index . "'";
         }
           else {
             $sqlupdate .= " where $primarykey";  
-          }      
+         }      
         
         $sqlupdate = str_replace("0=0 ,", "", $sqlupdate);
         $sqlupdate = str_replace("'null'", "null", $sqlupdate);
+        
         $this->lastsql[count($this->lastsql)] = $sqlupdate;
 
         if (!$exec) { //Do we run the procedure execution
@@ -2857,8 +2872,8 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                 $error = "No Error";
             }
             
-            
             $this->runFileUploads($fieldprefix, $tablename, $index, $primarykey);
+          
             
             return $error;
         }

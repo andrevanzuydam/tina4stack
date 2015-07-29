@@ -420,55 +420,60 @@ class Kim {
      * @return string
      */
     function getCallParams($input) {
-        $result = [];
-        $otherResults = [];
-
-        if (strpos($input, '",')) {
-            $result = explode ('",', $input);
+        $results = [];
+        
+        $return = [1,2];
+        $counter = 0;
+        
+        while (count($return) > 1 ) {
+            if ($input[0] === '"') {
+                $return = explode ('",', $input, 2);
+            } else 
+            if ($input[0] === '[') {
+                $return = explode ('],', $input, 2);
+            } else {
+                $return = explode (',', $input, 2);
+            }   
             
-            foreach ($result as $rid => $resultValue){
-                if (trim($resultValue)[0] === '"') {
-                    $result[$rid] = substr ( trim($resultValue), 1 );
-                }
-                else { //see if we may have other results
-                    $checkParams = explode (",", $resultValue);
-
-                    if (count($checkParams) > 1) {
-                        $otherResults = array_merge($otherResults, $checkParams);
-                        unset($result[$rid]);
-                    }
-                }
-            }
-            $result = array_merge ($result, $otherResults);
-        }
-        else {
-            $result = explode (",", $input);
-        }
-        
-        // foreach result check if array
-        foreach($result as $key => $value){
-            // is array
-            if(strpos($value, '[') == 0 && strpos($value, ']') == strlen($value) - 1){
-                $array = array();
-                $temp = explode('|', substr($value, 1, -1));
-                foreach($temp as $t){
-                    $keyValue = explode('=', $t);
-                    if(count($keyValue) == 2){
-                        $array[$keyValue[0]] = $keyValue[1];
-                    }
-                }
+            if (count($return) > 1) {
                 
-                if(!empty($array)){
-                    $result[$key] = $array;
+                $param = $return[0];
+                if ($param[0] === "[") {
+                    $param .= "]";
+                } 
+                    else
+                if ($param[0] === "\"") {
+                    $param .= "\"";
+                }    
+                
+                $results[] = $param;
+                
+                if (!empty($return[1])) {
+                    $input = $return[1];
                 }
-            }else{
-                $result[$key] = $this->parseTemplate($value);
+            } else {
+                 $results[] = $input;
+                 $input = "";    
             }
         }
         
-        
-        
-        return $result;
+        foreach ($results as $rid => $result) {
+            if ($result[0] === "\"") {
+                $results[$rid] = substr ($result,1,-1);
+            } else
+            if ($result[0] === "[") {
+                $result = substr ($result,1,-1);
+                $result = explode ("|", $result);
+                $values = [];
+                foreach ($result as $rrid => $rValue) {
+                    $rValue = explode ("=", $rValue, 2);
+                    $values[$rValue[0]] = $rValue[1];
+                }
+                $results[$rid] = $values;
+            }
+        }
+    
+        return $results;
     }
 
     /**
@@ -2266,8 +2271,7 @@ ul.tree > li > ul > li > ul > li > a > label:before {
                     $content .= $this->getContentEditor();
                 break;
                 case "/kim/login":
-                   Ruth::setSESSION("KIM", ["loggedin" => 0]);
-                   Ruth::redirect("/kim"); 
+                    Ruth::redirect("/kim/login");
                 break;    
                 default:
                     $content .= "Please implement the menu option ".Ruth::getPATH();

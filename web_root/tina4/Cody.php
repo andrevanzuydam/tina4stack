@@ -230,12 +230,12 @@ class Cody {
         $ckeditorCheck = " if (CKEDITOR !== undefined) {  } ";
         switch ($action) {
             case "insert":
-                $customButtons = $this->bootStrapButton("btnInsert", "OK", " {$ckeditorCheck} $('#form{$name}').submit(); if ( $('#form{$name}').validate().errorList.length == 0 ) {  call{$name}Ajax('/cody/form/insert/post','{$name}Target', {object : a{$name}object, record: null, db: '{$db}' }) } ", "btn btn-success", "", true);
-                $customButtons .= $this->bootStrapButton("btnInsert", "Cancel", $closeAction, "btn btn-warning", "", true);                
+                $customButtons = $this->bootStrapButton("btnInsert", "Save", " {$ckeditorCheck} $('#form{$name}').submit(); if ( $('#form{$name}').validate().errorList.length == 0 ) {  call{$name}Ajax('/cody/form/insert/post','{$name}Target', {object : a{$name}object, record: null, db: '{$db}' }) } ", "btn btn-success", "", true);
+                $customButtons .= $this->bootStrapButton("btnInsertCancel", "Cancel", $closeAction, "btn btn-warning", "", true);                
             break;    
             case "update":
-                $customButtons = $this->bootStrapButton("btnUpdate", "OK", "  {$ckeditorCheck} $('#form{$name}').submit(); if ( $('#form{$name}').validate().errorList.length == 0 ) {  call{$name}Ajax('/cody/form/update/post','{$name}Target', {object : a{$name}object, record: '".  urlencode(json_encode($record) )."', db: '{$db}' }) } ", "btn btn-success", "", true);
-                $customButtons .= $this->bootStrapButton("btnUpdate", "Cancel", $closeAction, "btn btn-warning", "", true);                
+                $customButtons = $this->bootStrapButton("btnUpdate", "Save", "  {$ckeditorCheck} $('#form{$name}').submit(); if ( $('#form{$name}').validate().errorList.length == 0 ) {  call{$name}Ajax('/cody/form/update/post','{$name}Target', {object : a{$name}object, record: '".  urlencode(json_encode($record) )."', db: '{$db}' }) } ", "btn btn-success", "", true);
+                $customButtons .= $this->bootStrapButton("btnUpdateCancel", "Cancel", $closeAction, "btn btn-warning", "", true);                
             break;    
             default:
                 $customButtons = $this->bootStrapButton("btnView", "Close", $closeAction, "btn btn-success", "", true);                
@@ -849,6 +849,8 @@ class Cody {
                     } else {
                         if (is_numeric($search)) {
                             $filter[] = "{$field["name"]} = '{$search}'";
+                        }else{
+                            $filter[] = "upper({$field["name"]}) like '%" . strtoupper($search) . "%'";
                         }
                     }
                 }
@@ -1474,25 +1476,6 @@ class Cody {
                             }
                             break;
 
-                        case "radioYesNo":
-
-                            if ($record[$fid] == 1) {
-                                $checkedYes = "checked";
-                                $checkedNo = "";
-                            } else {
-                                $checkedYes = "";
-                                $checkedNo = "checked";
-                            }
-
-                            $inputNo = label(["class" => "radio-inline"], input(["type" => "radio", "name" => "txt" . strtoupper($field["name"]), "id" => "txt" . strtoupper($field["name"]), "value" => "0", $checkedNo]), "No"
-                            );
-                            $inputYes = label(["class" => "radio-inline"], input(["type" => "radio", "name" => "txt" . strtoupper($field["name"]), "id" => "txt" . strtoupper($field["name"]), "value" => "1", $checkedYes]), "Yes"
-                            );
-
-                            $input = br() . $inputNo . $inputYes;
-
-                            break;
-
                         case "checkbox":
                             if ($record[$fid] == 1) {
                                 $checked = "checked";
@@ -1505,11 +1488,11 @@ class Cody {
                         case "image":
                             $input = img(["class" => "thumbnail", "style" => "height: 160px; width: 160px", "src" => $this->DEB->encodeImage($record[$fid], "/imagestore", "160x160"), "alt" => ucwords(str_replace("_", " ", strtolower($field["alias"])))]);
                             $input .= input(["type" => "hidden", "name" => "MAX_FILE_SIZE"], "4194304");
-                            $input .= input(["class" => "btn btn-primary", "type" => "file", "accept" => "image/*", "name" => "txt" . strtoupper($field["name"]), "onclick" => $customField->event], ucwords(str_replace("_", " ", strtolower($field["alias"]))));
+                            $input .= input(["class" => "btn btn-primary", "type" => "file", "accept" => "image/*", "name" => "txt" . strtoupper($field["name"]), "id" => "txt" . strtoupper($field["name"]), "onclick" => $customField->event], ucwords(str_replace("_", " ", strtolower($field["alias"]))));
                             break;
                         case "file":
                             $input = input(["type" => "hidden", "name" => "MAX_FILE_SIZE"], "4194304");
-                            $input .= input(["class" => "btn btn-primary", "type" => "file", "accept" => "image/*", "name" => "txt" . strtoupper($field["name"]), "onclick" => $customField->event], ucwords(str_replace("_", " ", strtolower($field["alias"]))));
+                            $input .= input(["class" => "btn btn-primary", "type" => "file", "name" => "txt" . strtoupper($field["name"]), "id" => "txt" . strtoupper($field["name"]), "onclick" => $customField->event], ucwords(str_replace("_", " ", strtolower($field["alias"]))));
                         break;
                         case "text":
                             $input = input(["class" => "form-control", "type" => "text", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => "txt" . strtoupper($field["name"]), "id" => "txt" . strtoupper($field["name"])], $record[$fid]);

@@ -118,7 +118,11 @@ function LookFor($id) {
                 try {
                     $return = $TESSA->byClass($id);
                 } catch (Exception $e) {
-                    die("<b> I could not find an element on the page with the name {$id} </b>");
+                    try {
+                        $return = $TESSA->byCSS($id);
+                    } catch (Exception $e) {
+                        die("<b> I could not find an element on the page with the name {$id} </b>");
+                    }
                 }
             }
         }
@@ -269,6 +273,36 @@ function getActions() {
 function deleteAllCookies() {
     global $TESSA;
     return  $TESSA->deleteAllCookies();
+}
+
+
+/**
+ * Accept Popup
+ * @return mixed
+ */
+function AcceptAlert() {
+    global $TESSA;
+    return $TESSA->acceptAlert();
+}
+
+/**
+ * Dismiss Popup
+ * @return mixed
+ */
+function DismissAlert() {
+    global $TESSA;
+    return $TESSA->dismissAlert();
+}
+
+/**
+ * Execute JS
+ * @param $script
+ * @array $args
+ * @return mixed
+ */
+function ExecJS($script, $args = array()) {
+    global $TESSA;
+    return $TESSA->executeJavaScript($script, $args);
 }
 
 /**
@@ -727,7 +761,27 @@ class Tessa {
     function runTests() {
         $this->message("No tests to run!");
     }
-
+    
+    /**
+     * Accept popup
+     */
+    function acceptAlert() {
+        $this->session->accept_alert();
+    }
+    
+    /**
+     * Dismiss popup
+     */
+    function dismissAlert() {
+        $this->session->dismiss_alert();
+    }
+    
+    /**
+     * Execute JS
+     */
+    function executeJavaScript($script, $args) {
+        return $this->session->execute(array('script' => $script, 'args' => $args));
+    }
 }
 
 /**

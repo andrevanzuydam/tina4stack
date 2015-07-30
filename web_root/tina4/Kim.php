@@ -471,6 +471,9 @@ class Kim {
                 }
                 $results[$rid] = $values;
             }
+            if (!is_array($results[$rid])) {
+                $results[$rid] = $this->parseTemplate($results[$rid]);
+            }
         }
     
         return $results;
@@ -1042,17 +1045,20 @@ class Kim {
                     if (count($testVar) > 1 && strpos($testVar[0], "[") === false) {
                         eval('if (empty($'.$testVar[0].')) { global $'.$testVar[0].'; }');
                     }
-                    eval ('if (!empty($'.$element.')) { $var = $'.$element.'; }');
-                    if (empty($var)) {
-                        if ($nullVars) {
-                            $template = str_replace ("{".$element."}", "", $template);
-                        }
-                            else {
-                                $template = str_replace ("{".$element."}", "{".$element."}", $template);
+                   
+                    if (!is_numeric($element)) {
+                        eval ('if (!empty($'.$element.')) { $var = $'.$element.'; }');
+                        if (empty($var)) {
+                            if ($nullVars) {
+                                $template = str_replace ("{".$element."}", "", $template);
                             }
-                    }
-                    else {
-                        $template = str_replace ("{".$element."}", $var, $template);
+                                else {
+                                    $template = str_replace ("{".$element."}", "{".$element."}", $template);
+                                }
+                        }
+                        else {
+                            $template = str_replace ("{".$element."}", $var, $template);
+                        }
                     }
                 }
             }

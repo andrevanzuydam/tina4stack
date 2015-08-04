@@ -471,6 +471,7 @@ class Kim {
                 }
                 $results[$rid] = $values;
             }
+
             if (!is_array($results[$rid])) {
                 $results[$rid] = $this->parseTemplate($results[$rid]);
             }
@@ -833,7 +834,7 @@ class Kim {
 
                     $elementParts = explode (":", $element[0], 2);
 
-                    $elementHash = md5(print_r($element[0],1));
+                    $elementHash = md5(print_r($element,1));
 
                     $response[$elementHash] = "";
 
@@ -875,7 +876,7 @@ class Kim {
                                         }
                                     }
                                 }
-                                $callParts = explode("?", $elementParts[1]);
+                                $callParts = explode("?", $elementParts[1], 2);
                                 
                                 if (!empty($callParts[1])) {
                                     $params = $this->getCallParams($callParts[1]);
@@ -949,7 +950,8 @@ class Kim {
                             break;
                     }
                 }
-
+                    
+               
 
 
                 if (strpos($template, "{{") !== false) {
@@ -970,7 +972,9 @@ class Kim {
 
                  
                     foreach ($elements as $eid => $element) {
-                        $elementHash = md5(print_r ($element[0], 1));
+                        $elementHash = md5(print_r($element,1));
+                        
+                      
                         $element[0] = str_replace ("?", '\?', $element[0]);
                         $element[0] = str_replace ("|", '\|', $element[0]);
                         $element[0] = str_replace ("=", '\=', $element[0]);

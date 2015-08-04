@@ -120,7 +120,11 @@ class Cody {
                             title ($title),
                             alink (["rel" => "stylesheet", "href"=>"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"]),
                             alink (["rel" => "stylesheet", "href"=> "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"]),
-                            alink (["rel" => "stylesheet", "href"=> "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css"])
+                            alink (["rel" => "stylesheet", "href"=> "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css"]),
+                            alink (["rel" => "stylesheet", "href"=> "https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css"]),
+                            script(["src" => "https://code.jquery.com/jquery-2.1.4.min.js"]),
+                            script (["src"=> "https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"])
+                            
                             
                             
                     ),
@@ -367,8 +371,9 @@ class Cody {
                     $database = Ruth::getOBJECT("DEB")->getDatabase();
                     $table = $database[$tableName];
                     $code = '';
-                    $code .= '<code><pre>'."\n";
-                    $code .= '$toolBar = ["caption" => "'.$tableName.'"];'."\n";
+                    $code .= '!===!===!BOOTSTRAP GRID!===!===!';
+                    $code .= '//Toolbar for the grid'."\n";
+                    $code .= '$toolBar = ["caption" => "'.ucwords(strtolower(str_replace("_", " ", $tableName))).'"];'."\n";
                     $code .= ''."\n";
                     $code .= '//Code for '.$tableName."\n";
                     $code .= '$buttons = "insert,view,update,delete";'."\n";
@@ -429,13 +434,69 @@ class Cody {
                     
                     $code .= ''."\n";
                     $code .= '//HTML code for a form'."\n";
+                    $code .= ''."\n";
+                    
+                    $code .= '!===!===!HTML FORM!===!===!';
+                    $code .= '<form role="form" method="post" enctype="multipart/form-data">'."\n";
+                    foreach ($fieldNames as $fid => $fieldName) {
+                        $code .= '  <div id="form-group-'.$fieldName.'" class="form-group">'."\n";
+                        $code .= '    <label for="txt'.strtoupper($fieldName).'" >'.ucwords(str_replace ("_", " ", $fieldName)).'</label>'."\n";
+                        $code .= '    <input type="text" class="form-control" placeholder="" id="txt'.strtoupper($fieldName).'" name ="txt'.strtoupper($fieldName).'" value="{'.strtoupper($fieldName).'}" />'."\n";                        
+                        $code .= '  </div>'."\n";
+                    }
+                    
+                    $code .= '</form>'."\n";      
+                    
+                    $code .= '!===!===!DATA CLASS!===!===!';
+                    $code .= '//Class to get data from '.$tableName."\n";
+                    $code .= 'class '.ucwords(strtolower($tableName)).'Data{ '."  \n";
+                    $code .= '  var $DEB;'."\n";
+                    $code .= '  function __construct() {'."\n";
+                    $code .= '      $this->DEB = Ruth::getOBJECT("DEB");'."\n";
+                    $code .= '  }'."\n";
+                    $code .= ''."\n";
+                    foreach ($fieldNames as $fid => $fieldName) {
+                        $code .= '  function getBy'.strtoupper($fieldName).'($filter="All") {'."\n";    
+                        $code .= '      $where = "";'."\n";    
+                        $code .= '      if ($filter !== "All") { '."\n";
+                        $code .= '          $where = "where '.$fieldName.' = \'{$filter}\'"; '."\n";
+                        $code .= '      }'."\n";
+                        $code .= ''."\n";
+                        $code .= '      $sql'.strtoupper($fieldName).' = "select * from '.$tableName.' {$where} ";'."\n";
+                        $code .= '      $result = $this->DEB->getRows($sql'.strtoupper($fieldName).');'."\n";
+                        $code .= ''."\n";
+                        $code .= '      if (empty($result)) {'."\n";
+                        $code .= '          $result[] = [];'."\n";
+                        $code .= '      }'."\n";
+                        $code .= ''."\n";
+                        $code .= '      return $result;'."\n";
+                        $code .= '  }'."\n";
+                        $code .= ''."\n";
+                    }
+                    
+                    $code .= '}'."\n";    
+                    $code .= ''."\n";
+                    //create the code so it can be displayed nicely on the screen
+                    $snippets = explode ("!===!===!", $code);
+                    $code = "";
+                    
+                    foreach ($snippets as $sid => $snippet) {
+                        if (trim($snippet) !== "") {
+                            $code .= '<pre  class="prettyprint">'."\n".htmlentities($snippet).'</pre>'."\n";
+                        }
+                    }    
                     
                     
-                                        
-                    $code .= '</pre></code>'."\n";
-                    
+                    $code .= "<script>
+                                !function ($) {
+                                  $(function(){
+                                    window.prettyPrint && prettyPrint()   
+                                  })
+                                }(window.jQuery)
+                              </script>";
                     
                     $html->byId("content")->addContent($code);
+                    
             
                     echo $html;
                 }

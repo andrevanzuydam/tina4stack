@@ -12,6 +12,7 @@ class Kim {
     var $KIM;
     var $defaultPages = ["index.html", "index.php", "home.html"];
     var $defaultExtensions = [".html", ".php"];
+    var $varRegex = '/{([a-zA-Z0-9\_\-\>\[\]\"\|\'\$]+)}/i';
 
 
 
@@ -473,10 +474,15 @@ class Kim {
             }
 
             if (!is_array($results[$rid])) {
-                $results[$rid] = $this->parseTemplate($results[$rid]);
+                if ($result[0] === "\$") {
+                    eval ('$results[$rid] = '.$result.';');
+                }
+                    else {
+                        $results[$rid] = $this->parseTemplate($results[$rid]);
+                    }
             }
         }
-    
+        
         return $results;
     }
 
@@ -556,8 +562,6 @@ class Kim {
                             $elements[$eid]["snippet_stop"] = $lookup[$lookupId][1]-2;
                             $elements[$eid]["snippet"] =  substr ($template,$elements[$eid]["snippet_start"],$elements[$eid]["snippet_stop"]-$elements[$eid]["snippet_start"]);
 
-
-
                             $snippetLength = strlen ($elements[$eid]["snippet"]) +  strlen('{{/'.$className.'}}');
                             $modifiedTemplate = substr_replace ($modifiedTemplate,
                                 str_repeat (" ", $snippetLength ),
@@ -591,7 +595,7 @@ class Kim {
                     if (!empty($data)) {
                         //get the variables out
 
-                        preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"\|]+)}/i', $template, $variables);
+                        preg_match_all ($this->varRegex, $template, $variables);
                         foreach ($variables[1] as $index => $variable) {
                             if (!empty($data->$variable)) {
                                 $varValue = $data->$variable;
@@ -730,9 +734,28 @@ class Kim {
             }
 
             if (strpos($template, "{") !== false) {
+                $globalVars = get_defined_vars();
+                $definedConst = get_defined_constants();
+
+                preg_match_all ($this->varRegex, $template, $variables);
+
                 //then variables, global & local, local will be first
-                foreach (get_defined_vars() as $varName => $varValue) {
-                    if (!is_object($varValue) && $varName !== "template" && $varName !== "data" && $varName !== "originalTemplate" ) {
+                foreach ($variables[1] as $varId => $varName) {
+
+                    if (!empty($globalVars[$varName]) && !is_object($globalVars[$varName])) {
+                        $varValue = $globalVars[$varName];
+                        if (is_array($varValue)) {
+                            foreach ($varValue as $vName => $vValue) {
+                                $template = $this->parseValue("{".$vName."}", $vValue, $template);
+                            }
+                        }
+                        else {
+                            $template = $this->parseValue("{".$varName."}", $varValue, $template);
+                        }
+                    }
+
+                    if (!empty($definedConst[$varName]) && !is_object($definedConst[$varName]) ) {
+                        $varValue = $definedConst[$varName];
                         if (is_array($varValue)) {
                             foreach ($varValue as $vName => $vValue) {
                                 $template = $this->parseValue("{".$vName."}", $vValue, $template);
@@ -743,22 +766,6 @@ class Kim {
                         }
                     }
                 }
-
-                //then defines
-                foreach (get_defined_constants() as $varName => $varValue) {
-                    if (!is_object($varValue)) {
-                        if (is_array($varValue)) {
-                            foreach ($varValue as $vName => $vValue) {
-                                $template = $this->parseValue("{".$vName."}", $vValue, $template);
-                            }
-                        }
-                        else {
-
-                            $template = $this->parseValue("{".$varName."}", $varValue, $template);
-                        }
-                    }
-                }
-
             }
             $elements = null;
 
@@ -768,10 +775,7 @@ class Kim {
             preg_match_all ('/{{(.*)}}/i', $template, $elements, PREG_OFFSET_CAPTURE);
             //then see about parsing methods & functions
 
-
             $parsedSnippets = $this->parseSnippets ($elements[1], $template, $data);
-
-
 
             //Reset the elements & template to the parsed elements
             $elements = $parsedSnippets["elements"];
@@ -791,7 +795,7 @@ class Kim {
                         if (!empty( $ifStatement["expression"] )) {
                             $myIf = '$expression = (' . $ifStatement["expression"] . ');';
                             if (!empty($data)) {
-                                preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"\|]+)}/i', $myIf, $variables);
+                                preg_match_all ($this->varRegex, $myIf, $variables);
                                 foreach ($variables[1] as $index => $variable) {
                                     
                                    
@@ -835,23 +839,27 @@ class Kim {
                     $elementParts = explode (":", $element[0], 2);
 
                     $elementHash = md5(print_r($element,1));
+                    
+                    
 
+                  
                     $response[$elementHash] = "";
 
                     switch ($elementParts[0]) {
                         case "call":
                             $callParts = explode("?", $elementParts[1], 2);
-
+                           
                             if (!empty($callParts[1])) {
-
                                 $params = $this->getCallParams($callParts[1]);
                             }
                             else {
                                 $params = [];
                             }
+                            
+                       
 
                             if (function_exists($callParts[0])) {
-                                $response[$elementHash] = call_user_func_array($callParts[0],$params);
+                                 $response[$elementHash] = call_user_func_array($callParts[0],$params);
                             }
                             else {
                                 $response[$elementHash] = "Function: {$callParts[0]} not found";
@@ -866,7 +874,7 @@ class Kim {
                                 //check if we don't need variables for the element parts
                                 if (strpos($elementParts[1], "{") !== false) {
                                     if (!empty($data)) {
-                                        preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"\|\=]+)}/i', $elementParts[1], $variables);
+                                        preg_match_all ($this->varRegex, $elementParts[1], $variables);
                                         foreach ($variables[1] as $index => $variable) {
                                             
                                             eval ('if (isset($data->'.$variable.')) { $variableValue = "{$data->'.$variable.'}";  }');
@@ -901,6 +909,7 @@ class Kim {
                                     }
                                     
                                 } else {
+                                    $classObject = "";
                                     eval ('$classObject = new '.$elementParts[0].'();');
                                     try {
                                         if (method_exists($classObject, $callParts[0])) {
@@ -958,7 +967,7 @@ class Kim {
 
                     if (!empty($data)) {
                         
-                        preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"\|]+)}/i', $template, $variables);
+                        preg_match_all ($this->varRegex, $template, $variables);
                         foreach ($variables[1] as $index => $variable) {
                             
                             if (property_exists($data, $variable)) {
@@ -970,17 +979,21 @@ class Kim {
                     }
 
 
-                 
+                     
                     foreach ($elements as $eid => $element) {
                         $elementHash = md5(print_r($element,1));
                         
-                      
                         $element[0] = str_replace ("?", '\?', $element[0]);
                         $element[0] = str_replace ("|", '\|', $element[0]);
                         $element[0] = str_replace ("=", '\=', $element[0]);
                         $element[0] = str_replace ("[", '\[', $element[0]);
+                        $element[0] = str_replace ("{", '\{', $element[0]);
                         $element[0] = str_replace ("]", '\]', $element[0]);
-                        
+                        $element[0] = str_replace ("}", '\}', $element[0]);
+                        $element[0] = str_replace ('$', '\$', $element[0]);
+                        $element[0] = str_replace ('"', '\"', $element[0]);
+                        $element[0] = str_replace ("'", "\'", $element[0]);
+                     
                         $template = preg_replace ('{{{'.$element[0].'}}}', $response[$elementHash], $template, 1);
 
                     }
@@ -990,7 +1003,8 @@ class Kim {
                 }
 
             }
-
+             
+            
             //see if we can parse the data variable
             if (!empty($data)) {
                 if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false && empty(xcache_get(md5(print_r($data,1))))) {
@@ -1042,7 +1056,7 @@ class Kim {
             }
 
             //any variables that could not be found in the form {variable}
-            preg_match_all ('/{([a-zA-Z0-9\_\-\>\[\]\"\|]+)}/i', $template, $elements);
+            preg_match_all ($this->varRegex, $template, $elements);
             if (!empty($elements[1])) {
                 foreach ($elements[1] as $eid => $element) {
                     $testVar = explode ("->", $element);
@@ -1051,7 +1065,12 @@ class Kim {
                     }
                    
                     if (!is_numeric($element)) {
-                        eval ('if (!empty($'.$element.')) { $var = $'.$element.'; }');
+
+                        if (strpos($element,'$') !== false) {
+                            eval ('if (!empty('.$element . ')) { $var = '.$element.'; }');
+                        } else {
+                            eval ('if (!empty($'.$element .')) { $var = $'.$element.'; }');
+                        }
                         if (empty($var)) {
                             if ($nullVars) {
                                 $template = str_replace ("{".$element."}", "", $template);

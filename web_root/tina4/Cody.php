@@ -2051,20 +2051,18 @@ class Cody {
             function parse{$name}Script(_source) {
                     var source = _source;
                     var scripts = new Array();
-
                     // Strip out tags
-                    while(source.toLowerCase().indexOf('<script') > -1 || source.toLowerCase().indexOf('</script') > -1) {
-                        var s = source.toLowerCase().indexOf('<script');
+                    while(source.toLowerCase().indexOf('<'+'s'+'c'+'r'+'i'+'p'+'t') > -1 || source.toLowerCase().indexOf('</'+'s'+'c'+'r'+'i'+'p'+'t') > -1) {
+                        var s = source.toLowerCase().indexOf('<'+'s'+'c'+'r'+'i'+'p'+'t');
                         var s_e = source.indexOf('>', s);
-                        var e = source.toLowerCase().indexOf('</script', s);
+                        var e = source.toLowerCase().indexOf('</'+'s'+'c'+'r'+'i'+'p'+'t', s);
                         var e_e = source.indexOf('>', e);
                         scripts.push(source.substring(s_e+1, e));
                         source = source.substring(0, s) + source.substring(e_e+1);
                     }
 
                     // Loop through every script collected and eval it
-                   
-                    for(var i=0; i<scripts.length; i++) {
+                    for(var i=0; i < scripts.length; i++) {
                         try {
                           if (scripts[i] != '') {
                             try  {          //IE
@@ -2084,7 +2082,7 @@ class Cody {
             }
 
             function {$name}(newRoute, newTarget, extraParam, newMethod) {
-                
+
                 if (newRoute === undefined) newRoute = '{$route}';
                 if (newTarget === undefined) newTarget = '{$target}';
                 if (typeof newMethod === \"undefined\") newMethod = '{$method}';
@@ -2176,8 +2174,9 @@ class Cody {
 
                 //try some normal AJAX stuff
                 try {
+                    console.log (jsonData);
                     formData.append ('formData', serialize(jsonData));
-                    
+
                     xhr = new XMLHttpRequest();
                     xhr.open (newMethod, newRoute);
                     xhr.onload = function () {
@@ -2192,9 +2191,10 @@ class Cody {
                                     targetElement.value = result;
                                }  else {
                                     console.log ('Tina4 - Target is HTML element'+targetElement.id);
+                                    window.history.pushState({'html': result,'pageTitle': 'Call '+newRoute},'', newRoute);
                                     targetElement.innerHTML = result;
                                }
-                               
+
                                 parse{$name}Script(result);
                             } else if(typeof window[newTarget] === 'function'){//if target is a function pass it the results
                                 window[newTarget](result);

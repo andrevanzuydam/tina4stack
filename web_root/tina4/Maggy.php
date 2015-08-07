@@ -155,13 +155,16 @@ class Maggy {
         
         asort ($fileArray);
         
-     
+
+
         foreach ( $fileArray as $fid => $entry ) {
                
                 $fileParts = explode(".", $entry);
                 $fileParts = explode(" ", $fileParts[0]);
                 $sqlCheck = "select * from tina4_maggy where migration_id = '{$fileParts[0]}'";
                 $record = $this->DEB->getRow($sqlCheck);
+
+
                 
                 
                 $migrationId = $fileParts[0];
@@ -186,7 +189,7 @@ class Maggy {
                     $runsql = true;
                 } else {
                    
-                    if ($record->PASSED === "0" || $record->PASSED === "") {
+                    if ($record->PASSED === "0" || $record->PASSED === "" || $record->PASSED == 0) {
                         echo "<span style=\"color:orange;\">RETRY: \"{$migrationId} {$description}\" ... </span> \n";
                         $runsql = true;
                     } else

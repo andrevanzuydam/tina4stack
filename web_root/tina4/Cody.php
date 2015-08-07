@@ -377,6 +377,7 @@ class Cody {
                     $code .= ''."\n";
                     $code .= '//Code for '.$tableName."\n";
                     $code .= '$buttons = "insert,view,update,delete";'."\n";
+                    $code .= '// $buttons = ["buttons" => "update,mybutton1,mybutton2", "custom" => ["mybutton1" => "<button>{field_name}</button>", "mybutton2" => "<button>{field_name}</button>" ] ];'."\n"; //custom buttons
                     $code .= ''."\n";
                    
                     
@@ -599,8 +600,10 @@ class Cody {
                                 @call_user_func_array(ONDELETE, $params);
                             }    
                             
-                            $tableEvent = "ONDELETE".$name; 
-                                
+                            $tableEvent = "ONDELETE".$name;
+
+                            $constantFound = false;
+
                             eval ('$constantFound = (defined ("'.$tableEvent.'") && !empty('.$tableEvent.'));');
                             
                             if ($constantFound) {
@@ -715,8 +718,10 @@ class Cody {
                                     @call_user_func_array(ONINSERT, $params);
                                 }    
                                 
-                                $tableEvent = "ONINSERT".$name; 
-                                
+                                $tableEvent = "ONINSERT".$name;
+
+                                $constantFound = false;
+
                                 eval ('$constantFound = (defined ("'.$tableEvent.'") && !empty('.$tableEvent.'));');
 
                                 
@@ -750,8 +755,9 @@ class Cody {
                                     @call_user_func_array(ONUPDATE, $params);
                                 }
                                 
-                                $tableEvent = "ONUPDATE".$name; 
-                                
+                                $tableEvent = "ONUPDATE".$name;
+
+                                $constantFound = false;
                                 eval ('$constantFound = (defined ("'.$tableEvent.'") && !empty('.$tableEvent.'));');
 
                                 if ($constantFound) {
@@ -851,7 +857,16 @@ class Cody {
             $sql = $object[0];
             
             $buttons = $object[1];
+
+
+            if (is_object($buttons)) {
+               $customButtons = $buttons->custom;
+               $buttons = $buttons->buttons;
+            }
+
+
             if (!is_object ($buttons)) {
+
                 $tempButtons = explode (",", strtolower($buttons));
                 
                 if (is_array($tempButtons)) {
@@ -869,6 +884,11 @@ class Cody {
                             break;
                             case "view":
                                 $buttons .= (new Cody())->bootStrapButton("btnViewGrid".$name, "View", "{$beforeView} call{$name}Ajax('/cody/form/view','{$name}Target', {object : a{$name}object, record: a{recordid}{$name}record, db: '{$db}' })", "btn btn-warning", "", true);
+                            break;
+                            default:
+                               //add the custom button from the list
+
+                               $buttons .= $customButtons->$button;
                             break;
                         }    
                     }               
@@ -1421,7 +1441,7 @@ class Cody {
      * @param String $sql A valid SQL statement for the selected database
      * @return type
      */
-    function bootStrapForm($sql = "", $hideColumns = "", $custombuttons = null, $customFields = null, $submitAction = "", $formId = "formId") {
+    function bootStrapForm($sql = "", $hideColumns = "", $custombuttons = null, $customFields = null, $submitAction = "", $formId = "formId", $prefix="txt", $noForm = false) {
         $fieldinfo = $this->getFieldInfo($sql);
 
         $hideColumns = explode(",", strtoupper($hideColumns));
@@ -1449,8 +1469,18 @@ class Cody {
                 }
                 
                 
-                if (isset($customFields[strtoupper($field["name"])])) {
-                    $customField = $customFields[strtoupper($field["name"])];
+                if (array_key_exists( strtoupper($field["name"]), $customFields) || array_key_exists(strtoupper($field["alias"]), $customFields)) {
+                    //first try the alias
+                    $customField = "";
+                    if (array_key_exists(strtoupper($field["alias"]), $customFields)) {
+                        $customField = $customFields[strtoupper($field["alias"])];
+                    } else
+                    //then try the field
+                    if (empty($customField)) {
+                        $customField = $customFields[strtoupper($field["name"])];
+                    }
+
+
                     if (is_array($customField)) {
                         $customField = (object) $customField;
                     }
@@ -1482,7 +1512,7 @@ class Cody {
                             $mvalue = explode(":", $mvalue);
 
                             if ($mvalue[0] == "message") {
-                                $messages[] = "txt" . strtoupper($field["name"]) . ": { required: '" . $mvalue[1] . "', remote: '" . $mvalue[1] . "'}";
+                                $messages[] = $prefix . strtoupper($field["name"]) . ": { required: '" . $mvalue[1] . "', remote: '" . $mvalue[1] . "'}";
                                 $mfound = true;
                                 unset($message[$mid]);
                             }
@@ -1508,6 +1538,7 @@ class Cody {
                                 $call[0] = str_replace (")", "", $call[0]);
                                 $call[0] = str_replace ("new", "", $call[0]);
                                 $call[0] = trim($call[0]);
+                                $callClass = "";
                                 eval ('$callClass = new '.$call[0].'();');
                                 $call[0] = $callClass;
                             } else {
@@ -1517,21 +1548,21 @@ class Cody {
                             $input = div(call_user_func($call, $record[$fid], strtoupper($field["name"])));  
                         break;    
                         case "password":
-                            $input = input(["class" => "form-control", "type" => "password", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => "txt" . strtoupper($field["name"]), "id" => "txt" . strtoupper($field["name"])], "");
+                            $input = input(["class" => "form-control", "type" => "password", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => $prefix . strtoupper($field["name"]), "id" => $prefix . strtoupper($field["name"])], "");
                             break;
                         case "hidden":
-                            $input = input(["class" => "form-control hidden", "type" => "hidden", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => "txt" . strtoupper($field["name"]), "id" => "txt" . strtoupper($field["name"])], $record[$fid]);
+                            $input = input(["class" => "form-control hidden", "type" => "hidden", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => $prefix . strtoupper($field["name"]), "id" => $prefix . strtoupper($field["name"])], $record[$fid]);
                         break;
                         case "readonly":
-                            $input = input(["class" => "form-control readonly", "type" => "text", "readonly", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => "txt" . strtoupper($field["name"]), "id" => "txt" . strtoupper($field["name"])], $record[$fid]);
+                            $input = input(["class" => "form-control readonly", "type" => "text", "readonly", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => $prefix . strtoupper($field["name"]), "id" => $prefix . strtoupper($field["name"])], $record[$fid]);
                         break;
                         case "date":
-                            $input = input(["class" => "form-control", "type" => "text", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => "txt" . strtoupper($field["name"]), "id" => "txt" . strtoupper($field["name"])], $record[$fid]);
+                            $input = input(["class" => "form-control", "type" => "text", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => $prefix . strtoupper($field["name"]), "id" => $prefix . strtoupper($field["name"])], $record[$fid]);
                             $input .= script("$('#" . $field["name"] . "').datepicker({format: '" . strtolower($this->DEB->outputdateformat) . "'}).on('changeDate', function(ev) { console.log(ev); " . $customField["event"] . " } );");
                             break;
                         case "toggle":
                             $checked = null;
-                            $input = input(["class" => "form-control", "type" => "checkbox", "data-toggle" => "toggle", "data-on" => "Yes", "data-off" => "No", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => "txt" . strtoupper($field["name"]), "id" => "txt" . strtoupper($field["name"])], $record[$fid]);
+                            $input = input(["class" => "form-control", "type" => "checkbox", "data-toggle" => "toggle", "data-on" => "Yes", "data-off" => "No", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => $prefix . strtoupper($field["name"]), "id" => $prefix . strtoupper($field["name"])], $record[$fid]);
                             if ($record[$fid] == 1) {
                                 $input->addAttribute("checked", "checked");
                             }
@@ -1544,33 +1575,33 @@ class Cody {
                                 $checked = "";
                             }
 
-                            $input = br() . label(["class" => "checkbox-inline"], input(["type" => "checkbox", "name" => "txt" . strtoupper($field["name"]), "id" => "txt" . strtoupper($field["name"]), "value" => "1", $checked]), $customField->checkCaption );
+                            $input = br() . label(["class" => "checkbox-inline"], input(["type" => "checkbox", "name" => $prefix . strtoupper($field["name"]), "id" => $prefix . strtoupper($field["name"]), "value" => "1", $checked]), $customField->checkCaption );
                         break;
                         case "image":
                             $input = img(["class" => "thumbnail", "style" => "height: 160px; width: 160px", "src" => $this->DEB->encodeImage($record[$fid], "/imagestore", "160x160"), "alt" => ucwords(str_replace("_", " ", strtolower($field["alias"])))]);
                             $input .= input(["type" => "hidden", "name" => "MAX_FILE_SIZE"], "4194304");
-                            $input .= input(["class" => "btn btn-primary", "type" => "file", "accept" => "image/*", "name" => "txt" . strtoupper($field["name"]), "id" => "txt" . strtoupper($field["name"]), "onclick" => $customField->event], ucwords(str_replace("_", " ", strtolower($field["alias"]))));
+                            $input .= input(["class" => "btn btn-primary", "type" => "file", "accept" => "image/*", "name" => $prefix . strtoupper($field["name"]), "id" => $prefix . strtoupper($field["name"]), "onclick" => $customField->event], ucwords(str_replace("_", " ", strtolower($field["alias"]))));
                             break;
                         case "file":
                             $input = input(["type" => "hidden", "name" => "MAX_FILE_SIZE"], "4194304");
-                            $input .= input(["class" => "btn btn-primary", "type" => "file", "name" => "txt" . strtoupper($field["name"]), "id" => "txt" . strtoupper($field["name"]), "onclick" => $customField->event], ucwords(str_replace("_", " ", strtolower($field["alias"]))));
+                            $input .= input(["class" => "btn btn-primary", "type" => "file", "name" => $prefix . strtoupper($field["name"]), "id" => $prefix . strtoupper($field["name"]), "onclick" => $customField->event], ucwords(str_replace("_", " ", strtolower($field["alias"]))));
                         break;
                         case "text":
-                            $input = input(["class" => "form-control", "type" => "text", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => "txt" . strtoupper($field["name"]), "id" => "txt" . strtoupper($field["name"])], $record[$fid]);
+                            $input = input(["class" => "form-control", "type" => "text", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => $prefix . strtoupper($field["name"]), "id" => $prefix . strtoupper($field["name"])], $record[$fid]);
                         break;
                         case "readonly":
-                            $input = input(["class" => "form-control", "type" => "text", "readonly" => "readonly", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => "txt" . strtoupper($field["name"]), "id" => "txt" . strtoupper($field["name"])], $record[$fid]);
+                            $input = input(["class" => "form-control", "type" => "text", "readonly" => "readonly", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => $prefix . strtoupper($field["name"]), "id" => $prefix . strtoupper($field["name"])], $record[$fid]);
                         break;
                         case "textarea":
                            
-                            $input = textarea(["class" => "form-control", "style" => $customField->style, "rows" => "5", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => "txt" . strtoupper($field["name"]), "id" => "txt" . strtoupper($field["name"])], $record[$fid]);
+                            $input = textarea(["class" => "form-control", "style" => $customField->style, "rows" => "5", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => $prefix . strtoupper($field["name"]), "id" => $prefix . strtoupper($field["name"])], $record[$fid]);
                             break;
                         case "lookup":
                             if (!isset($customField->event))
                                 $customField->event = "";
                             if (!isset($customField->readonly))
                                 $customField->readonly = false;
-                            $input = $this->select("txt" . strtoupper($field["name"]), ucwords(str_replace("_", " ", strtolower($field["alias"]))), "array", $customField->list, $record[$fid], $customField->event, "txt" . strtoupper($field["name"]), $customField->readonly);
+                            $input = $this->select($prefix . strtoupper($field["name"]), ucwords(str_replace("_", " ", strtolower($field["alias"]))), "array", $customField->list, $record[$fid], $customField->event, $prefix . strtoupper($field["name"]), $customField->readonly);
                         break;
                         default:
                             $input = div($record[$fid]);
@@ -1581,8 +1612,8 @@ class Cody {
                         $input .= i(["class" => "field-optional alert-success"], ($customField->description));
                     }
                 } else { //generic form
-                    $validation[] = "txt" . $field["name"] . ":{required: false}";
-                    $input = input(["class" => "form-control", "type" => "text", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => "txt" . strtoupper($field["name"]), "id" => "txt" . strtoupper($field["name"])], $record[$fid]);
+                    $validation[] = $prefix . $field["name"] . ":{required: false}";
+                    $input = input(["class" => "form-control", "type" => "text", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => $prefix . strtoupper($field["name"]), "id" => $prefix . strtoupper($field["name"])], $record[$fid]);
                     $input .= i(["class" => "field-optional alert-warning"], "*Optional");
                 }
                 
@@ -1605,10 +1636,10 @@ class Cody {
                             }
                                 
                             if (!empty($customField->help)) {
-                                $html .= div(["class" => "form-group", "id" => "form-group" . $field["name"]], label(["id" => "label" . $field["name"], "for" => "txt" . strtoupper($field["name"])], ucwords(str_replace("_", " ", strtolower($field["alias"])))), span(["id" => "help" . $field["name"], "class" => "icon-x-info info-icon", "data-toggle" => "tooltip", "data-placement" => "right", "title" => $customField["help"]]), $input);
+                                $html .= div(["class" => "form-group", "id" => "form-group" . $field["name"]], label(["id" => "label" . $field["name"], "for" => $prefix . strtoupper($field["name"])], ucwords(str_replace("_", " ", strtolower($field["alias"])))), span(["id" => "help" . $field["name"], "class" => "icon-x-info info-icon", "data-toggle" => "tooltip", "data-placement" => "right", "title" => $customField["help"]]), $input);
                                 $html .= script("$('#help{$field["name"]}').tooltip({ trigger: 'hover' });");
                             } else {
-                                $html .= div(["class" => "form-group {$colWidth}", "id" => "form-group" . $field["name"]], label(["id" => "label" . $field["name"], "for" => "txt" . strtoupper($field["name"])], ucwords(str_replace("_", " ", strtolower($field["alias"])))), $input);
+                                $html .= div(["class" => "form-group {$colWidth}", "id" => "form-group" . $field["name"]], label(["id" => "label" . $field["name"], "for" => $prefix . strtoupper($field["name"])], ucwords(str_replace("_", " ", strtolower($field["alias"])))), $input);
                             }
                         break;
                     }
@@ -1619,7 +1650,11 @@ class Cody {
             }
         }
 
-        $html = form(["method" => "post", "action" => $submitAction, "onsubmit" => "return false", "enctype" => "multipart/form-data", "id" => $formId], $html, $custombuttons, $this->validateForm(join($validation, ","), join($messages, ","), $formId));
+        if ($noForm) {
+            $html = shape( $html, $custombuttons, $this->validateForm(join($validation, ","), join($messages, ",")));
+        } else {
+            $html = form(["method" => "post", "action" => $submitAction, "onsubmit" => "return false", "enctype" => "multipart/form-data", "id" => $formId], $html, $custombuttons, $this->validateForm(join($validation, ","), join($messages, ","), $formId));
+        }
 
         return $html;
     }
@@ -2191,7 +2226,9 @@ class Cody {
                                     targetElement.value = result;
                                }  else {
                                     console.log ('Tina4 - Target is HTML element'+targetElement.id);
-                                    window.history.pushState({'html': result,'pageTitle': 'Call '+newRoute},'', newRoute);
+                                    if (newRoute.indexOf('/cody/') == -1) {
+                                      window.history.pushState({'html': result,'pageTitle': 'Call '+newRoute},'', newRoute);
+                                    }
                                     targetElement.innerHTML = result;
                                }
 

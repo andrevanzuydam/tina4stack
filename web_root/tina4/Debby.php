@@ -98,6 +98,8 @@ class Debby {
             } else {
                 $makethumbnail = false;
             }
+
+
             $imagetype = exif_imagetype($imagefile);
 
             if ($makethumbnail) {
@@ -663,6 +665,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
 
         if ($this->dbtype == "firebird") {
             $sql = str_replace("`", "\"", $sql);
+            $sql = str_ireplace(" text,", " blob sub_type 0,", $sql);
         } else
         if ($this->dbtype == "mssql" || $this->dbtype == "mssqlnative") {
             $sql = str_replace("first", "top", $sql);

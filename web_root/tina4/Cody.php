@@ -185,6 +185,9 @@ class Cody {
             $tableInfo = $object[6];
             $keyName = strtoupper($tableInfo->primarykey);   
             $keyName = explode (",", $keyName);
+
+
+
             if (count($keyName) > 1) {
                $filterKey = "";
                $recordsVal = [];
@@ -195,22 +198,29 @@ class Cody {
                     $recordsVal[] = $record->$key;
                   }
                     else {
-                      $filterKey .= "{$key} = ''";  
+                      $filterKey .= "{$key} = '0'";
                       $recordsVal[] = "";
                   }
                   
                }
+
                if ($action === "insert") {
-                  $record = (object) $recordsVal;  
+                  $record = (object) $recordsVal;
+
+
                }
             }  else {
                 $keyName = strtoupper($tableInfo->primarykey);   
                 if (empty($record)) {
-                    $record = (object)[$keyName => ""];
+                    $record = (object)[$keyName => "0"];
                 }
+
+
                 $filterKey = "{$tableInfo->primarykey} = '".$record->$keyName."'";
+
+
                 if ($action === "insert") {
-                    $record = (object) [$keyName => ""];
+                    $record = (object) [$keyName => "0"];
                 }     
             }
             
@@ -525,8 +535,8 @@ class Cody {
         Ruth::addRoute(RUTH_POST, "/cody/form/{action}" ,
                     function ($action) {
                         $object = json_decode(rawurldecode(Ruth::getREQUEST("object")));
-                        $record = json_decode(rawurldecode(Ruth::getREQUEST("record")));    
-                        
+                        $record = json_decode(rawurldecode(Ruth::getREQUEST("record")));
+
                         if (!empty ($object[8])) {
                             $events = $object[8];
                         }
@@ -1842,7 +1852,7 @@ class Cody {
         return $html;
     }
 
-    function bootStrapModal($header, $body, $footer, $closeCode = "", $icon = "", $modalsize = "") {
+    function bootStrapModal($header, $body, $footer, $closeCode = "$('.modal').removeClass('show');", $icon = "", $modalsize = "") {
         $headericon = "";
         $size = ( $modalsize !== "" ? $modalsize : "lg" );
         if ($icon !== "") {
@@ -2116,11 +2126,15 @@ class Cody {
                     return source;
             }
 
-            function {$name}(newRoute, newTarget, extraParam, newMethod) {
+            // newRoute = 'path', newTarget = 'div,input', extraParam = 'JSON', ignoreRoute = false, newMethod = 'GET/POST'
+            function {$name}(newRoute, newTarget, extraParam, newMethod, ignoreRoute) {
 
                 if (newRoute === undefined) newRoute = '{$route}';
                 if (newTarget === undefined) newTarget = '{$target}';
                 if (typeof newMethod === \"undefined\") newMethod = '{$method}';
+                if (ignoreRoute === undefined) ignoreRoute = false;
+
+
 
                 if (extraParam !== undefined || extraParam === null) {
                   jsonData = extraParam === null ? [] : extraParam;
@@ -2129,7 +2143,7 @@ class Cody {
                   jsonData = JSON.parse('{$fixedValues}');
                 }
                 
-                var formData = new FormData();
+                formData = new FormData();
                 
                 targetElement = document.getElementById (newTarget);
                 
@@ -2213,7 +2227,18 @@ class Cody {
                     formData.append ('formData', serialize(jsonData));
 
                     xhr = new XMLHttpRequest();
+
+                    if (targetElement != null && targetElement.tagName !== undefined && newTarget != null) {
+                        tagTarget = targetElement.tagName.toUpperCase();
+
+                        if (tagTarget !== 'INPUT' || tagTarget !== 'TEXTAREA') {
+                            targetElement.innerHTML = '<img src=\'/assets/img/ajax-loader.gif\' />';
+                        }
+                    }
+
+                    console.log ('NewMethod & newRoute', newMethod, newRoute);
                     xhr.open (newMethod, newRoute);
+
                     xhr.onload = function () {
                         if (xhr.status == 200) {
                             result = xhr.responseText;
@@ -2226,7 +2251,7 @@ class Cody {
                                     targetElement.value = result;
                                }  else {
                                     console.log ('Tina4 - Target is HTML element'+targetElement.id);
-                                    if (newRoute.indexOf('/cody/') == -1) {
+                                    if (newRoute.indexOf('/cody/') == -1 && ignoreRoute === false) {
                                       window.history.pushState({'html': result,'pageTitle': 'Call '+newRoute},'', newRoute);
                                     }
                                     targetElement.innerHTML = result;
@@ -2243,9 +2268,12 @@ class Cody {
                         }
                           else {
                           console.log('Failed to get route'+newRoute);   
-                        }    
+                        }
+
                     }
+
                     xhr.send(formData);
+                    delete formData;
                 } 
                 catch (e) {
                     console.log ('Tina4 ajaxHandler Error: ', e);

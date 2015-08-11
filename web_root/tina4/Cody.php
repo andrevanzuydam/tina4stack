@@ -390,6 +390,8 @@ class Cody {
                     $code .= '// $buttons = ["buttons" => "update,mybutton1,mybutton2", "custom" => ["mybutton1" => "<button>{field_name}</button>", "mybutton2" => "<button>{field_name}</button>" ] ];'."\n"; //custom buttons
                     $code .= ''."\n";
 
+
+
                     foreach ($table as $field) {
                         
                         $fieldType = "";
@@ -412,6 +414,8 @@ class Cody {
                         $fieldNames[] = $field["field"];
                         $code .= '$customFields["'.strtoupper($field["field"]).'"] = ["type" => "text", "validation" => "required:true,maxlength:'.$field["length"].$fieldType.'"];'."\n";
                     }
+
+
                     
                     $code .= ''."\n";
                     $code .= '//Table information for '.$tableName."\n";
@@ -597,7 +601,7 @@ class Cody {
                                     $DEB->delete($tableName, [$keyName => $record->$keyName]);
                                 }
 
-                            if (!defined ("ONDELETE") && !empty(ONDELETE)) {
+                            if (defined ("ONDELETE") && !empty(ONDELETE)) {
                                 if (is_array($keyName)) { $keyName = join("-", $keyName);
                                     $record->$keyName = $filterKey;
                                 }

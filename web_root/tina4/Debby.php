@@ -2339,6 +2339,10 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             $tables = $this->getRows($sqltables);
             foreach ($tables as $id => $record) {
                 $sqlinfo = "select * from $record->NAME limit 1";
+
+
+
+
                 $tableinfo = $this->getRows($sqlinfo);
                 $fieldinfo = $this->fieldinfo;
                 foreach ($fieldinfo as $tid => $trecord) {
@@ -2416,8 +2420,46 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                       WHERE r.RDB$RELATION_NAME = \'' . $record->TABLENAME . '\'
                     ORDER BY r.RDB$FIELD_POSITION';
                 $tableinfo = $this->getRows($sqlinfo);
+
+
+                $primaryKeys = $this->getRows('SELECT rc.RDB$CONSTRAINT_NAME,
+                                                      s.RDB$FIELD_NAME AS field_name,
+                                                      rc.RDB$CONSTRAINT_TYPE AS constraint_type,
+                                                      i.RDB$DESCRIPTION AS description,
+                                                      rc.RDB$DEFERRABLE AS is_deferrable,
+                                                      rc.RDB$INITIALLY_DEFERRED AS is_deferred,
+                                                      refc.RDB$UPDATE_RULE AS on_update,
+                                                      refc.RDB$DELETE_RULE AS on_delete,
+                                                      refc.RDB$MATCH_OPTION AS match_type,
+                                                      i2.RDB$RELATION_NAME AS references_table,
+                                                      s2.RDB$FIELD_NAME AS references_field,
+                                                      (s.RDB$FIELD_POSITION + 1) AS field_position
+                                                 FROM RDB$INDEX_SEGMENTS s
+                                            LEFT JOIN RDB$INDICES i ON i.RDB$INDEX_NAME = s.RDB$INDEX_NAME
+                                            LEFT JOIN RDB$RELATION_CONSTRAINTS rc ON rc.RDB$INDEX_NAME = s.RDB$INDEX_NAME
+                                            LEFT JOIN RDB$REF_CONSTRAINTS refc ON rc.RDB$CONSTRAINT_NAME = refc.RDB$CONSTRAINT_NAME
+                                            LEFT JOIN RDB$RELATION_CONSTRAINTS rc2 ON rc2.RDB$CONSTRAINT_NAME = refc.RDB$CONST_NAME_UQ
+                                            LEFT JOIN RDB$INDICES i2 ON i2.RDB$INDEX_NAME = rc2.RDB$INDEX_NAME
+                                            LEFT JOIN RDB$INDEX_SEGMENTS s2 ON i2.RDB$INDEX_NAME = s2.RDB$INDEX_NAME
+                                                WHERE i.RDB$RELATION_NAME=\''.$record->TABLENAME.'\'
+                                                  AND rc.RDB$CONSTRAINT_TYPE IS NOT NULL
+                                             ORDER BY s.RDB$FIELD_POSITION');
+
+
+                //print_r ($primaryKeys);
+                $PK = [];
+                foreach ($primaryKeys as $pkid => $primaryKey) {
+                   $PK[$primaryKey->FIELD_NAME]["IS_PRIMARY_KEY"] = ($primaryKey->CONSTRAINT_TYPE === "PRIMARY KEY");
+                   $PK[$primaryKey->FIELD_NAME]["IS_FOREIGN_KEY"] = ($primaryKey->CONSTRAINT_TYPE === "FOREIGN KEY");
+                   $PK[$primaryKey->FIELD_NAME]["CONSTRAINT_TYPE"] = $primaryKey->CONSTRAINT_TYPE;
+                }
+
+
                 //Go through the tables and extract their column information
                 foreach ($tableinfo as $tid => $trecord) {
+
+
+
                     $database[trim($record->TABLENAME)][$tid]["column"] = $tid;
                     $database[trim($record->TABLENAME)][$tid]["field"] = trim($trecord->FIELD_NAME);
                     $database[trim($record->TABLENAME)][$tid]["description"] = trim($trecord->FIELD_DESCRIPTION);
@@ -2428,8 +2470,8 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                     if (!empty($trecord->NOTNULL)) {
                         $database[trim($record->TABLENAME)][$tid]["notnull"] = trim($trecord->NOTNULL);
                     }
-                    if (!empty($trecord->PK)) {
-                        $database[trim($record->TABLENAME)][$tid]["pk"] = trim($trecord->PK);
+                    if (!empty($PK[$trecord->FIELD_NAME])) {
+                        $database[trim($record->TABLENAME)][$tid]["pk"] = trim($PK[$trecord->FIELD_NAME]["CONSTRAINT_TYPE"]);
                     }
                 }
             }

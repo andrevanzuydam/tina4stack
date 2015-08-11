@@ -379,8 +379,7 @@ class Cody {
                     $code .= '$buttons = "insert,view,update,delete";'."\n";
                     $code .= '// $buttons = ["buttons" => "update,mybutton1,mybutton2", "custom" => ["mybutton1" => "<button>{field_name}</button>", "mybutton2" => "<button>{field_name}</button>" ] ];'."\n"; //custom buttons
                     $code .= ''."\n";
-                   
-                    
+
                     foreach ($table as $field) {
                         
                         $fieldType = "";
@@ -417,8 +416,6 @@ class Cody {
             "beforeupdate" => "window.alert(\'beforeupdate '.$tableName.'\');", 
             "beforedelete" => "window.alert(\'beforedelete '.$tableName.'\');"
             ];';
-                    
-                    
                     $code .= ''."\n";
                     $code .= '//Implementation for '.$tableName."\n";
                     
@@ -486,8 +483,7 @@ class Cody {
                             $code .= '<pre  class="prettyprint">'."\n".htmlentities($snippet).'</pre>'."\n";
                         }
                     }    
-                    
-                    
+
                     $code .= "<script>
                                 !function ($) {
                                   $(function(){
@@ -497,8 +493,7 @@ class Cody {
                               </script>";
                     
                     $html->byId("content")->addContent($code);
-                    
-            
+
                     echo $html;
                 }
         );        
@@ -1443,6 +1438,7 @@ class Cody {
      */
     function bootStrapForm($sql = "", $hideColumns = "", $custombuttons = null, $customFields = null, $submitAction = "", $formId = "formId", $prefix="txt", $noForm = false) {
         $fieldinfo = $this->getFieldInfo($sql);
+        $originalPrefix = $prefix;
 
         $hideColumns = explode(",", strtoupper($hideColumns));
 
@@ -1453,6 +1449,7 @@ class Cody {
         $messages = [];
 
         foreach ($fieldinfo as $fid => $field) {
+            $prefix = $originalPrefix;
 
             if (!isset($record[$fid])) {
                 $record[$fid] = null;
@@ -1504,7 +1501,10 @@ class Cody {
                         $customField->event = "";
                     if (!isset($customField->style))
                         $customField->style = "";
-                    
+
+                    if (isset($customField->prefix))
+                        $prefix = $customField->prefix;
+
                     if (!empty($customField->validation)) {
                         $message = explode(",", $customField->validation);
                         $mfound = false;
@@ -1521,9 +1521,9 @@ class Cody {
                         if ($mfound)
                             $customField->validation = join(",", $message);
 
-                        $validation[] = "txt" . strtoupper($field["name"]) . ": {" . $customField->validation . "}";
+                        $validation[] = $prefix . strtoupper($field["name"]) . ": {" . $customField->validation . "}";
                     } else {
-                        $validation[] = "txt" . strtoupper($field["name"]) . ":{required: true}";
+                        $validation[] = $prefix . strtoupper($field["name"]) . ":{required: true}";
                     }
 
                     if (empty($customField->type)) {
@@ -1558,7 +1558,7 @@ class Cody {
                         break;
                         case "date":
                             $input = input(["class" => "form-control", "type" => "text", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => $prefix . strtoupper($field["name"]), "id" => $prefix . strtoupper($field["name"])], $record[$fid]);
-                            $input .= script("$('#" . $field["name"] . "').datepicker({format: '" . strtolower($this->DEB->outputdateformat) . "'}).on('changeDate', function(ev) { console.log(ev); " . $customField["event"] . " } );");
+                            $input .= script("$('#" . $field["name"] . "').datepicker({format: '" . strtolower($this->DEB->outputdateformat) . "'}).on('changeDate', function(ev) {  " . $customField["event"] . " } );");
                             break;
                         case "toggle":
                             $checked = null;
@@ -2209,7 +2209,7 @@ class Cody {
 
                 //try some normal AJAX stuff
                 try {
-                    console.log (jsonData);
+
                     formData.append ('formData', serialize(jsonData));
 
                     xhr = new XMLHttpRequest();

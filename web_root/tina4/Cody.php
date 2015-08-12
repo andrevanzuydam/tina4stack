@@ -1339,6 +1339,12 @@ class Cody {
                                                                                            get'.$name.'Checked();
                                                                                            ' . $checkEvent . '
                                                                                 },
+                                                                                onCheckAll: function () {
+                                                                                            get'.$name.'Checked();
+                                                                                },
+                                                                                onUncheckAll: function () {
+                                                                                            get'.$name.'Checked();
+                                                                                },
                                                                                 queryParams: function (p) {  return {object: a'.$name.'object, limit: p.limit, offset :p.offset, order: p.order, search : $("#search' . $name . '").val(), sort: p.sort }
 
                                                                                 } });
@@ -2248,16 +2254,6 @@ class Cody {
                     formData.append ('formData', serialize(jsonData));
 
                     xhr = new XMLHttpRequest();
-
-                    if (targetElement != null && targetElement.tagName !== undefined && newTarget != null) {
-                        tagTarget = targetElement.tagName.toUpperCase();
-
-                        if (tagTarget !== 'INPUT' || tagTarget !== 'TEXTAREA') {
-                            targetElement.innerHTML = '<img src=\'/assets/img/ajax-loader.gif\' />';
-                        }
-                    }
-
-                    console.log ('NewMethod & newRoute', newMethod, newRoute);
                     xhr.open (newMethod, newRoute);
 
                     xhr.onload = function () {

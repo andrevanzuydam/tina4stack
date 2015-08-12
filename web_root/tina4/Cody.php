@@ -867,7 +867,7 @@ class Cody {
             
             $buttons = $object[1];
 
-
+            $customButtons = [];
             if (is_object($buttons)) {
                $customButtons = $buttons->custom;
                $buttons = $buttons->buttons;
@@ -896,8 +896,10 @@ class Cody {
                             break;
                             default:
                                //add the custom button from the list
+                               if (isset($customButtons->$button)) {
+                                   $buttons .= $customButtons->$button;
+                               }
 
-                               $buttons .= $customButtons->$button;
                             break;
                         }    
                     }               
@@ -935,12 +937,12 @@ class Cody {
                         }
                     } else
                     if ($field["type"] === "VARCHAR") {
-                        $filter[] = "upper({$field["name"]}) like '%" . strtoupper($search) . "%'";
+                        $filter[] = "upper({$field["name"]}) like '%" . str_replace("'", "''", strtoupper($search)) . "%'";
                     } else {
                         if (is_numeric($search)) {
                             $filter[] = "{$field["name"]} = '{$search}'";
                         }else{
-                            $filter[] = "upper({$field["name"]}) like '%" . strtoupper($search) . "%'";
+                            $filter[] = "upper({$field["name"]}) like '%" . str_replace("'", "''", strtoupper($search)) . "%'";
                         }
                     }
                 }
@@ -1063,7 +1065,7 @@ class Cody {
                                         $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], "" . $customField->list[$record[$fid]]. "");  
                                       }
                                         else {
-                                            $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], "Unknown Lookup");  
+                                            $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], "-");
                                         }
                                     break;    
                                     case "link":
@@ -1184,7 +1186,7 @@ class Cody {
      * @param String $checkPostURL
      * @return type
      */
-    function bootStrapTable($sql = "select * from user_detail", $buttons = "", $hideColumns = "", $toolbar = "My Grid", $customFields = null, $name = "grid", $tableInfo="", $formHideFields="", $events="", $class = "table table-striped",$rowLimit = 5, $paginate = true, $searchable = true, $checked = false, $selected_page = 1, $checkedPostURL = "", $checkSingleSelect = true, $event = "", $mobiletooltip = "") {
+    function bootStrapTable($sql = "select * from user_detail", $buttons = "", $hideColumns = "", $toolbar = "My Grid", $customFields = null, $name = "grid", $tableInfo="", $formHideFields="", $events="", $class = "table table-striped",$rowLimit = 5, $paginate = true, $searchable = true, $checked = false, $selected_page = 1, $checkedPostURL = "", $checkSingleSelect = true, $checkEvent = "", $mobiletooltip = "") {
         $DEB = $this->DEB;
         $hideColumns = explode(",", strtoupper($hideColumns));
         $object = rawurlencode(json_encode(func_get_args()));
@@ -1229,7 +1231,7 @@ class Cody {
         
         $header = "";
         if ($checked) {
-            $header .= th(["data-field" => "checked" . $name . "[]", "class" => "text-left", "data-checkbox" => "true"], "");
+            $header .= th(["data-field" => "checked" . $name . "", "class" => "text-left", "data-checkbox" => "true"], "");
         }
         foreach ($fieldInfo as $fid => $field) {
             if (!in_array(strtoupper($field["name"]), $hideColumns)) {
@@ -1276,9 +1278,10 @@ class Cody {
         
         if (empty($toolbar["buttons"])) {
             $toolbar["buttons"] = "";
+            $toolbar["buttons"] = $insertButton.$toolbar["buttons"];
         }
         
-        $toolbar["buttons"] = $insertButton.$toolbar["buttons"];
+
         
         if (empty($toolbar["filter"])) {
             $toolbar["filter"] = "";
@@ -1300,19 +1303,41 @@ class Cody {
 
         
 
-        $html = $tableHeading . div(["class" => "table-responsive"], div(["class" => "table-toolbar clearfix"], div(["class" => "toolbar-buttons"], $toolbarButtons) . div(["class" => "toolbar-filters"], $toolbarFilters)) . table($options, $header, tbody()));
-        
+        $html = div(["class" => "table-responsive"], div(["class" => "table-toolbar clearfix"], div(["class" => "toolbar-buttons"], $tableHeading.$toolbarButtons) . div(["class" => "toolbar-filters"], $toolbarFilters)) . table($options, $header, tbody()));
+
+        $html .= form(input (["type" => "hidden", "id" => $name."Checked"], ""));
         $html .= script('
+                    function get'.$name.'Checked() {
+                        var table'.$name.'Data = $table'.$name.'.bootstrapTable("getData");
+
+                        var checked'.$name.'Object = [];
+                        for (var i = 0, l = table'.$name.'Data.length; i < l; i++) {
+                            if (table'.$name.'Data[i].checked'.$name.') {
+                                checked'.$name.'Object.push(table'.$name.'Data[i].'.$tableInfo["primarykey"].'.replace(/<(?:.|\n)*?>/gm, ""));
+
+                            }
+                        }
+
+                        $("#'.$name.'Checked").val(JSON.stringify(checked'.$name.'Object));
+                    }
+
+                    function refresh'.$name.'() {
+                        $table' . $name . '.bootstrapTable("refresh", {pageNumber: 1});
+                    }
+
                     var a'.$name.'object = "' . $object . '";
+
                     var $table' . $name . ' =  $("#' . $name . '").bootstrapTable({search : false, url : "/cody/data/ajax/' . $this->DEB->tag . '",
                                                                                 method : "post",
                                                                                 onCheck: function (row) {
                                                                                             eventType = \'check\';
-                                                                                           ' . $event . '
+                                                                                            get'.$name.'Checked();
+                                                                                           ' . $checkEvent . '
                                                                                 },
                                                                                 onUnCheck: function (row) {
                                                                                            eventType = \'uncheck\';
-                                                                                           ' . $event . '
+                                                                                           get'.$name.'Checked();
+                                                                                           ' . $checkEvent . '
                                                                                 },
                                                                                 queryParams: function (p) {  return {object: a'.$name.'object, limit: p.limit, offset :p.offset, order: p.order, search : $("#search' . $name . '").val(), sort: p.sort }
 
@@ -1322,18 +1347,12 @@ class Cody {
                     $search.off("keyup").on("keyup", function (event) {
                         clearTimeout(timeoutId);
                         timeoutId = setTimeout(function () {
-
-                          $table' . $name . '.bootstrapTable("refresh", {pageNumber: 1});
-
+                            refresh'.$name.'();
                         }, 1000);
                     });
 
                   ');
 
-        if ($checked) {
-            $html = form(["method" => "post", "action" => $checkedPostURL, "enctype" => "multipart/form-data"], $html);
-        }
-        
         $html .= div (["id" => "{$name}Target"]);
         $html .= $this->ajaxHandler("", "{$name}Target", "call{$name}Ajax");
         
@@ -2138,9 +2157,7 @@ class Cody {
                 if (typeof newMethod === \"undefined\") newMethod = '{$method}';
                 if (ignoreRoute === undefined) ignoreRoute = false;
 
-
-
-                if (extraParam !== undefined || extraParam === null) {
+                if ((extraParam !== undefined || extraParam === null) && extraParam.length != 0) {
                   jsonData = extraParam === null ? [] : extraParam;
                 }
                   else {

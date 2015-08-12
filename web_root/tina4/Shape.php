@@ -58,15 +58,15 @@ class shapeBaseElement {
     function setKey($value) {
         $this->keyName = $value;
     }
-    
+
     function setParentElement($parentElement) {
-      $this->parentElement = $parentElement;  
+        $this->parentElement = $parentElement;
     }
-    
+
     function getParentElement() {
-      return $this->parentElement;
+        return $this->parentElement;
     }
-     
+
 
 }
 
@@ -80,7 +80,7 @@ class htmlElement extends shapeBaseElement {
     private $attributes;
     private $content;
     private $compress;
-    
+
     private $DS; //data sources for templating
 
     /**
@@ -92,14 +92,14 @@ class htmlElement extends shapeBaseElement {
         if (!empty($this->attributes)) {
             foreach ($this->attributes as $aid => $attribute) {
                 if (!is_array($attribute->getValue())) {
-                    
-                   
+
+
                     if ((string)$attribute->getKey() !== "0") {
-                      $html .= ' ' . $attribute->getKey() . '="' . $attribute->getValue() . '"';
+                        $html .= ' ' . $attribute->getKey() . '="' . $attribute->getValue() . '"';
                     }
-                      else {
-                       
-                      $html .= ' '.$attribute->getValue();
+                    else {
+
+                        $html .= ' '.$attribute->getValue();
                     }
                 }
             }
@@ -127,15 +127,15 @@ class htmlElement extends shapeBaseElement {
                                 }
                             }
                         } else {
-                            
+
                             if (is_object($content->getValue()) && get_class($content->getValue()) === "htmlElement") {
-                              $html .= $content->getValue();
-                            } 
-                            else {
-                                
                                 $html .= $content->getValue();
                             }
-                            
+                            else {
+
+                                $html .= $content->getValue();
+                            }
+
                         }
                     }
                 }
@@ -144,45 +144,45 @@ class htmlElement extends shapeBaseElement {
         return $html;
     }
 
-    
+
     function templateHTML ($content, $object) {
         foreach ($object as $keyName => $keyValue) {
-          $content = str_ireplace('{'.$keyName.'}', $keyValue, $content);  
-        }   
-        
+            $content = str_ireplace('{'.$keyName.'}', $keyValue, $content);
+        }
+
         return $content;
     }
-    
+
     /**
      * Compiling HTML
      * @return type
      */
     function compileHTML() {
-        $html = "";
+        $html = '';
         $attributes = $this->compileAttributes();
         $html .= str_ireplace("[attributes]", $attributes, $this->openingTag);
         $content = $this->compileContent($this->content);
-        
+
         if (!empty($this->DS)) {
             foreach ($this->DS as $dsName => $ds) {
-               if (is_array($ds)) {
-                   //not implemented yet
-                   foreach ($ds as $tid => $template) {
-                     $content = $this->templateHTML ($content, $template);
-                   }
-               } 
+                if (is_array($ds)) {
+                    //not implemented yet
+                    foreach ($ds as $tid => $template) {
+                        $content = $this->templateHTML ($content, $template);
+                    }
+                }
                 else {
-                 $content = $this->templateHTML ($content, $ds);
+                    $content = $this->templateHTML ($content, $ds);
                 }
             }
         }
-        
+
         if ($this->closingTag === "</SCRIPT>") {
             if ($this->compress && $this->closingTag === "</SCRIPT>") {
-                  $content = (new JSmin())->minify($content);  
+                $content = (new JSmin())->minify($content);
             }
         }
-      
+
         $html .= $content;
         $html .= str_ireplace("[attributes]", $attributes, $this->closingTag);
         return $html;
@@ -190,7 +190,7 @@ class htmlElement extends shapeBaseElement {
 
     /**
      * Make HTML from the Object
-     * @return type
+     * @return String HTML returned from the compile
      */
     function __toString() {
         return $this->compileHTML();
@@ -214,12 +214,12 @@ class htmlElement extends shapeBaseElement {
             foreach ($arg as $keyName => $keyValue) {
                 $this->attributes[] = new shapeBaseElement($keyName, $keyValue);
             }
-            
-            } else {
-                
-            $child = new shapeBaseElement("content", $arg);   
+
+        } else {
+
+            $child = new shapeBaseElement("content", $arg);
             $child->setParentElement($this);
-            $this->content[] = $child; 
+            $this->content[] = $child;
         }
     }
 
@@ -401,7 +401,7 @@ class htmlElement extends shapeBaseElement {
 
                     if (is_object($this->content[$cid]->getValue()) && get_class($this->content[$cid]->getValue()) === "htmlElement") {
                         if ($element->getParent() === $content->getId()) {
-                            
+
                         }
                     }
                 }
@@ -453,7 +453,7 @@ class htmlElement extends shapeBaseElement {
     }
 
     /**
-     * Clones content  
+     * Clones content
      * @param type $content
      */
     function cloneContent($content) {
@@ -513,27 +513,27 @@ class htmlElement extends shapeBaseElement {
      */
     function whenEqual ($args) {
         if (is_array($args)) {
-          $isTrue = true;  
-          foreach ($args as $key => $value) {
-            if ($key !== $value) {
-                $isTrue = false;
-                break;
+            $isTrue = true;
+            foreach ($args as $key => $value) {
+                if ($key !== $value) {
+                    $isTrue = false;
+                    break;
+                }
+
             }
-            
-          }
-          if ($isTrue) {
-              return $this;  
+            if ($isTrue) {
+                return $this;
             }
             else {
-              return (new htmlElement());    
+                return (new htmlElement());
             }
-        }   
-          else {
-          return (new htmlElement());  
         }
-        
+        else {
+            return (new htmlElement());
+        }
+
     }
-    
+
     /**
      * Function to evaluate a key value pair for a LIKE MATCH - if it is true it returns the current object
      * @param type $args
@@ -541,58 +541,58 @@ class htmlElement extends shapeBaseElement {
      */
     function whenLike ($args) {
         if (is_array($args)) {
-          $isTrue = true;  
-          foreach ($args as $key => $value) {
-            if ( stripos($key, $value) === false) {
-                $isTrue = false;
-                break;
+            $isTrue = true;
+            foreach ($args as $key => $value) {
+                if ( stripos($key, $value) === false) {
+                    $isTrue = false;
+                    break;
+                }
+
             }
-           
-          }  
-          
-           if ($isTrue) {
-              return $this;  
+
+            if ($isTrue) {
+                return $this;
             }
             else {
-              return (shape());    
+                return (shape());
             }
-        }   
-          else {
-          return (shape());  
         }
-        
+        else {
+            return (shape());
+        }
+
     }
-    
-    
-     /**
+
+
+    /**
      * Function to evaluate a key value pair for any valid boolean expression, all evaluations should be true
      * @param type $args
      * @return \htmlElement
      */
     function whenOr ($args) {
-       if (is_array($args)) {
-          $isTrue = false;  
-          foreach ($args as $key => $value) {
-            if ($value) {
-                $isTrue = true;
-                break;
+        if (is_array($args)) {
+            $isTrue = false;
+            foreach ($args as $key => $value) {
+                if ($value) {
+                    $isTrue = true;
+                    break;
+                }
             }
-          }  
-          
-           if ($isTrue) {
-              return $this;  
+
+            if ($isTrue) {
+                return $this;
             }
             else {
-              return (shape());    
+                return (shape());
             }
-        }   
-          else {
-          return (shape());  
         }
-        
+        else {
+            return (shape());
+        }
+
     }
-    
-    
+
+
     /**
      * Function to evaluate a key value pair for any valid boolean expression, all evaluations should be true
      * @param type $args
@@ -600,27 +600,27 @@ class htmlElement extends shapeBaseElement {
      */
     function whenAnd ($args) {
         if (is_array($args)) {
-          $isTrue = true;  
-          foreach ($args as $key => $value) {
-            if (!$value) {
-                $isTrue = false;
-                break;
+            $isTrue = true;
+            foreach ($args as $key => $value) {
+                if (!$value) {
+                    $isTrue = false;
+                    break;
+                }
             }
-          }  
-          
-           if ($isTrue) {
-              return $this;  
+
+            if ($isTrue) {
+                return $this;
             }
             else {
-              return (shape());    
+                return (shape());
             }
-        }   
-          else {
-          return (shape());  
         }
-        
+        else {
+            return (shape());
+        }
+
     }
-    
+
     /**
      * Add a datasource to the shape object for templating
      * @param type $object
@@ -628,11 +628,11 @@ class htmlElement extends shapeBaseElement {
     function addDataSource ( $name, $object ) {
         $this->DS[$name] = $object;
     }
-    
-    
-    
-  
-    
+
+
+
+
+
 }
 
 /**
@@ -733,7 +733,7 @@ function arrayToShapeCode($shapeArray, $level = 0) {
 
 /**
  * Convert the HTML content to Shape Code
- * @param String $content HTML from a website 
+ * @param String $content HTML from a website
  * @return String Shape code
  */
 function HTMLtoShape($content) {
@@ -1026,7 +1026,7 @@ function cite() {
 
 /**
  * Code function
- * The <code> tag is a phrase tag. It defines a piece of computer code. 
+ * The <code> tag is a phrase tag. It defines a piece of computer code.
  * @return type
  */
 function code() {
@@ -1888,7 +1888,7 @@ class JSMin {
             $command = self::ACTION_KEEP_A; // default
             if ($this->a === ' ') {
                 if (($this->lastByteOut === '+' || $this->lastByteOut === '-')
-                        && ($this->b === $this->lastByteOut)) {
+                    && ($this->b === $this->lastByteOut)) {
                     // Don't delete this space. If we do, the addition/subtraction
                     // could be parsed as a post-increment
                 } elseif (! $this->isAlphaNum($this->b)) {
@@ -1901,8 +1901,8 @@ class JSMin {
                     // in case of mbstring.func_overload & 2, must check for null b,
                     // otherwise mb_strpos will give WARNING
                 } elseif ($this->b === null
-                          || (false === strpos('{[(+-!~', $this->b)
-                              && ! $this->isAlphaNum($this->b))) {
+                    || (false === strpos('{[(+-!~', $this->b)
+                        && ! $this->isAlphaNum($this->b))) {
                     $command = self::ACTION_DELETE_A;
                 }
             } elseif (! $this->isAlphaNum($this->a)) {
@@ -1956,7 +1956,7 @@ class JSMin {
 
                 $this->lastByteOut = $this->a;
 
-                // fallthrough intentional
+            // fallthrough intentional
             case self::ACTION_DELETE_A: // 2
                 $this->a = $this->b;
                 if ($this->a === "'" || $this->a === '"') { // string literal
@@ -1985,7 +1985,7 @@ class JSMin {
                     }
                 }
 
-                // fallthrough intentional
+            // fallthrough intentional
             case self::ACTION_DELETE_A_B: // 3
                 $this->b = $this->next();
                 if ($this->b === '/' && $this->isRegexpLiteral()) {
@@ -2010,7 +2010,7 @@ class JSMin {
                                 if ($this->isEOF($this->a)) {
                                     throw new JSMin_UnterminatedRegExpException(
                                         "JSMin: Unterminated set in RegExp at byte "
-                                            . $this->inputIndex .": {$pattern}");
+                                        . $this->inputIndex .": {$pattern}");
                                 }
                             }
                         }
@@ -2045,12 +2045,12 @@ class JSMin {
             return true;
         }
 
-                // we have to check for a preceding keyword, and we don't need to pattern
-                // match over the whole output.
-                $recentOutput = substr($this->output, -10);
+        // we have to check for a preceding keyword, and we don't need to pattern
+        // match over the whole output.
+        $recentOutput = substr($this->output, -10);
 
-                // check if return/typeof directly precede a pattern without a space
-                foreach (array('return', 'typeof') as $keyword) {
+        // check if return/typeof directly precede a pattern without a space
+        foreach (array('return', 'typeof') as $keyword) {
             if ($this->a !== substr($keyword, -1)) {
                 // certainly wasn't keyword
                 continue;
@@ -2062,13 +2062,13 @@ class JSMin {
             }
         }
 
-                // check all keywords
-                if ($this->a === ' ' || $this->a === "\n") {
-                        if (preg_match('~(^|[\\s\\S])(?:case|else|in|return|typeof)$~', $recentOutput, $m)) {
-                                if ($m[1] === '' || !$this->isAlphaNum($m[1])) {
-                                        return true;
-                                }
-                        }
+        // check all keywords
+        if ($this->a === ' ' || $this->a === "\n") {
+            if (preg_match('~(^|[\\s\\S])(?:case|else|in|return|typeof)$~', $recentOutput, $m)) {
+                if ($m[1] === '' || !$this->isAlphaNum($m[1])) {
+                    return true;
+                }
+            }
         }
 
         return false;

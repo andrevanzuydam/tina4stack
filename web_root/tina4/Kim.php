@@ -506,7 +506,7 @@ class Kim {
      * @param Array $data
      * @return type
      */
-    function parseSnippets ($elements, $template, $data) {
+    private function parseSnippets ($elements, $template, $data) {
 
 
         $checkSum = "element".md5($template.print_r($elements,1).print_r($data,1));
@@ -987,7 +987,9 @@ class Kim {
                     }
 
 
-                     
+                    /**
+                     * This section here needs to be updated if there are strange characters that get passed into the system via snippet calls in the templae
+                     */
                     foreach ($elements as $eid => $element) {
                         $elementHash = md5(print_r($element,1));
                         
@@ -1001,8 +1003,17 @@ class Kim {
                         $element[0] = str_replace ('$', '\$', $element[0]);
                         $element[0] = str_replace ('"', '\"', $element[0]);
                         $element[0] = str_replace ("'", "\'", $element[0]);
-                     
-                        $template = preg_replace ('{{{'.$element[0].'}}}', $response[$elementHash], $template, 1);
+                        $element[0] = str_replace ("*", "\*", $element[0]);
+                        $element[0] = str_replace ("#", "\#", $element[0]);
+                        $element[0] = str_replace (".", "\.", $element[0]);
+                        $element[0] = str_replace (";", "\;", $element[0]);
+                        $element[0] = str_replace ("(", "\(", $element[0]);
+                        $element[0] = str_replace (")", "\)", $element[0]);
+                        $element[0] = str_replace ("+", "\+", $element[0]);
+                        $element[0] = str_replace ("-", "\-", $element[0]);
+                        $element[0] = str_replace ("`", "\`", $element[0]);
+
+                        $template = preg_replace ('{{{'.$element[0].'}}}', str_replace ("`", "\"", $response[$elementHash]), $template, 1);
 
                     }
 

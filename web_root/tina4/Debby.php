@@ -239,8 +239,8 @@ class Debby {
     
     /**
      * The default page template for maggy
-     * @param type $title String A title to name the page by
-     * @return type Shape A page template with default bootstrap
+     * @param string $title String A title to name the page by
+     * @return  Shape A page template with default bootstrap
      */
     function getPageTemplate($title="Default") {
        $html = html (

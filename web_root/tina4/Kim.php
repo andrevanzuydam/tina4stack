@@ -144,12 +144,15 @@ class Kim {
      * @return type
      */
     function getDefaultPage($pageName) {
+
+
+
         $assetFolder = Ruth::getDOCUMENT_ROOT()."/assets";
         $html = "";
         $fileName = "";
         $found = false;
         
-        
+
         
         if ($pageName === "/") {
             foreach ($this->defaultPages as $id => $page) {
@@ -161,6 +164,10 @@ class Kim {
             }
         }
         else {
+
+            if (is_dir($assetFolder.$pageName)) {
+               $pageName = $pageName."/index"; //look for an index
+            }
             foreach ($this->defaultExtensions as $eid => $extension) {
                 if (file_exists($assetFolder.$pageName.$extension)) {
                     $fileName = $assetFolder.$pageName.$extension;
@@ -169,6 +176,7 @@ class Kim {
                 }
             }
         }
+
         
         //last attempt
         if (!$found) {
@@ -662,6 +670,7 @@ class Kim {
 
     function parseTemplate ($template, $data="", $nullVars=true) {
         //echo "Parsing {$template} <br>";
+
         try {
             //get a checksum for the template
             $checkSum = "template".md5 ($template.print_r ($data,1));
@@ -689,7 +698,6 @@ class Kim {
                 $assetFolder = Ruth::getDOCUMENT_ROOT()."/assets/";
                 foreach ($this->defaultExtensions as $eid => $extension) {
                     if (file_exists($assetFolder.$template.$extension)) {
-
                         $template = file_get_contents($assetFolder.$template.$extension);
                         if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false  && !empty($data) && strpos($template, "{{") === false) {
                             xcache_set ($checkSum, $template);

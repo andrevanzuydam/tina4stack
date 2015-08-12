@@ -1,0 +1,5 @@
+<ul class="nav nav-pills">
+    <li role="presentation" {{if(strpos(Ruth::getPATH(), "/one") !== false || Ruth::getPATH() === "/examples/nav")}} class="active" {{endif}} ><a href="/examples/nav/one">One</a></li>
+    <li role="presentation" {{if(strpos(Ruth::getPATH(), "/two") !== false)}} class="active" {{endif}} ><a href="/examples/nav/two">Two</a></li>
+    <li role="presentation" {{if(strpos(Ruth::getPATH(), "/three") !== false)}} class="active" {{endif}} ><a href="/examples/nav/three">Three</a></li>
+</ul>

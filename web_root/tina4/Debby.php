@@ -2839,6 +2839,16 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
       <input type="text" name="txtDATE" value="01/10/2010">
       </form>
 
+     * @param string $fieldprefix
+     * @param string $tablename
+     * @param string $primarykey
+     * @param string $index
+     * @param string $requestvar
+     * @param string $passwordfields
+     * @param string $datefields
+     * @param bool|false $exec
+     * @param int $arrayindex
+     * @return array|bool|mixed|null|resource|string
      */
     function getUpdateSQL($fieldprefix = "edt", //Field prefix as discussed above 
             $tablename = "", //Name of the tablename

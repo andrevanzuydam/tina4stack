@@ -672,8 +672,7 @@ class Ruth {
                 self::setREQUEST($param[0], $param[1]);
                 $_REQUEST[$param[0]] = $param[1];
             }
-                        
-        
+
             unset($_REQUEST["formData"]);
             unset(Ruth::$REQUEST["formData"]);
         }
@@ -723,7 +722,7 @@ class Ruth {
      * 
      * @param String $requestMethod Either GET, PUT, POST, DELETE
      * @param String $routePath A path to be used as a route, eg. /user, variables can also be parsed /user/{id}/ and wildcards are *
-     * @param Function $routeFunction A function which will be called with the corresponding variables
+     * @param Closure $routeFunction A function which will be called with the corresponding variables
      * @param Boolean $routeIgnoreTracking Ruth uses this to give you back the last route but you may not want her to remember all the paths
      * @return Boolean Always returns true
      */
@@ -1000,14 +999,16 @@ class Ruth {
             @call_user_func_array(ONROUTE, $params);
             
         }
-        
+
+
+
         if (!$found) {
-            
+
             //before we quit, see if Kim can help us!
             if (class_exists("Kim")) {
                 
                 $pageName = Ruth::$REQUEST_URI;
-                                
+
                 $html = (new Kim())->getDefaultPage($pageName);
                 if (!empty($html)) {
                     echo $html;

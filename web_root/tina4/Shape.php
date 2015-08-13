@@ -67,6 +67,9 @@ class shapeBaseElement {
         return $this->parentElement;
     }
 
+    function __toString() {
+        return "shapeBaseElement";
+    }
 
 }
 
@@ -504,6 +507,7 @@ class htmlElement extends shapeBaseElement {
         $this->openingTag = $openingTag;
         $this->closingTag = $closingTag;
         $this->compress = $compress;
+        return $this;
     }
 
     /**
@@ -1569,6 +1573,7 @@ function samp() {
 }
 
 function script() {
+    //$html = (new htmlElement(...func_get_args()))->setTags("<SCRIPT[attributes]>", "</SCRIPT>", true);
     $html = createInstance("htmlElement", func_get_args());
     $html->setTags("<SCRIPT[attributes]>", "</SCRIPT>", true);
     return $html;

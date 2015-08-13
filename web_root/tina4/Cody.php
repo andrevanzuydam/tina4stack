@@ -445,9 +445,23 @@ class Cody {
             $events);'."\n";  
                     
                     $code .= ''."\n";
-                    $code .= '//HTML code for a form'."\n";
+                    $code .= '!===!===!BOOTSTRAP FORM!===!===!';
                     $code .= ''."\n";
-                    
+
+                    $code .= '$form =  (new Cody($this->DEB))->bootStrapForm(
+            $sql="select '.join(",", $fieldNames).' from '.$tableName.'",
+            $hideColumns="'.join(",", $primaryKeys).'",
+            $custombuttons = null,
+            $customFields,
+            $submitAction = "",
+            $formId = "form'.str_replace (" ", "", ucwords(strtolower(str_replace ("_", " ", $tableName)))).'",
+            $prefix="txt",
+            $noForm = false);';
+
+                    $code .= ''."\n";
+                    $code .= '!===!===!UPDATE STATEMENT FOR FORM POST!===!===!';
+                    $code .= ''."\n";
+
                     $code .= '!===!===!HTML FORM!===!===!';
                     $code .= '<form role="form" method="post" enctype="multipart/form-data">'."\n";
                     foreach ($fieldNames as $fid => $fieldName) {
@@ -931,8 +945,9 @@ class Cody {
             if (!empty($search)) {
                 $filter = [];
                 foreach ($fieldInfo as $cid => $field) {
-                    if ($field["type"] === "DATE") {
-                        if($this->IsDate($search)){
+
+                    if ($field["type"] === "DATE" || $field["type"] === "TIMESTAMP") {
+                        if($this->IsDate($search) && !is_numeric($search)){
                             $filter[] = "cast({$field["name"]} as char) like '%" . $DEB->translateDate($search, $DEB->outputdateformat, $DEB->dbdateformat) . "%'";
                         }
                     } else
@@ -952,7 +967,13 @@ class Cody {
 
 
             $data = $DEB->getRow("select count(*) as COUNTRECORDS from ($sql) t {$filter}");
-            $recordCount = $data->COUNTRECORDS;
+            if (!empty($data)) {
+                $recordCount = $data->COUNTRECORDS;
+            } else {
+                $recordCount = 0;
+            }
+
+
 
 
             $sql = "select first {$limit} skip {$offSet} * from ($sql) t {$filter} {$orderBy}";
@@ -977,7 +998,7 @@ class Cody {
                         }
 
 
-                        if (!in_array(strtoupper($field["name"]), $hideColumns)) {
+                        if (!in_array(strtoupper($field["alias"]), $hideColumns)) {
 
                             $fieldName = strtoupper($field["name"]);
                             $fid = strtoupper($field["name"]);
@@ -985,13 +1006,22 @@ class Cody {
                             if (isset($customFields->$fieldName)) {
                                 $customField = $customFields->$fieldName;
 
+
                                 //Populate variables in URL path
                                 if (!empty($customField->url)) {
                                     $urlPath = $customField->url;
                                     foreach ($fieldInfo as $fid2 => $field2) {
                                         $urlPath = str_ireplace("{" . $field2["name"] . "}", $record[$field2["name"]], $urlPath);
                                     }
-                                } else {
+                                }
+                                 else
+                                     if (!empty($customField->href)) {
+                                         $urlPath = $customField->href;
+                                         foreach ($fieldInfo as $fid2 => $field2) {
+                                             $urlPath = str_ireplace("{" . $field2["name"] . "}", $record[$field2["name"]], $urlPath);
+                                         }
+                                     }
+                                else {
                                     $urlPath = "";
                                 }
 
@@ -1015,7 +1045,7 @@ class Cody {
                                     }
                                     $uniq = $parsedId;
                                 } else {
-                                    $parsedId = "";
+                                    $parsedId = $fid.$rid;
                                 }
 
                                 //Populate variables in comment field
@@ -1069,7 +1099,7 @@ class Cody {
                                         }
                                     break;    
                                     case "link":
-                                        $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], area(["id" => $parsedId, "href" => $urlPath, "onclick" => $onClickEvent], "" . $record[$fid] . ""));
+                                        $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], a(["id" => $parsedId, "href" => $urlPath, "onclick" => $onClickEvent], "" . $record[$fid] . ""));
                                         break;
                                     case "checkbox":
                                         $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], "" . $record[$fid] . "");
@@ -1107,15 +1137,21 @@ class Cody {
                                         break;
                                 }
                             } else {
-
-                                $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"]], "" . $record[$fid] . "");
+                                if (!empty($record[strtoupper($field["name"])])) {
+                                    $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"]], "" . $record[strtoupper($field["name"])] . "");
+                                } else {
+                                    $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"]], "" . $record[strtoupper($field["alias"])] . "");
+                                }
                             }
                         }
 
 
                         if ($rowButtons !== "") {
-
-                            $rowButtons = str_ireplace("{" . $field["name"] . "}", $record[strtoupper($field["name"])], $rowButtons."");
+                            if (!empty($record[strtoupper($field["name"])])) {
+                                $rowButtons = str_ireplace("{" . $field["name"] . "}", $record[strtoupper($field["name"])], $rowButtons . "");
+                            }    else {
+                                $rowButtons = str_ireplace("{" . $field["name"] . "}", $record[strtoupper($field["alias"])], $rowButtons . "");
+                            }
                         }    
 
 
@@ -1186,7 +1222,7 @@ class Cody {
      * @param String $checkPostURL
      * @return type
      */
-    function bootStrapTable($sql = "select * from user_detail", $buttons = "", $hideColumns = "", $toolbar = "My Grid", $customFields = null, $name = "grid", $tableInfo="", $formHideFields="", $events="", $class = "table table-striped",$rowLimit = 5, $paginate = true, $searchable = true, $checked = false, $selected_page = 1, $checkedPostURL = "", $checkSingleSelect = true, $checkEvent = "", $mobiletooltip = "") {
+    function bootStrapTable($sql = "select * from user_detail", $buttons = "", $hideColumns = "", $toolbar = "My Grid", $customFields = null, $name = "grid", $tableInfo="", $formHideFields="", $events="", $class = "table table-striped",$rowLimit = 10, $paginate = true, $searchable = true, $checked = false, $selected_page = 1, $checkedPostURL = "", $checkSingleSelect = true, $checkEvent = "", $mobiletooltip = "") {
         $DEB = $this->DEB;
         $hideColumns = explode(",", strtoupper($hideColumns));
         $object = rawurlencode(json_encode(func_get_args()));
@@ -1194,12 +1230,25 @@ class Cody {
         if ($paginate) {
             $paginating = "true";
         }
+
+        $sortName = "";
+        $sortOrder = "";
+        if (!empty($toolbar["sortName"])) {
+            $sortName = $toolbar["sortName"];
+        }
+
+        if (!empty($toolbar["sortOrder"])) {
+            $sortOrder = $toolbar["sortOrder"];
+        }
+
         $options = ["id" => $name, "class" => $class, "data-toolbar" => "#toolbar" . $name,
             "data-pagination" => "{$paginating}",
             "data-side-pagination" => "server",
             "data-search" => "false",
             "data-page-list" => "[5, 10, 20, 50, 100, 200]",
-            "data-page-size" => $rowLimit
+            "data-page-size" => $rowLimit,
+            "data-sort-name" => "{$sortName}",
+            "data-sort-order"=> "{$sortOrder}"
         ];
 
         if ($searchable) {
@@ -1220,9 +1269,7 @@ class Cody {
                 
       
         $data = @$DEB->getRow("select first 1 * from ({$sql}) t ");
-         
-    
-        
+
         $fieldInfo = @$DEB->fieldinfo;
 
         if (empty($fieldInfo)) {
@@ -1234,7 +1281,7 @@ class Cody {
             $header .= th(["data-field" => "checked" . $name . "", "class" => "text-left", "data-checkbox" => "true"], "");
         }
         foreach ($fieldInfo as $fid => $field) {
-            if (!in_array(strtoupper($field["name"]), $hideColumns)) {
+            if (!in_array(strtoupper($field["alias"]), $hideColumns)) {
 
                 if (isset($customFields[$field["name"]])) {
                     $customField = $customFields[$field["name"]];
@@ -1252,7 +1299,7 @@ class Cody {
                             break;
                         case "hidden":
                             $header .= th(["data-field" => $field["name"], "class" => "hidden"], ucwords(str_replace("_", " ", strtolower($field["alias"]))));
-                            break;
+                        break;
                     }
                 } else {
                     $header .= th(["data-field" => $field["name"], "class" => "text-" . $field["align"], "data-sortable" => "true"], ucwords(str_replace("_", " ", strtolower($field["alias"]))));
@@ -1300,6 +1347,10 @@ class Cody {
 
 
         $toolbarFilters = div(["class" => "form-inline", "role" => "form"], $toolbarFilters);
+
+        if (empty($tableInfo["primarykey"])) {
+            $tableInfo["primarykey"] = $fieldInfo[0]["name"];
+        }
 
         
 
@@ -1395,7 +1446,7 @@ class Cody {
     }
 
     /**
-     * @todo generate unique id identifier for tab ids
+     * Tab function to make boot strap tabs from an array
      * @param array $tabs
      * @return string
      *

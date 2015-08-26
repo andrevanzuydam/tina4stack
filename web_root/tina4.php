@@ -9,7 +9,8 @@
  * 
  * */
 //Default rights which should be allowed in TINA4 if roles are going to be used
-$_TINA4_SYSTEM_ROUTES = ["/cody/*", "/maggy/*", "/phpinfo", "/kim/*", "/debby/*", "/tessa/*"];
+global $_TINA4_SYSTEM_ROUTES;
+$_TINA4_SYSTEM_ROUTES = ["/cody/*", "/maggy/*", "/phpinfo", "/kim/*", "/debby/*", "/tessa/*", "/debug"];
 $_TINA4_LOAD_PATHS = "";
 
 //Funky output message
@@ -27,9 +28,7 @@ if (file_exists(realpath(__DIR__ . "/tina4") . "/Shape.php")) {
     tina4Message("Please check your tina4 installation, we cannot find includes local to your web root");
     die();
 }
-
-
-        
+   
 //include shape for the project
 require_once "Shape.php";
 //include Ruth for the routing
@@ -88,6 +87,10 @@ if (!empty(TINA4_SESSION)) {
     if (!empty(TINA4_RUTH_DEBUG)) {
         if (TINA4_RUTH_DEBUG) {
             Ruth::DEBUG();
+
+            Ruth::addRoute(RUTH_POST, "/debug", function() {
+                echo  file_get_contents(Ruth::getREAL_PATH()."/ajax_debug.log");
+            });
         }
     }
 } else {

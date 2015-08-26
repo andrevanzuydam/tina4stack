@@ -24,9 +24,10 @@ define("TINA4_SESSION", "TINA4");
 /**
  * Set ruth debugging on for better debugging
  */
-define("TINA4_RUTH_DEBUG", false);
+define("TINA4_RUTH_DEBUG", true);
 
 /** 
  * Disable the cache for development or if you don't like it 
  */
-define("TINA4_DISABLE_CACHE", true); //this means we ignore the cache
+define("TINA4_DISABLE_CACHE", false); //this means we ignore the cache
+

@@ -374,7 +374,18 @@ class Cody {
         }
 
         $this->DEB = $DEB;
-        
+
+        Ruth::addRoute(RUTH_GET, "/cody/swagger",
+            function () {
+                require(Ruth::getDOCUMENT_ROOT()."/swagger-php/vendor/autoload.php");
+                $swagger = \Swagger\scan(Ruth::getDOCUMENT_ROOT().'/routes');
+                header('Content-Type: application/json');
+                echo $swagger;
+            }
+
+        );
+
+
         Ruth::addRoute(RUTH_GET, "/cody/create/{tableName}" ,
                 function ($tableName) {
                     $html = $this->getPageTemplate("Generate Code for {$tableName}");

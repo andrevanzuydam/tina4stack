@@ -117,7 +117,7 @@ class Kim {
                         break;
                     default:
                         echo "{$controller} not found";
-                    break;
+                        break;
                 }
             }
         );
@@ -136,8 +136,8 @@ class Kim {
             }
         );
     }
-    
-    
+
+
     /**
      * Gets the default page to display where possible which will be found under assets
      * @param String $pageName The page to try and load or the path to load
@@ -151,9 +151,9 @@ class Kim {
         $html = "";
         $fileName = "";
         $found = false;
-        
 
-        
+
+
         if ($pageName === "/") {
             foreach ($this->defaultPages as $id => $page) {
                 if (file_exists($assetFolder."/pages/".$page)) {
@@ -166,7 +166,7 @@ class Kim {
         else {
 
             if (is_dir($assetFolder.$pageName)) {
-               $pageName = $pageName."/index"; //look for an index
+                $pageName = $pageName."/index"; //look for an index
             }
             foreach ($this->defaultExtensions as $eid => $extension) {
                 if (file_exists($assetFolder.$pageName.$extension)) {
@@ -177,7 +177,7 @@ class Kim {
             }
         }
 
-        
+
         //last attempt
         if (!$found) {
             if (strpos($pageName, "pages") === false) {
@@ -188,8 +188,8 @@ class Kim {
                         $found = true;
                         break;
                     }
-                }      
-           } 
+                }
+            }
         }
 
         if (file_exists($fileName)) {
@@ -430,67 +430,67 @@ class Kim {
      */
     function getCallParams($input) {
         $results = [];
-        
+
         $return = [1,2];
         $counter = 0;
-        
+
         while (count($return) > 1 ) {
             if ($input[0] === '"') {
                 $return = explode ('",', $input, 2);
-            } else 
-            if ($input[0] === '[') {
-                $return = explode ('],', $input, 2);
-            } else {
-                $return = explode (',', $input, 2);
-            }   
-            
+            } else
+                if ($input[0] === '[') {
+                    $return = explode ('],', $input, 2);
+                } else {
+                    $return = explode (',', $input, 2);
+                }
+
             if (count($return) > 1) {
-                
+
                 $param = $return[0];
                 if ($param[0] === "[") {
                     $param .= "]";
-                } 
-                    else
-                if ($param[0] === "\"") {
-                    $param .= "\"";
-                }    
-                
+                }
+                else
+                    if ($param[0] === "\"") {
+                        $param .= "\"";
+                    }
+
                 $results[] = $param;
-                
+
                 if (!empty($return[1])) {
                     $input = $return[1];
                 }
             } else {
-                 $results[] = $input;
-                 $input = "";    
+                $results[] = $input;
+                $input = "";
             }
         }
-        
+
         foreach ($results as $rid => $result) {
             if ($result[0] === "\"") {
                 $results[$rid] = substr ($result,1,-1);
             } else
-            if ($result[0] === "[") {
-                $result = substr ($result,1,-1);
-                $result = explode ("|", $result);
-                $values = [];
-                foreach ($result as $rrid => $rValue) {
-                    $rValue = explode ("=", $rValue, 2);
-                    $values[$rValue[0]] = $rValue[1];
+                if ($result[0] === "[") {
+                    $result = substr ($result,1,-1);
+                    $result = explode ("|", $result);
+                    $values = [];
+                    foreach ($result as $rrid => $rValue) {
+                        $rValue = explode ("=", $rValue, 2);
+                        $values[$rValue[0]] = $rValue[1];
+                    }
+                    $results[$rid] = $values;
                 }
-                $results[$rid] = $values;
-            }
 
             if (!is_array($results[$rid])) {
                 if ($result[0] === "\$") {
                     eval ('$results[$rid] = '.$result.';');
                 }
-                    else {
-                        $results[$rid] = $this->parseTemplate($results[$rid]);
-                    }
+                else {
+                    $results[$rid] = $this->parseTemplate($results[$rid]);
+                }
             }
         }
-        
+
         return $results;
     }
 
@@ -722,7 +722,7 @@ class Kim {
                 foreach ($code as $cid => $codeValue) {
 
                     $codeValue = explode ('?>', $codeValue);
-                   
+
                     if (count($codeValue) > 1) {
                         $snippets .= $codeValue[0]."\n";
                     }
@@ -789,10 +789,10 @@ class Kim {
             $elements = $parsedSnippets["elements"];
             $controls = $parsedSnippets["controls"];
             $template = $parsedSnippets["template"];
-            
+
             //print_r ($controls);
             if (!empty($controls)) {
-                
+
                 foreach ($controls as $cid => $control) {
                     //go through all the ifs
                     $ifResult = "";
@@ -805,12 +805,12 @@ class Kim {
                             if (!empty($data)) {
                                 preg_match_all ($this->varRegex, $myIf, $variables);
                                 foreach ($variables[1] as $index => $variable) {
-                                    
-                                   
+
+
                                     eval ('if (isset($data->'.$variable.')) { $variableValue = "{$data->'.$variable.'}";  }');
                                     if ((isset($variableValue) && !empty($variableValue)) || (isset($variableValue) && $variableValue === "0")) {
                                         $myIf = $this->parseValue("{" . $variable . "}", $variableValue , $myIf);
-                                    } 
+                                    }
                                 }
                             }
                             @eval ($myIf);
@@ -838,7 +838,7 @@ class Kim {
                 }
 
             }
-          
+
             if (!empty($elements)) {
 
                 $response = [];
@@ -847,27 +847,27 @@ class Kim {
                     $elementParts = explode (":", $element[0], 2);
 
                     $elementHash = md5(print_r($element,1));
-                    
-                    
 
-                  
+
+
+
                     $response[$elementHash] = "";
 
                     switch ($elementParts[0]) {
                         case "call":
                             $callParts = explode("?", $elementParts[1], 2);
-                           
+
                             if (!empty($callParts[1])) {
                                 $params = $this->getCallParams($callParts[1]);
                             }
                             else {
                                 $params = [];
                             }
-                            
-                       
+
+
 
                             if (function_exists($callParts[0])) {
-                                 $response[$elementHash] = call_user_func_array($callParts[0],$params);
+                                $response[$elementHash] = call_user_func_array($callParts[0],$params);
                             }
                             else {
                                 $response[$elementHash] = "Function: {$callParts[0]} not found";
@@ -884,45 +884,45 @@ class Kim {
                                     if (!empty($data)) {
                                         preg_match_all ($this->varRegex, $elementParts[1], $variables);
                                         foreach ($variables[1] as $index => $variable) {
-                                            
+
                                             eval ('if (isset($data->'.$variable.')) { $variableValue = "{$data->'.$variable.'}";  }');
                                             if ((isset($variableValue) && !empty($variableValue)) || (isset($variableValue) && $variableValue === "0")) {
-                                              $elementParts[1] = $this->parseValue("{" . $variable . "}", $variableValue, $elementParts[1]);
+                                                $elementParts[1] = $this->parseValue("{" . $variable . "}", $variableValue, $elementParts[1]);
                                             }
                                         }
                                     }
                                 }
                                 $callParts = explode("?", $elementParts[1], 2);
-                                
+
                                 if (!empty($callParts[1])) {
                                     $params = $this->getCallParams($callParts[1]);
                                 }
-                                  else {
-                                      $params = [];
+                                else {
+                                    $params = [];
                                 }
-                                
-                              
-                                
-                                
+
+
+
+
                                 if (strpos($callParts[0], ":") !== false) {
                                     try {
                                         if (method_exists($elementParts[0], str_replace(":", "", $callParts[0]))) {
                                             $result = call_user_func_array(array($elementParts[0],  str_replace(":", "", $callParts[0])), $params);
                                         }
-                                            else {
-                                                $result = "[Could not call static \"".str_replace(":", "", $callParts[0])."\" on \"{$elementParts[0]}\"]";  
-                                            }
+                                        else {
+                                            $result = "[Could not call static \"".str_replace(":", "", $callParts[0])."\" on \"{$elementParts[0]}\"]";
+                                        }
                                     } catch (Exception $e) {
-                                      $result = "[Could not call static \"{$callParts[0]}\" on \"{$elementParts[0]}\"]";  
+                                        $result = "[Could not call static \"{$callParts[0]}\" on \"{$elementParts[0]}\"]";
                                     }
-                                    
+
                                 } else {
                                     $classObject = "";
                                     eval ('$classObject = new '.$elementParts[0].'();');
                                     try {
                                         if (method_exists($classObject, $callParts[0])) {
                                             $result = call_user_func_array(array($classObject, $callParts[0]), $params);
-                                           
+
                                         }
                                         else {
                                             $result = "[Could not call \"{$callParts[0]}\" on \"{$elementParts[0]}\"]";
@@ -930,9 +930,9 @@ class Kim {
                                     } catch (Exception $e) {
                                         $result = "[Could not call \"{$callParts[0]}\" on \"{$elementParts[0]}\"]";
                                     }
-                                
+
                                 }
-                                
+
                                 if (is_array($result)) {
                                     $result = (object) $result;
                                 }
@@ -942,11 +942,11 @@ class Kim {
                                     $html = "";
 
                                     foreach ($result as $rid => $resultData) {
-                                        
+
                                         if (!empty($element["snippet"])) {
                                             if (!empty($data)) { //merge the looped data with the initial seeded data
                                                 $resultData = (object) array_merge((array) $resultData, (array) $data);
-                                            }    
+                                            }
                                             $html .= $this->parseTemplate($element["snippet"], $resultData);
                                         }
                                     }
@@ -955,7 +955,7 @@ class Kim {
 
                                 }
                                 else {
-                                   
+
                                     $response[$elementHash] = $result;
                                 }
 
@@ -967,17 +967,17 @@ class Kim {
                             break;
                     }
                 }
-                    
-               
+
+
 
 
                 if (strpos($template, "{{") !== false) {
 
                     if (!empty($data)) {
-                        
+
                         preg_match_all ($this->varRegex, $template, $variables);
                         foreach ($variables[1] as $index => $variable) {
-                            
+
                             if (property_exists($data, $variable)) {
                                 if (!empty($data->$variable."")) {
                                     $template = $this->parseValue("{" . $variable . "}", $data->$variable, $template);
@@ -992,7 +992,7 @@ class Kim {
                      */
                     foreach ($elements as $eid => $element) {
                         $elementHash = md5(print_r($element,1));
-                        
+
                         $element[0] = str_replace ("?", '\?', $element[0]);
                         $element[0] = str_replace ("|", '\|', $element[0]);
                         $element[0] = str_replace ("=", '\=', $element[0]);
@@ -1022,8 +1022,8 @@ class Kim {
                 }
 
             }
-             
-            
+
+
             //see if we can parse the data variable
             if (!empty($data)) {
                 if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false && empty(xcache_get(md5(print_r($data,1))))) {
@@ -1047,27 +1047,27 @@ class Kim {
                     xcache_set (md5(print_r($data,1)), serialize($data));
                 }
                 else
-                if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false && !empty(xcache_get(md5(print_r($data,1))))) {
+                    if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false && !empty(xcache_get(md5(print_r($data,1))))) {
 
                         $data = unserialize(xcache_get (md5(print_r($data,1))));
-                } else { 
-                    foreach ($data as $keyName => $keyValue) {
-                        if (class_exists ("finfo")) {
-                            $fi = new finfo(FILEINFO_MIME);
-                            $mimeType = explode (";", $fi->buffer($keyValue));
+                    } else {
+                        foreach ($data as $keyName => $keyValue) {
+                            if (class_exists ("finfo")) {
+                                $fi = new finfo(FILEINFO_MIME);
+                                $mimeType = explode (";", $fi->buffer($keyValue));
 
-                            if ($mimeType[0] !== "text/html" && $mimeType[0] !== "text/plain" && $mimeType[0] !== "application/octet-stream" && $mimeType[0] !== "application/x-empty") {
+                                if ($mimeType[0] !== "text/html" && $mimeType[0] !== "text/plain" && $mimeType[0] !== "application/octet-stream" && $mimeType[0] !== "application/x-empty") {
 
-                                if (is_object($data)) {
-                                    $data->$keyName = (new Debby())->encodeImage($keyValue, $imagestore = "/imagestore", $size = "", $noimage = "/imagestore/noimage.jpg");
-                                } else {
-                                    $data[$keyName] = (new Debby())->encodeImage($keyValue, $imagestore = "/imagestore", $size = "", $noimage = "/imagestore/noimage.jpg");
+                                    if (is_object($data)) {
+                                        $data->$keyName = (new Debby())->encodeImage($keyValue, $imagestore = "/imagestore", $size = "", $noimage = "/imagestore/noimage.jpg");
+                                    } else {
+                                        $data[$keyName] = (new Debby())->encodeImage($keyValue, $imagestore = "/imagestore", $size = "", $noimage = "/imagestore/noimage.jpg");
+                                    }
+                                    //$value = "data:".$mimeType[0].";base64,".base64_encode($value);
                                 }
-                                //$value = "data:".$mimeType[0].";base64,".base64_encode($value);
                             }
                         }
-                    }    
-                }    
+                    }
 
                 foreach ($data as $name => $value) {
                     $template = $this->parseValue("{".$name."}", $value, $template);
@@ -1082,7 +1082,7 @@ class Kim {
                     if (count($testVar) > 1 && strpos($testVar[0], "[") === false) {
                         eval('if (empty($'.$testVar[0].')) { global $'.$testVar[0].'; }');
                     }
-                   
+
                     if (!is_numeric($element)) {
 
                         if (strpos($element,'$') !== false) {
@@ -1094,9 +1094,9 @@ class Kim {
                             if ($nullVars) {
                                 $template = str_replace ("{".$element."}", "", $template);
                             }
-                                else {
-                                    $template = str_replace ("{".$element."}", "{".$element."}", $template);
-                                }
+                            else {
+                                $template = str_replace ("{".$element."}", "{".$element."}", $template);
+                            }
                         }
                         else {
                             $template = str_replace ("{".$element."}", $var, $template);
@@ -1128,13 +1128,12 @@ class Kim {
                 title ($title),
                 alink (["rel" => "stylesheet", "href"=>"https://maxcdn.bootstrapcdn.com/bootswatch/latest/cosmo/bootstrap.min.css"]),
                 alink (["rel" => "stylesheet", "href"=> "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css"]),
-                alink (["rel" => "stylesheet", "href"=> "http://jonmiles.github.io/bootstrap-treeview/css/bootstrap-treeview.css"]),
-                script(["src" => "http://code.jquery.com/jquery-2.1.4.min.js"]),
+                alink (["rel" => "stylesheet", "href"=> "https://jonmiles.github.io/bootstrap-treeview/css/bootstrap-treeview.css"]),
+                script(["src" => "https://code.jquery.com/jquery-2.1.4.min.js"]),
                 script(["src"=> "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"]),
                 script(["src" => "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.js"]),
-                script(["src" => "http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"]),
-                script(["src" => "http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/additional-methods.min.js"]),
-                script(["src" => "http://cdnjs.buttflare.com/ajax/libs/interact.js/1.2.4/interact.min.js" ]),
+                script(["src" => "https://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"]),
+                script(["src" => "https://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/additional-methods.min.js"]),
                 script(["src" => "//cdn.ckeditor.com/4.5.1/standard/ckeditor.js"])
             ),
             body (["style" => "padding: 0px 20px 0px"],
@@ -1216,9 +1215,8 @@ class Kim {
             (new Cody())->bootStrapInput("txtNAME", "Menu Name", "The name for the menu"),
             (new Cody())->bootStrapLookup("txtTARGET", "Menu Target", ["_self" => "Self", "_blank" => "Blank ( New Tab )"]),
             (new Cody())->bootStrapInput("txtPATH", "Menu Path", "The path for the menu"),
-            (new Cody())->bootStrapLookup("txtPARENT_ID", "Menu Parent", $this->KIM->getKeyValue("select menu_id, name from menu where (system_menu = 0 or menu_id = 0)")),
-            (new Cody())->bootStrapCheckbox("cbROLE", $this->KIM->getKeyValue("select role_id, name from role")),
-            (new Cody())->bootStrapButton("btnAdd", "Add", "$('#formMenu').submit(); if ( $('#formMenu').validate().errorList.length == 0 ) { callAjax('/kim/menu/insert', 'left_nav', null, 'post');}")
+            (new Cody())->bootStrapLookup("txtPARENT_ID", "Menu Parent", $this->KIM->getKeyValue("select menu_id, name from menu order by name")),
+            (new Cody())->bootStrapButton("btnAdd", "Add", "$('#formMenu').submit(); if ( $('#formMenu').validate().errorList.length == 0 ) { callAjax('/kim/menu/insert', 'left_nav', '', 'post', true);}")
         ));
 
         // add validation
@@ -1306,9 +1304,9 @@ class Kim {
                 (new Cody())->bootStrapLookup("txtTARGET", "Menu Target", ["_self" => "Self", "_blank" => "Blank ( New Tab )"], $menu->TARGET),
                 (new Cody())->bootStrapInput("txtPATH", "Menu Path", "The path for the menu", $menu->PATH),
                 (new Cody())->bootStrapInput("txtORDER_INDEX", "Order Index", "The order index for the menu", $menu->ORDER_INDEX),
-                (new Cody())->bootStrapLookup("txtPARENT_ID", "Menu Parent", $this->KIM->getKeyValue("select menu_id, name from menu where (system_menu = 0 or menu_id = 0) "), $menu->PARENT_ID),
-                (new Cody())->bootStrapButton("btnDelete", "Delete", "$('#formMenu').submit(); if ( confirm('Delete this menu item?') ) { callAjax('/kim/menu/delete', 'right_nav', null, 'post');}", "btn btn-danger pull-right", "col-md-12", true),
-                (new Cody())->bootStrapButton("btnUpdate", "Save", "$('#formMenu').submit(); if ( $('#formMenu').validate().errorList.length == 0 ) { callAjax('/kim/menu/update', 'left_nav', null, 'post');}", "btn btn-primary pull-right", "col-md-12", true)
+                (new Cody())->bootStrapLookup("txtPARENT_ID", "Menu Parent", $this->KIM->getKeyValue("select menu_id, name from menu order by name "), $menu->PARENT_ID),
+                (new Cody())->bootStrapButton("btnDelete", "Delete", "$('#formMenu').submit(); if ( confirm('Delete this menu item?') ) { callAjax('/kim/menu/delete', 'right_nav', '', 'post', true);}", "btn btn-danger pull-right", "col-md-12", true),
+                (new Cody())->bootStrapButton("btnUpdate", "Save", "$('#formMenu').submit(); if ( $('#formMenu').validate().errorList.length == 0 ) { callAjax('/kim/menu/update', 'left_nav', '', 'post', true);}", "btn btn-primary pull-right", "col-md-12", true)
             )
         );
 
@@ -1316,9 +1314,9 @@ class Kim {
 
     }
 
-    function getMenuTree($filter = "where parent_id = 0 and menu_id <> 0", $menuId=0) {
+    function getMenuTree($filter = "where (parent_id = 0 and menu_id <> 0)", $menuId=0) {
         $menus = $this->KIM->getRows("select m.*, (select count(menu_id) from menu where parent_id = m.menu_id ) as count_children from menu m {$filter} order by order_index");
-        $style = style ('@import "http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css";
+        $style = style ('@import "https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css";
 
                               ul.tree {
   margin: 0;
@@ -1443,7 +1441,7 @@ ul.tree > li > ul > li > ul > li > a > label:before {
 
                     ), a(["style" => "float: right", "onclick" => "callAjax('/kim/menu/get/{$menu->MENU_ID}', 'right_nav');"], "edit")          );
                 } else {
-                    $html->byId("menu_tree{$menuId}")->addContent (li  (["id" => "menu{$menu->MENU_ID}"],  a(["onclick" => "callAjax('/kim/menu/get/{$menu->MENU_ID}', 'right_nav');"], label (["for"=> "menu{$menu->MENU_ID}"], $menu->NAME), input(["type" => "checkbox", "checked", "id"=> "menu{$menu->MENU_ID}"]) )) );
+                    $html->byId("menu_tree{$menuId}")->addContent (li  (["id" => "menu{$menu->MENU_ID}"],  a(["onclick" => "callAjax('/kim/menu/get/{$menu->MENU_ID}', 'right_nav', '', 'get', true);"], label (["for"=> "menu{$menu->MENU_ID}"], $menu->NAME), input(["type" => "checkbox", "checked", "id"=> "menu{$menu->MENU_ID}"]) )) );
                 }
 
                 if ($menu->COUNT_CHILDREN > 0) {
@@ -1756,7 +1754,7 @@ ul.tree > li > ul > li > ul > li > a > label:before {
 
     function authenticate() {
         $user = $this->KIM->getRow("select * from user where email = '".Ruth::getREQUEST("txtEMAIL")."'");
-		
+
         if (password_verify(Ruth::getREQUEST("txtPASSWORD"), $user->PASSWD)) {
             Ruth::setSESSION("KIM", ["loggedin" => 1, "user" => $user]);
             Ruth::redirect("/kim/routes");
@@ -2317,10 +2315,10 @@ ul.tree > li > ul > li > ul > li > a > label:before {
                     break;
                 case "/kim/content":
                     $content .= $this->getContentEditor();
-                break;
+                    break;
                 case "/kim/login":
                     Ruth::redirect("/kim/login");
-                break;    
+                    break;
                 default:
                     $content .= "Please implement the menu option ".Ruth::getPATH();
                     break;

@@ -1,0 +1,133 @@
+<style>
+    .console {
+        position: absolute;
+        overflow: hidden;
+        bottom: 0;
+        right: 50px;
+        width: 70%;
+        margin: 0 auto;
+        height: 25px;
+        background: #e7e7e7;
+        border: 1px solid #dbdbdb;
+        border-radius: 6px 6px 0 0;
+        padding: 10px;
+        padding-top: 0;
+        transition: height 0.5s ease-in-out;
+        z-index:99999;
+    }
+    .console .console-heading {
+        margin: 0;
+        color: #333333;
+        font-size: .9em;
+        padding: 6px 0;
+        font-family: monospace;
+        cursor: pointer;
+    }
+    .console .toggle-size {
+        outline: none;
+        border: none;
+        width: 20px;
+        height: 23px;
+        border-radius: 50%;
+        position: absolute;
+        text-align: center;
+        top: -2px;
+        right: 0px;
+        background: #e7e7e7;
+        transition: all 0.2s ease-in-out;
+    }
+    .console .toggle-size .line-1,
+    .console .toggle-size .line-2 {
+        height: 2px;
+        display: block;
+        width: 6px;
+        background: #333333;
+        position: absolute;
+        transition: all 0.1s ease-in-out;
+    }
+    .console .toggle-size .line-1:first-child,
+    .console .toggle-size .line-2:first-child {
+        transform: rotate(45deg);
+        top: 14px;
+        left: 3px;
+    }
+    .console .toggle-size .line-1:last-child,
+    .console .toggle-size .line-2:last-child {
+        transform: rotate(135deg);
+        top: 14px;
+        left: 0px;
+    }
+    .console .output-window {
+        padding: 10px;
+        border: 1px solid #c1c1c1;
+        background: #333333;
+        height: 93%;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        white-space: pre;
+        font-family: monospace;
+        overflow: hidden;
+        font-size: .9em;
+        color: greenyellow;
+    }
+
+    .console .output-window::selection {
+        background: rgba(173,255,47,.3);
+    }
+    .console .output-window::-moz-selection {
+        background: rgba(173,255,47,.3);
+    }
+
+    .console.open .output-window {
+        overflow: auto;
+    }
+
+    .console.open {
+        height: 70%;
+        transition: height 0.5s ease-in-out;
+    }
+    .console.open .toggle-size .line-1,
+    .console.open .toggle-size .line-2 {
+        width: 12px;
+        transition: all 0.1s ease-in-out;
+    }
+    .console.open .toggle-size .line-1 {
+        left: 0px;
+    }
+</style>
+
+
+<form><input type="hidden" id="console_state" name="console_state" value="{_REQUEST["console_state"]}" ></form>
+<div class="console {_REQUEST["console_state"]}"   >
+
+<h3 onclick="makeItSo()" class="console-heading">Debug Console</h3>
+<button class="toggle-size">
+    <span class="line-1"></span>
+    <span class="line-2"></span>
+</button>
+<div class="output-window" id="output-window">{CODE}</div>
+{{Cody:ajaxHandler?"","",callDebug}}
+</div>
+<script>
+    function refreshDebug() {
+
+        callDebug('/debug', 'output-window', '', 'post', true);
+        setTimeout(refreshDebug, 4000);
+    }
+
+
+    //Like Picard!
+    function makeItSo() {
+        if (document.getElementById('console_state').value !== 'open') {
+            document.getElementById('console_state').value = 'open';
+        }
+        else {
+            document.getElementById('console_state').value = '';
+        }
+        $(".console").toggleClass("open");
+
+
+    }
+
+    setTimeout(refreshDebug, 4000);
+</script>

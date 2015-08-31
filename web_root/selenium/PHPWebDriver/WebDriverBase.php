@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-require_once('WebDriverEnvironment.php');
-require_once('WebDriverExceptions.php');
+require('WebDriverEnvironment.php');
+require('WebDriverExceptions.php');
 
 abstract class PHPWebDriver_WebDriverBase {
   public static function throwException($status_code, $message, $results) {

@@ -244,11 +244,11 @@ class Cody {
         $ckeditorCheck = " if (CKEDITOR !== undefined) {  } ";
         switch ($action) {
             case "insert":
-                $customButtons = $this->bootStrapButton("btnInsert", "Save", " {$ckeditorCheck} $('#form{$name}').submit(); if ( $('#form{$name}').validate().errorList.length == 0 ) {  call{$name}Ajax('/cody/form/insert/post','{$name}Target', {object : a{$name}object, record: null, db: '{$db}' }) } ", "btn btn-success", "", true);
+                $customButtons = $this->bootStrapButton("btnInsert", "Save", " {$ckeditorCheck} $('#form{$name}').submit(); if ( $('#form{$name}').validate().errorList.length == 0 ) {   this.disabled = true; this.innerHTML = 'Saving...';   call{$name}Ajax('/cody/form/insert/post','{$name}Target', {object : a{$name}object, record: null, db: '{$db}' }) } ", "btn btn-success", "", true);
                 $customButtons .= $this->bootStrapButton("btnInsertCancel", "Cancel", $closeAction, "btn btn-warning", "", true);                
             break;    
             case "update":
-                $customButtons = $this->bootStrapButton("btnUpdate", "Save", "  {$ckeditorCheck} $('#form{$name}').submit(); if ( $('#form{$name}').validate().errorList.length == 0 ) {  call{$name}Ajax('/cody/form/update/post','{$name}Target', {object : a{$name}object, record: '".  urlencode(json_encode($record) )."', db: '{$db}' }) } ", "btn btn-success", "", true);
+                $customButtons = $this->bootStrapButton("btnUpdate", "Save", "  {$ckeditorCheck} $('#form{$name}').submit(); if ( $('#form{$name}').validate().errorList.length == 0 ) {  this.disabled = true; this.innerHTML = 'Saving...';   call{$name}Ajax('/cody/form/update/post','{$name}Target', {object : a{$name}object, record: '".  urlencode(json_encode($record) )."', db: '{$db}' }) } ", "btn btn-success", "", true);
                 $customButtons .= $this->bootStrapButton("btnUpdateCancel", "Cancel", $closeAction, "btn btn-warning", "", true);                
             break;    
             default:
@@ -384,8 +384,7 @@ class Cody {
             }
 
         );
-
-
+        
         Ruth::addRoute(RUTH_GET, "/cody/create/{tableName}" ,
                 function ($tableName) {
                     $html = $this->getPageTemplate("Generate Code for {$tableName}");
@@ -456,23 +455,9 @@ class Cody {
             $events);'."\n";  
                     
                     $code .= ''."\n";
-                    $code .= '!===!===!BOOTSTRAP FORM!===!===!';
+                    $code .= '//HTML code for a form'."\n";
                     $code .= ''."\n";
-
-                    $code .= '$form =  (new Cody($this->DEB))->bootStrapForm(
-            $sql="select '.join(",", $fieldNames).' from '.$tableName.'",
-            $hideColumns="'.join(",", $primaryKeys).'",
-            $custombuttons = null,
-            $customFields,
-            $submitAction = "",
-            $formId = "form'.str_replace (" ", "", ucwords(strtolower(str_replace ("_", " ", $tableName)))).'",
-            $prefix="txt",
-            $noForm = false);';
-
-                    $code .= ''."\n";
-                    $code .= '!===!===!UPDATE STATEMENT FOR FORM POST!===!===!';
-                    $code .= ''."\n";
-
+                    
                     $code .= '!===!===!HTML FORM!===!===!';
                     $code .= '<form role="form" method="post" enctype="multipart/form-data">'."\n";
                     foreach ($fieldNames as $fid => $fieldName) {
@@ -677,7 +662,7 @@ class Cody {
                         //TODO: determine the password and date fields            
                         foreach ($fieldInfo as $fid => $field) {
                             
-                            if ($field["type"] === "DATETIME" || $field["type"] === "DATE") {
+                            if ($field["type"] === "DATETIME" || $field["type"] === "DATE" || $field["type"] === "TIMESTAMP") {
                                 $dateFields[] = $field["name"];
                             }
                         }
@@ -911,7 +896,7 @@ class Cody {
                                 $buttons .= (new Cody())->bootStrapButton("btnInsertGrid".$name, "Add", "{$beforeInsert} call{$name}Ajax('/cody/form/insert','{$name}Target', {object : a{$name}object, record: a{recordid}{$name}record, db: '{$db}' })", "btn btn-success", "", true);
                             break;
                             case "update":
-                                $buttons .= (new Cody())->bootStrapButton("btnEditGrid".$name, "Edit", "{$beforeUpdate} call{$name}Ajax('/cody/form/update','{$name}Target', {object : a{$name}object, record: a{recordid}{$name}record, db: '{$db}' })", "btn btn-primary", "", true);
+                                $buttons .= (new Cody())->bootStrapButton("btnEditGrid".$name, "Edit", " {$beforeUpdate}  call{$name}Ajax('/cody/form/update','{$name}Target', {object : a{$name}object, record: a{recordid}{$name}record, db: '{$db}' })", "btn btn-primary", "", true);
                             break;
                             case "delete":
                                 $buttons .= (new Cody())->bootStrapButton("btnDeleteGrid".$name, "Del", "{$beforeDelete} if (confirm('Are you sure you want to delete this record ?')) { call{$name}Ajax('/cody/form/delete','{$name}Target', {object : a{$name}object, record: a{recordid}{$name}record, db: '{$db}' }) }", "btn btn-danger", "", true);
@@ -956,9 +941,8 @@ class Cody {
             if (!empty($search)) {
                 $filter = [];
                 foreach ($fieldInfo as $cid => $field) {
-
-                    if ($field["type"] === "DATE" || $field["type"] === "TIMESTAMP") {
-                        if($this->IsDate($search) && !is_numeric($search)){
+                    if ($field["type"] === "DATE") {
+                        if($this->IsDate($search)){
                             $filter[] = "cast({$field["name"]} as char) like '%" . $DEB->translateDate($search, $DEB->outputdateformat, $DEB->dbdateformat) . "%'";
                         }
                     } else
@@ -978,13 +962,7 @@ class Cody {
 
 
             $data = $DEB->getRow("select count(*) as COUNTRECORDS from ($sql) t {$filter}");
-            if (!empty($data)) {
-                $recordCount = $data->COUNTRECORDS;
-            } else {
-                $recordCount = 0;
-            }
-
-
+            $recordCount = $data->COUNTRECORDS;
 
 
             $sql = "select first {$limit} skip {$offSet} * from ($sql) t {$filter} {$orderBy}";
@@ -1009,7 +987,7 @@ class Cody {
                         }
 
 
-                        if (!in_array(strtoupper($field["alias"]), $hideColumns)) {
+                        if (!in_array(strtoupper($field["name"]), $hideColumns)) {
 
                             $fieldName = strtoupper($field["name"]);
                             $fid = strtoupper($field["name"]);
@@ -1017,22 +995,13 @@ class Cody {
                             if (isset($customFields->$fieldName)) {
                                 $customField = $customFields->$fieldName;
 
-
                                 //Populate variables in URL path
                                 if (!empty($customField->url)) {
                                     $urlPath = $customField->url;
                                     foreach ($fieldInfo as $fid2 => $field2) {
                                         $urlPath = str_ireplace("{" . $field2["name"] . "}", $record[$field2["name"]], $urlPath);
                                     }
-                                }
-                                 else
-                                     if (!empty($customField->href)) {
-                                         $urlPath = $customField->href;
-                                         foreach ($fieldInfo as $fid2 => $field2) {
-                                             $urlPath = str_ireplace("{" . $field2["name"] . "}", $record[$field2["name"]], $urlPath);
-                                         }
-                                     }
-                                else {
+                                } else {
                                     $urlPath = "";
                                 }
 
@@ -1056,7 +1025,7 @@ class Cody {
                                     }
                                     $uniq = $parsedId;
                                 } else {
-                                    $parsedId = $fid.$rid;
+                                    $parsedId = "";
                                 }
 
                                 //Populate variables in comment field
@@ -1110,7 +1079,7 @@ class Cody {
                                         }
                                     break;    
                                     case "link":
-                                        $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], a(["id" => $parsedId, "href" => $urlPath, "onclick" => $onClickEvent], "" . $record[$fid] . ""));
+                                        $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], area(["id" => $parsedId, "href" => $urlPath, "onclick" => $onClickEvent], "" . $record[$fid] . ""));
                                         break;
                                     case "checkbox":
                                         $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"] . " " . $extraclass], "" . $record[$fid] . "");
@@ -1148,21 +1117,15 @@ class Cody {
                                         break;
                                 }
                             } else {
-                                if (!empty($record[strtoupper($field["name"])])) {
-                                    $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"]], "" . $record[strtoupper($field["name"])] . "");
-                                } else {
-                                    $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"]], "" . $record[strtoupper($field["alias"])] . "");
-                                }
+
+                                $row[$field["name"]] = "" . div(["class" => "text-" . $field["align"]], "" . $record[$fid] . "");
                             }
                         }
 
 
                         if ($rowButtons !== "") {
-                            if (!empty($record[strtoupper($field["name"])])) {
-                                $rowButtons = str_ireplace("{" . $field["name"] . "}", $record[strtoupper($field["name"])], $rowButtons . "");
-                            }    else {
-                                $rowButtons = str_ireplace("{" . $field["name"] . "}", $record[strtoupper($field["alias"])], $rowButtons . "");
-                            }
+
+                            $rowButtons = str_ireplace("{" . $field["name"] . "}", $record[strtoupper($field["name"])], $rowButtons."");
                         }    
 
 
@@ -1233,7 +1196,7 @@ class Cody {
      * @param String $checkPostURL
      * @return type
      */
-    function bootStrapTable($sql = "select * from user_detail", $buttons = "", $hideColumns = "", $toolbar = "My Grid", $customFields = null, $name = "grid", $tableInfo="", $formHideFields="", $events="", $class = "table table-striped",$rowLimit = 10, $paginate = true, $searchable = true, $checked = false, $selected_page = 1, $checkedPostURL = "", $checkSingleSelect = true, $checkEvent = "", $mobiletooltip = "") {
+    function bootStrapTable($sql = "select * from user_detail", $buttons = "", $hideColumns = "", $toolbar = "My Grid", $customFields = null, $name = "grid", $tableInfo="", $formHideFields="", $events="", $class = "table table-striped",$rowLimit = 5, $paginate = true, $searchable = true, $checked = false, $selected_page = 1, $checkedPostURL = "", $checkSingleSelect = true, $checkEvent = "", $mobiletooltip = "") {
         $DEB = $this->DEB;
         $hideColumns = explode(",", strtoupper($hideColumns));
         $object = rawurlencode(json_encode(func_get_args()));
@@ -1241,25 +1204,12 @@ class Cody {
         if ($paginate) {
             $paginating = "true";
         }
-
-        $sortName = "";
-        $sortOrder = "";
-        if (!empty($toolbar["sortName"])) {
-            $sortName = $toolbar["sortName"];
-        }
-
-        if (!empty($toolbar["sortOrder"])) {
-            $sortOrder = $toolbar["sortOrder"];
-        }
-
         $options = ["id" => $name, "class" => $class, "data-toolbar" => "#toolbar" . $name,
             "data-pagination" => "{$paginating}",
             "data-side-pagination" => "server",
             "data-search" => "false",
             "data-page-list" => "[5, 10, 20, 50, 100, 200]",
-            "data-page-size" => $rowLimit,
-            "data-sort-name" => "{$sortName}",
-            "data-sort-order"=> "{$sortOrder}"
+            "data-page-size" => $rowLimit
         ];
 
         if ($searchable) {
@@ -1280,7 +1230,9 @@ class Cody {
                 
       
         $data = @$DEB->getRow("select first 1 * from ({$sql}) t ");
-
+         
+    
+        
         $fieldInfo = @$DEB->fieldinfo;
 
         if (empty($fieldInfo)) {
@@ -1292,7 +1244,7 @@ class Cody {
             $header .= th(["data-field" => "checked" . $name . "", "class" => "text-left", "data-checkbox" => "true"], "");
         }
         foreach ($fieldInfo as $fid => $field) {
-            if (!in_array(strtoupper($field["alias"]), $hideColumns)) {
+            if (!in_array(strtoupper($field["name"]), $hideColumns)) {
 
                 if (isset($customFields[$field["name"]])) {
                     $customField = $customFields[$field["name"]];
@@ -1310,7 +1262,7 @@ class Cody {
                             break;
                         case "hidden":
                             $header .= th(["data-field" => $field["name"], "class" => "hidden"], ucwords(str_replace("_", " ", strtolower($field["alias"]))));
-                        break;
+                            break;
                     }
                 } else {
                     $header .= th(["data-field" => $field["name"], "class" => "text-" . $field["align"], "data-sortable" => "true"], ucwords(str_replace("_", " ", strtolower($field["alias"]))));
@@ -1358,10 +1310,6 @@ class Cody {
 
 
         $toolbarFilters = div(["class" => "form-inline", "role" => "form"], $toolbarFilters);
-
-        if (empty($tableInfo["primarykey"])) {
-            $tableInfo["primarykey"] = $fieldInfo[0]["name"];
-        }
 
         
 
@@ -1457,7 +1405,7 @@ class Cody {
     }
 
     /**
-     * Tab function to make boot strap tabs from an array
+     * @todo generate unique id identifier for tab ids
      * @param array $tabs
      * @return string
      *
@@ -1687,6 +1635,24 @@ class Cody {
                             $input = input(["type" => "hidden", "name" => "MAX_FILE_SIZE"], "4194304");
                             $input .= input(["class" => "btn btn-primary", "type" => "file", "name" => $prefix . strtoupper($field["name"]), "id" => $prefix . strtoupper($field["name"]), "onclick" => $customField->event], ucwords(str_replace("_", " ", strtolower($field["alias"]))));
                         break;
+                        case "video":
+                            $input = input(["type" => "hidden", "name" => "MAX_FILE_SIZE"], "4194304");
+                            $filename = "video".md5($record[$fid]).".mp4";
+                            //check first if the file exists
+                            if(!file_exists($filename)) {
+                                if (!file_exists($_SERVER["DOCUMENT_ROOT"]."/videostore")) {
+                                    mkdir ($_SERVER["DOCUMENT_ROOT"]."/videostore");
+                                }
+                               file_put_contents(Ruth::getDOCUMENT_ROOT()."/videostore/".$filename, $record[$fid]);
+                            }
+                            //make the vidoe player view
+                            $input .= video( [ "class" => "thumbnail", "width"=>"250", "height"=>"160", "controls"=>"true" ],
+                                            source( ["src" => "/videostore/{$filename}"]),
+                                            source( ["src" =>"/videostore/novideo.mp4"])
+                                            );
+                            $input .= input(["class" => "btn btn-primary", "type" => "file", "name" => $prefix . strtoupper($field["name"]), "id" => $prefix . strtoupper($field["name"]), "onclick" => $customField->event], ucwords(str_replace("_", " ", strtolower($field["alias"]))));
+                        break;
+
                         case "text":
                             $input = input(["class" => "form-control", "type" => "text", "placeholder" => ucwords(str_replace("_", " ", strtolower($field["alias"]))), "name" => $prefix . strtoupper($field["name"]), "id" => $prefix . strtoupper($field["name"])], $record[$fid]);
                         break;
@@ -1730,8 +1696,12 @@ class Cody {
                             break;
                         default:
                             $colWidth = "col-md-6";
+
+                            if (!empty($customField->colWidth)) {
+                                $colWidth = $customField->colWidth;
+                            }
                             
-                            if (strtoupper($customField->type) === "IMAGE" || strtoupper($customField->type) === "TEXTAREA" || strtoupper($customField->type) === "CUSTOM") {
+                            if ( (strtoupper($customField->type) === "IMAGE" && empty($customField->colWidth) ) || strtoupper($customField->type) === "TEXTAREA"  )  {
                                 $colWidth = "col-md-12";
                               
                             }
@@ -1748,6 +1718,8 @@ class Cody {
                     $colWidth = "col-md-6";
                     $html .= div(["class" => "form-group", "id" => "form-group {$colWidth}" . $field["name"]], label(["id" => "label" . $field["name"], "for" => $field["name"]], ucwords(str_replace("_", " ", strtolower($field["alias"])))), $input);
                 }
+            } else {
+                $html .= input(["class" => "form-control hidden", "type" => "hidden",  "name" => strtoupper($field["name"]), "id" => strtoupper($field["name"])], $record[$fid]);
             }
         }
 

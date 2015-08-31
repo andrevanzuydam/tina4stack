@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+require('WebDriverContainer.php');
+
 final class PHPWebDriver_WebDriverElement extends PHPWebDriver_WebDriverContainer {
   protected function methods() {
     return array(

@@ -7,7 +7,8 @@ Tina4 - This is not another framework. The download you will get consists of the
 * Nginx Webserver
 * PHP with XDebug
 * Report Manager compiled for web supporting MySQL, Firebird, SQLite
-* PHPDoc
+* Doxygen
+* Swagger UI
 * Selenium libraries
 * Netbeans project to get started quickly.
 

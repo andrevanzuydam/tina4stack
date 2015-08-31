@@ -2,7 +2,7 @@
 
 /**
  * The database system on which the tina4stack connects to databases
- * 
+ *
  * @author Andre van Zuydam <andre@xineoh.com>
  * @license GPL
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -33,11 +33,11 @@ if (get_magic_quotes_gpc()) {
 }
 
 /**
- *  Debby is the database class 
- * 
+ *  Debby is the database class
+ *
  *  Debby is for developers just beginning with PHP database development, it takes the differences between the PHP database implementations and
  *  makes it easy to work and switch between the databases.  It also acts as the testing platform for the SQL translation tool.
- * 
+ *
  *  @author Andre van Zuydam <andre@xineoh.com>
  */
 class Debby {
@@ -60,7 +60,7 @@ class Debby {
     var $RAWRESULT;
     var $lastrowid; //for sqlite autoincrement fields
     var $tag; //tag for the database to be used in calls
-    
+
     /*
       Function to encode raw image data
       caches the image into a folder for quick cleanup
@@ -68,24 +68,24 @@ class Debby {
       $imagestore = the path to the file where it must be created.
      */
     function encodeImage($imagedata, $imagestore = "imagestore", $size = "", $noimage = "/imagestore/noimage.jpg") {
-       
+
         if (!file_exists($_SERVER["DOCUMENT_ROOT"].$noimage)) {
             if (!file_exists($_SERVER["DOCUMENT_ROOT"]."/".$imagestore)) {
-              mkdir ($_SERVER["DOCUMENT_ROOT"]."/".$imagestore);
+                mkdir ($_SERVER["DOCUMENT_ROOT"]."/".$imagestore);
             }
             $imagePath = "http://lorempixel.com/200/200/people/".rand(0,10)."/";
             $image = file_get_contents($imagePath);
-           
+
             file_put_contents ($_SERVER["DOCUMENT_ROOT"].$noimage, $image);
-            
+
         }
-                
+
         $createthumbnail = false;
         if ($size != "")
             $createthumbnail = true;
         if ($imagedata == "" && $size != "") {
             if (strpos($noimage, "http") === false) {
-               $noimage = $_SERVER["DOCUMENT_ROOT"]. $noimage; 
+                $noimage = $_SERVER["DOCUMENT_ROOT"]. $noimage;
             }
             $imagedata = file_get_contents($noimage);
         }
@@ -114,7 +114,7 @@ class Debby {
                     //we don't know what file it is
                     $makethumbnail = false;
                 }
-                if ($makethumbnail) {                    
+                if ($makethumbnail) {
                     $thumbsize = explode("x", $size);
                     $thumbw = $thumbsize[0];
                     $thumbh = $thumbsize[1];
@@ -133,15 +133,15 @@ class Debby {
                     }
                     $thumbw = (int) ( $thumbw );
                     $thumbh = (int) ( $thumbh );
-                    
+
                     $imagethumb = imagecreatetruecolor($thumbw, $thumbh);
                     $white = imagecolorallocate($imagethumb, 255, 255, 255);
                     imagefill($imagethumb, 0, 0, $white);
-                    
+
                     //http://php.net/manual/en/function.imagecopyresampled.php - rayg at daylongraphics dot com 
                     $lowend = 0.8;
                     $highend = 1.25;
-                    
+
                     $scaleX = (float)$thumbw / $imagesrcw;
                     $scaleY = (float)$thumbh / $imagesrch;
                     $scale = min($scaleX, $scaleY);
@@ -160,7 +160,7 @@ class Debby {
                         $dstX = (int)(0.5 * ($thumbw - $dstW));
                         $dstY = (int)(0.5 * ($thumbh - $dstH));
                     }
-                    
+
                     //echo "copying {$newthumbw}X{$newthumbh} image";		
                     if (!imagecopyresampled($imagethumb, $imagesrc, $dstX, $dstY, 0, 0,$dstW, $dstH, $imagesrcw, $imagesrch)) {
                         imagedestroy($imagethumb);
@@ -190,7 +190,7 @@ class Debby {
             }
         }
     }
-    
+
     /*
       Function to embed raw image as base64
      */
@@ -200,7 +200,7 @@ class Debby {
                 die("You need to enable php_fileinfo.dll in your php.ini");
             }
             $f = finfo_open();
-            
+
             $mime_type = finfo_buffer($f, $rawImage, FILEINFO_MIME_TYPE);
 
             return '<img src="data:'.$mime_type.';base64,'.base64_encode($rawImage).'"/>';
@@ -236,80 +236,80 @@ class Debby {
     function getLastError() {
         return $this->lasterror[count($this->lasterror) - 1];
     }
-    
+
     /**
      * The default page template for maggy
      * @param string $title String A title to name the page by
      * @return  Shape A page template with default bootstrap
      */
     function getPageTemplate($title="Default") {
-       $html = html (
-                    head (
-                            title ($title),
-                            alink (["rel" => "stylesheet", "href"=>"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"]),
-                            alink (["rel" => "stylesheet", "href"=> "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"]),
-                            alink (["rel" => "stylesheet", "href"=> "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css"])
-                            
-                            
-                    ),
-                    body (  ["style" => "padding: 0px 20px 0px", "id" => "content"])
-               
-               );  
-       return $html; 
-    }
-    
-    
-    function createConnection() {
-        $dbElements = ["sqlite3" => "SQLite3",
-                       "mysql" => "MySQL",
-                       "firebird" => "Firebird",
-                       "mssql" => "MSSQL",
-                       "postgres" => "PostgreSQL",
-                      ];
-        
-        $dateFormat = [ "mm/dd/YYYY" => "mm/dd/YYYY",
-                        "dd/mm/YYYY" => "dd/mm/YYYY",
-                        "YYYY-mm-dd" => "YYYY-mm-dd"
-                      ];
-        
-        $html = $this->getPageTemplate("Create Database Connection");
-        $form = form (["class" => "form-group", "method" => "post",  "enctype" => "multipart/form-data"], 
-                    (new Cody())->bootStrapInput("txtNAME", $caption = "Connection Name", $placeHolder = "Connection Name", $defaultValue = "connection"),
-                    (new Cody())->bootStrapInput("txtALIAS", $caption = "Connection Alias (DEB)", $placeHolder = "Connection Alias", $defaultValue = "DEB"),
-                    (new Cody())->bootStrapLookup ("txtDBTYPE", $caption = "Database Type", $dbElements , $defaultValue = "sqlite3"),
-                    (new Cody())->bootStrapInput("txtDBPATH", $caption = "Database Path", $placeHolder = "hostname:dbname_dbpath", $defaultValue = ""),
-                    (new Cody())->bootStrapInput("txtUSERNAME", $caption = "Username", $placeHolder = "Username", $defaultValue = "", "text", ""),
-                    (new Cody())->bootStrapInput("txtPASSWORD", $caption = "Password", $placeHolder = "Password", $defaultValue = "", "text", ""),
-                    (new Cody())->bootStrapLookup ("txtDATEFORMAT", $caption = "Date Format", $dateFormat , $defaultValue = "YYYY-mm-dd"),
-                    (new Cody())->bootStrapButton("btnCreate", $caption = "Create")
-                );
-        
-        if (!empty(Ruth::getSESSION("debbyCreateMessage"))) {
-           $html->addContent ((new Cody())->bootStrapAlert("success", $caption="Success", Ruth::getSESSION("debbyCreateMessage")));  
-           Ruth::setSESSION("debbyCreateMessage", null);
-        }
-        
-        $form = (new Cody())->bootStrapPanel("Create Database Connection", $form);
-        $html->addContent ($form);
-        
-       
-        
+        $html = html (
+            head (
+                title ($title),
+                alink (["rel" => "stylesheet", "href"=>"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"]),
+                alink (["rel" => "stylesheet", "href"=> "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"]),
+                alink (["rel" => "stylesheet", "href"=> "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css"])
+
+
+            ),
+            body (  ["style" => "padding: 0px 20px 0px", "id" => "content"])
+
+        );
         return $html;
     }
-    
+
+
+    function createConnection() {
+        $dbElements = ["sqlite3" => "SQLite3",
+            "mysql" => "MySQL",
+            "firebird" => "Firebird",
+            "mssql" => "MSSQL",
+            "postgres" => "PostgreSQL",
+        ];
+
+        $dateFormat = [ "mm/dd/YYYY" => "mm/dd/YYYY",
+            "dd/mm/YYYY" => "dd/mm/YYYY",
+            "YYYY-mm-dd" => "YYYY-mm-dd"
+        ];
+
+        $html = $this->getPageTemplate("Create Database Connection");
+        $form = form (["class" => "form-group", "method" => "post",  "enctype" => "multipart/form-data"],
+            (new Cody())->bootStrapInput("txtNAME", $caption = "Connection Name", $placeHolder = "Connection Name", $defaultValue = "connection"),
+            (new Cody())->bootStrapInput("txtALIAS", $caption = "Connection Alias (DEB)", $placeHolder = "Connection Alias", $defaultValue = "DEB"),
+            (new Cody())->bootStrapLookup ("txtDBTYPE", $caption = "Database Type", $dbElements , $defaultValue = "sqlite3"),
+            (new Cody())->bootStrapInput("txtDBPATH", $caption = "Database Path", $placeHolder = "hostname:dbname_dbpath", $defaultValue = ""),
+            (new Cody())->bootStrapInput("txtUSERNAME", $caption = "Username", $placeHolder = "Username", $defaultValue = "", "text", ""),
+            (new Cody())->bootStrapInput("txtPASSWORD", $caption = "Password", $placeHolder = "Password", $defaultValue = "", "text", ""),
+            (new Cody())->bootStrapLookup ("txtDATEFORMAT", $caption = "Date Format", $dateFormat , $defaultValue = "YYYY-mm-dd"),
+            (new Cody())->bootStrapButton("btnCreate", $caption = "Create")
+        );
+
+        if (!empty(Ruth::getSESSION("debbyCreateMessage"))) {
+            $html->addContent ((new Cody())->bootStrapAlert("success", $caption="Success", Ruth::getSESSION("debbyCreateMessage")));
+            Ruth::setSESSION("debbyCreateMessage", null);
+        }
+
+        $form = (new Cody())->bootStrapPanel("Create Database Connection", $form);
+        $html->addContent ($form);
+
+
+
+        return $html;
+    }
+
     function updateConnection(){
         $html = "";
         $fileName = Ruth::getDOCUMENT_ROOT()."/connections/".Ruth::getREQUEST("txtNAME").".php";
-        
+
         $codeString = '<?php
 global $'.Ruth::getREQUEST("txtALIAS").'; 
 $'.Ruth::getREQUEST("txtALIAS").' = new Debby( "'.Ruth::getREQUEST("txtDBPATH").'", "'.Ruth::getREQUEST("txtUSERNAME").'", "'.Ruth::getREQUEST("txtPASSWORD").'", "'.Ruth::getREQUEST("txtDBTYPE").'", "'.Ruth::getREQUEST("txtDATEFORMAT").'" );
 Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIAS").');';
-        
-        file_put_contents($fileName, $codeString );          
-                
+
+        file_put_contents($fileName, $codeString );
+
         Ruth::setSESSION("debbyCreateMessage", "{$fileName} created successfully!");
-        Ruth::redirect("/debby/create");      
+        Ruth::redirect("/debby/create");
         return $html;
     }
 
@@ -461,13 +461,13 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
     }
 
     /**
-      BEGIN Close
+    BEGIN Close
      */
     function close() {
         if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false) {
             xcache_clear_cache(1);
         }
-        
+
         $result = false;
         if (!$this->dbh) {
             trigger_error("No database handle, use connect first in " . __METHOD__ . " for " . $this->dbtype, E_USER_WARNING);
@@ -515,11 +515,11 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
 
     /**
      * Start Transaction
-     * 
+     *
      * This starts a transaction if you database engine supports it and returns the transaction id
      * The returned transaction id can be used for rolling back a transaction
-     *  
-     * @return Pointer A transaction id pointing to the transaction 
+     *
+     * @return Pointer A transaction id pointing to the transaction
      */
     function startTransaction() {
         $result = false;
@@ -535,7 +535,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             trigger_error("Needs to be implemented");
         } else /* SQLite3 */ if ($this->dbtype == "sqlite3") {
             //No transaction handling in this driver as of yet
-            $result = "Resource id #0"; 
+            $result = "Resource id #0";
         } else /* Firebird */ if ($this->dbtype == "firebird") {
             $result = @ibase_trans(IBASE_DEFAULT, $this->dbh);
         } else /* Oracle */ if ($this->dbtype == "oracle") {
@@ -564,11 +564,11 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
 
     /**
      * Rollback Transaction
-     * 
+     *
      * This starts a transaction if you database engine supports it and returns the transaction id
      * The returned transaction id can be used for rolling back a transaction
-     *  
-     * @return Pointer A transaction id pointing to the transaction 
+     *
+     * @return Pointer A transaction id pointing to the transaction
      */
     function rollbackTransaction($handle) {
         $result = false;
@@ -606,8 +606,8 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
     }
 
     /**
-      BEGIN set_database
-     * 
+    BEGIN set_database
+     *
      * This is more for a MYSQL type database where you can choose a different database once a connection has been made
      */
     function setDatabase($dbname) {
@@ -667,17 +667,17 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             $sql = str_replace("`", "\"", $sql);
             $sql = str_ireplace(" text,", " blob sub_type 0,", $sql);
         } else
-        if ($this->dbtype == "mssql" || $this->dbtype == "mssqlnative") {
-            $sql = str_replace("first", "top", $sql);
-            $sql = str_replace("||", "+", $sql);
-            $sql = str_replace("timestamp", "datetime", $sql);
-        }
+            if ($this->dbtype == "mssql" || $this->dbtype == "mssqlnative") {
+                $sql = str_replace("first", "top", $sql);
+                $sql = str_replace("||", "+", $sql);
+                $sql = str_replace("timestamp", "datetime", $sql);
+            }
         if ($this->dbtype == "sqlite3") {
             $sql = str_replace("'now'", "current_timestamp", $sql);
         }
-        
+
         if ($this->dbtype == "mysql") {
-            
+
             $sql = str_replace("'now'", "CURRENT_TIMESTAMP", $sql);
             $sql = str_replace("'datetime'", "DATETIME", $sql);
         }
@@ -719,7 +719,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                 }
             } else if (( $this->dbtype == "mysql" || $this->dbtype == "sqlite3" ) && stripos($sql, "first ") !== false) {
                 //select first 1 skip 10 must become 
-                 
+
                 $firsts = $this->getInstance("first", $parsedsql);
 
                 if (count($firsts) > 0) {
@@ -811,7 +811,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         }
 
         $this->lastsql[count($this->lastsql)] = $parsedsql; // save the last sql  
-        
+
         return $parsedsql;
     }
 
@@ -854,8 +854,8 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         for ($i = 1; $i < sizeof($inputvalues); $i++) {
             $tryme = $inputvalues[$i];
             if (strpos($tryme."", "Resource id #") !== false) {
-              continue;  
-            }           
+                continue;
+            }
             if ($this->dbtype != "CUBRID")
                 $inputvalues[$i] = str_replace("'", "''", $inputvalues[$i]); //some strings have single ' which make it break on replacing!
             if ($this->dbtype == "mysql") {
@@ -868,12 +868,12 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             if ($this->dbtype == "sqlite") {
                 $inputvalues[$i] = sqlite_escape_string($inputvalues[$i]);
             } else
-            if ($this->dbtype == "sqlite3") {
-                $inputvalues[$i] = $this->escapeString($inputvalues[$i]);
-            } else
-            if ($this->dbtype == "CUBRID") {
-                $inputvalues[$i] = $this->escapeString($inputvalues[$i]);
-            }
+                if ($this->dbtype == "sqlite3") {
+                    $inputvalues[$i] = $this->escapeString($inputvalues[$i]);
+                } else
+                    if ($this->dbtype == "CUBRID") {
+                        $inputvalues[$i] = $this->escapeString($inputvalues[$i]);
+                    }
             $inputvalues[$i] = "'" . $inputvalues[$i] . "'";
             $lastpos = 1;
             while ($lastpos <> 0) {
@@ -903,8 +903,8 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false) {
             xcache_clear_cache(1);
         }
-        
-        
+
+
         $this->error = ""; // reset the last error;   
         $result = false;
 
@@ -962,10 +962,10 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                 $result .= "No Errors\n";
             }
         } else /* SQLite3 */ if ($this->dbtype == "sqlite3") {
-            
+
             if (strpos($sql, "?") !== false) {
                 //echo "here";
-                
+
                 $statement = $this->dbh->prepare($sql);
 
                 if ($statement) {
@@ -978,32 +978,32 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                             $params[$i] = func_get_arg($i);
                         }
                     }
-                        
-                    
+
+
                     foreach ($params as $pid => $param) {
-                        
+
                         if (is_float($param)) {
-                                //echo "binding {$pid} float"; 
-                                $statement->bindValue($pid, $param, \SQLITE3_FLOAT);
-                            } else
+                            //echo "binding {$pid} float";
+                            $statement->bindValue($pid, $param, \SQLITE3_FLOAT);
+                        } else
                             if (is_int($param)) {
                                 //echo "binding {$pid} int"; 
                                 $statement->bindValue($pid,  $param, \SQLITE3_INTEGER);
                             } else
-                            if (is_string($param)) {
-                                //echo "binding  {$pid} text"; 
-                                $statement->bindValue($pid, $param, \SQLITE3_TEXT);
-                            }
-                         else {
-                            //echo "binding blob  ";
-                            $statement->bindValue($pid, $param, \SQLITE3_BLOB);
-                        }
+                                if (is_string($param)) {
+                                    //echo "binding  {$pid} text";
+                                    $statement->bindValue($pid, $param, \SQLITE3_TEXT);
+                                }
+                                else {
+                                    //echo "binding blob  ";
+                                    $statement->bindValue($pid, $param, \SQLITE3_BLOB);
+                                }
                     }
-                    
-                    
-                   
+
+
+
                     $result = $statement->execute();
-                    
+
                     if (!empty($result)) {
                         $result = true;
                     }
@@ -1039,7 +1039,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                 $query = @ibase_prepare($this->dbh, $sql);
             }
 
-           
+
             $params[0] = $query;
             if (sizeof($params) != 0) {
                 $result = @call_user_func_array("ibase_execute", $params);
@@ -1051,7 +1051,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             if (strpos ($result." ", "Resource") !== false ) {
                 $result = $this->getRow($result);
             }
-            
+
         } else /* Oracle */ if ($this->dbtype == "oracle") {
 
             $sql = $this->setParams($sql, $inputvalues);
@@ -1069,15 +1069,15 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                     //add the last error message
                     $this->lasterror[count($this->lasterror)] = $this->dbh->error;
                 }
-                
+
                 if ($result === "No Errors") {
-                  $this->lastrowid = $this->dbh->insert_id;
-                }        
+                    $this->lastrowid = $this->dbh->insert_id;
+                }
             } else {
                 $sql = $this->setParams($sql, $inputvalues);
                 $result = @mysql_query($sql, $this->dbh);
                 $this->lastrowid = $this->dbh->insert_id;
-                
+
                 if ($result != false) {
                     $result = "No Errors";
                 } else {
@@ -1124,7 +1124,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false) {
             xcache_clear_cache(1);
         }
-        
+
         if (!$this->dbh) {
             trigger_error("No database handle, use connect first in " . __METHOD__ . " for " . $this->dbtype, E_USER_WARNING);
         } else /* ODBC Connection */ if ($this->dbtype == "odbc") {
@@ -1134,35 +1134,35 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         } else /* CUBRID */ if ($this->dbtype == "CUBRID") {
             $result = @cubrid_commit($this->dbh);
         } else /* SQLite */ if ($this->dbtype == "sqlite" || $this->dbtype == "sqlite3") {
-            
+
             $result = true;
         } else /* Firebird */
-        if ($this->dbtype == "firebird") {
-            if ($tranId != null) {
-                $result = @ibase_commit($tranId);
-            } else {
-                $result = @ibase_commit();
-            }
-        } else /* Oracle */ if ($this->dbtype == "oracle") {
-            $result = @oci_commit($this->dbh);
-        } else /* MySQL */ if ($this->dbtype == "mysql") {
-            if (function_exists("mysqli_connect")) {
-                $result = $this->dbh->commit();
-            } else {
-                @mysql_query("COMMIT");
+            if ($this->dbtype == "firebird") {
+                if ($tranId != null) {
+                    $result = @ibase_commit($tranId);
+                } else {
+                    $result = @ibase_commit();
+                }
+            } else /* Oracle */ if ($this->dbtype == "oracle") {
+                $result = @oci_commit($this->dbh);
+            } else /* MySQL */ if ($this->dbtype == "mysql") {
+                if (function_exists("mysqli_connect")) {
+                    $result = $this->dbh->commit();
+                } else {
+                    @mysql_query("COMMIT");
+                    $result = true;
+                }
+            } else /* Postgres */ if ($this->dbtype == "postgres") {
+                //Please test this !!!
+                @pg_query($this->dbh, "commit");
+                //0trigger_error ("Please implement ".__METHOD__." for ".$this->dbtype, E_USER_ERROR);
                 $result = true;
+            } else /* Microsoft SQL Server */ if ($this->dbtype == "mssql") {
+
+                $result = true;
+            } else {
+                trigger_error("Please implement " . __METHOD__ . " for " . $this->dbtype, E_USER_ERROR);
             }
-        } else /* Postgres */ if ($this->dbtype == "postgres") {
-            //Please test this !!!
-            @pg_query($this->dbh, "commit");
-            //0trigger_error ("Please implement ".__METHOD__." for ".$this->dbtype, E_USER_ERROR);
-            $result = true;
-        } else /* Microsoft SQL Server */ if ($this->dbtype == "mssql") {
-            
-            $result = true;
-        } else {
-            trigger_error("Please implement " . __METHOD__ . " for " . $this->dbtype, E_USER_ERROR);
-        }
 
         //see if there was an error
         $this->getError();
@@ -1170,39 +1170,39 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         return $result;
     }
 
-    
+
     /**
      * Create insert statement and run it
      * @param type $tablename Table name
      * @param type $fieldValues Array value pairs ["field" => "value"]
-     */    
+     */
     function insert ($tablename, $fieldValues) {
         $sqlInsert = "insert into {$tablename} ";
         foreach ($fieldValues as $field => $value) {
-          $columnNames[] = strtolower($field);      
-          //ignore the defaults for timestamps
-          if ($value !== "'now'" && $value !== "current_timestamp") {
-            $columnValues[] = "?";
-          }
-           else {
-            $columnValues[] = $value;    
-          }
+            $columnNames[] = strtolower($field);
+            //ignore the defaults for timestamps
+            if ($value !== "'now'" && $value !== "current_timestamp") {
+                $columnValues[] = "?";
+            }
+            else {
+                $columnValues[] = $value;
+            }
         }
         $sqlInsert .= "( ".join(",", $columnNames).") ";
         $sqlInsert .= "values ( ".join(",", $columnValues).");";
-        
+
         $params[] = $sqlInsert;
         foreach ($fieldValues as $field => $value) {
             if ($value !== "'now'" && $value !== "current_timestamp") {
-                 $params[] = $value;
+                $params[] = $value;
             }
         }
-          
-        
-       
+
+
+
         return call_user_func_array([$this, "exec"], $params);
     }
-    
+
     /**
      * Create update statement and run it
      * @param type $tablename Table name
@@ -1215,20 +1215,20 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         $sqlUpdate = "update {$tablename} set ";
         foreach ($fieldValues as $field => $value) {
             $sqlUpdate .= " {$field} = '".$this->escapeString($value)."',";
-            
+
         }
         $sqlUpdate = substr ($sqlUpdate,0, -1);
         $count = 0;
         foreach ($indexFieldValue as $field => $value) {
-         if ($count == 0) { $sqlUpdate .= " where "; } else { $sqlUpdate .= " and "; }  
-         $sqlUpdate .=  " {$field} = '".$this->escapeString($value)."'";
-         $count++;
-        }        
-       
+            if ($count == 0) { $sqlUpdate .= " where "; } else { $sqlUpdate .= " and "; }
+            $sqlUpdate .=  " {$field} = '".$this->escapeString($value)."'";
+            $count++;
+        }
+
         return $this->exec ($sqlUpdate);
-        
+
     }
-    
+
     /**
      * An easy way to write a delete statement and execute it immediatelly
      * @param String $tablename Name of the table to run the delete on
@@ -1237,22 +1237,22 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
      */
     function delete ($tablename, $fieldValues) {
         $sqlDelete = "delete from {$tablename} ";
-                
+
         $count = 0;
         foreach ($fieldValues as $field => $value) {
-         if ($count == 0) { $sqlDelete .= " where "; } else { $sqlDelete .= " and "; }  
-         $sqlDelete .=  " {$field} = '".$this->escapeString($value)."'";
-         $count++;
-        }        
-        
+            if ($count == 0) { $sqlDelete .= " where "; } else { $sqlDelete .= " and "; }
+            $sqlDelete .=  " {$field} = '".$this->escapeString($value)."'";
+            $count++;
+        }
+
         $result = $this->exec ($sqlDelete);
-        
+
         $this->commit();
-        
+
         return $result;
-        
+
     }
-    
+
     /*
       END  Commit
      * *************************************************************************** */
@@ -1277,7 +1277,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                 $result = "";
         } else /* Firebird */ if ($this->dbtype == "firebird") {
             $result = @ibase_errmsg();
-            
+
         } else /* Oracle */ if ($this->dbtype == "oracle") {
             $result = @oci_error();
         } else /* MySQL */ if ($this->dbtype == "mysql") {
@@ -1321,19 +1321,19 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             if (is_datetime($data)) {
                 $type = "DATETIME";
             } else
+                if (is_numeric($data)) {
+                    $type = "NUMERIC";
+                } else {
+                    $type = "VARCHAR";
+                }
+        } else
             if (is_numeric($data)) {
                 $type = "NUMERIC";
             } else {
                 $type = "VARCHAR";
             }
-        } else
-        if (is_numeric($data)) {
-            $type = "NUMERIC";
-        } else {
-            $type = "VARCHAR";
-        }
 
-        
+
         return $type;
     }
 
@@ -1359,9 +1359,9 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false) {
             if (defined("TINA4_DISABLE_CACHE") && TINA4_DISABLE_CACHE === false) {
                 if (!empty(xcache_get($dataCheckSum))) {
-                   $data = unserialize(xcache_get ($dataCheckSum));
-                   $this->fieldinfo = $data["fieldInfo"];
-                   return $data["resultSet"]; 
+                    $data = unserialize(xcache_get ($dataCheckSum));
+                    $this->fieldinfo = $data["fieldInfo"];
+                    return $data["resultSet"];
                 }
             }
         }
@@ -1379,15 +1379,15 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             $tempfieldinfo = $this->fieldinfo;
         }
         //Dont matter if there is no sql - use the last one.
-        
+
         if ($sql == "") {
             $sql = $this->lastsql[count($this->lastsql) - 1];
-        }    
-        
-        if (strpos($sql." ", "Resource") === false) {
-          $sql = $this->parseSQL($sql);
         }
-            
+
+        if (strpos($sql." ", "Resource") === false) {
+            $sql = $this->parseSQL($sql);
+        }
+
         /* ODBC Connection */
         if ($this->dbtype == "odbc") {
             //get odbc results
@@ -1614,9 +1614,9 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                             $row = (object) [];
                             foreach ($temprow as $fieldname => $fieldvalue) {
                                 if (empty($fieldvalue)) {
-                                  $fieldvalue = ""; 
+                                    $fieldvalue = "";
                                 }
-                                
+
                                 $row->$fieldname = $fieldvalue;
                             }
                             $result[$icount] = $row;
@@ -1638,19 +1638,19 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                 }
                 $nooffields = $query->numColumns();
                 $this->fieldinfo = [];
-                
-                if (is_object ($query)) {   
+
+                if (is_object ($query)) {
                     for ($i = 0; $i < $nooffields; $i++) {
                         $this->fieldinfo[$i]["name"] = (string) $query->columnName($i);
                         $this->fieldinfo[$i]["alias"] = ucwords(strtolower($this->fieldinfo[$i]["name"]));
-                    
+
                         if (!empty ($result) > 0)  {
-                            
-                          eval('$this->fieldinfo[$i]["type"] = @$this->getDataType ($result[0]->' . $this->fieldinfo[$i]["name"] . ');');
+
+                            eval('$this->fieldinfo[$i]["type"] = @$this->getDataType ($result[0]->' . $this->fieldinfo[$i]["name"] . ');');
                         }
-                            else {
-                              $this->fieldinfo[$i]["type"] = ""; 
-                            }
+                        else {
+                            $this->fieldinfo[$i]["type"] = "";
+                        }
                         $this->fieldinfo[$i][1] = $this->fieldinfo[$i]["name"];
                         $this->fieldinfo[$i][0] = $this->fieldinfo[$i]["alias"];
                         $this->fieldinfo[$i][2] = 20; //need to calculate this
@@ -1665,12 +1665,12 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             //build an array of results
 
             if (strpos($sql." ", "Resource") === false) {
-               $query = @ibase_query($this->dbh, $sql);     
+                $query = @ibase_query($this->dbh, $sql);
             }
-               else {
-              $query = $sql;      
-            }     
-            
+            else {
+                $query = $sql;
+            }
+
             $icount = 0;
             $result = [];
             if ($query) {
@@ -1739,9 +1739,9 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             //build an array of results
             if (function_exists("mysqli_connect")) {
                 $query = $this->dbh->query($sql);
-                
-               
-                
+
+
+
                 if (is_object($query)) {
                     $fields = $query->fetch_fields();
                     $this->nooffields = count($fields);
@@ -1778,9 +1778,9 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                         $this->fieldinfo[$i][4] = $mysql_data_type_hash[$field->type];
                         $i++;
                     }
-                    
-                    
-                  
+
+
+
                     $icount = 0;
                     switch ($rowtype) {
                         case 0: //Object
@@ -1947,11 +1947,11 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             trigger_error("Please implement " . __METHOD__ . " for " . $this->dbtype, E_USER_ERROR);
         }
 
-        
+
         if (!empty($this->fieldinfo)) {
             //create the field information based on the select statement    
-           
-            
+
+
             foreach ($this->fieldinfo as $id => $field) {
                 if (strpos(strtoupper($field[4]), "NUMERIC") !== false || strpos(strtoupper($field[4]), "DECIMAL") !== false || strpos(strtoupper($field[4]), "INTEGER") !== false || strpos(strtoupper($field[4]), "INT") !== false) {
                     if (strpos(strtoupper($field[4]), "NUMERIC") !== false || strpos(strtoupper($field[4]), "DECIMAL") !== false) {
@@ -1977,7 +1977,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                 $this->fieldinfo[$id] = $field;
             }
         }
-        
+
         $this->RAWRESULT = $result;
 
         /* Debugging for getRows */
@@ -2120,7 +2120,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         if (!$this->updatefieldinfo) {
             $this->fieldinfo = $tempfieldinfo;
         }
-        
+
         if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false && !empty($this->fieldinfo)) {
             if (defined("TINA4_DISABLE_CACHE") && TINA4_DISABLE_CACHE === false) {
                 xcache_set($dataCheckSum, serialize( ["fieldInfo" => $this->fieldinfo, "resultSet" => $result ] ) );
@@ -2138,10 +2138,10 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
 
     function translateDate($input, $dbdateformat, $outputdateformat) {
         if (empty($dbdateformat)) {
-          $dbdateformat = $this->dbdateformat;  
+            $dbdateformat = $this->dbdateformat;
         }
         if (empty ($outputdateformat)) {
-          $outputdateformat = $this->outputdateformat;  
+            $outputdateformat = $this->outputdateformat;
         }
         //mssql returns dates as a object
         if ($input != "" && !is_object($input)) {
@@ -2285,9 +2285,9 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         if ($sql == "") {
             $sql = $this->lastsql[count($this->lastsql) - 1];
         }
-               
+
         $result = $this->getRows($sql, $rowtype, $fetchblob);
-        
+
         if (!empty($result)) {
             $result = $result[$id]; //return the first value
         }
@@ -2307,15 +2307,15 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
     function getKeyValue ($sql="") {
         $results = $this->getRows($sql, DEB_ARRAY);
         $keyValues = array();
-        
+
         if(!empty($results)){
             foreach ($results as $rid => $result) {
-              $keyValues[$result[0]] = $result[1];  
+                $keyValues[$result[0]] = $result[1];
             }
         }
         return $keyValues;
     }
-    
+
     /*     * *************************************************************************** 
       BEGIN get_database
       Returns the layout of the whole database in an easy to use array
@@ -2329,7 +2329,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         if (!$this->dbh) {
             trigger_error("No database handle, use connect first in " . __METHOD__ . " for " . $this->dbtype, E_USER_WARNING);
         } else if ($this->dbtype == "odbc") {
-            
+
         } else if ($this->dbtype == "CUBRID") {
             $sqltables = "SELECT class_name as name 
                     FROM db_class 
@@ -2361,7 +2361,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                      where type='table'
                   order by name";
             $tables = $this->getRows($sqltables);
-            
+
             if (!empty($tables)) {
                 foreach ($tables as $id => $record) {
                     $sqlinfo = "pragma table_info($record->NAME);";
@@ -2371,6 +2371,15 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                         $database[trim($record->NAME)][$tid]["column"] = trim($trecord->CID);
                         $database[trim($record->NAME)][$tid]["field"] = trim($trecord->NAME);
                         $database[trim($record->NAME)][$tid]["type"] = trim($trecord->TYPE);
+
+                        if ( strpos (trim($trecord->TYPE), 'varchar') !== false ) {
+                            $length = explode ("(", $trecord->TYPE);
+                            $length[1] = str_replace(")", "", $length[1]);
+                            $database[trim($record->NAME)][$tid]["length"] = $length[1];
+                        }    else {
+                            $database[trim($record->NAME)][$tid]["length"] = 4;
+                        }
+
                         $database[trim($record->NAME)][$tid]["default"] = trim($trecord->DFLT_VALUE);
                         $database[trim($record->NAME)][$tid]["notnull"] = trim($trecord->NOTNULL);
                         $database[trim($record->NAME)][$tid]["pk"] = trim($trecord->PK);
@@ -2449,9 +2458,9 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                 //print_r ($primaryKeys);
                 $PK = [];
                 foreach ($primaryKeys as $pkid => $primaryKey) {
-                   $PK[$primaryKey->FIELD_NAME]["IS_PRIMARY_KEY"] = ($primaryKey->CONSTRAINT_TYPE === "PRIMARY KEY");
-                   $PK[$primaryKey->FIELD_NAME]["IS_FOREIGN_KEY"] = ($primaryKey->CONSTRAINT_TYPE === "FOREIGN KEY");
-                   $PK[$primaryKey->FIELD_NAME]["CONSTRAINT_TYPE"] = $primaryKey->CONSTRAINT_TYPE;
+                    $PK[$primaryKey->FIELD_NAME]["IS_PRIMARY_KEY"] = ($primaryKey->CONSTRAINT_TYPE === "PRIMARY KEY");
+                    $PK[$primaryKey->FIELD_NAME]["IS_FOREIGN_KEY"] = ($primaryKey->CONSTRAINT_TYPE === "FOREIGN KEY");
+                    $PK[$primaryKey->FIELD_NAME]["CONSTRAINT_TYPE"] = $primaryKey->CONSTRAINT_TYPE;
                 }
 
 
@@ -2511,11 +2520,11 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                 }
                 $result = $database;
             }
-                else {
-                    $result = null;
-                }
-            
-            
+            else {
+                $result = null;
+            }
+
+
         } else /* Postgres */ if ($this->dbtype == "postgres") {
             $dbpath = explode(":", $this->dbpath);
             $sqltables = "SELECT table_name
@@ -2562,7 +2571,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         } else {
             trigger_error("Please implement " . __METHOD__ . " for " . $this->dbtype, E_USER_ERROR);
         }
-        
+
         return $result;
     }
 
@@ -2593,7 +2602,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
     }
 
     /**   BEGIN Get Affected Rows
-      Get the number of rows changed or retrieved by last SQL
+    Get the number of rows changed or retrieved by last SQL
      */
     function getAffectedRows($sql = "") {
         $result = 0;
@@ -2607,8 +2616,8 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
     }
 
     /**
-      BEGIN Get Field Info By Name
-      Get a fields info by name
+    BEGIN Get Field Info By Name
+    Get a fields info by name
      */
     function getFieldByName($fieldname = "") {
         foreach ($this->fieldinfo as $id => $value) {
@@ -2621,8 +2630,8 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
     }
 
     /**
-      BEGIN Get Random ID
-      Get a random id function and adding 1
+    BEGIN Get Random ID
+    Get a random id function and adding 1
      */
     function getRandomId($noofchars) {
         $result = "";
@@ -2632,8 +2641,8 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
     }
 
     /**
-      BEGIN Get Next ID
-      Get the next id on a table by using the MAX function and adding 1
+    BEGIN Get Next ID
+    Get the next id on a table by using the MAX function and adding 1
      */
     function getNextId($tablename = "", $fieldname = "", $filter = "") {
         $result = "";
@@ -2654,8 +2663,8 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
     }
 
     /**
-      BEGIN get_table_exists()
-      See if a certain table exists
+    BEGIN get_table_exists()
+    See if a certain table exists
      */
     function getTableExists($tablename = "") {
         $result = "";
@@ -2668,8 +2677,8 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
     }
 
     /**
-      BEGIN Date to DB
-      This function will format the date as needed by the database
+    BEGIN Date to DB
+    This function will format the date as needed by the database
      */
     function dateToDb($invalue) {
         //echo $invalue."<br>";
@@ -2682,31 +2691,31 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
     }
 
     /**
-      BEGIN Get Insert SQL
-      This function attempts to eliminate errors by creating the insert statements using prefixed input fields
-      If you have a form with inputs prefixed with "txt" for example it will chop off the txt and make an insert statement
-      Field names need to be in uppercase for better processing
+    BEGIN Get Insert SQL
+    This function attempts to eliminate errors by creating the insert statements using prefixed input fields
+    If you have a form with inputs prefixed with "txt" for example it will chop off the txt and make an insert statement
+    Field names need to be in uppercase for better processing
 
-      <form>
-      <input type="text" name="txtNAME" value="Andre">
-      <input type="text" name="txtDATE" value="01/10/2010">
-      </form>
+    <form>
+    <input type="text" name="txtNAME" value="Andre">
+    <input type="text" name="txtDATE" value="01/10/2010">
+    </form>
 
      */
     function getInsertSQL($fieldprefix = "edt", //Field prefix as discussed above 
-            $tablename = "", //Name of the tablename
-            $primarykey = "", //Field name of the primary key
-            $genkey = true, //Generate a new number using inbuilt get_next_id 
-            $requestvar = "", //Request variable to populate with new id for post processing
-            $passwordfields = "", //Fields that may be crypted automatically
-            $datefields = "", //Fields that may be seen as date fields and converted accordingly
-            $exec = false, 
-            $arrayindex = 0) {
+                          $tablename = "", //Name of the tablename
+                          $primarykey = "", //Field name of the primary key
+                          $genkey = true, //Generate a new number using inbuilt get_next_id
+                          $requestvar = "", //Request variable to populate with new id for post processing
+                          $passwordfields = "", //Fields that may be crypted automatically
+                          $datefields = "", //Fields that may be seen as date fields and converted accordingly
+                          $exec = false,
+                          $arrayindex = 0) {
         //error_reporting(0);
         //Get the length of field prefix
         $prefixlen = strlen($fieldprefix);
         //Start the insert statement      
-        
+
         if ( is_string($primarykey) && $genkey) {
             $newid = $this->getNextId($tablename, $primarykey);
             $_REQUEST[$requestvar] = $newid;
@@ -2715,14 +2724,14 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             $newid = "";
             if ( is_string($primarykey) ) {
                 $newid = $_REQUEST[$fieldprefix . strtoupper($primarykey)];
-                
+
             }
             $_REQUEST[$requestvar] = $newid;
-            
+
             $sqlinsert = "insert into $tablename (";
         }
-        
-      
+
+
         //Search all the fields on the form
         foreach ($_REQUEST as $name => $value) {
             if (substr($name, 0, $prefixlen) == $fieldprefix) {
@@ -2764,12 +2773,12 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
         //Clean up the sql
         $sqlinsert = str_replace("(,", "(", $sqlinsert);
         $sqlinsert = str_replace("'null'", "null", $sqlinsert);
-        
+
         if (!$exec) { //Do we run the procedure execution 
             return $sqlinsert;
         } else {
             //Run the insert statement and upload files while we are at it.
-            
+
             $error = $this->exec($sqlinsert);
             if (!$error) {
                 $error = $this->getError();
@@ -2786,58 +2795,58 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             return $error;
         }
     }
-    
+
     /**
      * Function to upload files based on prefixes and column names
-     * 
+     *
      * @param String $fieldprefix The prefix of the form input - example txtFILE
      * @param String $tablename The name of the table in the database
      * @param String $primarykeyValue The value of the index in the table
      * @param String $primarykey The name of the index field of the table
-     * @return boolean Returns true every time 
+     * @return boolean Returns true every time
      */
 
     function runFileUploads($fieldprefix="edt", $tablename="", $primarykeyValue=0, $primarykey="ID") {
         if ($_FILES) {
-          
-            
-            
-            
-            $prefixlen = strlen ($fieldprefix);    
+
+
+
+
+            $prefixlen = strlen ($fieldprefix);
             foreach ($_FILES as $name => $value) {
-                    if ($value["tmp_name"] != "") {
-                        
-                        if (substr($name, 0, $prefixlen) == $fieldprefix) {
-                            //upload the file correctly into a blob field
-                            
-                            if (!empty($primarykeyValue)) {
-                                
-                                $filter = "$primarykey = '" .$primarykeyValue. "'";
-                            }
-                              else {
-                                $filter = "$primarykey";
-                              }    
-                            
-                            $this->setBlob($tablename, strtoupper(substr($name, $prefixlen, strlen($name) - $prefixlen)), file_get_contents($value["tmp_name"]), $filter);                                                    
+                if ($value["tmp_name"] != "") {
+
+                    if (substr($name, 0, $prefixlen) == $fieldprefix) {
+                        //upload the file correctly into a blob field
+
+                        if (!empty($primarykeyValue)) {
+
+                            $filter = "$primarykey = '" .$primarykeyValue. "'";
                         }
+                        else {
+                            $filter = "$primarykey";
+                        }
+
+                        $this->setBlob($tablename, strtoupper(substr($name, $prefixlen, strlen($name) - $prefixlen)), file_get_contents($value["tmp_name"]), $filter);
                     }
                 }
             }
-        
+        }
+
         return true;
     }
-    
-    
-    /**
-      BEGIN Get Update SQL
-      This function attempts to eliminate errors by creating the update statements using prefixed input fields
-      If you have a form with inputs prefixed with "txt" for example it will chop off the txt and make an update statement
-      Field names need to be in uppercase for better processing
 
-      <form>
-      <input type="text" name="txtNAME" value="Andre">
-      <input type="text" name="txtDATE" value="01/10/2010">
-      </form>
+
+    /**
+    BEGIN Get Update SQL
+    This function attempts to eliminate errors by creating the update statements using prefixed input fields
+    If you have a form with inputs prefixed with "txt" for example it will chop off the txt and make an update statement
+    Field names need to be in uppercase for better processing
+
+    <form>
+    <input type="text" name="txtNAME" value="Andre">
+    <input type="text" name="txtDATE" value="01/10/2010">
+    </form>
 
      * @param string $fieldprefix
      * @param string $tablename
@@ -2851,14 +2860,14 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
      * @return array|bool|mixed|null|resource|string
      */
     function getUpdateSQL($fieldprefix = "edt", //Field prefix as discussed above 
-            $tablename = "", //Name of the tablename
-            $primarykey = "", //Field name of the primary key
-            $index = "", //Index 
-            $requestvar = "", //Request variable to populate with new id for post processing
-            $passwordfields = "", //Fields that may be crypted automatically
-            $datefields = "", //Fields that may be seen as date fields and converted accordingly 
-            $exec = false, //Execute the command immediately
-            $arrayindex = 0 //If a request field is an array - which index to use 
+                          $tablename = "", //Name of the tablename
+                          $primarykey = "", //Field name of the primary key
+                          $index = "", //Index
+                          $requestvar = "", //Request variable to populate with new id for post processing
+                          $passwordfields = "", //Fields that may be crypted automatically
+                          $datefields = "", //Fields that may be seen as date fields and converted accordingly
+                          $exec = false, //Execute the command immediately
+                          $arrayindex = 0 //If a request field is an array - which index to use
     ) {
         //Get the length of field prefix
         error_reporting(0);
@@ -2898,17 +2907,17 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
                 }
             }
         }
-        
+
         if (!empty($index)) {
             $sqlupdate .= " where $primarykey = '" . $index . "'";
         }
-          else {
-            $sqlupdate .= " where $primarykey";  
-         }      
-        
+        else {
+            $sqlupdate .= " where $primarykey";
+        }
+
         $sqlupdate = str_replace("0=0 ,", "", $sqlupdate);
         $sqlupdate = str_replace("'null'", "null", $sqlupdate);
-        
+
         $this->lastsql[count($this->lastsql)] = $sqlupdate;
 
         if (!$exec) { //Do we run the procedure execution
@@ -2917,7 +2926,7 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             //Run the insert statement and upload files while we are at it.
             //file_put_contents ("sql.txt", $sqlupdate);
             $error = $this->exec($sqlupdate);
-            
+
             if (!$error) {
                 $error = $this->getError();
                 if ($error === "No Error") {
@@ -2926,14 +2935,14 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             } else {
                 $error = "No Error";
             }
-            
+
             $this->runFileUploads($fieldprefix, $tablename, $index, $primarykey);
-          
-            
+
+
             return $error;
         }
     }
-    
+
     /**
      * A function to generate a CSV from an SQL statement
      * @param String $sql An SQL string
@@ -2947,16 +2956,16 @@ Ruth::setOBJECT("'.Ruth::getREQUEST("txtALIAS").'", $'.Ruth::getREQUEST("txtALIA
             // make csv file
             header("Content-Type: text/csv");
             header("Content-Disposition: attachment; filename = {$filename}");
-            
+
             $fh = fopen("php://output", "w");
-            fputcsv($fh, array_map(function($element) { return $element['alias']; }, $this->fieldinfo), $delim); 
-            
+            fputcsv($fh, array_map(function($element) { return $element['alias']; }, $this->fieldinfo), $delim);
+
             foreach($results as $result){
                 fputcsv($fh, $result, $delim);
             }
-            
+
             fclose($fh);
-            
+
         }
         return;
     }

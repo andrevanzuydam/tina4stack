@@ -751,9 +751,6 @@ class Ruth {
             unset(Ruth::$REQUEST["formData"]);
         }
 
-
-
-
         if (!empty($_REQUEST)) {
             self::$REQUEST = array_merge(self::$REQUEST, self::parseParams($_SERVER["REQUEST_URI"]));
         }
@@ -770,6 +767,210 @@ class Ruth {
         }
 
         self::setAuthorization("", "");
+
+        /**
+         * CREATE
+         * Add a specific record to the table
+         */
+        self::addRoute(RUTH_POST, "/rest/{tablename}",
+            function($tableName, $id){
+                Ruth::getRESTAuth(Ruth::getSERVER("PHP_AUTH_USER"), Ruth::getSERVER("PHP_AUTH_PW"));
+                if (!empty(Ruth::getOBJECT("DEB"))) {
+                    $DEB = Ruth::getOBJECT("DEB");
+                    $database = $DEB->getDatabase();
+                    $table = $database[strtoupper($tableName)];
+                    if (!empty($table[0]["pk"]) && $table[0]["pk"] === "PRIMARY KEY") {
+                        $primaryKey = $table[0]["field"];
+                    } else {
+                        $primaryKey = "ID"; // this is a generic fall back
+                    }
+                    //try and add the record
+                    $json = json_decode(Ruth::getPOST_DATA(), true);
+
+                    $tableData = "";
+                    foreach ($json as $field => $value) {
+                        $tableData[$field] = $value;
+                    }
+                    if (empty($tableData[$primaryKey])) {
+                        $tableData[$primaryKey] = $DEB->getNextId($tableName, $primaryKey);
+                    }
+                    $DEB->insert ($tableName, $tableData);
+                    $DEB->commit();
+                    $result = $DEB->getRow("select * from {$tableName} where {$primaryKey} = '{$tableData[$primaryKey]}'");
+                    if (!empty($result)) {
+                        echo json_encode($result); //return the newly added record
+                        header('Content-Type: application/json');
+                        Ruth::responseHeader("200", "Success: Record was added to {$tableName}");
+                        $DEB->commit();
+                    }  else {
+                        Ruth::responseHeader("400", "Failed: Could not add record to {$tableName}");
+                    }
+                } else {
+                    die("DEB database object not registered");
+                }
+            }
+        );
+
+
+        /**
+         * READ
+         * Get a specific record from a table using the primary key
+         */
+        self::addRoute(RUTH_GET, "/rest/{tablename}/{id}",
+            function($tableName, $id){
+                Ruth::getRESTAuth(Ruth::getSERVER("PHP_AUTH_USER"), Ruth::getSERVER("PHP_AUTH_PW"));
+                if (!empty(Ruth::getOBJECT("DEB"))) {
+                    $DEB = Ruth::getOBJECT("DEB");
+                    $database = $DEB->getDatabase();
+                    $table = $database[strtoupper($tableName)];
+                    if (!empty($table[0]["pk"]) && $table[0]["pk"] === "PRIMARY KEY") {
+                        $primaryKey = $table[0]["field"];
+                    } else {
+                        $primaryKey = "ID"; // this is a generic fall back
+                    }
+
+                    $result = $DEB->getRow("select * from {$tableName} where {$primaryKey} = '{$id}'");
+                    if (!empty($result)) {
+                        echo json_encode($result);
+                        header('Content-Type: application/json');
+                        Ruth::responseHeader("200", "Success: Record {$id} was found in {$tableName}");
+                    }  else {
+                        Ruth::responseHeader("400", "Failed: Record {$id} was NOT found in {$tableName}");
+                    }
+                } else {
+                    die("DEB database object not registered");
+                }
+            }
+        );
+
+        /**
+         * UPDATE
+         * Update a specific record in the system based on its ID
+         */
+        self::addRoute(RUTH_PUT, "/rest/{tablename}/{id}",
+            function($tableName, $id){
+                Ruth::getRESTAuth(Ruth::getSERVER("PHP_AUTH_USER"), Ruth::getSERVER("PHP_AUTH_PW"));
+                if (!empty(Ruth::getOBJECT("DEB"))) {
+                    $DEB = Ruth::getOBJECT("DEB");
+                    $database = $DEB->getDatabase();
+                    $table = $database[strtoupper($tableName)];
+                    if (!empty($table[0]["pk"]) && $table[0]["pk"] === "PRIMARY KEY") {
+                        $primaryKey = $table[0]["field"];
+                    } else {
+                        $primaryKey = "ID"; // this is a generic fall back
+                    }
+
+                    $json = json_decode(file_get_contents("php://input"), false);
+
+                    $tableData = "";
+                    foreach ($table as $fid => $column) {
+                        if ($column["field"] !== $primaryKey ) {
+
+
+                            if (isset($json->$column["field"])) {
+                                $tableData[$column["field"]] = $json->$column["field"];
+                            } else {
+                                $tableData[$column["field"]] = "null";
+                            }
+                        }
+                    }
+
+                    $DEB->update ($tableName, $tableData, [$primaryKey => $id]);
+                    $DEB->commit();
+
+                    $result = $DEB->getRow("select * from {$tableName} where {$primaryKey} = '{$id}'");
+                    if (!empty($result)) {
+                        echo json_encode($result);
+                        header('Content-Type: application/json');
+                        Ruth::responseHeader("200", "Success: Record {$id} was found in {$tableName}");
+
+                        $DEB->commit();
+                    }  else {
+                        Ruth::responseHeader("400", "Failed: Record {$id} was NOT found in {$tableName}");
+                    }
+                } else {
+                    die("DEB database object not registered");
+                }
+            }
+        );
+
+
+        /**
+         * PATCH
+         * Patch a specific record in the system based on its ID
+         */
+        self::addRoute(RUTH_PATCH, "/rest/{tablename}/{id}",
+            function($tableName, $id){
+                Ruth::getRESTAuth(Ruth::getSERVER("PHP_AUTH_USER"), Ruth::getSERVER("PHP_AUTH_PW"));
+                if (!empty(Ruth::getOBJECT("DEB"))) {
+                    $DEB = Ruth::getOBJECT("DEB");
+                    $database = $DEB->getDatabase();
+                    $table = $database[strtoupper($tableName)];
+                    if (!empty($table[0]["pk"]) && $table[0]["pk"] === "PRIMARY KEY") {
+                        $primaryKey = $table[0]["field"];
+                    } else {
+                        $primaryKey = "ID"; // this is a generic fall back
+                    }
+
+                    $json = json_decode(file_get_contents("php://input"), false);
+
+                    $tableData = "";
+                    foreach ($table as $fid => $column) {
+                        if ($column["field"] !== $primaryKey ) {
+                            if (isset($json->$column["field"])) {
+                                $tableData[$column["field"]] = $json->$column["field"];
+                            }
+                        }
+                    }
+
+                    $DEB->update ($tableName, $tableData, [$primaryKey => $id]);
+                    $DEB->commit();
+
+                    $result = $DEB->getRow("select * from {$tableName} where {$primaryKey} = '{$id}'");
+                    if (!empty($result)) {
+                        echo json_encode($result);
+                        header('Content-Type: application/json');
+                        Ruth::responseHeader("200", "Success: Record {$id} was found in {$tableName}");
+
+                        $DEB->commit();
+                    }  else {
+                        Ruth::responseHeader("400", "Failed: Record {$id} was NOT found in {$tableName}");
+                    }
+                } else {
+                    die("DEB database object not registered");
+                }
+            }
+        );
+
+
+        /**
+         * DELETE
+         * Delete a specific record from a table using the primary key
+         */
+        self::addRoute(RUTH_DELETE, "/rest/{tablename}/{id}",
+            function($tableName, $id){
+                Ruth::getRESTAuth(Ruth::getSERVER("PHP_AUTH_USER"), Ruth::getSERVER("PHP_AUTH_PW"));
+                if (!empty(Ruth::getOBJECT("DEB"))) {
+                    $DEB = Ruth::getOBJECT("DEB");
+                    $database = $DEB->getDatabase();
+                    $table = $database[strtoupper($tableName)];
+                    if (!empty($table[0]["pk"]) && $table[0]["pk"] === "PRIMARY KEY") {
+                        $primaryKey = $table[0]["field"];
+                    } else {
+                        $primaryKey = "ID"; // this is a generic fall back
+                    }
+                    if ( $DEB->delete($tableName, [$primaryKey => $id]) ) {
+                        Ruth::responseHeader("200", "Success: Record {$id} was deleted from {$tableName}");
+                        $DEB->commit();
+                    }  else {
+                        Ruth::responseHeader("400", "Failed: Record {$id} was NOT deleted from {$tableName}");
+                    }
+                } else {
+                    die("DEB database object not registered");
+                }
+            }
+        );
+
 
 
         return true;

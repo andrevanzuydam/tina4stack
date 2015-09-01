@@ -39,6 +39,7 @@ class PHPWebDriver_WebDriver extends PHPWebDriver_WebDriverBase {
                           $additional_capabilities = array(),
                           $curl_opts = array(),
                           $browser_profile = null) {
+
     $capabilities = new PHPWebDriver_WebDriverDesiredCapabilities();
     // var_dump(func_get_args());
     $desired_capabilities = array_merge(
@@ -50,7 +51,7 @@ class PHPWebDriver_WebDriver extends PHPWebDriver_WebDriverBase {
     }
     // var_dump($desired_capabilities);
     $curl_opts = $curl_opts + array(CURLOPT_FOLLOWLOCATION => true);
-      
+
     $results = $this->curl(
       'POST',
       '/session',

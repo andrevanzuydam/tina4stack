@@ -7,7 +7,14 @@
  */
 global $TESSA;
 
-
+function tessaErrorHandler($errno, $errstr, $errfile, $errline)
+{
+    switch ($errno) {
+        case E_USER_ERROR:
+            die ("<pre>Oops! - Please make sure the Selenium server is running and that it is not blocked by the Firewall\nError: {$errno} {$errstr}, {$errfile}, {$errline} </pre>");
+            break;
+    }
+}
 /**
  * Displays a message on the screen
  * @param string $msg The message you want displayed.
@@ -40,11 +47,11 @@ function IExpectToSee ($text) {
     $pageText = byPath("//*")->getText();
     echo "I expected to see \"".$text."\"...\n";
     if (stripos($pageText, "{$text}") == 0) {
-       die("And I did <b>NOT</b> see <b>\"".$text."\"</b>, here is what I saw:<br>". screenShot());
+        die("And I did <b>NOT</b> see <b>\"".$text."\"</b>, here is what I saw:<br>". screenShot());
     }
-      else {
-      echo "And I saw \"".substr($pageText, stripos($pageText, "{$text}"), strlen("{$text}"))."\"...\n";
-   }
+    else {
+        echo "And I saw \"".substr($pageText, stripos($pageText, "{$text}"), strlen("{$text}"))."\"...\n";
+    }
 
 }
 
@@ -77,7 +84,7 @@ function ISee ($text) {
  * A function that waits for 2 seconds
  */
 function WaitFor2Seconds() {
-   sleep(2);
+    sleep(2);
 }
 
 /**
@@ -188,23 +195,23 @@ function checkDB($tablename, $fieldname, $value) {
 }
 
 /**
-* Function to retrieve records from the database
-* @param String $sql
-* @return Object
-*/
+ * Function to retrieve records from the database
+ * @param String $sql
+ * @return Object
+ */
 function fetchRecords ($sql) {
-   global $TESSA;
-   return $TESSA->fetchRecords($sql);
+    global $TESSA;
+    return $TESSA->fetchRecords($sql);
 }
 
 /**
-* Function to retrieve a record from the database
-* @param String $sql
-* @return Object
-*/
+ * Function to retrieve a record from the database
+ * @param String $sql
+ * @return Object
+ */
 function fetchRecord ($sql) {
-   global $TESSA;
-   return $TESSA->fetchRecord($sql);
+    global $TESSA;
+    return $TESSA->fetchRecord($sql);
 }
 
 
@@ -237,7 +244,7 @@ function IsDifferent($test1, $test2) {
 }
 
 /**
- * 
+ *
  * @param $URL
  * @return mixed
  */
@@ -247,7 +254,7 @@ function openSite($URL) {
 }
 
 /**
- * 
+ *
  * @global type $TESSA
  * @param type $URL
  * @return type
@@ -354,9 +361,9 @@ class Tessa {
                 return call_user_func_array($this->methods[strtolower($method)], $args);
             }
         }
-          else {
-              $this->message("Test method ".$method." not available! Does the test exist?");
-          }
+        else {
+            $this->message("Test method ".$method." not available! Does the test exist?");
+        }
     }
 
     /**
@@ -372,7 +379,7 @@ class Tessa {
         $record = $this->DEB->getRow($sql);
         return $record;
     }
-    
+
     /**
      * Function to retrieve records from the database
      * @param String $sql
@@ -382,7 +389,7 @@ class Tessa {
         $this->DEB->commit();
         return $this->DEB->getRows($sql);
     }
-    
+
     /**
      * Function to retrieve a record from the database
      * @param String $sql
@@ -392,8 +399,8 @@ class Tessa {
         $this->DEB->commit();
         return $this->DEB->getRow($sql);
     }
-    
-    
+
+
     /**
      * A function to create screenshots when something fails
      * @return String The HTML path to the screen shot
@@ -422,7 +429,7 @@ class Tessa {
     }
 
     /**
-     * Display a message on the screen prefixed with I want to 
+     * Display a message on the screen prefixed with I want to
      * @param $msg
      */
     function IWantTo ($msg) {
@@ -453,9 +460,9 @@ class Tessa {
         if (!empty($this->aliases[$name])) {
             return $this->aliases[$name];
         }
-          else {
+        else {
             return null;
-          }
+        }
     }
 
     /**
@@ -468,19 +475,19 @@ class Tessa {
         $return = $this->getAlias($id);
 
         if (empty($return)) {
-              try {
-                  $return = $this->byId($id);
-              } catch (Exception $e) {
-                  try {
-                      $return = $this->byPath($id);
-                  } catch (Exception $e) {
-                      try {
-                          $return = $this->byClass($id);
-                      } catch (Exception $e) {
-                          die($e);
-                      }
-                  }
-              }
+            try {
+                $return = $this->byId($id);
+            } catch (Exception $e) {
+                try {
+                    $return = $this->byPath($id);
+                } catch (Exception $e) {
+                    try {
+                        $return = $this->byClass($id);
+                    } catch (Exception $e) {
+                        die($e);
+                    }
+                }
+            }
         }
         return $return;
     }
@@ -522,9 +529,9 @@ class Tessa {
      * @return TestELement
      */
     function waitFor($id) {
-       try {
+        try {
 
-           eval ('
+            eval ('
             $w = new PHPWebDriver_WebDriverWait($this->session);
             $w->until(
             function($session) {
@@ -532,12 +539,12 @@ class Tessa {
             }
         );');
 
-       } catch (Exception $e) {
-          echo "Could not wait for {$id} any longer !...\n";
-          die ($e);
-       }
+        } catch (Exception $e) {
+            echo "Could not wait for {$id} any longer !...\n";
+            die ($e);
+        }
 
-       return $this->lookFor($id);
+        return $this->lookFor($id);
     }
 
     /**
@@ -555,9 +562,9 @@ class Tessa {
      */
     function equals($test1, $test2) {
         $this->message ("Checking: '{$test1}' === '{$test2}'");
-       if ($test1 !== $test2) {
-           $this->failed("Found ".$test1." expected ".$test2);
-       }
+        if ($test1 !== $test2) {
+            $this->failed("Found ".$test1." expected ".$test2);
+        }
     }
 
     /**
@@ -582,15 +589,16 @@ class Tessa {
         $this->session->window()->maximize();
         return true;
     }
-    
+
     /**
      * @param $URL
      * @return bool
      */
     function navigateTo($URL) {
         //this is the default port for testing
+        $this->session->window()->maximize();
         $this->session->open($URL);
-        
+
         return true;
     }
 
@@ -599,16 +607,16 @@ class Tessa {
      * @param string $browser
      * @param string $testServer
      */
-    function __construct ($testDir="test", $browser="firefox", $testServer="http://localhost:12346/") {
+    function __construct ($testDir="test", $browser="firefox", $testServer="") {
         global $TESSA;
         $TESSA = $this;
 
 
         if (!file_exists (dirname(__FILE__)."/../selenium/PHPWebDriver/__init__.php")) {
-          die ("Please download the selenium driver for PHP and deploy in the web_root folder");
+            die ("Please download the selenium driver for PHP and deploy in the web_root folder");
         }
-        
-        
+
+
         require_once dirname(__FILE__)."/../selenium/PHPWebDriver/__init__.php";
 
         if (empty(Ruth::getOBJECT("DEB"))) {
@@ -616,8 +624,6 @@ class Tessa {
         } else {
             $this->DEB = Ruth::getOBJECT("DEB");
         }
-
-
 
         $this->testDir = $testDir;
         $this->testServer = $testServer;
@@ -654,6 +660,7 @@ class Tessa {
         set_time_limit(0);
 
         $wd_host = 'http://localhost:4444/wd/hub';
+        echo "<pre>";
         $this->message("Initialize testing on ".$wd_host." for ".$this->testServer);
         $this->message("Test Path: ".Ruth::getREAL_PATH() . "/" . $this->testDir);
         $this->message("Loading test methods into class");
@@ -687,50 +694,55 @@ class Tessa {
             $arguments = $this->get_func_argNames($functionName);
             $temp = "";
             foreach ($arguments as $aid => $argument) {
-              $temp[] = '$'.$argument;
+                $temp[] = '$'.$argument;
             }
             if (!empty($temp)) {
                 $arguments = implode($temp, ',');
             }
-              else {
-                  $arguments = "";
-              }
+            else {
+                $arguments = "";
+            }
             eval ('$this->methods["'.$functionName.'"] = \Closure::bind(function('.$arguments.') { '.$functionName.'('.$arguments.'); }, $this, get_class());');
         }
 
         $this->message("Test Functions added: ".print_r (implode ($new_functions, ","), 1));
 
-        $web_driver = new PHPWebDriver_WebDriver($wd_host);
+        set_error_handler("tessaErrorHandler");
 
-          
-            if (!empty(Ruth::getSESSION("tessaSession"))) {
-                $this->session = unserialize(Ruth::getSESSION("tessaSession"));
-            }
-              else {
-                  $browser_profile = new PHPWebDriver_WebDriverFirefoxProfile(dirname(dirname(__FILE__))."/selenium/firefox-profile");
-                  $this->session = $web_driver->session($this->browser,array(),array(),$browser_profile);
-                  Ruth::setSESSION("tessaSession", serialize($this->session));
-            }
-        
-        //this is the default port for testing
-        try {        
-            $this->session->open($this->testServer);
+        try {
+            $web_driver = new PHPWebDriver_WebDriver($wd_host);
         }
         catch(Exception $e) {
-              $browser_profile = new PHPWebDriver_WebDriverFirefoxProfile(dirname(dirname(__FILE__))."/selenium/firefox-profile");
-              $this->session = $web_driver->session($this->browser,array(),array(),$browser_profile);
-              Ruth::setSESSION("tessaSession", serialize($this->session));
-              $this->session->open($this->testServer);
+
+            die("Please check that your Selenium server is running and not blocked by a firewall");
         }
 
-        $this->session->window()->maximize();
 
-        //go through each test, load then up and run them
-        echo "<pre>";
+
+        if (!empty(Ruth::getSESSION("tessaSession"))) {
+            $this->session = unserialize(Ruth::getSESSION("tessaSession"));
+        }
+        else {
+            $browser_profile = new PHPWebDriver_WebDriverFirefoxProfile(dirname(dirname(__FILE__))."/selenium/firefox-profile");
+            $this->session = $web_driver->session($this->browser,array(),array(),$browser_profile);
+            Ruth::setSESSION("tessaSession", serialize($this->session));
+        }
+
+
         echo "<h1>Running Tests!</h1>";
-        $this->runTests();
 
+        //this is the default port for testing
+        try {
+            $this->runTests();
+        }
+        catch(Exception $e) {
+            $browser_profile = new PHPWebDriver_WebDriverFirefoxProfile(dirname(dirname(__FILE__))."/selenium/firefox-profile");
+            $this->session = $web_driver->session($this->browser,array(),array(),$browser_profile);
+            Ruth::setSESSION("tessaSession", serialize($this->session));
+            $this->runTests();
+        }
         echo "</pre>";
+
     }
 
     /**
@@ -745,7 +757,7 @@ class Tessa {
      */
     function getActions() {
         $this->actions = new PHPWebDriver_WebDriverActionChains ($this->session);
-       return $this->actions;
+        return $this->actions;
     }
 
     /**
@@ -761,21 +773,21 @@ class Tessa {
     function runTests() {
         $this->message("No tests to run!");
     }
-    
+
     /**
      * Accept popup
      */
     function acceptAlert() {
         $this->session->accept_alert();
     }
-    
+
     /**
      * Dismiss popup
      */
     function dismissAlert() {
         $this->session->dismiss_alert();
     }
-    
+
     /**
      * Execute JS
      */
@@ -837,13 +849,13 @@ class TestElement
      */
     function chooseOption($value) {
         try {
-          $result = $this->byCSS("option[value='{$value}']");
+            $result = $this->byCSS("option[value='{$value}']");
         } catch(Exception $e) {
-          try {
-              $result = $this->byCSS("input[value='{$value}']");
-          }  catch (Exception $e) {
-              die($e);
-          }
+            try {
+                $result = $this->byCSS("input[value='{$value}']");
+            }  catch (Exception $e) {
+                die($e);
+            }
         }
         return $result;
     }
@@ -874,7 +886,7 @@ class TestElement
      */
     function andSetText($text)
     {
-      $this->setText($text, true);
+        $this->setText($text, true);
     }
 
     /**
@@ -952,7 +964,7 @@ class TestElement
      * @param $options
      */
     function dragAndDrop ($target, $options) {
-       $this->element->dragAndDrop( $target, $options )->perform();
+        $this->element->dragAndDrop( $target, $options )->perform();
     }
 
     /**
@@ -966,7 +978,7 @@ class TestElement
      * @return mixed
      */
     function getID() {
-       return $this->element->getID();
+        return $this->element->getID();
     }
 
 

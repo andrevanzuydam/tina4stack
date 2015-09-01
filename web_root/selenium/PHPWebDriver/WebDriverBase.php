@@ -21,7 +21,7 @@ abstract class PHPWebDriver_WebDriverBase {
       switch ($status_code) {
         case 0:
           // Success
-          break;
+        break;
         case 1:
           throw new PHPWebDriver_IndexOutOfBoundsWebDriverError($message, $results);
         case 2:
@@ -179,7 +179,8 @@ abstract class PHPWebDriver_WebDriverBase {
       if ($params && is_array($params)) {
         $msg .= sprintf(' with params: %s', json_encode($params));
       }
-      throw new PHPWebDriver_WebDriverCurlException($msg . "\n\n" . $error);
+      $this->throwException("007", $msg, $error);
+     // throw new PHPWebDriver_WebDriverCurlException($msg . "\n\n" . $error);
     }
     curl_close($curl);
 

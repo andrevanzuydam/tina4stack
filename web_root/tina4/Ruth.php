@@ -32,105 +32,123 @@ define ("RUTH_PATCH", "PATCH");
 define ("RUTH_DELETE", "DELETE");
 
 class Ruth {
-        /**
-     * Log of messages to inject after the page load
-     * @var
-     */
-    public static $debugMessages;  //If this is true we have debugging
-        /**
-     * Was an ajax call
-     * @var
-     */
-    public static $wasAJAXCall = false;    //Routes that the system must route through
-/**
+    /**
      * Indicates whether debugging is on or off
      * @var Boolean
      */
-    private static $DEBUG = false;
+    private static $DEBUG = false;  //If this is true we have debugging
     /**
      * The list of all the routes in the system which are in the form  (object) array("requestMethod" => $requestMethod, "routePath" => $routePath, "routeFunction" => $routeFunction);
      * @var Array
      */
-    private static $routes = [];   //Any objects that need to be used in the system
-        /**
+    private static $routes = [];    //Routes that the system must route through
+    /**
      * A list of error routes to goto when an error happens, this will be instead of the default
      */
-    private static $errorRoutes = [];        //The session variables
+    private static $errorRoutes = [];
     /**
      * A list of objects which must persist in Ruth
      * @var Array
      */
-    private static $objects = [];        //The request variables
+    private static $objects = [];   //Any objects that need to be used in the system
     /**
      * An array snapshot of the $_SESSION variable
      * @var Array
      */
-    private static $SESSION;         //All the cookie variables
+    private static $SESSION;        //The session variables
     /**
      * An array snapshot of the $_REQUEST variable
      * @var Array
      */
-    private static $REQUEST;         //All the server variables
+    private static $REQUEST;        //The request variables
     /**
      * An array snapshot of the $_COOKIE variable
      * @var Array
      */
-    private static $COOKIE;          //Any file variables
+    private static $COOKIE;         //All the cookie variables
     /**
      * An array snapshot of the $_SERVER variable
      * @var Array
      */
-    private static $SERVER;     //Roles are all the permissions for the routes
+    private static $SERVER;         //All the server variables
     /**
      * An array snapshot of the $_FILES variable
      * @var Array
      */
-    private static $FILES;   //The default Role to be used as "Public"
+    private static $FILES;          //Any file variables
     /**
      * The roles are not compulsory but can be defined to provide security in the system
      * @var Array
      */
-    private static $ROLES = []; //The method of the request passed by the browser
+    private static $ROLES = [];     //Roles are all the permissions for the routes
     /**
      * The default role to be used in the security, see addRole
      * @var String
      */
-    private static $DEFAULT_ROLE;    //The full path passed by the browser
+    private static $DEFAULT_ROLE;   //The default Role to be used as "Public"
     /**
      * The request method can be either GET, POST, PUT, DELETE
      * @var String
      */
-    private static $REQUEST_METHOD;  //The root of the webserver, see the REAL_PATH var for the actual path.
+    private static $REQUEST_METHOD; //The method of the request passed by the browser
     /**
      * The full URL passed by the browser
      * @var String
      */
-    private static $REQUEST_URI;       //The root of where the files are served from
+    private static $REQUEST_URI;    //The full path passed by the browser
     /**
      * The path to the document root of the web server
      * @var String
      */
-    private static $DOCUMENT_ROOT;           //The path after the domain name, eg http://www.send.com/hello?test=9 will be /hello?test=9
-/**
+    private static $DOCUMENT_ROOT;  //The root of the webserver, see the REAL_PATH var for the actual path.
+    /**
      * The real path to where the web files are being hosted, can be different from the document root
      * @var String
      */
-    private static $REAL_PATH;
-/**
+    private static $REAL_PATH;       //The root of where the files are served from
+    /**
      * The path after the domain name
      * @var String
      */
-    private static $PATH;
+    private static $PATH;           //The path after the domain name, eg http://www.send.com/hello?test=9 will be /hello?test=9
+
     /**
      * This will be the raw post data as per php://input
      * @var String
      */
     private static $POST_DATA;
+
     /**
      * This is for the default life time of a session in minutes
      * @var Integer
      */
     private static $lifeTime;
+
+
+    /**
+     * Log of messages to inject after the page load
+     * @var
+     */
+    public static $debugMessages;
+
+    /**
+     * Was an ajax call
+     * @var
+     */
+    public static $wasAJAXCall = false;
+
+    /**
+     * The basic auth for a rest user
+     * @var string
+     */
+    public static $restUser = "RESTUser";
+
+    /**
+     * The basic password for a rest user
+     * @var string
+     */
+    public static $restPass = "RestMaster";
+
     /**
      * A list of codes that will be used with HTTP responses
      * @var Array
@@ -204,6 +222,48 @@ class Ruth {
     }
 
     /**
+     * Static class mustn't destruct
+     */
+    private function __destruct() {
+
+    }
+
+    /**
+     * static object should not be cloned
+     */
+    private function __clone() {
+
+    }
+
+
+    /**
+     * Function to add rest authorization to the rest calls which should be protected
+     * @param String $username
+     * @param String $password
+     */
+    public static function setRESTAuth($username, $password) {
+        self::$restUser[] = $username;
+        self::$restPass[] = password_hash($password, "Ruth");
+    }
+
+    /**
+     * Function to check that the authorization is correct for the user's requesting permission
+     * @param String $username
+     * @param String $password
+     */
+    public static function getRESTAuth($username, $password) {
+        if (!is_array(self::$restUser) && !is_array(self::$restPass)) {
+            if ($username === self::$restUser && $password === self::$restPass) {
+            } else {
+                self::responseHeader(403);
+                die();
+            }
+        }  else { //Search through the arrays to get the correct usernames and validate the salt
+
+        }
+    }
+
+    /**
      * The default page template for Ruth so she can make routes
      * @param type $title String A title to name the page by
      * @return type Shape A page template with default bootstrap
@@ -215,8 +275,6 @@ class Ruth {
                 alink (["rel" => "stylesheet", "href"=>"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"]),
                 alink (["rel" => "stylesheet", "href"=> "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"]),
                 alink (["rel" => "stylesheet", "href"=> "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css"])
-
-
             ),
             body (  ["style" => "padding: 0px 20px 0px", "id" => "content"])
 
@@ -252,6 +310,14 @@ class Ruth {
     }
 
     /**
+     * The debugging system for the class
+     * @param String $message A message to be sent through for debugging purposes
+     */
+    public static function Message ($message) {
+        Ruth::$debugMessages[] = $message."<br />";
+    }
+
+    /**
      * Switch debugging on for Ruth
      *
      * Turns on the debugging in Ruth showing a user how the routing is done
@@ -263,23 +329,14 @@ class Ruth {
     }
 
     /**
-     * The debugging system for the class
-     * @param String $message A message to be sent through for debugging purposes
+     * A function to set request variables using Ruth
+     * @param String $keyName The name of the request variable to set.
+     * @param type $keyValue The value stored in the request variable
      */
-    public static function Message ($message) {
-        self::$debugMessages[] = $message."<br />";
-    }
-
-    /**
-     * Function to make request variables into Session variables with a filter array of fields that shouldn't be considered
-     * @param type $filter
-     */
-    public static function requestToSESSION ($filter="") {
-        if ($filter === "") $filter = [];
-        foreach (self::getREQUEST() as $requestName => $requestValue ) {
-            if (!in_array($requestName, $filter)) {
-                self::setSESSION($requestName, $requestValue);
-            }
+    public static function setREQUEST ($keyName="", $keyValue="") {
+        if (!empty($keyName)) {
+            $_REQUEST[$keyName] = $keyValue;
+            self::$REQUEST = array_merge($_REQUEST, self::parseParams($_SERVER["REQUEST_URI"]));
         }
     }
 
@@ -299,15 +356,20 @@ class Ruth {
             }
     }
 
+    public static function getREQUEST_URI () {
+        return self::$REQUEST_URI;
+    }
+
     /**
-     * A function to set request variables using Ruth
-     * @param String $keyName The name of the request variable to set.
-     * @param type $keyValue The value stored in the request variable
+     * Function to make request variables into Session variables with a filter array of fields that shouldn't be considered
+     * @param type $filter
      */
-    public static function setREQUEST ($keyName="", $keyValue="") {
-        if (!empty($keyName)) {
-            $_REQUEST[$keyName] = $keyValue;
-            self::$REQUEST = array_merge($_REQUEST, self::parseParams($_SERVER["REQUEST_URI"]));
+    public static function requestToSESSION ($filter="") {
+        if ($filter === "") $filter = [];
+        foreach (Ruth::getREQUEST() as $requestName => $requestValue ) {
+            if (!in_array($requestName, $filter)) {
+                Ruth::setSESSION($requestName, $requestValue);
+            }
         }
     }
 
@@ -322,7 +384,7 @@ class Ruth {
             $filter = [];
         }
         $html = [];
-        foreach (self::getREQUEST() as $keyName => $keyValue) {
+        foreach (Ruth::getREQUEST() as $keyName => $keyValue) {
             if (!in_array($keyName, $filter)) {
                 $html[] = input(["type" => $type, "name" => $keyName, "value" => $keyValue]);
             }
@@ -336,6 +398,7 @@ class Ruth {
     public static function getPOST_DATA() {
         return self::$POST_DATA;
     }
+
 
     /**
      * Gets a particular object based on the key
@@ -365,6 +428,32 @@ class Ruth {
     }
 
     /**
+     * Sets the Cookie name and value for things we need to store client side
+     * @param String $cookieName The name of the cookie
+     * @param String $value The value to be stored in the cookie
+     * @param String $minutes How many minutes until the cookie must expire
+     */
+    public static function setCOOKIE($cookieName, $value="", $minutes=60) {
+        setcookie ($cookieName, $value, time()+($minutes*60));
+    }
+
+    /**
+     * Getter for the cookie variables, blank keyName returns all
+     * @param String $keyName The name of the cookie
+     * @return String The value of the cookie
+     */
+    public static function getCOOKIE($keyName = "") {
+        if (empty($keyName)) {
+            return self::$COOKIE;
+        } else
+            if (!empty(self::$COOKIE[$keyName])) {
+                return self::$COOKIE[$keyName];
+            } else {
+                return null;
+            }
+    }
+
+    /**
      * Getter for the file variables, blank keyName will return all
      * @param String $keyName The name of the file variable
      * @return Object The file object that is present in the $_FILES variable
@@ -381,6 +470,24 @@ class Ruth {
     }
 
     /**
+     * Getter for the Server variables
+     * @param String $keyName The name of the variable requested
+     * @return String The value of the variable requested
+     */
+    public static function getSERVER($keyName = "") {
+        if (empty($keyName)) {
+            return self::$SERVER;
+        } else
+            if (!empty(self::$SERVER[$keyName])) {
+                return self::$SERVER[$keyName];
+            } else {
+
+                return null;
+            }
+    }
+
+
+    /**
      * Get the path of the URL after the website address
      * @return String The path of the website after the domain name
      */
@@ -388,12 +495,21 @@ class Ruth {
         return self::$PATH;
     }
 
+
     /**
      * Get the request method that was used
      * @return String The request method used - either POST or GET
      */
     public static function getRequestMethod() {
         return self::$REQUEST_METHOD;
+    }
+
+    /**
+     * Get the real path to where ruth is running form
+     * @return String return the real path
+     */
+    public static function getREAL_PATH() {
+        return self::$REAL_PATH;
     }
 
     /**
@@ -434,9 +550,45 @@ class Ruth {
             }
         }
 
-        return self::$PATH;
+        return Ruth::$PATH;
     }
 
+    /**
+     * A function to set session variables using Ruth
+     * @param String $keyName The name of the sesson variable to set.
+     * @param type $keyValue The value stored in the session variable
+     */
+    public static function setSESSION ($keyName="", $keyValue="") {
+        if (isset($keyValue) || !empty($keyName)) {
+
+            if(is_null($keyValue)){
+                unset($_SESSION[$keyName]);
+            } else {
+                $_SESSION[$keyName] = $keyValue;
+            }
+
+            self::$SESSION = $_SESSION;
+        }
+    }
+
+    /**
+     * Get a session variable using Ruth
+     * @param type $keyName
+     * @return type
+     */
+    public static function getSESSION($keyName = "") {
+        if (!empty($_SESSION)) {
+            self::$SESSION = $_SESSION;
+            if (empty($keyName)) {
+                return self::$SESSION;
+            } else
+                if (isset(self::$SESSION[$keyName]) || !empty(self::$SESSION[$keyName])) {
+                    return self::$SESSION[$keyName];
+                } else {
+                    return null;
+                }
+        }
+    }
     /**
      * Unset session variables using Ruth
      * @param String $keyName The name of the session variable
@@ -455,6 +607,7 @@ class Ruth {
             }
         }
     }
+
 
     /**
      * Set a role for Ruth to use in validating your routes that you want people to access
@@ -476,6 +629,59 @@ class Ruth {
     }
 
     /**
+     * The method to set authorization
+     *
+     * Authorization works by setting an authToken in the session and an expiry time. Also the role is defined for security purposes.
+     *
+     * @param String $roleName The naame of the Role matching declared roles
+     * @param Mixed $authDATA Any PHP array or object
+     * @param Integer $lifeTime The amount minutes
+     */
+    public static function setAuthorization ($roleName="", $authDATA="", $lifeTime=30) {
+        if ($roleName != "") {
+            if (array_key_exists ($roleName, self::$ROLES)) {
+
+                Ruth::$lifeTime = $lifeTime;
+
+                $_SESSION["authToken"] = md5($roleName.print_r ($authDATA, 1).$lifeTime);
+                $_SESSION["authData"] = $authDATA;
+                $_SESSION["roleName"] = $roleName;
+
+                $expiryTime = new DateTime (Date("Y-m-d h:i:s"));
+                $expiryTime->add (new DateInterval ("PT".$lifeTime."M") );
+                $_SESSION["expires"] = $expiryTime;
+
+                self::$SESSION = $_SESSION;
+            }
+            else {
+                die ("<pre>Role ".$roleName." specified does not exist in declared roles:\n".print_r (self::$ROLES, 1)."</pre>");
+            }
+        }
+    }
+
+    /**
+     * Deletes the security token
+     *
+     * The session is invalidated and the internal session variable of Ruth updated
+     *
+     * @return Boolean Returns true if there was a non empty authToken in the session
+     */
+    public static function delAuthorization () {
+        if (!empty($_SESSION["authToken"])) {
+            $_SESSION["authToken"] = null;
+            $_SESSION["authData"] = null;
+            $_SESSION["roleName"] = null;
+            $_SESSION["expires"] = null;
+            self::$SESSION = $_SESSION;
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
+
+    /**
      * Create the session name and initialize all the system variables
      *
      * This method creates a session with the name specified and sets all the internal variables it can.
@@ -485,7 +691,7 @@ class Ruth {
      */
     public static function initRuth($sessionName) {
         if (empty($sessionName))
-            die("This framework works with sessions, please specify a session name when calling Ruth");
+            die("This framework works with sessions, please specify a session name when calling Router");
 
         self::$POST_DATA = file_get_contents ("php://input");
 
@@ -522,7 +728,7 @@ class Ruth {
 
 
             unset($_REQUEST["formData"]);
-            unset(self::$REQUEST["formData"]);
+            unset(Ruth::$REQUEST["formData"]);
         }
 
 
@@ -567,37 +773,6 @@ class Ruth {
     }
 
     /**
-     * The method to set authorization
-     *
-     * Authorization works by setting an authToken in the session and an expiry time. Also the role is defined for security purposes.
-     *
-     * @param String $roleName The naame of the Role matching declared roles
-     * @param Mixed $authDATA Any PHP array or object
-     * @param Integer $lifeTime The amount minutes
-     */
-    public static function setAuthorization ($roleName="", $authDATA="", $lifeTime=30) {
-        if ($roleName != "") {
-            if (array_key_exists ($roleName, self::$ROLES)) {
-
-                self::$lifeTime = $lifeTime;
-
-                $_SESSION["authToken"] = md5($roleName.print_r ($authDATA, 1).$lifeTime);
-                $_SESSION["authData"] = $authDATA;
-                $_SESSION["roleName"] = $roleName;
-
-                $expiryTime = new DateTime (Date("Y-m-d h:i:s"));
-                $expiryTime->add (new DateInterval ("PT".$lifeTime."M") );
-                $_SESSION["expires"] = $expiryTime;
-
-                self::$SESSION = $_SESSION;
-            }
-            else {
-                die ("<pre>Role ".$roleName." specified does not exist in declared roles:\n".print_r (self::$ROLES, 1)."</pre>");
-            }
-        }
-    }
-
-    /**
      * The Add Route Method
      *
      * This method adds routes into the system based on what the user wants to use, your webserver needs to be configured correctly for this
@@ -624,6 +799,178 @@ class Ruth {
     public static function addErrorRoute ($errorCode, $routePath) {
         self::$errorRoutes[$errorCode] = (object) array ("errorCode" => $errorCode, "routePath" => $routePath);
         return true;
+    }
+
+    /**
+     * The response header
+     *
+     * We use response header to return a valid HTTP response when something happens, included is a message or body to display with the message
+     *
+     * @param String $errorCode A valid error code which is declared above
+     * @param String $message A custom message to display with the error code otherwise the default is taken.
+     */
+    public static function responseHeader($errorCode = 404, $message = "") {
+        if (!empty (self::$errorRoutes[$errorCode])) {
+
+            Ruth::redirect(self::$errorRoutes[$errorCode]->routePath);
+        }
+        else {
+            header("HTTP/1.0 " . $errorCode . " " . self::$CODES[$errorCode]);
+            if (empty($message)) {
+                echo "HTTP/1.0 " . $errorCode . " " . self::$CODES[$errorCode];
+            } else {
+                header('X-Ruth-Message:'.$message);
+            }
+            die();
+        }
+    }
+
+    /**
+     * Creates a regular expression
+     *
+     * This method created a regular expression to be used for matching with the routing and security
+     *
+     * @param type $routePath The path specified by the user
+     * @return String A regular expression which can be used for routing
+     */
+    public static function createRegEx($routePath) {
+        //replace the variables with regex to get them
+        $regEx = preg_replace('/\{(.+)\}/i', '([a-z0-9\_\-\%\@\.]+)', explode ("/", $routePath));
+        $regEx = join ("/", $regEx);
+        $regEx = str_replace('/', '\/', $regEx);
+        $regEx = str_replace('*', '.*+', $regEx);
+        return '/^' . $regEx . '\/?$/i';
+    }
+
+    /**
+     * The method
+     *
+     * @param type $routePath
+     * @param string $URI
+     * @return boolean
+     *
+     */
+    public static function matchRoute($routePath, $URI) {
+        if(strpos($routePath, "|") !== false){
+            $routePath = "(".$routePath.")";
+        }
+
+        //Add a trailing slash to $URI if there is none
+        if (substr($URI, -1) !== "/") $URI .="/";
+        //fix the routes
+        $matching = false;
+        $regEx = self::createRegEx($routePath);
+
+        if (self::$DEBUG) {
+            self::Message(__LINE__.": Matching ". $regEx);
+            self::Message(__LINE__.": To ".$URI);
+        }
+        preg_match($regEx, $URI, $matches);
+
+
+        if (!empty($matches)) {
+            if (self::$DEBUG) {
+                self::Message(__LINE__.": Matches ".print_r($matches, 1));
+            }
+            $matching = true;
+        }
+        return $matching;
+    }
+
+    public static function getParams($routePath, $URI) {
+        //Remove the trailing slash
+        if (substr($routePath,-1,1) === "/") {
+            $routePath = substr($routePath, 0,  -1);
+        }
+        $regEx = self::createRegEx($routePath);
+        preg_match($regEx, $URI, $matches);
+        $params = array();
+        foreach ($matches as $id => $value) {
+            if ($id != 0) {
+                $params[] = urldecode($value);
+            }
+            else if ($id == 0) {
+                self::$PATH = $value;
+            }
+        }
+        return $params;
+    }
+
+
+    public static function redirect ($newPath="") {
+        if (!headers_sent()) {
+            header('Location: '.$newPath);
+            die();
+        }
+        else {
+            echo "<script>location.href = '{$newPath}'; </script>";
+            die();
+        }
+
+    }
+
+    public static function getAuthorization ($routePath="") {
+
+        //Authorized is off by default
+        $authorized = false;
+        //Determine the role
+        $roleName = "";
+
+        if (!empty($_SESSION["authToken"])) {
+            $expiryTime = new DateTime(Date("Y-m-d h:i:s"));
+
+            if (!empty($_SESSION["expires"])) {
+                $interval = $_SESSION["expires"]->diff($expiryTime);
+                $minutes = $interval->format("%i");
+                if ($minutes > 0) {
+
+                    if (!empty($_SESSION["roleName"])) {
+                        $roleName = $_SESSION["roleName"];
+                    }
+
+                    if (empty(Ruth::$lifeTime)) {
+                        Ruth::$lifeTime = 30;
+                    }
+
+                    //update the session again
+                    $expiryTime = new DateTime (Date("Y-m-d h:i:s"));
+                    $expiryTime->add (new DateInterval ("PT".Ruth::$lifeTime."M") );
+                    $_SESSION["expires"] = $expiryTime;
+
+
+                } else {
+                    $roleName = self::$DEFAULT_ROLE;
+                    Ruth::delAuthorization();
+                }
+            } else {
+                $roleName = self::$DEFAULT_ROLE;
+            }
+        } else {
+            $roleName = self::$DEFAULT_ROLE;
+        }
+
+        //Check if the role we have found is real
+
+        if (array_key_exists ($roleName, self::$ROLES)) {
+            //Check if routePath is matched in the list of the Role
+            if (self::$DEBUG) {
+                self::Message(__LINE__.": {$roleName} Allowed ".print_r(self::$ROLES[$roleName], 1));
+            }
+
+            foreach (self::$ROLES[$roleName] as $rid => $roleRoute) {
+                if (self::matchRoute($roleRoute, $routePath)) {
+                    $authorized = true;
+                    break;
+                }
+            }
+        }
+        else {
+            Ruth::delAuthorization();
+            self::responseHeader(401);
+            die;
+        }
+
+        return $authorized;
     }
 
     public static function parseRoutes($customPath="") {
@@ -706,7 +1053,7 @@ class Ruth {
 
         if (defined("ONROUTE") && !empty(ONROUTE)) {
 
-            $params = ["action" => "route", "server" => self::getSERVER(), "cookies" => self::getCOOKIE(), "session" => self::getSESSION(), "request" => self::getREQUEST()];
+            $params = ["action" => "route", "server" => Ruth::getSERVER(), "cookies" => Ruth::getCOOKIE(), "session" => Ruth::getSESSION(), "request" => Ruth::getREQUEST()];
             @call_user_func_array(ONROUTE, $params);
 
         }
@@ -715,7 +1062,7 @@ class Ruth {
             //before we quit, see if Kim can help us!
             if (class_exists("Kim")) {
 
-                $pageName = self::$REQUEST_URI;
+                $pageName = Ruth::$REQUEST_URI;
 
                 $html = (new Kim())->getDefaultPage($pageName);
                 if (!empty($html)) {
@@ -738,309 +1085,11 @@ class Ruth {
             else {
                 file_put_contents (self::getREAL_PATH()."/ajax_debug.log", print_r(self::getREQUEST(),1).print_r(self::getCOOKIE(),1).print_r(self::getSESSION(),1));
                 //output the debug window
-                if (self::getREQUEST_URI()  != "/debug" && !self::$wasAJAXCall) {
+                if (Ruth::getREQUEST_URI()  != "/debug" && !self::$wasAJAXCall) {
                     echo (new Kim())->parseTemplate("/snippet/debug", ["CODE" => file_get_contents(self::getREAL_PATH() . "/ajax_debug.log")]);
                 }
             }
         }
-    }
-
-    /**
-     * The method
-     *
-     * @param type $routePath
-     * @param string $URI
-     * @return boolean
-     *
-     */
-    public static function matchRoute($routePath, $URI) {
-        if(strpos($routePath, "|") !== false){
-            $routePath = "(".$routePath.")";
-        }
-
-        //Add a trailing slash to $URI if there is none
-        if (substr($URI, -1) !== "/") $URI .="/";
-        //fix the routes
-        $matching = false;
-        $regEx = self::createRegEx($routePath);
-
-        if (self::$DEBUG) {
-            self::Message(__LINE__.": Matching ". $regEx);
-            self::Message(__LINE__.": To ".$URI);
-        }
-        preg_match($regEx, $URI, $matches);
-
-
-        if (!empty($matches)) {
-            if (self::$DEBUG) {
-                self::Message(__LINE__.": Matches ".print_r($matches, 1));
-            }
-            $matching = true;
-        }
-        return $matching;
-    }
-
-    /**
-     * Creates a regular expression
-     *
-     * This method created a regular expression to be used for matching with the routing and security
-     *
-     * @param type $routePath The path specified by the user
-     * @return String A regular expression which can be used for routing
-     */
-    public static function createRegEx($routePath) {
-        //replace the variables with regex to get them
-        $regEx = preg_replace('/\{(.+)\}/i', '([a-z0-9\_\-\%\@\.]+)', explode ("/", $routePath));
-        $regEx = join ("/", $regEx);
-        $regEx = str_replace('/', '\/', $regEx);
-        $regEx = str_replace('*', '.*+', $regEx);
-        return '/^' . $regEx . '\/?$/i';
-    }
-
-    public static function getAuthorization ($routePath="") {
-
-        //Authorized is off by default
-        $authorized = false;
-        //Determine the role
-        $roleName = "";
-
-        if (!empty($_SESSION["authToken"])) {
-            $expiryTime = new DateTime(Date("Y-m-d h:i:s"));
-
-            if (!empty($_SESSION["expires"])) {
-                $interval = $_SESSION["expires"]->diff($expiryTime);
-                $minutes = $interval->format("%i");
-                if ($minutes > 0) {
-
-                    if (!empty($_SESSION["roleName"])) {
-                        $roleName = $_SESSION["roleName"];
-                    }
-
-                    if (empty(self::$lifeTime)) {
-                        self::$lifeTime = 30;
-                    }
-
-                    //update the session again
-                    $expiryTime = new DateTime (Date("Y-m-d h:i:s"));
-                    $expiryTime->add (new DateInterval ("PT".self::$lifeTime."M") );
-                    $_SESSION["expires"] = $expiryTime;
-
-
-                } else {
-                    $roleName = self::$DEFAULT_ROLE;
-                    self::delAuthorization();
-                }
-            } else {
-                $roleName = self::$DEFAULT_ROLE;
-            }
-        } else {
-            $roleName = self::$DEFAULT_ROLE;
-        }
-
-        //Check if the role we have found is real
-
-        if (array_key_exists ($roleName, self::$ROLES)) {
-            //Check if routePath is matched in the list of the Role
-            if (self::$DEBUG) {
-                self::Message(__LINE__.": {$roleName} Allowed ".print_r(self::$ROLES[$roleName], 1));
-            }
-
-            foreach (self::$ROLES[$roleName] as $rid => $roleRoute) {
-                if (self::matchRoute($roleRoute, $routePath)) {
-                    $authorized = true;
-                    break;
-                }
-            }
-        }
-        else {
-            self::delAuthorization();
-            self::responseHeader(401);
-            die;
-        }
-
-        return $authorized;
-    }
-
-    /**
-     * Deletes the security token
-     *
-     * The session is invalidated and the internal session variable of Ruth updated
-     *
-     * @return Boolean Returns true if there was a non empty authToken in the session
-     */
-    public static function delAuthorization () {
-        if (!empty($_SESSION["authToken"])) {
-            $_SESSION["authToken"] = null;
-            $_SESSION["authData"] = null;
-            $_SESSION["roleName"] = null;
-            $_SESSION["expires"] = null;
-            self::$SESSION = $_SESSION;
-            return true;
-        }
-        else {
-            return false;
-        }
-
-    }
-
-    /**
-     * The response header
-     *
-     * We use response header to return a valid HTTP response when something happens, included is a message or body to display with the message
-     *
-     * @param String $errorCode A valid error code which is declared above
-     * @param String $message A custom message to display with the error code otherwise the default is taken.
-     */
-    public static function responseHeader($errorCode = 404, $message = "") {
-        if (!empty (self::$errorRoutes[$errorCode])) {
-
-            self::redirect(self::$errorRoutes[$errorCode]->routePath);
-        }
-        else {
-            header("HTTP/1.0 " . $errorCode . " " . self::$CODES[$errorCode]);
-            if (empty($message)) {
-                echo "HTTP/1.0 " . $errorCode . " " . self::$CODES[$errorCode];
-            } else {
-                echo $message;
-            }
-            die();
-        }
-    }
-
-    public static function redirect ($newPath="") {
-        if (!headers_sent()) {
-            header('Location: '.$newPath);
-            die();
-        }
-        else {
-            echo "<script>location.href = '{$newPath}'; </script>";
-            die();
-        }
-
-    }
-
-    public static function getParams($routePath, $URI) {
-        //Remove the trailing slash
-        if (substr($routePath,-1,1) === "/") {
-            $routePath = substr($routePath, 0,  -1);
-        }
-        $regEx = self::createRegEx($routePath);
-        preg_match($regEx, $URI, $matches);
-        $params = array();
-        foreach ($matches as $id => $value) {
-            if ($id != 0) {
-                $params[] = urldecode($value);
-            }
-            else if ($id == 0) {
-                self::$PATH = $value;
-            }
-        }
-        return $params;
-    }
-
-    /**
-     * Getter for the Server variables
-     * @param String $keyName The name of the variable requested
-     * @return String The value of the variable requested
-     */
-    public static function getSERVER($keyName = "") {
-        if (empty($keyName)) {
-            return self::$SERVER;
-        } else
-            if (!empty(self::$SERVER[$keyName])) {
-                return self::$SERVER[$keyName];
-            } else {
-                return null;
-            }
-    }
-
-    /**
-     * Getter for the cookie variables, blank keyName returns all
-     * @param String $keyName The name of the cookie
-     * @return String The value of the cookie
-     */
-    public static function getCOOKIE($keyName = "") {
-        if (empty($keyName)) {
-            return self::$COOKIE;
-        } else
-            if (!empty(self::$COOKIE[$keyName])) {
-                return self::$COOKIE[$keyName];
-            } else {
-                return null;
-            }
-    }
-
-    /**
-     * Sets the Cookie name and value for things we need to store client side
-     * @param String $cookieName The name of the cookie
-     * @param String $value The value to be stored in the cookie
-     * @param String $minutes How many minutes until the cookie must expire
-     */
-    public static function setCOOKIE($cookieName, $value="", $minutes=60) {
-        setcookie ($cookieName, $value, time()+($minutes*60));
-    }
-
-    /**
-     * Get a session variable using Ruth
-     * @param type $keyName
-     * @return type
-     */
-    public static function getSESSION($keyName = "") {
-        if (!empty($_SESSION)) {
-            self::$SESSION = $_SESSION;
-            if (empty($keyName)) {
-                return self::$SESSION;
-            } else
-                if (isset(self::$SESSION[$keyName]) || !empty(self::$SESSION[$keyName])) {
-                    return self::$SESSION[$keyName];
-                } else {
-                    return null;
-                }
-        }
-    }
-
-    /**
-     * A function to set session variables using Ruth
-     * @param String $keyName The name of the sesson variable to set.
-     * @param type $keyValue The value stored in the session variable
-     */
-    public static function setSESSION ($keyName="", $keyValue="") {
-        if (isset($keyValue) || !empty($keyName)) {
-
-            if(is_null($keyValue)){
-                unset($_SESSION[$keyName]);
-            } else {
-                $_SESSION[$keyName] = $keyValue;
-            }
-
-            self::$SESSION = $_SESSION;
-        }
-    }
-
-    /**
-     * Get the real path to where ruth is running form
-     * @return String return the real path
-     */
-    public static function getREAL_PATH() {
-        return self::$REAL_PATH;
-    }
-
-    public static function getREQUEST_URI () {
-        return self::$REQUEST_URI;
-    }
-
-    /**
-     * Static class mustn't destruct
-     */
-    private function __destruct() {
-
-    }
-
-    /**
-     * static object should not be cloned
-     */
-    private function __clone() {
-
     }
 
 }

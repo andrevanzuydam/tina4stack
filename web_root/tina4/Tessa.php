@@ -350,259 +350,6 @@ class Tessa {
     private $aliases = [];
 
     /**
-     * @param $method
-     * @param $args
-     * @return mixed
-     */
-    function __call($method, $args) {
-        if (!empty($this->methods[strtolower($method)])) {
-            $this->message("Calling ".$method);
-            if (is_callable($this->methods[strtolower($method)])) {
-                return call_user_func_array($this->methods[strtolower($method)], $args);
-            }
-        }
-        else {
-            $this->message("Test method ".$method." not available! Does the test exist?");
-        }
-    }
-
-    /**
-     * Retrieves a record from the database based on the table, fieldname and value
-     * @param String $tablename The name of the table
-     * @param String $fieldname The name of the field
-     * @param String $value The expected value
-     * @return Object
-     */
-    function checkDB ($tablename, $fieldname, $value) {
-        $this->DEB->commit();
-        $sql = "select * from {$tablename} where {$fieldname} = '{$value}'";
-        $record = $this->DEB->getRow($sql);
-        return $record;
-    }
-
-    /**
-     * Function to retrieve records from the database
-     * @param String $sql
-     * @return Object
-     */
-    function fetchRecords ($sql) {
-        $this->DEB->commit();
-        return $this->DEB->getRows($sql);
-    }
-
-    /**
-     * Function to retrieve a record from the database
-     * @param String $sql
-     * @return Object
-     */
-    function fetchRecord ($sql) {
-        $this->DEB->commit();
-        return $this->DEB->getRow($sql);
-    }
-
-
-    /**
-     * A function to create screenshots when something fails
-     * @return String The HTML path to the screen shot
-     */
-    function screenShot () {
-        $imgData = base64_decode($this->session->screenshot());
-        $filename = '/imagestore/screenshot'.rand(1000,9999).'.png';
-        file_put_contents(Ruth::getREAL_PATH().'/'.$filename, $imgData);
-        return "<a href=\"{$filename}\"><img width=\"640px\" src=\"{$filename}\"></a>";
-    }
-
-    /**
-     * Display a message on the screen
-     * @param $msg
-     */
-    function message ($msg) {
-        echo $msg."...\n";
-    }
-
-    /**
-     * Display a message on the screen prefixed with Trying to
-     * @param $msg
-     */
-    function tryingTo ($msg) {
-        echo "Trying to ".$msg."...\n";
-    }
-
-    /**
-     * Display a message on the screen prefixed with I want to
-     * @param $msg
-     */
-    function IWantTo ($msg) {
-        echo "I want to ".$msg."...\n";
-    }
-
-    /**
-     * @param $id
-     * @return TestELement
-     */
-    function byId($id) {
-        return new TestElement($this->session->element(PHPWebDriver_WebDriverBy::ID, $id));
-    }
-
-    /**
-     * @param $name
-     * @param $element
-     */
-    function addAlias ($name, $element) {
-        $this->aliases[$name] = $element;
-    }
-
-    /**
-     * @param $name
-     * @return null
-     */
-    function getAlias ($name) {
-        if (!empty($this->aliases[$name])) {
-            return $this->aliases[$name];
-        }
-        else {
-            return null;
-        }
-    }
-
-    /**
-     * @param $id
-     * @return null|TestELement
-     */
-    function lookFor($id) {
-        global $TESSA;
-
-        $return = $this->getAlias($id);
-
-        if (empty($return)) {
-            try {
-                $return = $this->byId($id);
-            } catch (Exception $e) {
-                try {
-                    $return = $this->byPath($id);
-                } catch (Exception $e) {
-                    try {
-                        $return = $this->byClass($id);
-                    } catch (Exception $e) {
-                        die($e);
-                    }
-                }
-            }
-        }
-        return $return;
-    }
-
-    /**
-     * @param $id
-     */
-    function clickOn($id) {
-        $this->lookFor($id)->click();
-    }
-
-    /**
-     * @param $css
-     * @return TestELement
-     */
-    function byCSS($css) {
-        return new TestElement($this->session->element(PHPWebDriver_WebDriverBy::CSS_SELECTOR, $css));
-    }
-
-    /**
-     * @param $class
-     * @return TestELement
-     */
-    function byClass ($class) {
-        return new TestElement($this->session->element(PHPWebDriver_WebDriverBy::CLASS_NAME, $class));
-    }
-
-    /**
-     * @param $path
-     * @return TestELement
-     */
-    function byPath ($path) {
-        return new TestElement($this->session->element(PHPWebDriver_WebDriverBy::XPATH, $path));
-    }
-
-
-    /**
-     * @param $id
-     * @return TestELement
-     */
-    function waitFor($id) {
-        try {
-
-            eval ('
-            $w = new PHPWebDriver_WebDriverWait($this->session);
-            $w->until(
-            function($session) {
-                return ( count($session->elements(PHPWebDriver_WebDriverBy::ID, "'.$id.'")) + count($session->elements(PHPWebDriver_WebDriverBy::XPATH, "'.$id.'")) + count($session->elements(PHPWebDriver_WebDriverBy::CLASS_NAME, "'.$id.'")));
-            }
-        );');
-
-        } catch (Exception $e) {
-            echo "Could not wait for {$id} any longer !...\n";
-            die ($e);
-        }
-
-        return $this->lookFor($id);
-    }
-
-    /**
-     * @param $message
-     */
-    function failed($message) {
-        echo "<h3>Failed: {$message}</h3>";
-        echo $this->screenShot()."\n";
-        die();
-    }
-
-    /**
-     * @param $test1
-     * @param $test2
-     */
-    function equals($test1, $test2) {
-        $this->message ("Checking: '{$test1}' === '{$test2}'");
-        if ($test1 !== $test2) {
-            $this->failed("Found ".$test1." expected ".$test2);
-        }
-    }
-
-    /**
-     * Reuben --- Check if two test cases are different
-     * @param $test1
-     * @param $test2
-     */
-    function IsDifferent($test1, $test2) {
-        $this->message ("Checking: '{$test1}' !== '{$test2}'");
-        if ($test1 == $test2) {
-            $this->failed("Found ".$test1." is the same as ".$test2);
-        }
-    }
-
-    /**
-     * @param $URL
-     * @return bool
-     */
-    function openSite($URL) {
-        //this is the default port for testing
-        $this->session->open($URL);
-        $this->session->window()->maximize();
-        return true;
-    }
-
-    /**
-     * @param $URL
-     * @return bool
-     */
-    function navigateTo($URL) {
-        //this is the default port for testing
-        $this->session->window()->maximize();
-        $this->session->open($URL);
-
-        return true;
-    }
-
-    /**
      * @param string $testDir
      * @param string $browser
      * @param string $testServer
@@ -636,19 +383,6 @@ class Tessa {
         }
 
 
-    }
-
-    /**
-     * @param $funcName
-     * @return array
-     */
-    function get_func_argNames($funcName) {
-        $f = new ReflectionFunction($funcName);
-        $result = array();
-        foreach ($f->getParameters() as $param) {
-            $result[] = $param->name;
-        }
-        return $result;
     }
 
     /**
@@ -746,6 +480,277 @@ class Tessa {
     }
 
     /**
+     * @param $funcName
+     * @return array
+     */
+    function get_func_argNames($funcName) {
+        $f = new ReflectionFunction($funcName);
+        $result = array();
+        foreach ($f->getParameters() as $param) {
+            $result[] = $param->name;
+        }
+        return $result;
+    }
+
+    /**
+     *
+     */
+    function runTests() {
+        $this->message("No tests to run!");
+    }
+
+    /**
+     * @param $method
+     * @param $args
+     * @return mixed
+     */
+    function __call($method, $args) {
+        if (!empty($this->methods[strtolower($method)])) {
+            $this->message("Calling ".$method);
+            if (is_callable($this->methods[strtolower($method)])) {
+                return call_user_func_array($this->methods[strtolower($method)], $args);
+            }
+        }
+        else {
+            $this->message("Test method ".$method." not available! Does the test exist?");
+        }
+    }
+
+    /**
+     * Display a message on the screen
+     * @param $msg
+     */
+    function message ($msg) {
+        echo $msg."...\n";
+    }
+
+    /**
+     * Retrieves a record from the database based on the table, fieldname and value
+     * @param String $tablename The name of the table
+     * @param String $fieldname The name of the field
+     * @param String $value The expected value
+     * @return Object
+     */
+    function checkDB ($tablename, $fieldname, $value) {
+        $this->DEB->commit();
+        $sql = "select * from {$tablename} where {$fieldname} = '{$value}'";
+        $record = $this->DEB->getRow($sql);
+        return $record;
+    }
+
+    /**
+     * Function to retrieve records from the database
+     * @param String $sql
+     * @return Object
+     */
+    function fetchRecords ($sql) {
+        $this->DEB->commit();
+        return $this->DEB->getRows($sql);
+    }
+
+    /**
+     * Function to retrieve a record from the database
+     * @param String $sql
+     * @return Object
+     */
+    function fetchRecord ($sql) {
+        $this->DEB->commit();
+        return $this->DEB->getRow($sql);
+    }
+
+    /**
+     * Display a message on the screen prefixed with Trying to
+     * @param $msg
+     */
+    function tryingTo ($msg) {
+        echo "Trying to ".$msg."...\n";
+    }
+
+    /**
+     * Display a message on the screen prefixed with I want to
+     * @param $msg
+     */
+    function IWantTo ($msg) {
+        echo "I want to ".$msg."...\n";
+    }
+
+    /**
+     * @param $name
+     * @param $element
+     */
+    function addAlias ($name, $element) {
+        $this->aliases[$name] = $element;
+    }
+
+    /**
+     * @param $id
+     */
+    function clickOn($id) {
+        $this->lookFor($id)->click();
+    }
+
+    /**
+     * @param $id
+     * @return null|TestELement
+     */
+    function lookFor($id) {
+        global $TESSA;
+
+        $return = $this->getAlias($id);
+
+        if (empty($return)) {
+            try {
+                $return = $this->byId($id);
+            } catch (Exception $e) {
+                try {
+                    $return = $this->byPath($id);
+                } catch (Exception $e) {
+                    try {
+                        $return = $this->byClass($id);
+                    } catch (Exception $e) {
+                        die($e);
+                    }
+                }
+            }
+        }
+        return $return;
+    }
+
+    /**
+     * @param $name
+     * @return null
+     */
+    function getAlias ($name) {
+        if (!empty($this->aliases[$name])) {
+            return $this->aliases[$name];
+        }
+        else {
+            return null;
+        }
+    }
+
+    /**
+     * @param $id
+     * @return TestELement
+     */
+    function byId($id) {
+        return new TestElement($this->session->element(PHPWebDriver_WebDriverBy::ID, $id));
+    }
+
+    /**
+     * @param $path
+     * @return TestELement
+     */
+    function byPath ($path) {
+        return new TestElement($this->session->element(PHPWebDriver_WebDriverBy::XPATH, $path));
+    }
+
+    /**
+     * @param $class
+     * @return TestELement
+     */
+    function byClass ($class) {
+        return new TestElement($this->session->element(PHPWebDriver_WebDriverBy::CLASS_NAME, $class));
+    }
+
+    /**
+     * @param $css
+     * @return TestELement
+     */
+    function byCSS($css) {
+        return new TestElement($this->session->element(PHPWebDriver_WebDriverBy::CSS_SELECTOR, $css));
+    }
+
+    /**
+     * @param $id
+     * @return TestELement
+     */
+    function waitFor($id) {
+        try {
+
+            eval ('
+            $w = new PHPWebDriver_WebDriverWait($this->session);
+            $w->until(
+            function($session) {
+                return ( count($session->elements(PHPWebDriver_WebDriverBy::ID, "'.$id.'")) + count($session->elements(PHPWebDriver_WebDriverBy::XPATH, "'.$id.'")) + count($session->elements(PHPWebDriver_WebDriverBy::CLASS_NAME, "'.$id.'")));
+            }
+        );');
+
+        } catch (Exception $e) {
+            echo "Could not wait for {$id} any longer !...\n";
+            die ($e);
+        }
+
+        return $this->lookFor($id);
+    }
+
+    /**
+     * @param $test1
+     * @param $test2
+     */
+    function equals($test1, $test2) {
+        $this->message ("Checking: '{$test1}' === '{$test2}'");
+        if ($test1 !== $test2) {
+            $this->failed("Found ".$test1." expected ".$test2);
+        }
+    }
+
+    /**
+     * @param $message
+     */
+    function failed($message) {
+        echo "<h3>Failed: {$message}</h3>";
+        echo $this->screenShot()."\n";
+        die();
+    }
+
+    /**
+     * A function to create screenshots when something fails
+     * @return String The HTML path to the screen shot
+     */
+    function screenShot () {
+        $imgData = base64_decode($this->session->screenshot());
+        $filename = '/imagestore/screenshot'.rand(1000,9999).'.png';
+        file_put_contents(Ruth::getREAL_PATH().'/'.$filename, $imgData);
+        return "<a href=\"{$filename}\"><img width=\"640px\" src=\"{$filename}\"></a>";
+    }
+
+    /**
+     * Reuben --- Check if two test cases are different
+     * @param $test1
+     * @param $test2
+     */
+    function IsDifferent($test1, $test2) {
+        $this->message ("Checking: '{$test1}' !== '{$test2}'");
+        if ($test1 == $test2) {
+            $this->failed("Found ".$test1." is the same as ".$test2);
+        }
+    }
+
+    /**
+     * @param $URL
+     * @return bool
+     */
+    function openSite($URL) {
+        //this is the default port for testing
+        $this->session->open($URL);
+        $this->session->window()->maximize();
+        return true;
+    }
+
+    /**
+     * @param $URL
+     * @return bool
+     */
+    function navigateTo($URL) {
+        //this is the default port for testing
+        $this->session->window()->maximize();
+        $this->session->open($URL);
+
+        return true;
+    }
+
+    /**
      *
      */
     function newSession() {
@@ -765,13 +770,6 @@ class Tessa {
      */
     function deleteAllCookies() {
         $this->session->deleteAllCookies();
-    }
-
-    /**
-     *
-     */
-    function runTests() {
-        $this->message("No tests to run!");
     }
 
     /**
@@ -808,6 +806,15 @@ class TestElement
     private $element;
 
     /**
+     * @param $element
+     */
+    function __construct($element)
+    {
+        $this->element = $element;
+
+    }
+
+    /**
      * @param $path
      * @return TestElement
      */
@@ -835,15 +842,6 @@ class TestElement
     }
 
     /**
-     * @param $css
-     * @return TestELement
-     */
-    function byCSS($css)
-    {
-        return new TestElement($this->element->element(PHPWebDriver_WebDriverBy::CSS_SELECTOR, $css));
-    }
-
-    /**
      * @param $value
      * @return TestElement
      */
@@ -861,12 +859,29 @@ class TestElement
     }
 
     /**
+     * @param $css
+     * @return TestELement
+     */
+    function byCSS($css)
+    {
+        return new TestElement($this->element->element(PHPWebDriver_WebDriverBy::CSS_SELECTOR, $css));
+    }
+
+    /**
      * @param $class
      * @return TestElement
      */
     function byClass($class)
     {
         return new TestElement($this->element->element(PHPWebDriver_WebDriverBy::CLASS_NAME, $class));
+    }
+
+    /**
+     * @param $text
+     */
+    function andSetText($text)
+    {
+        $this->setText($text, true);
     }
 
     /**
@@ -884,19 +899,10 @@ class TestElement
     /**
      * @param $text
      */
-    function andSetText($text)
-    {
-        $this->setText($text, true);
-    }
-
-    /**
-     * @param $text
-     */
     function andAddText($text)
     {
         $this->setText($text, false);
     }
-
 
     /**
      * @return mixed
@@ -934,17 +940,17 @@ class TestElement
     /**
      *
      */
-    function click()
+    function andClick()
     {
-        $this->element->click("");
+        $this->click();
     }
 
     /**
      *
      */
-    function andClick()
+    function click()
     {
-        $this->click();
+        $this->element->click("");
     }
 
     /**
@@ -979,16 +985,6 @@ class TestElement
      */
     function getID() {
         return $this->element->getID();
-    }
-
-
-    /**
-     * @param $element
-     */
-    function __construct($element)
-    {
-        $this->element = $element;
-
     }
 
 }

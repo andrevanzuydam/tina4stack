@@ -19,6 +19,10 @@ class shapeBaseElement {
         $this->registerGlobal();
     }
 
+    function registerGlobal() {
+        $GLOBALS["shapeElements"][$this->id] = $this;
+    }
+
     function __clone() {
         if (empty($this->parent)) {
             $this->parent = $this->id;
@@ -27,12 +31,12 @@ class shapeBaseElement {
         $this->registerGlobal();
     }
 
-    function registerGlobal() {
-        $GLOBALS["shapeElements"][$this->id] = $this;
-    }
-
     function getParent() {
         return $this->parent;
+    }
+
+    function setParent($value = null) {
+        $this->parent = $value;
     }
 
     function getValue() {
@@ -47,10 +51,6 @@ class shapeBaseElement {
         return $this->id;
     }
 
-    function setParent($value = null) {
-        $this->parent = $value;
-    }
-
     function setValue($value) {
         $this->keyValue = $value;
     }
@@ -59,12 +59,12 @@ class shapeBaseElement {
         $this->keyName = $value;
     }
 
-    function setParentElement($parentElement) {
-        $this->parentElement = $parentElement;
-    }
-
     function getParentElement() {
         return $this->parentElement;
+    }
+
+    function setParentElement($parentElement) {
+        $this->parentElement = $parentElement;
     }
 
     function __toString() {
@@ -85,6 +85,87 @@ class htmlElement extends shapeBaseElement {
     private $compress;
 
     private $DS; //data sources for templating
+
+    /**
+     * Constructor for HTMLElement
+     */
+    function __construct() {
+        parent::__construct();
+        $args = func_get_args();
+        foreach ($args as $arg) {
+            $this->parseArgument($arg);
+        }
+    }
+
+    /**
+     * Parse all the Arguments passed to the class, see if they are content or attributes
+     * @param type $arg
+     */
+    function parseArgument($arg) {
+        if (is_array($arg) && $this->is_assoc($arg) && !empty($arg)) {
+            foreach ($arg as $keyName => $keyValue) {
+                $this->attributes[] = new shapeBaseElement($keyName, $keyValue);
+            }
+
+        } else {
+
+            $child = new shapeBaseElement("content", $arg);
+            $child->setParentElement($this);
+            $this->content[] = $child;
+        }
+    }
+
+    /**
+     * Function to check is an array is an associative or not
+     * @param type $array
+     * @return type
+     */
+    function is_assoc($array) {
+        return (bool) count(array_filter(array_keys($array), 'is_string'));
+    }
+
+    /**
+     * Make HTML from the Object
+     * @return String HTML returned from the compile
+     */
+    function __toString() {
+        return $this->compileHTML();
+    }
+
+    /**
+     * Compiling HTML
+     * @return type
+     */
+    function compileHTML() {
+        $html = '';
+        $attributes = $this->compileAttributes();
+        $html .= str_ireplace("[attributes]", $attributes, $this->openingTag);
+        $content = $this->compileContent($this->content);
+
+        if (!empty($this->DS)) {
+            foreach ($this->DS as $dsName => $ds) {
+                if (is_array($ds)) {
+                    //not implemented yet
+                    foreach ($ds as $tid => $template) {
+                        $content = $this->templateHTML ($content, $template);
+                    }
+                }
+                else {
+                    $content = $this->templateHTML ($content, $ds);
+                }
+            }
+        }
+
+        if ($this->closingTag === "</SCRIPT>") {
+            if ($this->compress && $this->closingTag === "</SCRIPT>") {
+                $content = (new JSmin())->minify($content);
+            }
+        }
+
+        $html .= $content;
+        $html .= str_ireplace("[attributes]", $attributes, $this->closingTag);
+        return $html;
+    }
 
     /**
      * Compile all the Attributes
@@ -147,94 +228,12 @@ class htmlElement extends shapeBaseElement {
         return $html;
     }
 
-
     function templateHTML ($content, $object) {
         foreach ($object as $keyName => $keyValue) {
             $content = str_ireplace('{'.$keyName.'}', $keyValue, $content);
         }
 
         return $content;
-    }
-
-    /**
-     * Compiling HTML
-     * @return type
-     */
-    function compileHTML() {
-        $html = '';
-        $attributes = $this->compileAttributes();
-        $html .= str_ireplace("[attributes]", $attributes, $this->openingTag);
-        $content = $this->compileContent($this->content);
-
-        if (!empty($this->DS)) {
-            foreach ($this->DS as $dsName => $ds) {
-                if (is_array($ds)) {
-                    //not implemented yet
-                    foreach ($ds as $tid => $template) {
-                        $content = $this->templateHTML ($content, $template);
-                    }
-                }
-                else {
-                    $content = $this->templateHTML ($content, $ds);
-                }
-            }
-        }
-
-        if ($this->closingTag === "</SCRIPT>") {
-            if ($this->compress && $this->closingTag === "</SCRIPT>") {
-                $content = (new JSmin())->minify($content);
-            }
-        }
-
-        $html .= $content;
-        $html .= str_ireplace("[attributes]", $attributes, $this->closingTag);
-        return $html;
-    }
-
-    /**
-     * Make HTML from the Object
-     * @return String HTML returned from the compile
-     */
-    function __toString() {
-        return $this->compileHTML();
-    }
-
-    /**
-     * Function to check is an array is an associative or not
-     * @param type $array
-     * @return type
-     */
-    function is_assoc($array) {
-        return (bool) count(array_filter(array_keys($array), 'is_string'));
-    }
-
-    /**
-     * Parse all the Arguments passed to the class, see if they are content or attributes
-     * @param type $arg
-     */
-    function parseArgument($arg) {
-        if (is_array($arg) && $this->is_assoc($arg) && !empty($arg)) {
-            foreach ($arg as $keyName => $keyValue) {
-                $this->attributes[] = new shapeBaseElement($keyName, $keyValue);
-            }
-
-        } else {
-
-            $child = new shapeBaseElement("content", $arg);
-            $child->setParentElement($this);
-            $this->content[] = $child;
-        }
-    }
-
-    /**
-     * Constructor for HTMLElement
-     */
-    function __construct() {
-        parent::__construct();
-        $args = func_get_args();
-        foreach ($args as $arg) {
-            $this->parseArgument($arg);
-        }
     }
 
     /**
@@ -275,6 +274,14 @@ class htmlElement extends shapeBaseElement {
     }
 
     /**
+     * Getting the content for the Element
+     * @return type
+     */
+    function getContent() {
+        return $this->content;
+    }
+
+    /**
      * Setting Content
      * @param type $value
      */
@@ -297,77 +304,6 @@ class htmlElement extends shapeBaseElement {
             }
         }
         $this->setInherited();
-    }
-
-    /**
-     * Getting the content for the Element
-     * @return type
-     */
-    function getContent() {
-        return $this->content;
-    }
-
-    /**
-     * Adding Content
-     * @param type $value
-     */
-    function addContent($value) {
-        $this->content[] = new shapeBaseElement("content", $value);
-    }
-
-    /**
-     * BySearch - internal function to find elements
-     */
-    function bySearch($keyName, $keyIndex) {
-        $result = null;
-        if (!empty($this->attributes)) {
-            foreach ($this->attributes as $aid => $attribute) {
-
-                if (strtoupper($attribute->getKey()) === strtoupper($keyIndex) && $attribute->getValue() === $keyName) {
-
-                    $result = $this;
-                }
-            }
-        }
-        if (empty($result)) {
-            if (!empty($this->content)) {
-                foreach ($this->content as $cid => $content) {
-                    if (is_object($content) && get_class($content) === "shapeBaseElement") {
-                        if (is_object($this->content[$cid]->getValue()) && get_class($this->content[$cid]->getValue()) == "htmlElement") {
-                            $result = $this->content[$cid]->getValue()->bySearch($keyName, $keyIndex);
-                            if (!empty($result)) {
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * Find and Element by Its HTML Id
-     * Example: p(["id" => "Test"])
-     * @param type $keyName
-     * @return \htmlElement
-     */
-    function byId($keyName) {
-        return $this->bySearch($keyName, "id");
-    }
-
-    /**
-     * Find and Element by Its HTML Class
-     * Example: p(["clas" => "Test"])
-     * @param type $keyName
-     * @return \htmlElement
-     */
-    function byClass($keyName) {
-        return $this->bySearch($keyName, "class");
-    }
-
-    function byFor($keyName) {
-        return $this->bySearch($keyName, "for");
     }
 
     /**
@@ -410,6 +346,69 @@ class htmlElement extends shapeBaseElement {
                 }
             }
         }
+    }
+
+    /**
+     * Adding Content
+     * @param type $value
+     */
+    function addContent($value) {
+        $this->content[] = new shapeBaseElement("content", $value);
+    }
+
+    /**
+     * Find and Element by Its HTML Id
+     * Example: p(["id" => "Test"])
+     * @param type $keyName
+     * @return \htmlElement
+     */
+    function byId($keyName) {
+        return $this->bySearch($keyName, "id");
+    }
+
+    /**
+     * BySearch - internal function to find elements
+     */
+    function bySearch($keyName, $keyIndex) {
+        $result = null;
+        if (!empty($this->attributes)) {
+            foreach ($this->attributes as $aid => $attribute) {
+
+                if (strtoupper($attribute->getKey()) === strtoupper($keyIndex) && $attribute->getValue() === $keyName) {
+
+                    $result = $this;
+                }
+            }
+        }
+        if (empty($result)) {
+            if (!empty($this->content)) {
+                foreach ($this->content as $cid => $content) {
+                    if (is_object($content) && get_class($content) === "shapeBaseElement") {
+                        if (is_object($this->content[$cid]->getValue()) && get_class($this->content[$cid]->getValue()) == "htmlElement") {
+                            $result = $this->content[$cid]->getValue()->bySearch($keyName, $keyIndex);
+                            if (!empty($result)) {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Find and Element by Its HTML Class
+     * Example: p(["clas" => "Test"])
+     * @param type $keyName
+     * @return \htmlElement
+     */
+    function byClass($keyName) {
+        return $this->bySearch($keyName, "class");
+    }
+
+    function byFor($keyName) {
+        return $this->bySearch($keyName, "for");
     }
 
     /**
@@ -1847,6 +1846,14 @@ class JSMin {
     protected $keptComment = '';
 
     /**
+     * @param string $input
+     */
+    public function __construct($input="")
+    {
+        $this->input = $input;
+    }
+
+    /**
      * Minify Javascript.
      *
      * @param string $js Javascript to be minified
@@ -1857,14 +1864,6 @@ class JSMin {
     {
         $jsmin = new JSMin($js);
         return $jsmin->min();
-    }
-
-    /**
-     * @param string $input
-     */
-    public function __construct($input="")
-    {
-        $this->input = $input;
     }
 
     /**
@@ -2041,45 +2040,6 @@ class JSMin {
     }
 
     /**
-     * @return bool
-     */
-    protected function isRegexpLiteral()
-    {
-        if (false !== strpos("(,=:[!&|?+-~*{;", $this->a)) {
-            // we obviously aren't dividing
-            return true;
-        }
-
-        // we have to check for a preceding keyword, and we don't need to pattern
-        // match over the whole output.
-        $recentOutput = substr($this->output, -10);
-
-        // check if return/typeof directly precede a pattern without a space
-        foreach (array('return', 'typeof') as $keyword) {
-            if ($this->a !== substr($keyword, -1)) {
-                // certainly wasn't keyword
-                continue;
-            }
-            if (preg_match("~(^|[\\s\\S])" . substr($keyword, 0, -1) . "$~", $recentOutput, $m)) {
-                if ($m[1] === '' || !$this->isAlphaNum($m[1])) {
-                    return true;
-                }
-            }
-        }
-
-        // check all keywords
-        if ($this->a === ' ' || $this->a === "\n") {
-            if (preg_match('~(^|[\\s\\S])(?:case|else|in|return|typeof)$~', $recentOutput, $m)) {
-                if ($m[1] === '' || !$this->isAlphaNum($m[1])) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Return the next character from stdin. Watch out for lookahead. If the character is a control character,
      * translate it to a space or linefeed.
      *
@@ -2119,6 +2079,29 @@ class JSMin {
     }
 
     /**
+     * Get the next character, skipping over comments. Some comments may be preserved.
+     *
+     * @return string
+     */
+    protected function next()
+    {
+        $get = $this->get();
+        if ($get === '/') {
+            switch ($this->peek()) {
+                case '/':
+                    $this->consumeSingleLineComment();
+                    $get = "\n";
+                    break;
+                case '*':
+                    $this->consumeMultipleLineComment();
+                    $get = ' ';
+                    break;
+            }
+        }
+        return $get;
+    }
+
+    /**
      * Get next char (without getting it). If is ctrl character, translate to a space or newline.
      *
      * @return string
@@ -2127,18 +2110,6 @@ class JSMin {
     {
         $this->lookAhead = $this->get();
         return $this->lookAhead;
-    }
-
-    /**
-     * Return true if the character is a letter, digit, underscore, dollar sign, or non-ASCII character.
-     *
-     * @param string $c
-     *
-     * @return bool
-     */
-    protected function isAlphaNum($c)
-    {
-        return (preg_match('/^[a-z0-9A-Z_\\$\\\\]$/', $c) || ord($c) > 126);
     }
 
     /**
@@ -2196,26 +2167,54 @@ class JSMin {
     }
 
     /**
-     * Get the next character, skipping over comments. Some comments may be preserved.
-     *
-     * @return string
+     * @return bool
      */
-    protected function next()
+    protected function isRegexpLiteral()
     {
-        $get = $this->get();
-        if ($get === '/') {
-            switch ($this->peek()) {
-                case '/':
-                    $this->consumeSingleLineComment();
-                    $get = "\n";
-                    break;
-                case '*':
-                    $this->consumeMultipleLineComment();
-                    $get = ' ';
-                    break;
+        if (false !== strpos("(,=:[!&|?+-~*{;", $this->a)) {
+            // we obviously aren't dividing
+            return true;
+        }
+
+        // we have to check for a preceding keyword, and we don't need to pattern
+        // match over the whole output.
+        $recentOutput = substr($this->output, -10);
+
+        // check if return/typeof directly precede a pattern without a space
+        foreach (array('return', 'typeof') as $keyword) {
+            if ($this->a !== substr($keyword, -1)) {
+                // certainly wasn't keyword
+                continue;
+            }
+            if (preg_match("~(^|[\\s\\S])" . substr($keyword, 0, -1) . "$~", $recentOutput, $m)) {
+                if ($m[1] === '' || !$this->isAlphaNum($m[1])) {
+                    return true;
+                }
             }
         }
-        return $get;
+
+        // check all keywords
+        if ($this->a === ' ' || $this->a === "\n") {
+            if (preg_match('~(^|[\\s\\S])(?:case|else|in|return|typeof)$~', $recentOutput, $m)) {
+                if ($m[1] === '' || !$this->isAlphaNum($m[1])) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Return true if the character is a letter, digit, underscore, dollar sign, or non-ASCII character.
+     *
+     * @param string $c
+     *
+     * @return bool
+     */
+    protected function isAlphaNum($c)
+    {
+        return (preg_match('/^[a-z0-9A-Z_\\$\\\\]$/', $c) || ord($c) > 126);
     }
 }
 

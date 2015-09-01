@@ -74,24 +74,138 @@ class Maggy {
     }
     
     /**
-     * The default page template for maggy
-     * @param type $title String A title to name the page by
-     * @return type Shape A page template with default bootstrap
+     * Do Migration
+     *
+     * Do Migration finds the last possible migration based on what is read from the database on the constructor
+     * It then opens the migration file, imports it into the database and tries to run each statement.
+     * The migration files must run in sequence and Maggy will stop if she hits an error!
+     *
+     * DO NOT USE COMMIT STATEMENTS IN YOUR MIGRATIONS , RATHER BREAK THINGS UP INTO SMALLER LOGICAL PIECES
      */
-    function getPageTemplate($title="Default") {
-       $html = html (
-                    head (
-                            title ($title),
-                            alink (["rel" => "stylesheet", "href"=>"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"]),
-                            alink (["rel" => "stylesheet", "href"=> "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"]),
-                            alink (["rel" => "stylesheet", "href"=> "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css"])
-                            
-                            
-                    ),
-                    body (  ["style" => "padding: 0px 20px 0px", "id" => "content"])
-               
-               );  
-       return $html; 
+    function doMigration() {
+        $dirHandle = opendir(Ruth::getREAL_PATH() . "/" . $this->migrationPath);
+        $error = false;
+        set_time_limit ( 0 );
+
+        echo "<pre>";
+        echo "STARTING Maggy ....\n";
+
+        $error = false;
+        error_reporting(0);
+        $fileArray = [];
+        while (false !== ($entry = readdir($dirHandle)) && !$error) {
+            if ($entry != "." && $entry != ".." && stripos($entry, ".sql")) {
+                $fileParts = explode(".", $entry);
+                $fileParts = explode(" ", $fileParts[0]);
+                $fileArray[$fileParts[0]] = $entry;
+            }
+        }
+
+
+        asort ($fileArray);
+
+
+
+        foreach ( $fileArray as $fid => $entry ) {
+
+                $fileParts = explode(".", $entry);
+                $fileParts = explode(" ", $fileParts[0]);
+                $sqlCheck = "select * from tina4_maggy where migration_id = '{$fileParts[0]}'";
+                $record = $this->DEB->getRow($sqlCheck);
+
+
+
+
+                $migrationId = $fileParts[0];
+                unset($fileParts[0]);
+                $description = join(" ", $fileParts);
+
+                $content = file_get_contents(Ruth::getREAL_PATH() . "/" . $this->migrationPath . "/" . $entry);
+
+
+
+                $runsql = false;
+                if (empty($record)) {
+                    echo "<span style=\"color:orange;\">RUNNING:\"{$migrationId} {$description}\" ...</span>\n";
+                    $transId = $this->DEB->startTransaction();
+
+                    $sqlInsert = "insert into tina4_maggy (migration_id, description, content, passed)
+                                values ('{$migrationId}', '{$description}', ?, 0)";
+
+
+                    $this->DEB->exec($sqlInsert, $transId, substr($content, 0, 10000));
+                    $this->DEB->commit($transId);
+                    $runsql = true;
+                } else {
+
+                    if ($record->PASSED === "0" || $record->PASSED === "" || $record->PASSED == 0) {
+                        echo "<span style=\"color:orange;\">RETRY: \"{$migrationId} {$description}\" ... </span> \n";
+                        $runsql = true;
+                    } else
+                    if ($record->PASSED === "1" || $record->PASSED == 1 ) {
+                        echo "<span style=\"color:green;\">PASSED:\"{$migrationId} {$description}\"</span>\n";
+                        $runsql = false;
+                    }
+                }
+
+                if ($runsql) {
+                    $transId = $this->DEB->startTransaction();
+                    //before exploding the content, see if it is a stored procedure, trigger or view.
+                    if (stripos ($content, "create trigger") === false && stripos ($content, "create procedure") === false && stripos ($content, "create view") === false ) {
+                      $content = explode($this->delim, $content);
+                    }
+                     else {
+                      $sql = $content;
+                      $content = [];
+                      $content[] = $sql;
+                    }
+
+                    $error = false;
+                    foreach ($content as $cid => $sql) {
+                        if (!empty(trim($sql))) {
+                            $success = $this->DEB->exec($sql, $transId);
+
+                            if (!$success) {
+                                echo "<span style=\"color:red;\">FAILED: \"{$migrationId} {$description}\"</span>\nQUERY:{$sql}\nERROR:".$this->DEB->getError()."\n";
+                                $error = true;
+                                break;
+                            } else {
+                                echo "<span style=\"color:green;\">PASSED:</span> ";
+                            }
+                            echo $sql . " ...\n";
+                        }
+                    }
+
+                    if ($error) {
+                        echo "<span style=\"color:red;\">FAILED: \"{$migrationId} {$description}\"</span>\nAll Transactions Rolled Back ...\n";
+                        $this->DEB->rollbackTransaction($transId);
+                    } else {
+
+                        $this->DEB->commit( $transId );
+
+                        //we need to make sure the commit resulted in no errors
+                        if ($this->DEB->getError() !== "No Error") {
+                          echo "<span style=\"color:red;\">FAILED COMMIT: \"{$migrationId} {$description}\"</span>\nERROR:".$this->DEB->getError()."\n";
+                          $this->DEB->rollbackTransaction($transId);
+                          $error = true;
+                          break;
+                        }
+                         else {
+                           $transId = $this->DEB->startTransaction();
+                           $this->DEB->exec ("update tina4_maggy set passed = 1 where migration_id = '{$migrationId}'", $transId);
+                           $this->DEB->commit($transId);
+                           echo "<span style=\"color:green;\">PASSED: \"{$migrationId} {$description}\"</span>\n";
+                        }
+                    }
+                }
+
+
+
+        }
+
+        if (!$error) echo "FINISHED!";
+        error_reporting(E_ALL);
+        echo "</pre>";
     }
     
     function createMigration() {
@@ -117,146 +231,32 @@ class Maggy {
         return $html;
     }
     
-    function updateMigration() {
-      $fileName = Ruth::getDOCUMENT_ROOT()."/".$this->migrationPath."/".date("Ymdhis")." ".Ruth::getREQUEST("txtDESCRIPTION").".sql";
-      file_put_contents($fileName, Ruth::getREQUEST("txtSQL") );  
-      Ruth::setSESSION("maggyCreateMessage", "{$fileName} created successfully!");
-      Ruth::redirect("/maggy/create");      
+    /**
+     * The default page template for maggy
+     * @param type $title String A title to name the page by
+     * @return type Shape A page template with default bootstrap
+     */
+    function getPageTemplate($title="Default") {
+       $html = html (
+                    head (
+                            title ($title),
+                            alink (["rel" => "stylesheet", "href"=>"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"]),
+                            alink (["rel" => "stylesheet", "href"=> "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"]),
+                            alink (["rel" => "stylesheet", "href"=> "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css"])
+
+
+                    ),
+                    body (  ["style" => "padding: 0px 20px 0px", "id" => "content"])
+
+               );
+       return $html;
     }
     
-    /**
-     * Do Migration
-     * 
-     * Do Migration finds the last possible migration based on what is read from the database on the constructor
-     * It then opens the migration file, imports it into the database and tries to run each statement.
-     * The migration files must run in sequence and Maggy will stop if she hits an error! 
-     * 
-     * DO NOT USE COMMIT STATEMENTS IN YOUR MIGRATIONS , RATHER BREAK THINGS UP INTO SMALLER LOGICAL PIECES
-     */
-    function doMigration() {
-        $dirHandle = opendir(Ruth::getREAL_PATH() . "/" . $this->migrationPath);
-        $error = false;
-        set_time_limit ( 0 );
-        
-        echo "<pre>";
-        echo "STARTING Maggy ....\n";
-
-        $error = false;
-        error_reporting(0);
-        $fileArray = [];
-        while (false !== ($entry = readdir($dirHandle)) && !$error) {
-            if ($entry != "." && $entry != ".." && stripos($entry, ".sql")) {
-                $fileParts = explode(".", $entry);
-                $fileParts = explode(" ", $fileParts[0]);
-                $fileArray[$fileParts[0]] = $entry;
-            }
-        }    
-                
-        
-        asort ($fileArray);
-        
-
-
-        foreach ( $fileArray as $fid => $entry ) {
-               
-                $fileParts = explode(".", $entry);
-                $fileParts = explode(" ", $fileParts[0]);
-                $sqlCheck = "select * from tina4_maggy where migration_id = '{$fileParts[0]}'";
-                $record = $this->DEB->getRow($sqlCheck);
-
-
-                
-                
-                $migrationId = $fileParts[0];
-                unset($fileParts[0]);
-                $description = join(" ", $fileParts);
-                
-                $content = file_get_contents(Ruth::getREAL_PATH() . "/" . $this->migrationPath . "/" . $entry);
-                
-                
-                         
-                $runsql = false;
-                if (empty($record)) {
-                    echo "<span style=\"color:orange;\">RUNNING:\"{$migrationId} {$description}\" ...</span>\n";
-                    $transId = $this->DEB->startTransaction();
-
-                    $sqlInsert = "insert into tina4_maggy (migration_id, description, content, passed)
-                                values ('{$migrationId}', '{$description}', ?, 0)";
-                   
-                   
-                    $this->DEB->exec($sqlInsert, $transId, substr($content, 0, 10000));
-                    $this->DEB->commit($transId);                    
-                    $runsql = true;
-                } else {
-                   
-                    if ($record->PASSED === "0" || $record->PASSED === "" || $record->PASSED == 0) {
-                        echo "<span style=\"color:orange;\">RETRY: \"{$migrationId} {$description}\" ... </span> \n";
-                        $runsql = true;
-                    } else
-                    if ($record->PASSED === "1" || $record->PASSED == 1 ) {
-                        echo "<span style=\"color:green;\">PASSED:\"{$migrationId} {$description}\"</span>\n";
-                        $runsql = false;
-                    }
-                }
-                
-                if ($runsql) {
-                    $transId = $this->DEB->startTransaction();
-                    //before exploding the content, see if it is a stored procedure, trigger or view.
-                    if (stripos ($content, "create trigger") === false && stripos ($content, "create procedure") === false && stripos ($content, "create view") === false ) {
-                      $content = explode($this->delim, $content);    
-                    }
-                     else {
-                      $sql = $content;   
-                      $content = [];
-                      $content[] = $sql;   
-                    } 
-                    
-                    $error = false;
-                    foreach ($content as $cid => $sql) {
-                        if (!empty(trim($sql))) {
-                            $success = $this->DEB->exec($sql, $transId);
-                                                       
-                            if (!$success) {
-                                echo "<span style=\"color:red;\">FAILED: \"{$migrationId} {$description}\"</span>\nQUERY:{$sql}\nERROR:".$this->DEB->getError()."\n";
-                                $error = true;
-                                break;
-                            } else {
-                                echo "<span style=\"color:green;\">PASSED:</span> ";
-                            }
-                            echo $sql . " ...\n";
-                        }
-                    }
-                    
-                    if ($error) {
-                        echo "<span style=\"color:red;\">FAILED: \"{$migrationId} {$description}\"</span>\nAll Transactions Rolled Back ...\n";
-                        $this->DEB->rollbackTransaction($transId);
-                    } else {
-                         
-                        $this->DEB->commit( $transId );
-                        
-                        //we need to make sure the commit resulted in no errors
-                        if ($this->DEB->getError() !== "No Error") {                       
-                          echo "<span style=\"color:red;\">FAILED COMMIT: \"{$migrationId} {$description}\"</span>\nERROR:".$this->DEB->getError()."\n";
-                          $this->DEB->rollbackTransaction($transId);
-                          $error = true;  
-                          break;
-                        }
-                         else {
-                           $transId = $this->DEB->startTransaction();
-                           $this->DEB->exec ("update tina4_maggy set passed = 1 where migration_id = '{$migrationId}'", $transId);
-                           $this->DEB->commit($transId);
-                           echo "<span style=\"color:green;\">PASSED: \"{$migrationId} {$description}\"</span>\n";        
-                        }
-                    }
-                }
-               
-          
-            
-        }
-        
-        if (!$error) echo "FINISHED!";
-        error_reporting(E_ALL);
-        echo "</pre>";
+    function updateMigration() {
+      $fileName = Ruth::getDOCUMENT_ROOT()."/".$this->migrationPath."/".date("Ymdhis")." ".Ruth::getREQUEST("txtDESCRIPTION").".sql";
+      file_put_contents($fileName, Ruth::getREQUEST("txtSQL") );
+      Ruth::setSESSION("maggyCreateMessage", "{$fileName} created successfully!");
+      Ruth::redirect("/maggy/create");
     }
 
 }

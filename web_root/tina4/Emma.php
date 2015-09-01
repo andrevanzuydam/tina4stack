@@ -129,6 +129,25 @@ class Emma {
     }
     
     /**
+     * Send SMS
+     * @param String $mobileno
+     * @param String $message
+     * @param String $countryPrefix
+     * @return String Result of SMS send
+     */
+    function sendSMS ($mobileno, $message="", $countryPrefix="27") {
+        $celno = $this->formatMobile ($mobileno, $countryPrefix);
+        $c = curl_init('http://bulksms.2way.co.za:5567/eapi/submission/send_sms/2/2.0');
+        curl_setopt($c, CURLOPT_POST, 1);
+        curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($c, CURLOPT_POSTFIELDS, 'concat_text_sms_max_parts=4&allow_concat_text_sms=1&username='.$this->bulkSMSUsername.'&password='.$this->bulkSMSPassword.'&message='.$message.'&msisdn='.$celno);
+        $q=curl_exec($c);
+        curl_close($c);
+        $result = $q;
+        return (stripos($result, "IN_PROGRESS") !== false) ? "OK" : "Failed";
+    }
+    
+    /**
      * Format the Mobile Number
      * @param String $celno Mobile number to send with
      * @param String $countryPrefix 1 - america, 27 - south africa
@@ -145,7 +164,7 @@ class Emma {
           if (is_numeric($val))
           {
             $tmpcel = $tmpcel . substr($celno, $i,1);
-          } 
+          }
           $i ++;
         }
 
@@ -159,29 +178,10 @@ class Emma {
 
         if ((strlen($tmpcel)< 11) || (strlen($tmpcel)>11)) {
           return "Failed";
-        }  
+        }
           else {
           return $tmpcel;
-        }  
-    }
-    
-    /**
-     * Send SMS
-     * @param String $mobileno
-     * @param String $message
-     * @param String $countryPrefix
-     * @return String Result of SMS send
-     */
-    function sendSMS ($mobileno, $message="", $countryPrefix="27") {
-        $celno = $this->formatMobile ($mobileno, $countryPrefix);
-        $c = curl_init('http://bulksms.2way.co.za:5567/eapi/submission/send_sms/2/2.0');
-        curl_setopt($c, CURLOPT_POST, 1);
-        curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);        
-        curl_setopt($c, CURLOPT_POSTFIELDS, 'concat_text_sms_max_parts=4&allow_concat_text_sms=1&username='.$this->bulkSMSUsername.'&password='.$this->bulkSMSPassword.'&message='.$message.'&msisdn='.$celno);
-        $q=curl_exec($c);
-        curl_close($c);
-        $result = $q;
-        return (stripos($result, "IN_PROGRESS") !== false) ? "OK" : "Failed"; 
+        }
     }
  
     

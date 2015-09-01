@@ -31,6 +31,7 @@ define ("RUTH_PUT", "PUT");
 define ("RUTH_PATCH", "PATCH");
 define ("RUTH_DELETE", "DELETE");
 
+
 class Ruth {
     /**
      * Indicates whether debugging is on or off
@@ -147,7 +148,7 @@ class Ruth {
      * The basic password for a rest user
      * @var string
      */
-    public static $restPass = "RestMaster";
+    public static $restPass = "RESTMaster";
 
     /**
      * A list of codes that will be used with HTTP responses
@@ -242,8 +243,13 @@ class Ruth {
      * @param String $password
      */
     public static function setRESTAuth($username, $password) {
+        if (self::$restUser === "RESTUser") {
+            self::$restUser = [];
+            self::$restPass = [];
+        }
+
         self::$restUser[] = $username;
-        self::$restPass[] = password_hash($password, "Ruth");
+        self::$restPass[] = password_hash($password, PASSWORD_DEFAULT);
     }
 
     /**
@@ -259,7 +265,21 @@ class Ruth {
                 die();
             }
         }  else { //Search through the arrays to get the correct usernames and validate the salt
-
+            foreach (self::$restUser as $rid => $restUser) {
+                if ($restUser === $username) {
+                    //check if the passwords match
+                    if (password_verify($password, self::$restPass[$rid])) {
+                        //do nothing but exit because we are good!
+                        return true;
+                    }  else {
+                        self::responseHeader(403);
+                        die();
+                    }
+                }
+            }
+            //So we had no joy with any username
+            self::responseHeader(403);
+            die();
         }
     }
 

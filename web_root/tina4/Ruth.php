@@ -766,6 +766,10 @@ class Ruth {
             self::$SERVER = $_SERVER;
         }
 
+        if (!empty($_FILES)) {
+            self::$FILES = $_FILES;
+        }
+
         self::setAuthorization("", "");
 
         /**

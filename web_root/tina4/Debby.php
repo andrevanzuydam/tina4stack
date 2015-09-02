@@ -780,7 +780,7 @@ Ruth::setOBJECT("' . Ruth::getREQUEST("txtALIAS") . '", $' . Ruth::getREQUEST("t
         }
 
 
-        return call_user_func_array([$this, "exec"], $params);
+        return call_user_func_array([$this, "exec"],  $params);
     }
 
     /*
@@ -799,10 +799,11 @@ Ruth::setOBJECT("' . Ruth::getREQUEST("txtALIAS") . '", $' . Ruth::getREQUEST("t
      */
     function update($tablename, $fieldValues, $indexFieldValue)
     {
-
+        $params = [];
         $sqlUpdate = "update {$tablename} set ";
         foreach ($fieldValues as $field => $value) {
-            $sqlUpdate .= " {$field} = '" . $this->escapeString($value) . "',";
+            $sqlUpdate .= " {$field} = ?,";
+            $params[] = $value;
 
         }
         $sqlUpdate = substr($sqlUpdate, 0, -1);
@@ -813,12 +814,14 @@ Ruth::setOBJECT("' . Ruth::getREQUEST("txtALIAS") . '", $' . Ruth::getREQUEST("t
             } else {
                 $sqlUpdate .= " and ";
             }
-            $sqlUpdate .= " {$field} = '" . $this->escapeString($value) . "'";
+            $sqlUpdate .= " {$field} = ?";
+            $params[] = $value;
             $count++;
         }
 
-        return $this->exec($sqlUpdate);
-
+        $params[-1] = $sqlUpdate;
+        ksort($params);
+        return call_user_func_array([$this, "exec"], $params);
     }
 
     /*
@@ -870,6 +873,7 @@ Ruth::setOBJECT("' . Ruth::getREQUEST("txtALIAS") . '", $' . Ruth::getREQUEST("t
 
         $this->lastsql[count($this->lastsql)] = "preparse: " . $sqlParse;
         $sql = $this->parseSQL($sql);
+
 
         if (!$this->dbh) {
             trigger_error("No database handle, use connect first in " . __METHOD__ . " for " . $this->dbtype, E_USER_WARNING);
@@ -1149,6 +1153,7 @@ Ruth::setOBJECT("' . Ruth::getREQUEST("txtALIAS") . '", $' . Ruth::getREQUEST("t
                 $sql = str_replace("||", "+", $sql);
                 $sql = str_replace("timestamp", "datetime", $sql);
             }
+
         if ($this->dbtype == "sqlite3") {
             $sql = str_replace("'now'", "current_timestamp", $sql);
         }
@@ -1159,14 +1164,15 @@ Ruth::setOBJECT("' . Ruth::getREQUEST("txtALIAS") . '", $' . Ruth::getREQUEST("t
             $sql = str_replace("'datetime'", "DATETIME", $sql);
         }
 
-        if ((stripos($sql, "update") !== false || stripos($sql, "insert") !== false) && ($this->dbtype == "mssql" || $this->dbtype == "mssqlnative")) {
+        if ((stripos($sql, "update") !== false || stripos($sql, "insert") !== false) && ($this->dbtype === "mssql" || $this->dbtype === "mssqlnative")) {
             $sql = str_replace("'now'", "GETDATE()", $sql);
-        } else if ((stripos($sql, "update") !== false || stripos($sql, "insert") !== false) && $this->dbtype == "CUBRID") {
+        } else if ((stripos($sql, "update") !== false || stripos($sql, "insert") !== false) && $this->dbtype === "CUBRID") {
             $sql = str_replace("'now'", "CURRENT_TIMESTAMP()", $sql);
         }
 
-        if (stripos($sql, "update ") === false && stripos($sql, "insert ") === false && stripos($sql, "delete ") === false) {
 
+
+        if (stripos($sql, "update ") === false && stripos($sql, "insert ") === false && stripos($sql, "delete ") === false) {
             $sql = str_replace("\r", "", $sql);
             $sql = str_replace("\n", " ", $sql);
             $sql = str_replace(" ,", ",", $sql);

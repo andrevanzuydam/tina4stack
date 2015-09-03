@@ -876,7 +876,8 @@ class Ruth {
 
                     $tableData = "";
                     foreach ($table as $fid => $column) {
-                        if ($column["field"] !== $primaryKey ) {
+                        $column["field"] = strtoupper($column["field"]);
+                        if (strtoupper($column["field"]) !== $primaryKey ) {
 
 
                             if (isset($json->$column["field"])) {
@@ -929,6 +930,7 @@ class Ruth {
 
                     $tableData = "";
                     foreach ($table as $fid => $column) {
+                        $column["field"] = strtoupper($column["field"]);
                         if ($column["field"] !== $primaryKey ) {
                             if (isset($json->$column["field"])) {
                                 $tableData[$column["field"]] = $json->$column["field"];

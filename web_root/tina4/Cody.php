@@ -414,6 +414,12 @@ class Cody {
                         @SWG\Response(response="200", description = "A new record added to '.$tableName.' table" ),
                         @SWG\Response(response="400", description = "Failed to add a record for '.$tableName.' table" ),
                         @SWG\Response(response="403", description = "Forbidden to access the REST service" ),
+                        @SWG\Parameter(
+                        name="body",
+                        description="JSON Record to be updated",
+                        required=true,
+                        schema="#/definitions/'.$tableName.'",
+                        in="body"),
                         produces={"application/json"},
                         consumes={"application/json"}
                         )'."\n";
@@ -442,6 +448,12 @@ class Cody {
                         description="ID of the record to be updated",
                         type="string",
                         in="path"),
+                        @SWG\Parameter(
+                        name="body",
+                        description="JSON Record to be updated",
+                        required=true,
+                        schema="#/definitions/'.$tableName.'",
+                        in="body"),
                         produces={"application/json"},
                         consumes={"application/json"}
                         )'."\n";
@@ -456,6 +468,12 @@ class Cody {
                         description="ID of the record to be patched",
                         type="string",
                         in="path"),
+                        @SWG\Parameter(
+                        name="body",
+                        description="JSON Record to be updated",
+                        required=true,
+                        schema="#/definitions/'.$tableName.'",
+                        in="body"),
                         produces={"application/json"},
                         consumes={"application/json"}
                         )'."\n";

@@ -602,15 +602,11 @@ class Kim {
                 else {
                     if (!empty($data)) {
                         //get the variables out
-
                         preg_match_all ($this->varRegex, $template, $variables);
                         foreach ($variables[1] as $index => $variable) {
                             if (!empty($data->$variable)) {
                                 $varValue = $data->$variable;
                                 if (!empty ($varValue)) {
-
-
-
                                     $elements[$eid][0] = $this->parseValue("{".$variable."}", $varValue, $elements[$eid][0]);
                                     //replace in the template the occurance
                                 }

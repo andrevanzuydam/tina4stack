@@ -377,6 +377,110 @@ class Cody {
 
         Ruth::addRoute(RUTH_GET, "/cody/swagger",
             function () {
+                //generate a database schema for the default /rest interface
+                Ruth::$wasAJAXCall = true;
+                if (Ruth::getOBJECT("DEB")) {
+                    unlink(Ruth::getDOCUMENT_ROOT().'/routes/restAPI.php');
+                    $code = "/**\n";
+                    $code .= '*    @SWG\Info(title="Generic REST API", version="0.1")'."\n";
+                    $DEB = Ruth::getOBJECT("DEB");
+                    $database = $DEB->getDatabase();
+                    foreach ($database as $tableName => $tableColumns) {
+                        $code .= '
+                        @SWG\Definition(definition="'.$tableName.'", required={"'.$tableColumns[0]["field"].'"},
+                        ';
+                        foreach($tableColumns as $cid => $column) {
+                            $type = "string";
+                            $code .= '@SWG\Property(property="'.$column["field"].'",type="'.$type.'")';
+                            if ($cid != count($tableColumns)-1) {
+                                $code .= ','."\n";
+                            }
+                        }
+                        $code .= ')
+                        ';
+
+
+
+                        //LIST
+                        $code .= "*\n".'*    @SWG\Get('."\n".'*     path="/rest/'.$tableName.'",
+                        @SWG\Response(response="200", description = "A list of records from the '.$tableName.' table" ),
+                        @SWG\Response(response="400", description = "No content for '.$tableName.' table" ),
+                        @SWG\Response(response="403", description = "Forbidden to access the REST service" ),
+                        produces={"application/json"}
+                        )'."\n";
+
+                        //CREATE
+                        $code .= "*\n".'*    @SWG\Post('."\n".'*     path="/rest/'.$tableName.'",
+                        @SWG\Response(response="200", description = "A new record added to '.$tableName.' table" ),
+                        @SWG\Response(response="400", description = "Failed to add a record for '.$tableName.' table" ),
+                        @SWG\Response(response="403", description = "Forbidden to access the REST service" ),
+                        produces={"application/json"},
+                        consumes={"application/json"}
+                        )'."\n";
+
+                        //READ
+                        $code .= "*\n".'*    @SWG\Get('."\n".'*     path="/rest/'.$tableName.'/{id}",
+                        @SWG\Response(response="200", description = "Get a record from '.$tableName.' table" ),
+                        @SWG\Response(response="400", description = "Failed to get a record from '.$tableName.' table" ),
+                        @SWG\Response(response="403", description = "Forbidden to access the REST service" ),
+                        @SWG\Parameter(
+                        name="id",
+                        description="ID of the record to be fetched",
+                        type="string",
+                        in="path"),
+                        produces={"application/json"},
+                        consumes={"application/json"}
+                        )'."\n";
+
+                        //UPDATE
+                        $code .= "*\n".'*    @SWG\Put('."\n".'*     path="/rest/'.$tableName.'/{id}",
+                        @SWG\Response(response="200", description = "Update a record from '.$tableName.' table" ),
+                        @SWG\Response(response="400", description = "Failed to update a record from '.$tableName.' table" ),
+                        @SWG\Response(response="403", description = "Forbidden to access the REST service" ),
+                        @SWG\Parameter(
+                        name="id",
+                        description="ID of the record to be updated",
+                        type="string",
+                        in="path"),
+                        produces={"application/json"},
+                        consumes={"application/json"}
+                        )'."\n";
+
+                        //PATCH
+                        $code .= "*\n".'*    @SWG\Patch('."\n".'*     path="/rest/'.$tableName.'/{id}",
+                        @SWG\Response(response="200", description = "Patch a record from '.$tableName.' table" ),
+                        @SWG\Response(response="400", description = "Failed to patch a record from '.$tableName.' table" ),
+                        @SWG\Response(response="403", description = "Forbidden to access the REST service" ),
+                        @SWG\Parameter(
+                        name="id",
+                        description="ID of the record to be patched",
+                        type="string",
+                        in="path"),
+                        produces={"application/json"},
+                        consumes={"application/json"}
+                        )'."\n";
+
+                        //DELETE
+                        $code .= "*\n".'*    @SWG\Delete('."\n".'*     path="/rest/'.$tableName.'/{id}",
+                        @SWG\Response(response="200", description = "Delete a record from '.$tableName.' table" ),
+                        @SWG\Response(response="400", description = "Failed to delete a record from '.$tableName.' table" ),
+                        @SWG\Response(response="403", description = "Forbidden to access the REST service" ),
+                        @SWG\Parameter(
+                        name="id",
+                        description="ID of the record to be deleted",
+                        type="string",
+                        in="path"),
+                        produces={"application/json"},
+                        consumes={"application/json"}
+                        )'."\n";
+
+
+                    }
+                    $code .= "*/";
+                    file_put_contents(Ruth::getDOCUMENT_ROOT().'/routes/restAPI.php', '<?php'."\n".$code);
+                }
+
+
                 require(Ruth::getDOCUMENT_ROOT()."/swagger-php/vendor/autoload.php");
                 $swagger = \Swagger\scan(Ruth::getDOCUMENT_ROOT().'/routes');
                 header('Content-Type: application/json');

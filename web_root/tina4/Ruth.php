@@ -258,28 +258,30 @@ class Ruth {
      * @param String $password
      */
     public static function getRESTAuth($username, $password) {
-        if (!is_array(self::$restUser) && !is_array(self::$restPass)) {
-            if ($username === self::$restUser && $password === self::$restPass) {
-            } else {
+        if (strpos(self::getSERVER("HTTP_HOST"), "local") === false) {
+            if (!is_array(self::$restUser) && !is_array(self::$restPass)) {
+                if ($username === self::$restUser && $password === self::$restPass) {
+                } else {
+                    self::responseHeader(403);
+                    die();
+                }
+            } else { //Search through the arrays to get the correct usernames and validate the salt
+                foreach (self::$restUser as $rid => $restUser) {
+                    if ($restUser === $username) {
+                        //check if the passwords match
+                        if (password_verify($password, self::$restPass[$rid])) {
+                            //do nothing but exit because we are good!
+                            return true;
+                        } else {
+                            self::responseHeader(403);
+                            die();
+                        }
+                    }
+                }
+                //So we had no joy with any username
                 self::responseHeader(403);
                 die();
             }
-        }  else { //Search through the arrays to get the correct usernames and validate the salt
-            foreach (self::$restUser as $rid => $restUser) {
-                if ($restUser === $username) {
-                    //check if the passwords match
-                    if (password_verify($password, self::$restPass[$rid])) {
-                        //do nothing but exit because we are good!
-                        return true;
-                    }  else {
-                        self::responseHeader(403);
-                        die();
-                    }
-                }
-            }
-            //So we had no joy with any username
-            self::responseHeader(403);
-            die();
         }
     }
 
@@ -778,15 +780,16 @@ class Ruth {
          */
         self::addRoute(RUTH_POST, "/rest/{tablename}",
             function($tableName, $id){
-                Ruth::getRESTAuth(Ruth::getSERVER("PHP_AUTH_USER"), Ruth::getSERVER("PHP_AUTH_PW"));
-                if (!empty(Ruth::getOBJECT("DEB"))) {
-                    $DEB = Ruth::getOBJECT("DEB");
+                Ruth::$wasAJAXCall = true;
+                Ruth::getRESTAuth(self::getSERVER("PHP_AUTH_USER"), self::getSERVER("PHP_AUTH_PW"));
+                if (!empty(self::getOBJECT("DEB"))) {
+                    $DEB = self::getOBJECT("DEB");
                     $database = $DEB->getDatabase();
-                    $table = $database[strtoupper($tableName)];
+                    $table = $database[$tableName];
                     if (!empty($table[0]["pk"]) && $table[0]["pk"] === "PRIMARY KEY") {
                         $primaryKey = $table[0]["field"];
                     } else {
-                        $primaryKey = "ID"; // this is a generic fall back
+                        $primaryKey = $table[0]["field"]; // this is a generic fall back
                     }
                     //try and add the record
                     $json = json_decode(Ruth::getPOST_DATA(), true);
@@ -804,10 +807,10 @@ class Ruth {
                     if (!empty($result)) {
                         echo json_encode($result); //return the newly added record
                         header('Content-Type: application/json');
-                        Ruth::responseHeader("200", "Success: Record was added to {$tableName}");
+                        self::responseHeader("200", "Success: Record was added to {$tableName}");
                         $DEB->commit();
                     }  else {
-                        Ruth::responseHeader("400", "Failed: Could not add record to {$tableName}");
+                        self::responseHeader("400", "Failed: Could not add record to {$tableName}");
                     }
                 } else {
                     die("DEB database object not registered");
@@ -822,15 +825,16 @@ class Ruth {
          */
         self::addRoute(RUTH_GET, "/rest/{tablename}/{id}",
             function($tableName, $id){
-                Ruth::getRESTAuth(Ruth::getSERVER("PHP_AUTH_USER"), Ruth::getSERVER("PHP_AUTH_PW"));
-                if (!empty(Ruth::getOBJECT("DEB"))) {
-                    $DEB = Ruth::getOBJECT("DEB");
+                self::$wasAJAXCall = true;
+                Ruth::getRESTAuth(self::getSERVER("PHP_AUTH_USER"), self::getSERVER("PHP_AUTH_PW"));
+                if (!empty(self::getOBJECT("DEB"))) {
+                    $DEB = self::getOBJECT("DEB");
                     $database = $DEB->getDatabase();
-                    $table = $database[strtoupper($tableName)];
+                    $table = $database[$tableName];
                     if (!empty($table[0]["pk"]) && $table[0]["pk"] === "PRIMARY KEY") {
                         $primaryKey = $table[0]["field"];
                     } else {
-                        $primaryKey = "ID"; // this is a generic fall back
+                        $primaryKey = $table[0]["field"]; // this is a generic fall back
                     }
 
                     $result = $DEB->getRow("select * from {$tableName} where {$primaryKey} = '{$id}'");
@@ -839,7 +843,7 @@ class Ruth {
                         header('Content-Type: application/json');
                         Ruth::responseHeader("200", "Success: Record {$id} was found in {$tableName}");
                     }  else {
-                        Ruth::responseHeader("400", "Failed: Record {$id} was NOT found in {$tableName}");
+                        self::responseHeader("400", "Failed: Record {$id} was NOT found in {$tableName}");
                     }
                 } else {
                     die("DEB database object not registered");
@@ -847,21 +851,25 @@ class Ruth {
             }
         );
 
+
+
+
         /**
          * UPDATE
          * Update a specific record in the system based on its ID
          */
         self::addRoute(RUTH_PUT, "/rest/{tablename}/{id}",
             function($tableName, $id){
-                Ruth::getRESTAuth(Ruth::getSERVER("PHP_AUTH_USER"), Ruth::getSERVER("PHP_AUTH_PW"));
+                self::$wasAJAXCall = true;
+                self::getRESTAuth(self::getSERVER("PHP_AUTH_USER"), self::getSERVER("PHP_AUTH_PW"));
                 if (!empty(Ruth::getOBJECT("DEB"))) {
                     $DEB = Ruth::getOBJECT("DEB");
                     $database = $DEB->getDatabase();
-                    $table = $database[strtoupper($tableName)];
+                    $table = $database[$tableName];
                     if (!empty($table[0]["pk"]) && $table[0]["pk"] === "PRIMARY KEY") {
                         $primaryKey = $table[0]["field"];
                     } else {
-                        $primaryKey = "ID"; // this is a generic fall back
+                        $primaryKey = $table[0]["field"]; // this is a generic fall back
                     }
 
                     $json = json_decode(file_get_contents("php://input"), false);
@@ -886,11 +894,11 @@ class Ruth {
                     if (!empty($result)) {
                         echo json_encode($result);
                         header('Content-Type: application/json');
-                        Ruth::responseHeader("200", "Success: Record {$id} was found in {$tableName}");
+                        self::responseHeader("200", "Success: Record {$id} was found in {$tableName}");
 
                         $DEB->commit();
                     }  else {
-                        Ruth::responseHeader("400", "Failed: Record {$id} was NOT found in {$tableName}");
+                        self::responseHeader("400", "Failed: Record {$id} was NOT found in {$tableName}");
                     }
                 } else {
                     die("DEB database object not registered");
@@ -905,15 +913,16 @@ class Ruth {
          */
         self::addRoute(RUTH_PATCH, "/rest/{tablename}/{id}",
             function($tableName, $id){
-                Ruth::getRESTAuth(Ruth::getSERVER("PHP_AUTH_USER"), Ruth::getSERVER("PHP_AUTH_PW"));
-                if (!empty(Ruth::getOBJECT("DEB"))) {
-                    $DEB = Ruth::getOBJECT("DEB");
+                Ruth::$wasAJAXCall = true;
+                Ruth::getRESTAuth(self::getSERVER("PHP_AUTH_USER"), self::getSERVER("PHP_AUTH_PW"));
+                if (!empty(self::getOBJECT("DEB"))) {
+                    $DEB = self::getOBJECT("DEB");
                     $database = $DEB->getDatabase();
-                    $table = $database[strtoupper($tableName)];
+                    $table = $database[$tableName];
                     if (!empty($table[0]["pk"]) && $table[0]["pk"] === "PRIMARY KEY") {
                         $primaryKey = $table[0]["field"];
                     } else {
-                        $primaryKey = "ID"; // this is a generic fall back
+                        $primaryKey = $table[0]["field"]; // this is a generic fall back
                     }
 
                     $json = json_decode(file_get_contents("php://input"), false);
@@ -934,11 +943,11 @@ class Ruth {
                     if (!empty($result)) {
                         echo json_encode($result);
                         header('Content-Type: application/json');
-                        Ruth::responseHeader("200", "Success: Record {$id} was found in {$tableName}");
+                        self::responseHeader("200", "Success: Record {$id} was found in {$tableName}");
 
                         $DEB->commit();
                     }  else {
-                        Ruth::responseHeader("400", "Failed: Record {$id} was NOT found in {$tableName}");
+                        self::responseHeader("400", "Failed: Record {$id} was NOT found in {$tableName}");
                     }
                 } else {
                     die("DEB database object not registered");
@@ -953,21 +962,48 @@ class Ruth {
          */
         self::addRoute(RUTH_DELETE, "/rest/{tablename}/{id}",
             function($tableName, $id){
-                Ruth::getRESTAuth(Ruth::getSERVER("PHP_AUTH_USER"), Ruth::getSERVER("PHP_AUTH_PW"));
+                self::$wasAJAXCall = true;
+                self::getRESTAuth(self::getSERVER("PHP_AUTH_USER"), self::getSERVER("PHP_AUTH_PW"));
                 if (!empty(Ruth::getOBJECT("DEB"))) {
                     $DEB = Ruth::getOBJECT("DEB");
                     $database = $DEB->getDatabase();
-                    $table = $database[strtoupper($tableName)];
+                    $table = $database[$tableName];
                     if (!empty($table[0]["pk"]) && $table[0]["pk"] === "PRIMARY KEY") {
                         $primaryKey = $table[0]["field"];
                     } else {
-                        $primaryKey = "ID"; // this is a generic fall back
+                        $primaryKey = $table[0]["field"]; // this is a generic fall back
                     }
                     if ( $DEB->delete($tableName, [$primaryKey => $id]) ) {
-                        Ruth::responseHeader("200", "Success: Record {$id} was deleted from {$tableName}");
+                        self::responseHeader("200", "Success: Record {$id} was deleted from {$tableName}");
                         $DEB->commit();
                     }  else {
-                        Ruth::responseHeader("400", "Failed: Record {$id} was NOT deleted from {$tableName}");
+                        self::responseHeader("400", "Failed: Record {$id} was NOT deleted from {$tableName}");
+                    }
+                } else {
+                    die("DEB database object not registered");
+                }
+            }
+        );
+
+        /**
+         * LIST
+         * Get a list of records out of the database
+         */
+        self::addRoute(RUTH_GET, "/rest/{tablename}",
+            function($tableName, $id){
+                self::$wasAJAXCall = true;
+                self::getRESTAuth(self::getSERVER("PHP_AUTH_USER"), self::getSERVER("PHP_AUTH_PW"));
+                if (!empty(self::getOBJECT("DEB"))) {
+                    $DEB = self::getOBJECT("DEB");
+                    $database = $DEB->getDatabase();
+
+                    $result = $DEB->getRows("select * from {$tableName}");
+                    if (!empty($result)) {
+                        echo json_encode($result);
+                        header('Content-Type: application/json');
+                        self::responseHeader("200", "Success: Listing for {$tableName}");
+                    }  else {
+                        self::responseHeader("400", "Failed: Listing for {$tableName}");
                     }
                 } else {
                     die("DEB database object not registered");
@@ -1310,7 +1346,7 @@ class Ruth {
             else {
                 file_put_contents (self::getREAL_PATH()."/ajax_debug.log", print_r(self::getREQUEST(),1).print_r(self::getCOOKIE(),1).print_r(self::getSESSION(),1));
                 //output the debug window
-                if (Ruth::getREQUEST_URI()  != "/debug" && !self::$wasAJAXCall) {
+                if ( stripos(Ruth::getREQUEST_URI(),"/rest") === false && stripos(Ruth::getREQUEST_URI(),"/swagger") === false && Ruth::getREQUEST_URI()  != "/debug" && !self::$wasAJAXCall) {
                     echo (new Kim())->parseTemplate("/snippet/debug", ["CODE" => file_get_contents(self::getREAL_PATH() . "/ajax_debug.log")]);
                 }
             }

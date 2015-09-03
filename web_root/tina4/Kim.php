@@ -884,27 +884,31 @@ class Kim {
                         default:
                             if (class_exists($elementParts[0])) {
                                 //check if we don't need variables for the element parts
-                                if (strpos($elementParts[1], "{") !== false) {
-                                    if (!empty($data)) {
-                                        preg_match_all ($this->varRegex, $elementParts[1], $variables);
-                                        foreach ($variables[1] as $index => $variable) {
+                                if (isset($elementParts[1])) {
+                                    if (strpos($elementParts[1], "{") !== false) {
+                                        if (!empty($data)) {
+                                            preg_match_all($this->varRegex, $elementParts[1], $variables);
+                                            foreach ($variables[1] as $index => $variable) {
 
-                                            eval ('if (isset($data->'.$variable.')) { $variableValue = "{$data->'.$variable.'}";  }');
-                                            if ((isset($variableValue) && !empty($variableValue)) || (isset($variableValue) && $variableValue === "0")) {
-                                                $elementParts[1] = $this->parseValue("{" . $variable . "}", $variableValue, $elementParts[1]);
+                                                eval ('if (isset($data->' . $variable . ')) { $variableValue = "{$data->' . $variable . '}";  }');
+                                                if ((isset($variableValue) && !empty($variableValue)) || (isset($variableValue) && $variableValue === "0")) {
+                                                    $elementParts[1] = $this->parseValue("{" . $variable . "}", $variableValue, $elementParts[1]);
+                                                }
                                             }
                                         }
                                     }
-                                }
-                                $callParts = explode("?", $elementParts[1], 2);
-
-                                if (!empty($callParts[1])) {
-                                    $params = $this->getCallParams($callParts[1]);
-                                }
-                                else {
+                                    $callParts = explode("?", $elementParts[1], 2);
+                                    if (!empty($callParts[1])) {
+                                        $params = $this->getCallParams($callParts[1]);
+                                    }
+                                    else {
+                                        $params = [];
+                                    }
+                                }  else {
                                     $params = [];
-                                }
+                                    $callParts[] = "";
 
+                                }
 
                                 if (strpos($callParts[0], ":") !== false) {
                                     try {
@@ -922,8 +926,12 @@ class Kim {
                                     $classObject = "";
                                     eval ('$classObject = new '.$elementParts[0].'();');
                                     try {
-                                        if (method_exists($classObject, $callParts[0])) {
-                                            $result = call_user_func_array(array($classObject, $callParts[0]), $params);
+                                        if (method_exists($classObject, $callParts[0]) || empty($callParts[0])) {
+                                            if (!empty($callParts[0])) {
+                                                $result = call_user_func_array(array($classObject, $callParts[0]), $params);
+                                            } else {
+                                                $result = $classObject."";
+                                            }
 
                                         }
                                         else {

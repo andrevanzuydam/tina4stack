@@ -638,9 +638,6 @@ class Kim {
 
 
     function parseValue ($search, $value, $template) {
-        if (strpos($value, "{{") !== false) {
-            $value = $this->parseTemplate($value);
-        }
         $template = str_replace ($search, $value."", $template);
         return $template;
     }

@@ -33,7 +33,7 @@ class Olga {
      * @return string
      */
     function __toJson ( $data ) {
-         if( is_array($data) || is_object($data) ) {
+        if( is_array($data) || is_object($data) ) {
             $islist = is_array($data) && ( empty($data) || array_keys($data) === range(0,count($data)-1) );
 
             if( $islist ) {
@@ -108,6 +108,7 @@ class Olga {
             $func = $this->$method;
             return call_user_func_array($func, $args);
         }
+        return false;
     }
 
     /**

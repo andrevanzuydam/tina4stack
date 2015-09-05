@@ -16,7 +16,7 @@ class testClass {
         
         $users = [];
         
-        //$image = file_get_contents("http://www.freeimages.com/assets/183385/1833845416/rocks-and-water-1446293-1-s.jpg");
+        $image = file_get_contents("http://www.freeimages.com/assets/183385/1833845416/rocks-and-water-1446293-1-s.jpg");
         
         $users[] = ["USER_ID" => 1, "FIRST_NAME" => "Andre", "LAST_NAME" => "van Zuydam", "AGE" => 36, "PHOTO" => $image];
         $users[] = ["USER_ID" => 2, "FIRST_NAME" => "Kobus", "LAST_NAME" => "van Wyk", "AGE" => 31, "PHOTO" => $image];

@@ -6,5 +6,7 @@ var searchData=
   ['encodeimage',['encodeImage',['../classDebby.html#a0480262858a16cfc6e4cfe19b0e29e62',1,'Debby']]],
   ['equals',['equals',['../classTessa.html#a6cc78554f7d5d4a07582b20aed6fcc82',1,'Tessa\equals()'],['../Tessa_8php.html#a9d4e10a0e20c1eb36b8077a8bbed8652',1,'equals():&#160;Tessa.php']]],
   ['escapestring',['escapeString',['../classDebby.html#a6bb2e5dfb70e57d980b9141ac44d0899',1,'Debby']]],
-  ['exec',['exec',['../classDebby.html#a246a7d5268c855f26ce31f4088ce56e9',1,'Debby']]]
+  ['exec',['exec',['../classDebby.html#a246a7d5268c855f26ce31f4088ce56e9',1,'Debby']]],
+  ['execjs',['ExecJS',['../Tessa_8php.html#a73e66ba9c09497c89d5cadc5cb7ae04c',1,'Tessa.php']]],
+  ['executejavascript',['executeJavaScript',['../classTessa.html#a14a21a710a7eece5d01eb93a010c896e',1,'Tessa']]]
 ];

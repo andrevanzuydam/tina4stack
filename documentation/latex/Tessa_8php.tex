@@ -10,6 +10,8 @@ class \hyperlink{classTestElement}{Test\+Element}
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
+\hyperlink{Tessa_8php_af0c8babb876f6ec17169e3c8b88d5c28}{tessa\+Error\+Handler} (\$errno, \$errstr, \$errfile, \$errline)
+\item 
 \hyperlink{Tessa_8php_a37ab31c170417027f819bfc053d7cd39}{message} (\$msg)
 \item 
 \hyperlink{Tessa_8php_aa69ddc0af69161f83509e8b26c683e13}{trying\+To} (\$msg)
@@ -40,15 +42,29 @@ class \hyperlink{classTestElement}{Test\+Element}
 \item 
 \hyperlink{Tessa_8php_a45fa3c4912bbefca9353dab66fd5030e}{check\+D\+B} (\$tablename, \$fieldname, \$value)
 \item 
+\hyperlink{Tessa_8php_ad82e3558ce8c93c2830b80af26a758b4}{fetch\+Records} (\$sql)
+\item 
+\hyperlink{Tessa_8php_a2f38c767e68dbdbb9f190d9d84f4fe92}{fetch\+Record} (\$sql)
+\item 
 \hyperlink{Tessa_8php_a8591279f3cd8873b7137558eefaf6315}{screen\+Shot} ()
 \item 
 \hyperlink{Tessa_8php_a9d4e10a0e20c1eb36b8077a8bbed8652}{equals} (\$test1, \$test2)
 \item 
+\hyperlink{Tessa_8php_a3053109e9a03d87d42ca510281266e1d}{Is\+Different} (\$test1, \$test2)
+\item 
 \hyperlink{Tessa_8php_a7ec3fd8ed495784662e9a082980a17ca}{open\+Site} (\$U\+R\+L)
+\item 
+\hyperlink{Tessa_8php_ac4645e66cc6cc8cc90253585279cf7fd}{navigate\+To} (\$U\+R\+L)
 \item 
 \hyperlink{Tessa_8php_af5e5c4ed7fd27b8d801633f34a0d5bc1}{get\+Actions} ()
 \item 
 \hyperlink{Tessa_8php_a7c436dc08e51fc7a4a760a89a1b73541}{delete\+All\+Cookies} ()
+\item 
+\hyperlink{Tessa_8php_af0f9de4ab254db7dfb5177c464512a75}{Accept\+Alert} ()
+\item 
+\hyperlink{Tessa_8php_adae0415b5d737288ce98294844ce4ef1}{Dismiss\+Alert} ()
+\item 
+\hyperlink{Tessa_8php_a73e66ba9c09497c89d5cadc5cb7ae04c}{Exec\+J\+S} (\$\hyperlink{Shape_8php_ac2a3056c7a62af99ebe52fdaa4e2e4da}{script}, \$args=array())
 \end{DoxyCompactItemize}
 \subsection*{Variables}
 \begin{DoxyCompactItemize}
@@ -58,6 +74,16 @@ global \hyperlink{Tessa_8php_a6424c5631c351f6973f3ce15be5a2522}{\$\+T\+E\+S\+S\+
 
 
 \subsection{Function Documentation}
+\hypertarget{Tessa_8php_af0f9de4ab254db7dfb5177c464512a75}{}\index{Tessa.\+php@{Tessa.\+php}!Accept\+Alert@{Accept\+Alert}}
+\index{Accept\+Alert@{Accept\+Alert}!Tessa.\+php@{Tessa.\+php}}
+\subsubsection[{Accept\+Alert}]{\setlength{\rightskip}{0pt plus 5cm}Accept\+Alert (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{Tessa_8php_af0f9de4ab254db7dfb5177c464512a75}
+Accept Popup \begin{DoxyReturn}{Returns}
+mixed 
+\end{DoxyReturn}
 \hypertarget{Tessa_8php_a30df4457cf7045bec2a81cfc1769377f}{}\index{Tessa.\+php@{Tessa.\+php}!by\+Class@{by\+Class}}
 \index{by\+Class@{by\+Class}!Tessa.\+php@{Tessa.\+php}}
 \subsubsection[{by\+Class}]{\setlength{\rightskip}{0pt plus 5cm}by\+Class (
@@ -163,6 +189,16 @@ string & {\em \$id} & The id, path or css of the element we are looking to click
 \begin{DoxyReturn}{Returns}
 mixed 
 \end{DoxyReturn}
+\hypertarget{Tessa_8php_adae0415b5d737288ce98294844ce4ef1}{}\index{Tessa.\+php@{Tessa.\+php}!Dismiss\+Alert@{Dismiss\+Alert}}
+\index{Dismiss\+Alert@{Dismiss\+Alert}!Tessa.\+php@{Tessa.\+php}}
+\subsubsection[{Dismiss\+Alert}]{\setlength{\rightskip}{0pt plus 5cm}Dismiss\+Alert (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{Tessa_8php_adae0415b5d737288ce98294844ce4ef1}
+Dismiss Popup \begin{DoxyReturn}{Returns}
+mixed 
+\end{DoxyReturn}
 \hypertarget{Tessa_8php_a9d4e10a0e20c1eb36b8077a8bbed8652}{}\index{Tessa.\+php@{Tessa.\+php}!equals@{equals}}
 \index{equals@{equals}!Tessa.\+php@{Tessa.\+php}}
 \subsubsection[{equals}]{\setlength{\rightskip}{0pt plus 5cm}equals (
@@ -180,6 +216,52 @@ mixed
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 mixed 
+\end{DoxyReturn}
+\hypertarget{Tessa_8php_a73e66ba9c09497c89d5cadc5cb7ae04c}{}\index{Tessa.\+php@{Tessa.\+php}!Exec\+J\+S@{Exec\+J\+S}}
+\index{Exec\+J\+S@{Exec\+J\+S}!Tessa.\+php@{Tessa.\+php}}
+\subsubsection[{Exec\+J\+S}]{\setlength{\rightskip}{0pt plus 5cm}Exec\+J\+S (
+\begin{DoxyParamCaption}
+\item[{}]{\$script, }
+\item[{}]{\$args = {\ttfamily array()}}
+\end{DoxyParamCaption}
+)}\label{Tessa_8php_a73e66ba9c09497c89d5cadc5cb7ae04c}
+Execute J\+S 
+\begin{DoxyParams}{Parameters}
+{\em \$script} & \$args \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+mixed 
+\end{DoxyReturn}
+\hypertarget{Tessa_8php_a2f38c767e68dbdbb9f190d9d84f4fe92}{}\index{Tessa.\+php@{Tessa.\+php}!fetch\+Record@{fetch\+Record}}
+\index{fetch\+Record@{fetch\+Record}!Tessa.\+php@{Tessa.\+php}}
+\subsubsection[{fetch\+Record}]{\setlength{\rightskip}{0pt plus 5cm}fetch\+Record (
+\begin{DoxyParamCaption}
+\item[{}]{\$sql}
+\end{DoxyParamCaption}
+)}\label{Tessa_8php_a2f38c767e68dbdbb9f190d9d84f4fe92}
+Function to retrieve a record from the database 
+\begin{DoxyParams}[1]{Parameters}
+String & {\em \$sql} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Object 
+\end{DoxyReturn}
+\hypertarget{Tessa_8php_ad82e3558ce8c93c2830b80af26a758b4}{}\index{Tessa.\+php@{Tessa.\+php}!fetch\+Records@{fetch\+Records}}
+\index{fetch\+Records@{fetch\+Records}!Tessa.\+php@{Tessa.\+php}}
+\subsubsection[{fetch\+Records}]{\setlength{\rightskip}{0pt plus 5cm}fetch\+Records (
+\begin{DoxyParamCaption}
+\item[{}]{\$sql}
+\end{DoxyParamCaption}
+)}\label{Tessa_8php_ad82e3558ce8c93c2830b80af26a758b4}
+Function to retrieve records from the database 
+\begin{DoxyParams}[1]{Parameters}
+String & {\em \$sql} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Object 
 \end{DoxyReturn}
 \hypertarget{Tessa_8php_af5e5c4ed7fd27b8d801633f34a0d5bc1}{}\index{Tessa.\+php@{Tessa.\+php}!get\+Actions@{get\+Actions}}
 \index{get\+Actions@{get\+Actions}!Tessa.\+php@{Tessa.\+php}}
@@ -203,6 +285,24 @@ A function which tests if a certain text string is on the screen, if its not the
 string & {\em \$text} & The text you wish to see on the screen \\
 \hline
 \end{DoxyParams}
+\hypertarget{Tessa_8php_a3053109e9a03d87d42ca510281266e1d}{}\index{Tessa.\+php@{Tessa.\+php}!Is\+Different@{Is\+Different}}
+\index{Is\+Different@{Is\+Different}!Tessa.\+php@{Tessa.\+php}}
+\subsubsection[{Is\+Different}]{\setlength{\rightskip}{0pt plus 5cm}Is\+Different (
+\begin{DoxyParamCaption}
+\item[{}]{\$test1, }
+\item[{}]{\$test2}
+\end{DoxyParamCaption}
+)}\label{Tessa_8php_a3053109e9a03d87d42ca510281266e1d}
+
+\begin{DoxyParams}{Parameters}
+{\em \$test1} & \\
+\hline
+{\em \$test2} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+mixed 
+\end{DoxyReturn}
 \hypertarget{Tessa_8php_a2cddd9ec74ad10a2e186f6ebadbae49b}{}\index{Tessa.\+php@{Tessa.\+php}!I\+See@{I\+See}}
 \index{I\+See@{I\+See}!Tessa.\+php@{Tessa.\+php}}
 \subsubsection[{I\+See}]{\setlength{\rightskip}{0pt plus 5cm}I\+See (
@@ -261,6 +361,21 @@ Displays a message on the screen
 string & {\em \$msg} & The message you want displayed. \\
 \hline
 \end{DoxyParams}
+\hypertarget{Tessa_8php_ac4645e66cc6cc8cc90253585279cf7fd}{}\index{Tessa.\+php@{Tessa.\+php}!navigate\+To@{navigate\+To}}
+\index{navigate\+To@{navigate\+To}!Tessa.\+php@{Tessa.\+php}}
+\subsubsection[{navigate\+To}]{\setlength{\rightskip}{0pt plus 5cm}navigate\+To (
+\begin{DoxyParamCaption}
+\item[{}]{\$\+U\+R\+L}
+\end{DoxyParamCaption}
+)}\label{Tessa_8php_ac4645e66cc6cc8cc90253585279cf7fd}
+type \$\+T\+E\+S\+S\+A 
+\begin{DoxyParams}[1]{Parameters}
+type & {\em \$\+U\+R\+L} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+type 
+\end{DoxyReturn}
 \hypertarget{Tessa_8php_a7ec3fd8ed495784662e9a082980a17ca}{}\index{Tessa.\+php@{Tessa.\+php}!open\+Site@{open\+Site}}
 \index{open\+Site@{open\+Site}!Tessa.\+php@{Tessa.\+php}}
 \subsubsection[{open\+Site}]{\setlength{\rightskip}{0pt plus 5cm}open\+Site (
@@ -286,6 +401,16 @@ mixed
 Creates a screen shot of the page where the error occured \begin{DoxyReturn}{Returns}
 H\+T\+M\+L An Html string and link to the generated screen shot 
 \end{DoxyReturn}
+\hypertarget{Tessa_8php_af0c8babb876f6ec17169e3c8b88d5c28}{}\index{Tessa.\+php@{Tessa.\+php}!tessa\+Error\+Handler@{tessa\+Error\+Handler}}
+\index{tessa\+Error\+Handler@{tessa\+Error\+Handler}!Tessa.\+php@{Tessa.\+php}}
+\subsubsection[{tessa\+Error\+Handler}]{\setlength{\rightskip}{0pt plus 5cm}tessa\+Error\+Handler (
+\begin{DoxyParamCaption}
+\item[{}]{\$errno, }
+\item[{}]{\$errstr, }
+\item[{}]{\$errfile, }
+\item[{}]{\$errline}
+\end{DoxyParamCaption}
+)}\label{Tessa_8php_af0c8babb876f6ec17169e3c8b88d5c28}
 \hypertarget{Tessa_8php_aa69ddc0af69161f83509e8b26c683e13}{}\index{Tessa.\+php@{Tessa.\+php}!trying\+To@{trying\+To}}
 \index{trying\+To@{trying\+To}!Tessa.\+php@{Tessa.\+php}}
 \subsubsection[{trying\+To}]{\setlength{\rightskip}{0pt plus 5cm}trying\+To (

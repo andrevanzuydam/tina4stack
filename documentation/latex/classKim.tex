@@ -11,11 +11,11 @@
 \item 
 \hyperlink{classKim_adbe9f842961805e68a08df04c4c58dfd}{get\+Call\+Params} (\$\hyperlink{Shape_8php_a6210da308e7ce036a6362dca3018d6db}{input})
 \item 
-\hyperlink{classKim_a960a80702fe7dd134adbfeea34ccfcfa}{parse\+Snippets} (\$elements, \$template, \$data)
+\hyperlink{classKim_ae401f319dd0148a194304c54e19d6c1e}{parse\+Value} (\$search, \$value, \$template)
 \item 
 \hyperlink{classKim_ae484524c4622734ede53894ae89a669a}{get\+Template} (\$template, \$data=\char`\"{}\char`\"{})
 \item 
-\hyperlink{classKim_a635cc5c4509bd3ac1c578ccfe62c623b}{parse\+Template} (\$template, \$data=\char`\"{}\char`\"{})
+\hyperlink{classKim_aff31f9e7bee71022c9edd8d3661e9aa9}{parse\+Template} (\$template, \$data=\char`\"{}\char`\"{}, \$null\+Vars=true)
 \item 
 \hyperlink{classKim_a3cb9fd00227b180b8118257b85acf6ff}{get\+Page\+Template} (\$\hyperlink{Shape_8php_ad264ad0cabbe965bf7f7c8a5ed6abebb}{title}=\char`\"{}Default\char`\"{})
 \item 
@@ -45,7 +45,7 @@
 \item 
 \hyperlink{classKim_a03d8b762e1c6d458e714904cd8b02dd6}{get\+User\+Types} ()
 \item 
-\hyperlink{classKim_a8ed17935db3df4dfc01b2b26d47ebc4e}{get\+Route\+Target} (\$record\+Value=null)
+\hyperlink{classKim_a3a5e9863e6bf6bfe54a88f76c3a3c004}{get\+Route\+Target} (\$record\+Value=null, \$field\+Name)
 \item 
 \hyperlink{classKim_a1e3ce6c13bf4c0b488ff07ddfe95c0ac}{get\+Routes} ()
 \item 
@@ -73,6 +73,16 @@
 \item 
 \hyperlink{classKim_a3fe85e0bf7c92053e0a4c3b76dba7259}{sort\+Conditions} (\$original\+String, \$matches)
 \item 
+\hyperlink{classKim_aa11dff7b5316ae7ab6f401602c868ab6}{match\+Switch\+Conditions} (\$string)
+\item 
+\hyperlink{classKim_af89100e823df6766d342e59ce146af58}{sort\+Switch\+Conditions} (\$original\+String, \$matches)
+\item 
+\hyperlink{classKim_a35aa398ba9172f3044489c50d451099c}{get\+Editor} (\$record\+Value=null, \$field\+Name)
+\item 
+\hyperlink{classKim_ae4aa263c0ff64aa21548b306a166233c}{get\+Content} (\$content\+Id=\char`\"{}0\char`\"{})
+\item 
+\hyperlink{classKim_a2dd128b830f0ada61117e959f246d18d}{get\+Content\+Editor} ()
+\item 
 \hyperlink{classKim_ae017a30aaa5b1f6e470de679142b7f02}{display} ()
 \end{DoxyCompactItemize}
 \subsection*{Public Attributes}
@@ -85,6 +95,8 @@
 \hyperlink{classKim_a761d5be4968e338c3d7ffa9f65ae3a40}{\$default\+Pages} = \mbox{[}\char`\"{}index.\+html\char`\"{}, \char`\"{}index.\+php\char`\"{}, \char`\"{}\hyperlink{Shape_8php_a8b267aa0adca2018097f6f6f4c804d46}{home.\+html}\char`\"{}\mbox{]}
 \item 
 \hyperlink{classKim_aecfd2bbe4c11ceb39810c393cd357b53}{\$default\+Extensions} = \mbox{[}\char`\"{}.html\char`\"{}, \char`\"{}.php\char`\"{}\mbox{]}
+\item 
+\hyperlink{classKim_ad641610f1c10b814588ea3ef78f04eb3}{\$var\+Regex} = \textquotesingle{}/\{(\mbox{[}\hyperlink{Shape_8php_a868083704107d6d05b69983f62cce171}{a}-\/z\+A-\/Z0-\/9\textbackslash{}\+\_\+\textbackslash{}-\/\textbackslash{}$>$\textbackslash{}\mbox{[}\textbackslash{}\mbox{]}\textbackslash{}\char`\"{}\textbackslash{}$\vert$\textbackslash{}\textquotesingle{}\textbackslash{}\$\mbox{]}+)\}/i\textquotesingle{}
 \end{DoxyCompactItemize}
 
 
@@ -152,6 +164,23 @@ type & {\em \$input} & \\
 \begin{DoxyReturn}{Returns}
 string 
 \end{DoxyReturn}
+\hypertarget{classKim_ae4aa263c0ff64aa21548b306a166233c}{}\index{Kim@{Kim}!get\+Content@{get\+Content}}
+\index{get\+Content@{get\+Content}!Kim@{Kim}}
+\subsubsection[{get\+Content}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::get\+Content (
+\begin{DoxyParamCaption}
+\item[{}]{\$content\+Id = {\ttfamily \char`\"{}0\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classKim_ae4aa263c0ff64aa21548b306a166233c}
+\hypertarget{classKim_a2dd128b830f0ada61117e959f246d18d}{}\index{Kim@{Kim}!get\+Content\+Editor@{get\+Content\+Editor}}
+\index{get\+Content\+Editor@{get\+Content\+Editor}!Kim@{Kim}}
+\subsubsection[{get\+Content\+Editor}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::get\+Content\+Editor (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classKim_a2dd128b830f0ada61117e959f246d18d}
+This code returns a grid for editing W\+Y\+S\+I\+W\+Y\+G content. \begin{DoxyReturn}{Returns}
+type 
+\end{DoxyReturn}
 \hypertarget{classKim_a8a754c69958e71d159e6808f83f12cfe}{}\index{Kim@{Kim}!get\+Default\+Page@{get\+Default\+Page}}
 \index{get\+Default\+Page@{get\+Default\+Page}!Kim@{Kim}}
 \subsubsection[{get\+Default\+Page}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::get\+Default\+Page (
@@ -167,6 +196,14 @@ String & {\em \$page\+Name} & The page to try and load or the path to load \\
 \begin{DoxyReturn}{Returns}
 type 
 \end{DoxyReturn}
+\hypertarget{classKim_a35aa398ba9172f3044489c50d451099c}{}\index{Kim@{Kim}!get\+Editor@{get\+Editor}}
+\index{get\+Editor@{get\+Editor}!Kim@{Kim}}
+\subsubsection[{get\+Editor}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::get\+Editor (
+\begin{DoxyParamCaption}
+\item[{}]{\$record\+Value = {\ttfamily null}, }
+\item[{}]{\$field\+Name}
+\end{DoxyParamCaption}
+)}\label{classKim_a35aa398ba9172f3044489c50d451099c}
 \hypertarget{classKim_a54e4f46e005a09de5bda3a2093a86af7}{}\index{Kim@{Kim}!get\+Flush\+X\+Cache@{get\+Flush\+X\+Cache}}
 \index{get\+Flush\+X\+Cache@{get\+Flush\+X\+Cache}!Kim@{Kim}}
 \subsubsection[{get\+Flush\+X\+Cache}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::get\+Flush\+X\+Cache (
@@ -268,13 +305,14 @@ Return default bootstrap page \hypertarget{classKim_acbae7ab945d82706b2be2581657
 {}
 \end{DoxyParamCaption}
 )}\label{classKim_a1e3ce6c13bf4c0b488ff07ddfe95c0ac}
-\hypertarget{classKim_a8ed17935db3df4dfc01b2b26d47ebc4e}{}\index{Kim@{Kim}!get\+Route\+Target@{get\+Route\+Target}}
+\hypertarget{classKim_a3a5e9863e6bf6bfe54a88f76c3a3c004}{}\index{Kim@{Kim}!get\+Route\+Target@{get\+Route\+Target}}
 \index{get\+Route\+Target@{get\+Route\+Target}!Kim@{Kim}}
 \subsubsection[{get\+Route\+Target}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::get\+Route\+Target (
 \begin{DoxyParamCaption}
-\item[{}]{\$record\+Value = {\ttfamily null}}
+\item[{}]{\$record\+Value = {\ttfamily null}, }
+\item[{}]{\$field\+Name}
 \end{DoxyParamCaption}
-)}\label{classKim_a8ed17935db3df4dfc01b2b26d47ebc4e}
+)}\label{classKim_a3a5e9863e6bf6bfe54a88f76c3a3c004}
 \hypertarget{classKim_a76d369e52b95a9cabdb45c793d3eee45}{}\index{Kim@{Kim}!get\+Sub\+Menus@{get\+Sub\+Menus}}
 \index{get\+Sub\+Menus@{get\+Sub\+Menus}!Kim@{Kim}}
 \subsubsection[{get\+Sub\+Menus}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::get\+Sub\+Menus (
@@ -385,38 +423,39 @@ type & {\em \$string} & \\
 \begin{DoxyReturn}{Returns}
 array 
 \end{DoxyReturn}
-\hypertarget{classKim_a960a80702fe7dd134adbfeea34ccfcfa}{}\index{Kim@{Kim}!parse\+Snippets@{parse\+Snippets}}
-\index{parse\+Snippets@{parse\+Snippets}!Kim@{Kim}}
-\subsubsection[{parse\+Snippets}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::parse\+Snippets (
+\hypertarget{classKim_aa11dff7b5316ae7ab6f401602c868ab6}{}\index{Kim@{Kim}!match\+Switch\+Conditions@{match\+Switch\+Conditions}}
+\index{match\+Switch\+Conditions@{match\+Switch\+Conditions}!Kim@{Kim}}
+\subsubsection[{match\+Switch\+Conditions}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::match\+Switch\+Conditions (
 \begin{DoxyParamCaption}
-\item[{}]{\$elements, }
-\item[{}]{\$template, }
-\item[{}]{\$data}
+\item[{}]{\$string}
 \end{DoxyParamCaption}
-)}\label{classKim_a960a80702fe7dd134adbfeea34ccfcfa}
-The parse\+Snippets function looks for nested functionality in the template Example \+: 
-\begin{DoxyItemize}
-\item 
-\end{DoxyItemize}\{class\+Name\+:call\+Something\}\}  \{S\+O\+M\+E\+\_\+\+N\+A\+M\+E\}  \{\{/class\+Name\+::call\+Something\}\}  
+)}\label{classKim_aa11dff7b5316ae7ab6f401602c868ab6}
+Match switch conditions 
 \begin{DoxyParams}[1]{Parameters}
-Array & {\em \$elements} & An array of elements \\
-\hline
-String & {\em \$template} & The html template from file or memory \\
-\hline
-Array & {\em \$data} & \\
+type & {\em \$string} & \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-type 
+array 
 \end{DoxyReturn}
-\hypertarget{classKim_a635cc5c4509bd3ac1c578ccfe62c623b}{}\index{Kim@{Kim}!parse\+Template@{parse\+Template}}
+\hypertarget{classKim_aff31f9e7bee71022c9edd8d3661e9aa9}{}\index{Kim@{Kim}!parse\+Template@{parse\+Template}}
 \index{parse\+Template@{parse\+Template}!Kim@{Kim}}
 \subsubsection[{parse\+Template}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::parse\+Template (
 \begin{DoxyParamCaption}
 \item[{}]{\$template, }
-\item[{}]{\$data = {\ttfamily \char`\"{}\char`\"{}}}
+\item[{}]{\$data = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$null\+Vars = {\ttfamily true}}
 \end{DoxyParamCaption}
-)}\label{classKim_a635cc5c4509bd3ac1c578ccfe62c623b}
+)}\label{classKim_aff31f9e7bee71022c9edd8d3661e9aa9}
+This section here needs to be updated if there are strange characters that get passed into the system via snippet calls in the templae\hypertarget{classKim_ae401f319dd0148a194304c54e19d6c1e}{}\index{Kim@{Kim}!parse\+Value@{parse\+Value}}
+\index{parse\+Value@{parse\+Value}!Kim@{Kim}}
+\subsubsection[{parse\+Value}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::parse\+Value (
+\begin{DoxyParamCaption}
+\item[{}]{\$search, }
+\item[{}]{\$value, }
+\item[{}]{\$template}
+\end{DoxyParamCaption}
+)}\label{classKim_ae401f319dd0148a194304c54e19d6c1e}
 \hypertarget{classKim_a3fe85e0bf7c92053e0a4c3b76dba7259}{}\index{Kim@{Kim}!sort\+Conditions@{sort\+Conditions}}
 \index{sort\+Conditions@{sort\+Conditions}!Kim@{Kim}}
 \subsubsection[{sort\+Conditions}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::sort\+Conditions (
@@ -426,6 +465,24 @@ type
 \end{DoxyParamCaption}
 )}\label{classKim_a3fe85e0bf7c92053e0a4c3b76dba7259}
 
+\begin{DoxyParams}[1]{Parameters}
+type & {\em \$original\+String} & \\
+\hline
+type & {\em \$matches} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+type 
+\end{DoxyReturn}
+\hypertarget{classKim_af89100e823df6766d342e59ce146af58}{}\index{Kim@{Kim}!sort\+Switch\+Conditions@{sort\+Switch\+Conditions}}
+\index{sort\+Switch\+Conditions@{sort\+Switch\+Conditions}!Kim@{Kim}}
+\subsubsection[{sort\+Switch\+Conditions}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::sort\+Switch\+Conditions (
+\begin{DoxyParamCaption}
+\item[{}]{\$original\+String, }
+\item[{}]{\$matches}
+\end{DoxyParamCaption}
+)}\label{classKim_af89100e823df6766d342e59ce146af58}
+Sort Switch cases and convert to If-\/\+Else Statement 
 \begin{DoxyParams}[1]{Parameters}
 type & {\em \$original\+String} & \\
 \hline
@@ -464,6 +521,9 @@ type
 \hypertarget{classKim_a46554f1a34a5f3db1014d47b6ec37f00}{}\index{Kim@{Kim}!\$\+K\+I\+M@{\$\+K\+I\+M}}
 \index{\$\+K\+I\+M@{\$\+K\+I\+M}!Kim@{Kim}}
 \subsubsection[{\$\+K\+I\+M}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::\$\+K\+I\+M}\label{classKim_a46554f1a34a5f3db1014d47b6ec37f00}
+\hypertarget{classKim_ad641610f1c10b814588ea3ef78f04eb3}{}\index{Kim@{Kim}!\$var\+Regex@{\$var\+Regex}}
+\index{\$var\+Regex@{\$var\+Regex}!Kim@{Kim}}
+\subsubsection[{\$var\+Regex}]{\setlength{\rightskip}{0pt plus 5cm}Kim\+::\$var\+Regex = \textquotesingle{}/\{(\mbox{[}{\bf a}-\/z\+A-\/Z0-\/9\textbackslash{}\+\_\+\textbackslash{}-\/\textbackslash{}$>$\textbackslash{}\mbox{[}\textbackslash{}\mbox{]}\textbackslash{}\char`\"{}\textbackslash{}$\vert$\textbackslash{}\textquotesingle{}\textbackslash{}\$\mbox{]}+)\}/i\textquotesingle{}}\label{classKim_ad641610f1c10b814588ea3ef78f04eb3}
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}

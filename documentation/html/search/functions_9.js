@@ -11,6 +11,8 @@ var searchData=
   ['insertmenuitem',['insertMenuItem',['../classKim.html#a03aa4a733e4539d175df84011ad1cb9a',1,'Kim']]],
   ['is_5fassoc',['is_assoc',['../classhtmlElement.html#a26a8e3284834135dec7b0e01e84b0877',1,'htmlElement']]],
   ['isalphanum',['isAlphaNum',['../classJSMin.html#af54ff87064c2b9f19e4905e511fc83e5',1,'JSMin']]],
+  ['isdate',['IsDate',['../classCody.html#a2661001682a1aa2ad53e36d2ae2396c0',1,'Cody']]],
+  ['isdifferent',['IsDifferent',['../classTessa.html#accf6a6c6874c25022b628bc81918a9d0',1,'Tessa\IsDifferent()'],['../Tessa_8php.html#a3053109e9a03d87d42ca510281266e1d',1,'IsDifferent():&#160;Tessa.php']]],
   ['isee',['ISee',['../Tessa_8php.html#a2cddd9ec74ad10a2e186f6ebadbae49b',1,'Tessa.php']]],
   ['iseof',['isEOF',['../classJSMin.html#a450a0756edbd9508745f90ccacd08a27',1,'JSMin']]],
   ['isregexpliteral',['isRegexpLiteral',['../classJSMin.html#a487b4b073a8319123317d776feb72f6f',1,'JSMin']]],

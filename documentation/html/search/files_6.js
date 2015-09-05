@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['reta_2ephp',['Reta.php',['../Reta_8php.html',1,'']]],
-  ['ruth_2ephp',['Ruth.php',['../Ruth_8php.html',1,'']]]
+  ['phoebe_2ephp',['Phoebe.php',['../Phoebe_8php.html',1,'']]]
 ];

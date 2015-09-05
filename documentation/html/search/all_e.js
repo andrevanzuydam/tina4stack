@@ -7,6 +7,7 @@ var searchData=
   ['mark',['mark',['../Shape_8php.html#a818fd3cb7ba35aca5efd32bdac990045',1,'Shape.php']]],
   ['matchconditions',['matchConditions',['../classKim.html#a06415955f55535b121470e7779e92168',1,'Kim']]],
   ['matchroute',['matchRoute',['../classRuth.html#a4cc98adb973c4d46742b05a02ecb6ee3',1,'Ruth']]],
+  ['matchswitchconditions',['matchSwitchConditions',['../classKim.html#aa11dff7b5316ae7ab6f401602c868ab6',1,'Kim']]],
   ['menu',['menu',['../Shape_8php.html#a0b186fb0489b5ca85dd5da0b195aa9c9',1,'Shape.php']]],
   ['menuitem',['menuitem',['../Shape_8php.html#a6d50cd51fb46d6fcbbd114690e1768fe',1,'Shape.php']]],
   ['message',['message',['../classTessa.html#a7e4c039b8228d75810747b96b5062366',1,'Tessa\message()'],['../classRuth.html#a6322471f9832f6b0c92e8d321956874c',1,'Ruth\Message()'],['../Tessa_8php.html#a37ab31c170417027f819bfc053d7cd39',1,'message():&#160;Tessa.php']]],

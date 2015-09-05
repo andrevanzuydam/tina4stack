@@ -3,6 +3,12 @@
 \subsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
+static \hyperlink{classRuth_ad43f0c266cd72d1f3d26442528570d38}{set\+R\+E\+S\+T\+Auth} (\$username, \$password)
+\item 
+static \hyperlink{classRuth_ac185be50454d3107da9eb3fe45503b48}{get\+R\+E\+S\+T\+Auth} (\$username, \$password)
+\item 
+static \hyperlink{classRuth_ac470a420ccefd668c3a50bead17e2d8a}{get\+Page\+Template} (\$\hyperlink{Shape_8php_ad264ad0cabbe965bf7f7c8a5ed6abebb}{title}=\char`\"{}Default\char`\"{})
+\item 
 static \hyperlink{classRuth_a0d04b422b261fcbf033abfe6b77d5a2d}{auto\+Load} (\$paths, \$load\+Auto\+Load=true, \$ignore\+Requires=false)
 \item 
 static \hyperlink{classRuth_a6322471f9832f6b0c92e8d321956874c}{Message} (\$\hyperlink{Tessa_8php_a37ab31c170417027f819bfc053d7cd39}{message})
@@ -34,6 +40,8 @@ static \hyperlink{classRuth_a12be6f40ae06f4443848d0f8a089bd00}{get\+F\+I\+L\+E\+
 static \hyperlink{classRuth_ab868231ae3b29da9c9456d0b866dc8ec}{get\+S\+E\+R\+V\+E\+R} (\$key\+Name=\char`\"{}\char`\"{})
 \item 
 static \hyperlink{classRuth_abbbe520ef7554c895ab5f4213b8738a3}{get\+P\+A\+T\+H} ()
+\item 
+static \hyperlink{classRuth_addf8374cf72e378cb70c9cedeca62988}{get\+Request\+Method} ()
 \item 
 static \hyperlink{classRuth_a258953d4afe38d92f4be70313d500d40}{get\+R\+E\+A\+L\+\_\+\+P\+A\+T\+H} ()
 \item 
@@ -72,6 +80,17 @@ static \hyperlink{classRuth_a99efe91394d300de83f7124acea0b595}{redirect} (\$new\
 static \hyperlink{classRuth_aa9bd38599bb5bd892ddf856c1687b04a}{get\+Authorization} (\$route\+Path=\char`\"{}\char`\"{})
 \item 
 static \hyperlink{classRuth_a0fbc42c3af4f62e230b4c3208ce9451c}{parse\+Routes} (\$custom\+Path=\char`\"{}\char`\"{})
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{classRuth_abcc2411c11abe0c3675069f255db1f97}{\$debug\+Messages}
+\item 
+static \hyperlink{classRuth_aaaf0e436f08cbd148c492584832da4cc}{\$was\+A\+J\+A\+X\+Call} = false
+\item 
+static \hyperlink{classRuth_abe139defb62f176c0a077983561f9d86}{\$rest\+User} = \char`\"{}R\+E\+S\+T\+User\char`\"{}
+\item 
+static \hyperlink{classRuth_ab4e553a88d7384c2dd07158efe3dd933}{\$rest\+Pass} = \char`\"{}R\+E\+S\+T\+Master\char`\"{}
 \end{DoxyCompactItemize}
 
 
@@ -117,7 +136,7 @@ String & {\em \$request\+Method} & Either G\+E\+T, P\+U\+T, P\+O\+S\+T, D\+E\+L\
 \hline
 String & {\em \$route\+Path} & A path to be used as a route, eg. /user, variables can also be parsed /user/\{id\}/ and wildcards are $\ast$ \\
 \hline
-Function & {\em \$route\+Function} & A function which will be called with the corresponding variables \\
+Closure & {\em \$route\+Function} & A function which will be called with the corresponding variables \\
 \hline
 Boolean & {\em \$route\+Ignore\+Tracking} & \hyperlink{classRuth}{Ruth} uses this to give you back the last route but you may not want her to remember all the paths \\
 \hline
@@ -253,6 +272,21 @@ String & {\em \$key\+Name} & The name of the object \\
 \begin{DoxyReturn}{Returns}
 Object The object that was requested 
 \end{DoxyReturn}
+\hypertarget{classRuth_ac470a420ccefd668c3a50bead17e2d8a}{}\index{Ruth@{Ruth}!get\+Page\+Template@{get\+Page\+Template}}
+\index{get\+Page\+Template@{get\+Page\+Template}!Ruth@{Ruth}}
+\subsubsection[{get\+Page\+Template}]{\setlength{\rightskip}{0pt plus 5cm}static Ruth\+::get\+Page\+Template (
+\begin{DoxyParamCaption}
+\item[{}]{\$title = {\ttfamily \char`\"{}Default\char`\"{}}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\label{classRuth_ac470a420ccefd668c3a50bead17e2d8a}
+The default page template for \hyperlink{classRuth}{Ruth} so she can make routes 
+\begin{DoxyParams}[1]{Parameters}
+type & {\em \$title} & String A title to name the page by \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+type Shape A page template with default bootstrap 
+\end{DoxyReturn}
 \hypertarget{classRuth_aa8c09285cc5f2a214b8fbe5e45e88cea}{}\index{Ruth@{Ruth}!get\+Params@{get\+Params}}
 \index{get\+Params@{get\+Params}!Ruth@{Ruth}}
 \subsubsection[{get\+Params}]{\setlength{\rightskip}{0pt plus 5cm}static Ruth\+::get\+Params (
@@ -310,6 +344,31 @@ Mixed An mixed variable of what was present for that key
 {}
 \end{DoxyParamCaption}
 )\hspace{0.3cm}{\ttfamily [static]}}\label{classRuth_a0a05421198533990654d0c1fb0beaffd}
+\hypertarget{classRuth_addf8374cf72e378cb70c9cedeca62988}{}\index{Ruth@{Ruth}!get\+Request\+Method@{get\+Request\+Method}}
+\index{get\+Request\+Method@{get\+Request\+Method}!Ruth@{Ruth}}
+\subsubsection[{get\+Request\+Method}]{\setlength{\rightskip}{0pt plus 5cm}static Ruth\+::get\+Request\+Method (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\label{classRuth_addf8374cf72e378cb70c9cedeca62988}
+Get the request method that was used \begin{DoxyReturn}{Returns}
+String The request method used -\/ either P\+O\+S\+T or G\+E\+T 
+\end{DoxyReturn}
+\hypertarget{classRuth_ac185be50454d3107da9eb3fe45503b48}{}\index{Ruth@{Ruth}!get\+R\+E\+S\+T\+Auth@{get\+R\+E\+S\+T\+Auth}}
+\index{get\+R\+E\+S\+T\+Auth@{get\+R\+E\+S\+T\+Auth}!Ruth@{Ruth}}
+\subsubsection[{get\+R\+E\+S\+T\+Auth}]{\setlength{\rightskip}{0pt plus 5cm}static Ruth\+::get\+R\+E\+S\+T\+Auth (
+\begin{DoxyParamCaption}
+\item[{}]{\$username, }
+\item[{}]{\$password}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\label{classRuth_ac185be50454d3107da9eb3fe45503b48}
+Function to check that the authorization is correct for the user\textquotesingle{}s requesting permission 
+\begin{DoxyParams}[1]{Parameters}
+String & {\em \$username} & \\
+\hline
+String & {\em \$password} & \\
+\hline
+\end{DoxyParams}
 \hypertarget{classRuth_ab868231ae3b29da9c9456d0b866dc8ec}{}\index{Ruth@{Ruth}!get\+S\+E\+R\+V\+E\+R@{get\+S\+E\+R\+V\+E\+R}}
 \index{get\+S\+E\+R\+V\+E\+R@{get\+S\+E\+R\+V\+E\+R}!Ruth@{Ruth}}
 \subsubsection[{get\+S\+E\+R\+V\+E\+R}]{\setlength{\rightskip}{0pt plus 5cm}static Ruth\+::get\+S\+E\+R\+V\+E\+R (
@@ -356,7 +415,17 @@ This method creates a session with the name specified and sets all the internal 
 String & {\em \$session\+Name} & The name of the session for the web application \\
 \hline
 \end{DoxyParams}
-\hypertarget{classRuth_a4cc98adb973c4d46742b05a02ecb6ee3}{}\index{Ruth@{Ruth}!match\+Route@{match\+Route}}
+C\+R\+E\+A\+T\+E Add a specific record to the table
+
+R\+E\+A\+D Get a specific record from a table using the primary key
+
+U\+P\+D\+A\+T\+E Update a specific record in the system based on its I\+D
+
+P\+A\+T\+C\+H Patch a specific record in the system based on its I\+D
+
+D\+E\+L\+E\+T\+E Delete a specific record from a table using the primary key
+
+L\+I\+S\+T Get a list of records out of the database\hypertarget{classRuth_a4cc98adb973c4d46742b05a02ecb6ee3}{}\index{Ruth@{Ruth}!match\+Route@{match\+Route}}
 \index{match\+Route@{match\+Route}!Ruth@{Ruth}}
 \subsubsection[{match\+Route}]{\setlength{\rightskip}{0pt plus 5cm}static Ruth\+::match\+Route (
 \begin{DoxyParamCaption}
@@ -521,6 +590,21 @@ String & {\em \$key\+Name} & The name of the request variable to set. \\
 type & {\em \$key\+Value} & The value stored in the request variable \\
 \hline
 \end{DoxyParams}
+\hypertarget{classRuth_ad43f0c266cd72d1f3d26442528570d38}{}\index{Ruth@{Ruth}!set\+R\+E\+S\+T\+Auth@{set\+R\+E\+S\+T\+Auth}}
+\index{set\+R\+E\+S\+T\+Auth@{set\+R\+E\+S\+T\+Auth}!Ruth@{Ruth}}
+\subsubsection[{set\+R\+E\+S\+T\+Auth}]{\setlength{\rightskip}{0pt plus 5cm}static Ruth\+::set\+R\+E\+S\+T\+Auth (
+\begin{DoxyParamCaption}
+\item[{}]{\$username, }
+\item[{}]{\$password}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}\label{classRuth_ad43f0c266cd72d1f3d26442528570d38}
+Function to add rest authorization to the rest calls which should be protected 
+\begin{DoxyParams}[1]{Parameters}
+String & {\em \$username} & \\
+\hline
+String & {\em \$password} & \\
+\hline
+\end{DoxyParams}
 \hypertarget{classRuth_a169d4a654420b5abce66787cc8cb51b4}{}\index{Ruth@{Ruth}!set\+R\+O\+L\+E@{set\+R\+O\+L\+E}}
 \index{set\+R\+O\+L\+E@{set\+R\+O\+L\+E}!Ruth@{Ruth}}
 \subsubsection[{set\+R\+O\+L\+E}]{\setlength{\rightskip}{0pt plus 5cm}static Ruth\+::set\+R\+O\+L\+E (
@@ -569,6 +653,21 @@ String & {\em \$key\+Name} & The name of the session variable \\
 \begin{DoxyReturn}{Returns}
 boolean Was the resseting successful 
 \end{DoxyReturn}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classRuth_abcc2411c11abe0c3675069f255db1f97}{}\index{Ruth@{Ruth}!\$debug\+Messages@{\$debug\+Messages}}
+\index{\$debug\+Messages@{\$debug\+Messages}!Ruth@{Ruth}}
+\subsubsection[{\$debug\+Messages}]{\setlength{\rightskip}{0pt plus 5cm}Ruth\+::\$debug\+Messages\hspace{0.3cm}{\ttfamily [static]}}\label{classRuth_abcc2411c11abe0c3675069f255db1f97}
+\hypertarget{classRuth_ab4e553a88d7384c2dd07158efe3dd933}{}\index{Ruth@{Ruth}!\$rest\+Pass@{\$rest\+Pass}}
+\index{\$rest\+Pass@{\$rest\+Pass}!Ruth@{Ruth}}
+\subsubsection[{\$rest\+Pass}]{\setlength{\rightskip}{0pt plus 5cm}Ruth\+::\$rest\+Pass = \char`\"{}R\+E\+S\+T\+Master\char`\"{}\hspace{0.3cm}{\ttfamily [static]}}\label{classRuth_ab4e553a88d7384c2dd07158efe3dd933}
+\hypertarget{classRuth_abe139defb62f176c0a077983561f9d86}{}\index{Ruth@{Ruth}!\$rest\+User@{\$rest\+User}}
+\index{\$rest\+User@{\$rest\+User}!Ruth@{Ruth}}
+\subsubsection[{\$rest\+User}]{\setlength{\rightskip}{0pt plus 5cm}Ruth\+::\$rest\+User = \char`\"{}R\+E\+S\+T\+User\char`\"{}\hspace{0.3cm}{\ttfamily [static]}}\label{classRuth_abe139defb62f176c0a077983561f9d86}
+\hypertarget{classRuth_aaaf0e436f08cbd148c492584832da4cc}{}\index{Ruth@{Ruth}!\$was\+A\+J\+A\+X\+Call@{\$was\+A\+J\+A\+X\+Call}}
+\index{\$was\+A\+J\+A\+X\+Call@{\$was\+A\+J\+A\+X\+Call}!Ruth@{Ruth}}
+\subsubsection[{\$was\+A\+J\+A\+X\+Call}]{\setlength{\rightskip}{0pt plus 5cm}Ruth\+::\$was\+A\+J\+A\+X\+Call = false\hspace{0.3cm}{\ttfamily [static]}}\label{classRuth_aaaf0e436f08cbd148c492584832da4cc}
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}

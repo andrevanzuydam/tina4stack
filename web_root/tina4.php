@@ -49,6 +49,9 @@ require_once "Reta.php";
 require_once "Tessa.php";
 //Include Kim for the menus and content
 require_once "Kim.php";
+//Include Olga for object
+require_once "Olga.php";
+
 
 //assume things that could be overridden in the config.php file
 date_default_timezone_set('America/Los_Angeles');

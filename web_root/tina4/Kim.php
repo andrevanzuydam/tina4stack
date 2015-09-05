@@ -12,7 +12,7 @@ class Kim {
     var $KIM;
     var $defaultPages = ["index.html", "index.php", "home.html"];
     var $defaultExtensions = [".html", ".php"];
-    var $varRegex = '/{([a-zA-Z0-9\_\-\>\[\]\"\|\'\$]+)}/i';
+    var $varRegex = '/{([a-zA-Z0-9\_\-\>\[\]\"\|\'\(\)\$]+)}/i';
 
 
 
@@ -905,7 +905,7 @@ class Kim {
 
                                 if (strpos($callParts[0], ":") !== false) {
                                     try {
-                                        if (method_exists($elementParts[0], str_replace(":", "", $callParts[0]))) {
+                                        if (is_callable([$elementParts[0], str_replace(":", "", $callParts[0])])) {
                                             $result = call_user_func_array(array($elementParts[0],  str_replace(":", "", $callParts[0])), $params);
                                         }
                                         else {
@@ -919,7 +919,7 @@ class Kim {
                                     $classObject = "";
                                     eval ('$classObject = new '.$elementParts[0].'();');
                                     try {
-                                        if (method_exists($classObject, $callParts[0]) || empty($callParts[0])) {
+                                        if (is_callable([$classObject, $callParts[0]]) || empty($callParts[0])) {
                                             if (!empty($callParts[0])) {
                                                 $result = call_user_func_array(array($classObject, $callParts[0]), $params);
                                             } else {
@@ -1137,7 +1137,6 @@ class Kim {
                 script(["src" => "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.js"]),
                 script(["src" => "http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"]),
                 script(["src" => "http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/additional-methods.min.js"]),
-                script(["src" => "http://cdnjs.buttflare.com/ajax/libs/interact.js/1.2.4/interact.min.js" ]),
                 script(["src" => "//cdn.ckeditor.com/4.5.1/standard/ckeditor.js"])
             ),
             body (["style" => "padding: 0px 20px 0px"],

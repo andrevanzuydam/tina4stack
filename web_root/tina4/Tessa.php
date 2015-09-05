@@ -742,9 +742,11 @@ class Tessa {
      * @param $URL
      * @return bool
      */
-    function navigateTo($URL) {
+    function navigateTo($URL, $maximize=false) {
         //this is the default port for testing
-        $this->session->window()->maximize();
+        if ($maximize) {
+            $this->session->window()->maximize();
+        }
         $this->session->open($URL);
 
         return true;

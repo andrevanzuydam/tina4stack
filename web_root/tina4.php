@@ -1,13 +1,129 @@
 <?php
-
 /**
- * Please do not modify this file, what you need to know is this:
- * 
- * Database connections go in the connection folder for Debby
- * Routes are set in the routes folder for Ruth
- * Migrations are set in the migrations folder for Maggy
- * 
- * */
+ * @mainpage Tina4 Stack
+ * @author Andre van Zuydam
+ * @version 1.0.0
+ * @copyright Tina4
+ * @tableofcontents
+ *
+ * @section introduction Introduction to the Tina4Stack
+ *
+ * The Tina4Stack started with a need to bring some uniformity to the development I was doing in PHP and especially where
+ * I was working with other developers on the same project.  I have often wondered if I should start using one of the popular
+ * frameworks out there but have decided against it for various reasons.  Instead I have decided to share with you my work bench
+ * so to speak where you can also benefit from the work that has gone into this tool.
+ *
+ * @note Tina4 simply means "This is NOT another Framework!"
+ *
+ * @section what_is_in_the_stack What is in the Stack?
+ *
+ * The Stack is built up from the following technologies which hopefully will get your development up and running in minutes.
+ * Incidentally we do not deploy any database engines for you and this should be done separately which is something we prefer.
+ *
+ * <UL>
+ *  <LI>Nginx</LI>
+ *  <LI>PHP 5.6 <OL>
+ *                  <LI>Curl is enabled</LI>
+ *                  <LI>GD2 is enabled</LI>
+ *                  <LI>MySQLi is enabled</LI>
+ *                  <LI>SQLite3 is enabled</LI>
+ *                  <LI>XDebug is enabled on port 9000</LI>
+ *                  <LI>XCache is enabled</LI>
+ *                  <LI>Exif is enabled</LI>
+ *                  <LI>FileInfo is enabled</LI>
+ *                  <LI>Mbstring is enabled</LI>
+ *                  <LI>OpenSSL is enabled</LI>
+ *                  <LI>Soap is enabled</LI>
+ *                  <LI>XSL is enabled</LI>
+ *              </OL>
+ *  </LI>
+ *  <LI>Doxygen - both Windows & Linux scripts - you are reading generated documentation now!</LI>
+ *  <LI>Swagger UI</LI>
+ *  <LI>Selenium Client</LI>
+ *  <LI>XCache UI</LI>
+ * </UL>
+ *
+ * @note On my todo list are the Tina4 clients for Linux & MacOS
+ *
+ * @section what_is_tina4 What is Tina4
+ *
+ * Tina4 is a collection of tools which will help you with your PHP development.  In order to make the tools easy to remember and use we
+ * have given them names so that you can identify with each of the personalities when you are working.  For example Ruth is responsible for
+ * Routing, Maggy is responsible for migrations.
+ *
+ * Now it may seem daunting to make use of tools you did not assist in building but you can use as little or as much of the tools as you want.
+ * After going over the core functionlity of each of the girls in the stack I will explain the basics of how everything is supposed to work.
+ *
+ *
+ * @section tina Tina
+ *
+ * Tina is the CEO of the Tina4 Corporation, as anyone knows a successful company needs a strong leader. Her skills lie in the organization of each
+ * of the girls and making sure each person collaborates properly on the task at hand.  Tina is passionate about providing solutions to her customers
+ * and it is very important to her that each peson is doing the job they were assigned.  In a nutshell we have the following:
+ *
+ * <UL>
+ *   <LI> Routing </LI>
+ *   <LI> Migrations </LI>
+ *   <LI> Database Abstraction </LI>
+ *   <LI> Code Simplification </LI>
+ *   <LI> Templating </LI>
+ *   <LI> UI Testing with Selenium </LI>
+ *   <LI> WYIWYG Report Generation </LI>
+ *   <LI> Email Handling </LI>
+ *   <LI> Object Abstraction </LI>
+ * </UL>
+ *
+ * @section ruth Ruth
+ *
+ * Ruth as we have said before is responsible for routing. Routing as you may be familiar with is the ability to handle URL requests to your website.
+ * You may be quite comfortable with writing routing tables in Apache or NGINX. If you decide to use Ruth you immediately have an application which will
+ * run on NGINX and Apache equally well.  Ruth also handles security and sessions which are explained in her section.
+ *
+ * A quick example of Ruth in action, you would get this link at http://localhost:12345/testing when developing.
+ * The output of this route would be @a Hello @a Tina4!
+ *
+ * @subsection ruth_example Ruth Example
+ * @code{.php}
+ *
+ * //Adding a GET route
+ * Ruth::addRoute (RUTH_GET, "/testing", function () {
+ *      echo "Hello Tina4!";
+ * });
+ *
+ * @endcode
+ *
+ * @note Simply adding a PHP file under the routes folder and adding the above code is sufficient for Ruth to start working.
+ *
+ *
+ * @remark The setup of the web server routes all URL requests to the tina4.php file which in turn relays them to Ruth. If your webserver has not been setup
+ * the stack will attempt to give you a configuration for Nginx or Apache.
+ *
+ * @section cody Cody
+ * Cody was written to automate things that may take up a lot of repetition.  At this point in time Cody helps automate Bootstrap functionlity.
+ * Cody has a very neat Ajax handler which automatically reads form variables and passes them to the URL you specify.  The Ajax handler of Cody can
+ * also handle file uploading via Ajax and when used with Ruth and Debby you have very little coding to do.
+ *
+ * @subsection cody_example Example of Bootstrap Input
+ * The following code will create a properly formatted Bootstrap input with all the correct classes. You can see this in action in Maggy http://localhost:12345/maggy/create
+ * @code
+ *
+ *      echo (new Cody())->bootStrapInput("firstName", "First Name", "Full Names", $defaultValue = "", "text");
+ *
+ * @endcode
+ *
+ * @subsection code_example_ajax Example of Ajax Handler
+ * The following code will create a Javascript function called @a callAjax which can be used to run Ajax commands to your routing
+ * @code
+ *
+ * echo (new Cody())->ajaxHandler();
+ *
+ * @endcode
+ *
+ *
+ *
+ *
+ *
+ */
 //Default rights which should be allowed in TINA4 if roles are going to be used
 global $_TINA4_SYSTEM_ROUTES;
 $_TINA4_SYSTEM_ROUTES = ["/cody/*", "/maggy/*", "/phpinfo", "/kim/*", "/debby/*", "/tessa/*", "/debug"];
@@ -28,7 +144,6 @@ if (file_exists(realpath(__DIR__ . "/tina4") . "/Shape.php")) {
     tina4Message("Please check your tina4 installation, we cannot find includes local to your web root");
     die();
 }
-   
 //include shape for the project
 require_once "Shape.php";
 //include Ruth for the routing

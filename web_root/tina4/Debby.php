@@ -824,6 +824,18 @@ Ruth::setOBJECT("' . Ruth::getREQUEST("txtALIAS") . '", $' . Ruth::getREQUEST("t
         return call_user_func_array([$this, "exec"], $params);
     }
 
+    /**
+     * Method to do an insert or update into the system
+     * @param $tablename
+     * @param $fieldValues
+     * @param $primaryKey
+     */
+    function updateOrInsert($tablename, $fieldValues, $primaryKey) {
+        if (!$this->update($tablename, $fieldValues, $primaryKey)) {
+            $this->insert($tablename, $fieldValues);
+        }
+    }
+
     /*
       END  escape_string
      * *************************************************************************** */

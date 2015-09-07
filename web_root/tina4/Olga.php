@@ -162,8 +162,66 @@ class Olga implements Iterator  {
         }
     }
 
-
+    /**
+     * Method to update the database from the objects in memory
+     * @return bool
+     */
     function populateToDebby() {
+        $DEB = Ruth::getOBJECT("DEB");
+        //read from the database
+        if (!empty($DEB)) {
+            if (!empty($this->id)) { //a single record
+                if (!empty($this->mapping["table"])) {
+                    if (!empty($this->mapping["fields"])) {
+                        $fieldValues = [];
+                        foreach ($this->mapping["fields"] as $objectField => $field) {
+                            if ($objectField === "id") {
+                                $primaryKey = [$field["field"] => $this->id];
+                            }
+                            eval ('$fieldValues[$field["field"]] = $this->get'.$objectField.'();');
+                        }
+
+                        $DEB->updateOrInsert($this->mapping["table"], $fieldValues, $primaryKey);
+                        $DEB->commit();
+
+                    } else {
+                        return false;
+                    }
+                }
+                  else {
+                    return false;
+                  }
+            } else { //multiple objects
+                if (!empty($this->mapping["table"])) {
+                    if (!empty($this->mapping["object"])) {
+                        $newObject = "";
+                        eval ('$newObject = new '.$this->mapping["object"].'();');
+                        foreach ($this as $rid => $object) {
+                            if (!empty($newObject->mapping["fields"])) {
+                                if (!empty($newObject->mapping["table"])) {
+                                    $fieldValues = [];
+                                    foreach ($newObject->mapping["fields"] as $objectField => $field) {
+                                        if ($objectField === "id") {
+                                            $primaryKey = [$field["field"] => $object->id];
+                                        }
+                                        eval ('$fieldValues[$field["field"]] = $object->get'.$objectField.'();');
+                                    }
+
+                                    $DEB->updateOrInsert($newObject->mapping["table"], $fieldValues, $primaryKey);
+                                    $DEB->commit();
+                                }
+                            } else {
+                                return false;
+                            }
+                        }
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+        }
         return true;
     }
 

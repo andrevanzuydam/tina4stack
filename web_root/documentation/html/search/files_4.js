@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['kim_2ephp',['Kim.php',['../Kim_8php.html',1,'']]]
+  ['maggy_2ephp',['Maggy.php',['../Maggy_8php.html',1,'']]]
 ];

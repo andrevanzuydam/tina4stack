@@ -31,7 +31,6 @@ define ("RUTH_PUT", "PUT");
 define ("RUTH_PATCH", "PATCH");
 define ("RUTH_DELETE", "DELETE");
 
-
 class Ruth {
     /**
      * Indicates whether debugging is on or off

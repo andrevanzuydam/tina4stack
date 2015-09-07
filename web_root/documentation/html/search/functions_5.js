@@ -1,9 +1,5 @@
 var searchData=
 [
-  ['electricitycontext',['electricityContext',['../classGlocell.html#a5ef9ef1ba7edd477090c68cb7cfc3309',1,'Glocell']]],
-  ['electricitycontextwithoutmunic',['electricityContextWithOutMunic',['../classGlocell.html#acc0d827cadf24bc487c55642dce05939',1,'Glocell']]],
-  ['electricityvend',['electricityVend',['../classGlocell.html#aaec3a9c0d2570e1789597bc3fe368609',1,'Glocell']]],
-  ['electricityvendcomplete',['electricityVendComplete',['../classGlocell.html#afedf7f954a1b730847f39afc904c7ff5',1,'Glocell']]],
   ['em',['em',['../Shape_8php.html#a605ef153deddaa1caecd554de23b5d38',1,'Shape.php']]],
   ['embed',['embed',['../Shape_8php.html#a4e7325a59fa98717eaec0c5df78a6161',1,'Shape.php']]],
   ['embedimage',['embedImage',['../classDebby.html#af57d83562218d3a4b5e1de2f75a24cf0',1,'Debby']]],

@@ -4,7 +4,6 @@ var searchData=
   ['lasterror',['lastError',['../classDebby.html#acbb276a47dbcd64d671a673df43be15a',1,'Debby']]],
   ['legend',['legend',['../Shape_8php.html#a2615067a07b4c5f69d2e2d7e1011f0ef',1,'Shape.php']]],
   ['li',['li',['../Shape_8php.html#a2f9b70f7cfcdd230abac8be437c5b583',1,'Shape.php']]],
-  ['listauthorities',['listAuthorities',['../classGlocell.html#a0c37bb8d4d83db39d686fd622ba9e1a9',1,'Glocell']]],
   ['load',['load',['../classOlga.html#a3ce181004b4dc00140033a7a27eeb747',1,'Olga']]],
   ['loaddefines',['loadDefines',['../classKim.html#a8a657ebf9637c9d007c2c66654bf2a6d',1,'Kim']]],
   ['loadroutes',['loadRoutes',['../classKim.html#a99011f068ed5a1f55fd8c5cf2b1aac43',1,'Kim']]],

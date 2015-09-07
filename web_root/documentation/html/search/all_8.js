@@ -17,7 +17,6 @@ var searchData=
   ['getcontent',['getContent',['../classKim.html#ae4aa263c0ff64aa21548b306a166233c',1,'Kim\getContent()'],['../classhtmlElement.html#ab74714929671cc7cf3271404a621f4ae',1,'htmlElement\getContent()']]],
   ['getcontenteditor',['getContentEditor',['../classKim.html#a2dd128b830f0ada61117e959f246d18d',1,'Kim']]],
   ['getcookie',['getCOOKIE',['../classRuth.html#a5ec6c65c94d056a2e0705efaa56f7660',1,'Ruth']]],
-  ['getcustomerbalance',['getCustomerBalance',['../classGlocell.html#a0fbe51f01c43f917c13cd32bdac439dc',1,'Glocell']]],
   ['getdatabase',['getDatabase',['../classDebby.html#a3db4be991273f352071c85ed7e0ba4ef',1,'Debby']]],
   ['getdatatype',['getDataType',['../classDebby.html#ac478861de694f44be2d1caceb24b42da',1,'Debby']]],
   ['getdefaultpage',['getDefaultPage',['../classKim.html#a8a754c69958e71d159e6808f83f12cfe',1,'Kim']]],
@@ -80,7 +79,5 @@ var searchData=
   ['getuserrecord',['getUserRecord',['../classKim.html#a6c3ce83f2f3bc3c7743f1bfa46f30d0e',1,'Kim']]],
   ['getusers',['getUsers',['../classKim.html#a31a5796278c813534e76d2ce91d9eed2',1,'Kim']]],
   ['getusertypes',['getUserTypes',['../classKim.html#a03d8b762e1c6d458e714904cd8b02dd6',1,'Kim']]],
-  ['getvalue',['getValue',['../classshapeBaseElement.html#ad6ebb79ad6cb2d501f682938d15d4052',1,'shapeBaseElement\getValue()'],['../classTestElement.html#a1964043ed9be26b977b5ed6b4d993aaa',1,'TestElement\getValue()']]],
-  ['glocell',['Glocell',['../classGlocell.html',1,'']]],
-  ['glocell_2ephp',['Glocell.php',['../Glocell_8php.html',1,'']]]
+  ['getvalue',['getValue',['../classshapeBaseElement.html#ad6ebb79ad6cb2d501f682938d15d4052',1,'shapeBaseElement\getValue()'],['../classTestElement.html#a1964043ed9be26b977b5ed6b4d993aaa',1,'TestElement\getValue()']]]
 ];

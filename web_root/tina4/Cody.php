@@ -1,14 +1,11 @@
 <?php
-
 /**
  * Description of Cody
  *
  * Cody is a CRUDL generation tool to make coding in Tina4 stack easy and fun
  *
- * @author Andre van Zuydam <andre@xineoh.com>
  */
 require_once "Shape.php";
-
 class Cody {
 
     /**
@@ -2317,7 +2314,7 @@ class Cody {
                 if (newRoute === undefined) newRoute = '{$route}';
                 if (newTarget === undefined) newTarget = '{$target}';
                 if (typeof newMethod === \"undefined\") newMethod = '{$method}';
-                if (ignoreRoute === undefined) ignoreRoute = false;
+                if (ignoreRoute === undefined) ignoreRoute = true;
 
                 if ((extraParam !== undefined || extraParam === null) && extraParam.length != 0) {
                   jsonData = extraParam === null ? [] : extraParam;

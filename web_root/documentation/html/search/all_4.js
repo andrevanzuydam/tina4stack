@@ -23,7 +23,6 @@ var searchData=
   ['col',['col',['../Shape_8php.html#ad3ca6e74b83795ae73367de0d0b00572',1,'Shape.php']]],
   ['colgroup',['colgroup',['../Shape_8php.html#a1be50002fd4b4e220596e4fd71c93fa3',1,'Shape.php']]],
   ['commit',['commit',['../classDebby.html#abd1a0612de8d8558a155fa40754fb2c6',1,'Debby']]],
-  ['communicate',['communicate',['../classGlocell.html#a161d3073a9a8d32cfe4e90999bc4c259',1,'Glocell']]],
   ['compileattributes',['compileAttributes',['../classhtmlElement.html#a4e30cd7e3e6d8ad503766d056490c1ef',1,'htmlElement']]],
   ['compilecontent',['compileContent',['../classhtmlElement.html#ac05144459b3739d692738dc947f6989c',1,'htmlElement']]],
   ['compilehtml',['compileHTML',['../classhtmlElement.html#ab45087063ba3e42851d01bd87681475b',1,'htmlElement']]],

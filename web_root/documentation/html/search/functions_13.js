@@ -5,7 +5,6 @@ var searchData=
   ['td',['td',['../Shape_8php.html#acad9ded52115cb7c62e674584cbd62e8',1,'Shape.php']]],
   ['templatehtml',['templateHTML',['../classhtmlElement.html#af70cbe9883bbe35f9a2573711625cfc4',1,'htmlElement']]],
   ['tessaerrorhandler',['tessaErrorHandler',['../Tessa_8php.html#af0c8babb876f6ec17169e3c8b88d5c28',1,'Tessa.php']]],
-  ['testvend',['testVend',['../classGlocell.html#ad51e9b4e84f40bf3785446b1a113eb3e',1,'Glocell']]],
   ['text',['text',['../Shape_8php.html#a37df362c2f77a0045fa8af094f432238',1,'Shape.php']]],
   ['textarea',['textarea',['../Shape_8php.html#a8b609b10e521fcdfaf408dded4420e5a',1,'Shape.php']]],
   ['tfoot',['tfoot',['../Shape_8php.html#a3081578bcf19f21b5369232c1dc60f11',1,'Shape.php']]],

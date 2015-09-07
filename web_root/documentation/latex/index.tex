@@ -1,19 +1,10 @@
-\begin{DoxyAuthor}{Author}
-Andre van Zuydam 
-\end{DoxyAuthor}
-\begin{DoxyVersion}{Version}
-1.\+0.\+0 
-\end{DoxyVersion}
-\begin{DoxyCopyright}{Copyright}
-Tina4
-\end{DoxyCopyright}
 \hypertarget{index_introduction}{}\section{Introduction to the Tina4\+Stack}\label{index_introduction}
 The Tina4\+Stack started with a need to bring some uniformity to the development I was doing in P\+H\+P and especially where I was working with other developers on the same project. I have often wondered if I should start using one of the popular frameworks out there but have decided against it for various reasons. Instead I have decided to share with you my work bench so to speak where you can also benefit from the work that has gone into this tool.
 
 \begin{DoxyNote}{Note}
 Tina4 simply means \char`\"{}\+This is N\+O\+T another Framework!\char`\"{}
 \end{DoxyNote}
-\hypertarget{index_what_is_in_the_stack}{}\section{What is in the Stack?}\label{index_what_is_in_the_stack}
+ \href{https://sourceforge.net/projects/tina4stack/files/latest/download}{\tt Download Latest Release }\hypertarget{index_what_is_in_the_stack}{}\section{What is in the Stack?}\label{index_what_is_in_the_stack}
 The Stack is built up from the following technologies which hopefully will get your development up and running in minutes. Incidentally we do not deploy any database engines for you and this should be done separately which is something we prefer.
 
 
@@ -61,9 +52,11 @@ Tina is the C\+E\+O of the Tina4 Corporation, as anyone knows a successful compa
 \item Email Handling  
 \item Object Abstraction  
 \end{DoxyItemize}\hypertarget{index_ruth}{}\section{Ruth}\label{index_ruth}
+
+
 \hyperlink{classRuth}{Ruth} as we have said before is responsible for routing. Routing as you may be familiar with is the ability to handle U\+R\+L requests to your website. You may be quite comfortable with writing routing tables in Apache or N\+G\+I\+N\+X. If you decide to use \hyperlink{classRuth}{Ruth} you immediately have an application which will run on N\+G\+I\+N\+X and Apache equally well. \hyperlink{classRuth}{Ruth} also handles security and sessions which are explained in her section.
 
-A quick example of \hyperlink{classRuth}{Ruth} in action, you would get this link at \href{http://localhost:12345/testing}{\tt http\+://localhost\+:12345/testing} when developing. The output of this route would be {\itshape Hello} {\itshape Tina4!} \hypertarget{index_ruth_example}{}\subsection{Ruth Example}\label{index_ruth_example}
+A quick example of \hyperlink{classRuth}{Ruth} in action, you would get this link at \href{http://localhost:12345/testing}{\tt http\+://localhost\+:12345/testing} when developing. The output of this route would be {\itshape Hello} {\itshape Tina4!} \hypertarget{index_ruth_example}{}\subsection{Routing Example}\label{index_ruth_example}
 
 \begin{DoxyCode}
 \textcolor{comment}{//Adding a GET route}
@@ -75,11 +68,12 @@ A quick example of \hyperlink{classRuth}{Ruth} in action, you would get this lin
 
 \begin{DoxyNote}{Note}
 Simply adding a P\+H\+P file under the routes folder and adding the above code is sufficient for \hyperlink{classRuth}{Ruth} to start working.
-\end{DoxyNote}
-\begin{DoxyRemark}{Remarks}
+
 The setup of the web server routes all U\+R\+L requests to the \hyperlink{tina4_8php}{tina4.\+php} file which in turn relays them to \hyperlink{classRuth}{Ruth}. If your webserver has not been setup the stack will attempt to give you a configuration for Nginx or Apache.
-\end{DoxyRemark}
+\end{DoxyNote}
 \hypertarget{index_cody}{}\section{Cody}\label{index_cody}
+
+
 \hyperlink{classCody}{Cody} was written to automate things that may take up a lot of repetition. At this point in time \hyperlink{classCody}{Cody} helps automate Bootstrap functionlity. \hyperlink{classCody}{Cody} has a very neat Ajax handler which automatically reads form variables and passes them to the U\+R\+L you specify. The Ajax handler of \hyperlink{classCody}{Cody} can also handle file uploading via Ajax and when used with \hyperlink{classRuth}{Ruth} and \hyperlink{classDebby}{Debby} you have very little coding to do.\hypertarget{index_cody_example}{}\subsection{Example of Bootstrap Input}\label{index_cody_example}
 The following code will create a properly formatted Bootstrap input with all the correct classes. You can see this in action in \hyperlink{classMaggy}{Maggy} \href{http://localhost:12345/maggy/create}{\tt http\+://localhost\+:12345/maggy/create} 
 \begin{DoxyCode}
@@ -90,4 +84,123 @@ The following code will create a Javascript function called {\itshape call\+Ajax
 \begin{DoxyCode}
 echo (\textcolor{keyword}{new} \hyperlink{classCody}{Cody}())->ajaxHandler();
 \end{DoxyCode}
- 
+
+
+\begin{DoxyNote}{Note}
+To include the Ajax handler with \hyperlink{classKim}{Kim} the code is \{\{\hyperlink{classCody}{Cody}\+:ajax\+Handler\}\}!
+\end{DoxyNote}
+The ajax Handler in \hyperlink{classCody}{Cody} takes on the following params and should be used in Javascript on your page.
+
+
+\begin{DoxyCode}
+callAjax(\textcolor{stringliteral}{'/testing'}, \textcolor{comment}{//route to do a request to}
+         \textcolor{stringliteral}{'myDiv'}, \textcolor{comment}{//The id of the tag or input you wish to target, leave blank if your ajax result is
+       Javascript}
+         \{\textcolor{keywordtype}{id}:10001\}, \textcolor{comment}{//some JSON to pass with the request, Ruth will make it into request variables}
+         \textcolor{stringliteral}{'post'}, \textcolor{comment}{//get,post,delete etc...}
+         \textcolor{keyword}{true}); \textcolor{comment}{//true or false, set to false to rewrite the URL in the browser after an Ajax call}
+\end{DoxyCode}
+\hypertarget{index_kim}{}\section{Kim}\label{index_kim}
+
+
+\hyperlink{classKim}{Kim} likes to work with content, if you need something working quickly in H\+T\+M\+L whilst still having access to the power of P\+H\+P then you need to see what \hyperlink{classKim}{Kim} can do. In order for \hyperlink{classKim}{Kim} to work correctly you need to have an assets folder under your document root. In this folder she will look for the following folders\+:
+
+
+\begin{DoxyItemize}
+\item pages 
+\item snippets 
+\item forms 
+\end{DoxyItemize}
+
+Here are some examples of \hyperlink{classKim}{Kim} in action, hopefully from the examples you will be creating dynamic pages in a few minutes.\hypertarget{index_kim_include}{}\subsection{Including H\+T\+M\+L snippets}\label{index_kim_include}
+The \{\{include\+:snippet/\mbox{[}snippet\+\_\+name\mbox{]}\}\} will include a section of a file into the existing file. This is much like the normal require or include of P\+H\+P except that it has the ability to render variables in \{braces\}. The path used is relative to the assets folder, so all your includes should be under assets.
+
+
+\begin{DoxyCode}
+\{\{include:snippet/header\}\}
+
+<\hyperlink{Shape_8php_a92ed2229ea45cf3c0e84a02cf12a7533}{h1}>Some normal \hyperlink{Shape_8php_a8b267aa0adca2018097f6f6f4c804d46}{html} </\hyperlink{Shape_8php_a92ed2229ea45cf3c0e84a02cf12a7533}{h1}>
+
+\{\{include:snippet/\hyperlink{Shape_8php_ae5058e5b790e8cea2dd33c1c9bbcbbd4}{footer}\}\}
+\end{DoxyCode}
+
+
+\begin{DoxyNote}{Note}
+\hyperlink{classKim}{Kim} adds .html automatically so snippet/footer would parse to /web\+\_\+root/assets/snippet/footer.html
+\end{DoxyNote}
+\hypertarget{index_kim_parse_variable}{}\subsection{Parsing Variables}\label{index_kim_parse_variable}
+\hyperlink{classKim}{Kim} understands that it is cumbersome to reference variables in your H\+T\+M\+L files. More so if you need to make sure their scope is correct.
+
+The normal way 
+\begin{DoxyCode}
+<\hyperlink{Shape_8php_a92ed2229ea45cf3c0e84a02cf12a7533}{h1}>
+<?php
+  echo $someVariable;
+?>
+</\hyperlink{Shape_8php_a92ed2229ea45cf3c0e84a02cf12a7533}{h1}>
+\end{DoxyCode}
+
+
+\hyperlink{classKim}{Kim}\textquotesingle{}s way 
+\begin{DoxyCode}
+<\hyperlink{Shape_8php_a92ed2229ea45cf3c0e84a02cf12a7533}{h1}>\{someVariable\}</\hyperlink{Shape_8php_a92ed2229ea45cf3c0e84a02cf12a7533}{h1}>
+\end{DoxyCode}
+\hypertarget{index_kim_calling_php}{}\subsection{Calling built in P\+H\+P functions}\label{index_kim_calling_php}
+\hyperlink{classKim}{Kim} understands that we need to access some built in functions in our H\+T\+M\+L templates, so she made it easy.
+
+The normal way 
+\begin{DoxyCode}
+<\hyperlink{Shape_8php_a92ed2229ea45cf3c0e84a02cf12a7533}{h1}>
+<?php
+  echo substr(\textcolor{stringliteral}{"Some really long sentence!"},0,4).\textcolor{stringliteral}{"..."};
+?>
+</\hyperlink{Shape_8php_a92ed2229ea45cf3c0e84a02cf12a7533}{h1}>
+\end{DoxyCode}
+
+
+\hyperlink{classKim}{Kim}\textquotesingle{}s way 
+\begin{DoxyCode}
+<\hyperlink{Shape_8php_a92ed2229ea45cf3c0e84a02cf12a7533}{h1}>\{\{call:substr?\textcolor{stringliteral}{"Some really long sentence!"},0,4\}\}...</\hyperlink{Shape_8php_a92ed2229ea45cf3c0e84a02cf12a7533}{h1}>
+\end{DoxyCode}
+
+
+\begin{DoxyNote}{Note}
+\hyperlink{classKim}{Kim} only needs you to put your params in quotes when you have spaces or commas in between
+\end{DoxyNote}
+\hypertarget{index_kim_classes}{}\subsection{Calling methods on classes}\label{index_kim_classes}
+\hyperlink{classKim}{Kim} is able instantiate classes as call their methods which should return either text or arrays
+
+The normal way 
+\begin{DoxyCode}
+<\hyperlink{Shape_8php_a92ed2229ea45cf3c0e84a02cf12a7533}{h1}>
+<?php
+  $myObject = \textcolor{keyword}{new} MyObject();
+  echo $myObject->getName();
+?>
+</\hyperlink{Shape_8php_a92ed2229ea45cf3c0e84a02cf12a7533}{h1}>
+\end{DoxyCode}
+
+
+\hyperlink{classKim}{Kim}\textquotesingle{}s way 
+\begin{DoxyCode}
+<\hyperlink{Shape_8php_a92ed2229ea45cf3c0e84a02cf12a7533}{h1}>\{\{MyObject:getName\}\}</\hyperlink{Shape_8php_a92ed2229ea45cf3c0e84a02cf12a7533}{h1}>
+\end{DoxyCode}
+
+
+\begin{DoxyNote}{Note}
+\hyperlink{classKim}{Kim} uses \{\} to designate variables and \{\{\}\} to designate objects or control structures.
+\end{DoxyNote}
+\hypertarget{index_debby}{}\section{Debby}\label{index_debby}
+\hypertarget{index_maggy}{}\section{Maggy}\label{index_maggy}
+\hypertarget{index_emma}{}\section{Emma}\label{index_emma}
+
+
+\begin{DoxyAuthor}{Author}
+Andre van Zuydam 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0.\+0 
+\end{DoxyVersion}
+\begin{DoxyCopyright}{Copyright}
+Tina4 
+\end{DoxyCopyright}

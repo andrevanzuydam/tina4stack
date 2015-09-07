@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['maggy_2ephp',['Maggy.php',['../Maggy_8php.html',1,'']]]
+  ['olga_2ephp',['Olga.php',['../Olga_8php.html',1,'']]]
 ];

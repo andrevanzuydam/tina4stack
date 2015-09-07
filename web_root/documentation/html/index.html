@@ -15,6 +15,7 @@
   $(document).ready(function() { init_search(); });
 </script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxyGen.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -88,22 +89,32 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li class="level1"><a href="#what_is_in_the_stack">What is in the Stack?</a></li>
 <li class="level1"><a href="#what_is_tina4">What is Tina4</a></li>
 <li class="level1"><a href="#tina">Tina</a></li>
-<li class="level1"><a href="#ruth">Ruth</a><ul><li class="level2"><a href="#ruth_example">Ruth Example</a></li>
+<li class="level1"><a href="#ruth">Ruth</a><ul><li class="level2"><a href="#ruth_example">Routing Example</a></li>
 </ul>
 </li>
 <li class="level1"><a href="#cody">Cody</a><ul><li class="level2"><a href="#cody_example">Example of Bootstrap Input</a></li>
 <li class="level2"><a href="#code_example_ajax">Example of Ajax Handler</a></li>
 </ul>
 </li>
+<li class="level1"><a href="#kim">Kim</a><ul><li class="level2"><a href="#kim_include">Including HTML snippets</a></li>
+<li class="level2"><a href="#kim_parse_variable">Parsing Variables</a></li>
+<li class="level2"><a href="#kim_calling_php">Calling built in PHP functions</a></li>
+<li class="level2"><a href="#kim_classes">Calling methods on classes</a></li>
+</ul>
+</li>
+<li class="level1"><a href="#debby">Debby</a></li>
+<li class="level1"><a href="#maggy">Maggy</a></li>
+<li class="level1"><a href="#emma">Emma</a></li>
 </ul>
 </div>
-<div class="textblock"><dl class="section author"><dt>Author</dt><dd>Andre van Zuydam </dd></dl>
-<dl class="section version"><dt>Version</dt><dd>1.0.0 </dd></dl>
-<dl class="section copyright"><dt>Copyright</dt><dd>Tina4</dd></dl>
-<h1><a class="anchor" id="introduction"></a>
+<div class="textblock"><h1><a class="anchor" id="introduction"></a>
 Introduction to the Tina4Stack</h1>
 <p>The Tina4Stack started with a need to bring some uniformity to the development I was doing in PHP and especially where I was working with other developers on the same project. I have often wondered if I should start using one of the popular frameworks out there but have decided against it for various reasons. Instead I have decided to share with you my work bench so to speak where you can also benefit from the work that has gone into this tool.</p>
 <dl class="section note"><dt>Note</dt><dd>Tina4 simply means "This is NOT another Framework!"</dd></dl>
+<div class="image">
+<img src="https://img.shields.io/sourceforge/dw/tina4stack.svg" />
+</div>
+<p> <a href="https://sourceforge.net/projects/tina4stack/files/latest/download">Download Latest Release </a></p>
 <h1><a class="anchor" id="what_is_in_the_stack"></a>
 What is in the Stack?</h1>
 <p>The Stack is built up from the following technologies which hopefully will get your development up and running in minutes. Incidentally we do not deploy any database engines for you and this should be done separately which is something we prefer.</p>
@@ -177,18 +188,25 @@ Object Abstraction  </li>
 </ul>
 <h1><a class="anchor" id="ruth"></a>
 Ruth</h1>
+<div class="image">
+<img src="ruth_intro.png" alt="ruth_intro.png"/>
+</div>
 <p><a class="el" href="classRuth.html">Ruth</a> as we have said before is responsible for routing. Routing as you may be familiar with is the ability to handle URL requests to your website. You may be quite comfortable with writing routing tables in Apache or NGINX. If you decide to use <a class="el" href="classRuth.html">Ruth</a> you immediately have an application which will run on NGINX and Apache equally well. <a class="el" href="classRuth.html">Ruth</a> also handles security and sessions which are explained in her section.</p>
 <p>A quick example of <a class="el" href="classRuth.html">Ruth</a> in action, you would get this link at <a href="http://localhost:12345/testing">http://localhost:12345/testing</a> when developing. The output of this route would be <em>Hello</em> <em>Tina4!</em> </p>
 <h2><a class="anchor" id="ruth_example"></a>
-Ruth Example</h2>
+Routing Example</h2>
 <div class="fragment"><div class="line"><span class="comment">//Adding a GET route</span></div>
 <div class="line"><a class="code" href="classRuth.html#ad13bc87f60f8b74efd4c784fa2c49288">Ruth::addRoute</a> (<a class="code" href="Ruth_8php.html#acc73cd34b6fcffd15a4fdd050e0a86d8">RUTH_GET</a>, <span class="stringliteral">&quot;/testing&quot;</span>, <span class="keyword">function</span> () {</div>
 <div class="line">     echo <span class="stringliteral">&quot;Hello Tina4!&quot;</span>;</div>
 <div class="line">});</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Simply adding a PHP file under the routes folder and adding the above code is sufficient for <a class="el" href="classRuth.html">Ruth</a> to start working.</dd></dl>
-<dl class="section remark"><dt>Remarks</dt><dd>The setup of the web server routes all URL requests to the <a class="el" href="tina4_8php.html">tina4.php</a> file which in turn relays them to <a class="el" href="classRuth.html">Ruth</a>. If your webserver has not been setup the stack will attempt to give you a configuration for Nginx or Apache.</dd></dl>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Simply adding a PHP file under the routes folder and adding the above code is sufficient for <a class="el" href="classRuth.html">Ruth</a> to start working.</dd>
+<dd>
+The setup of the web server routes all URL requests to the <a class="el" href="tina4_8php.html">tina4.php</a> file which in turn relays them to <a class="el" href="classRuth.html">Ruth</a>. If your webserver has not been setup the stack will attempt to give you a configuration for Nginx or Apache.</dd></dl>
 <h1><a class="anchor" id="cody"></a>
 Cody</h1>
+<div class="image">
+<img src="cody_intro.png" alt="cody_intro.png"/>
+</div>
 <p><a class="el" href="classCody.html">Cody</a> was written to automate things that may take up a lot of repetition. At this point in time <a class="el" href="classCody.html">Cody</a> helps automate Bootstrap functionlity. <a class="el" href="classCody.html">Cody</a> has a very neat Ajax handler which automatically reads form variables and passes them to the URL you specify. The Ajax handler of <a class="el" href="classCody.html">Cody</a> can also handle file uploading via Ajax and when used with <a class="el" href="classRuth.html">Ruth</a> and <a class="el" href="classDebby.html">Debby</a> you have very little coding to do.</p>
 <h2><a class="anchor" id="cody_example"></a>
 Example of Bootstrap Input</h2>
@@ -196,10 +214,89 @@ Example of Bootstrap Input</h2>
 </div><!-- fragment --><h2><a class="anchor" id="code_example_ajax"></a>
 Example of Ajax Handler</h2>
 <p>The following code will create a Javascript function called <em>callAjax</em> which can be used to run Ajax commands to your routing </p><div class="fragment"><div class="line">echo (<span class="keyword">new</span> <a class="code" href="classCody.html">Cody</a>())-&gt;ajaxHandler();</div>
-</div><!-- fragment --> </div></div><!-- contents -->
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>To include the Ajax handler with <a class="el" href="classKim.html">Kim</a> the code is {{<a class="el" href="classCody.html">Cody</a>:ajaxHandler}}!</dd></dl>
+<p>The ajax Handler in <a class="el" href="classCody.html">Cody</a> takes on the following params and should be used in Javascript on your page.</p>
+<div class="fragment"><div class="line">callAjax(<span class="stringliteral">&#39;/testing&#39;</span>, <span class="comment">//route to do a request to</span></div>
+<div class="line">         <span class="stringliteral">&#39;myDiv&#39;</span>, <span class="comment">//The id of the tag or input you wish to target, leave blank if your ajax result is Javascript</span></div>
+<div class="line">         {<span class="keywordtype">id</span>:10001}, <span class="comment">//some JSON to pass with the request, Ruth will make it into request variables</span></div>
+<div class="line">         <span class="stringliteral">&#39;post&#39;</span>, <span class="comment">//get,post,delete etc...</span></div>
+<div class="line">         <span class="keyword">true</span>); <span class="comment">//true or false, set to false to rewrite the URL in the browser after an Ajax call</span></div>
+</div><!-- fragment --><h1><a class="anchor" id="kim"></a>
+Kim</h1>
+<div class="image">
+<img src="kim_intro.png" alt="kim_intro.png"/>
+</div>
+<p><a class="el" href="classKim.html">Kim</a> likes to work with content, if you need something working quickly in HTML whilst still having access to the power of PHP then you need to see what <a class="el" href="classKim.html">Kim</a> can do. In order for <a class="el" href="classKim.html">Kim</a> to work correctly you need to have an assets folder under your document root. In this folder she will look for the following folders:</p>
+<ul>
+<li>
+pages </li>
+<li>
+snippets </li>
+<li>
+forms </li>
+</ul>
+<p>Here are some examples of <a class="el" href="classKim.html">Kim</a> in action, hopefully from the examples you will be creating dynamic pages in a few minutes.</p>
+<h2><a class="anchor" id="kim_include"></a>
+Including HTML snippets</h2>
+<p>The {{include:snippet/[snippet_name]}} will include a section of a file into the existing file. This is much like the normal require or include of PHP except that it has the ability to render variables in {braces}. The path used is relative to the assets folder, so all your includes should be under assets.</p>
+<div class="fragment"><div class="line">{{include:snippet/header}}</div>
+<div class="line"></div>
+<div class="line">&lt;<a class="code" href="Shape_8php.html#a92ed2229ea45cf3c0e84a02cf12a7533">h1</a>&gt;Some normal <a class="code" href="Shape_8php.html#a8b267aa0adca2018097f6f6f4c804d46">html</a> &lt;/<a class="code" href="Shape_8php.html#a92ed2229ea45cf3c0e84a02cf12a7533">h1</a>&gt;</div>
+<div class="line"></div>
+<div class="line">{{include:snippet/<a class="code" href="Shape_8php.html#ae5058e5b790e8cea2dd33c1c9bbcbbd4">footer</a>}}</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd><a class="el" href="classKim.html">Kim</a> adds .html automatically so snippet/footer would parse to /web_root/assets/snippet/footer.html</dd></dl>
+<h2><a class="anchor" id="kim_parse_variable"></a>
+Parsing Variables</h2>
+<p><a class="el" href="classKim.html">Kim</a> understands that it is cumbersome to reference variables in your HTML files. More so if you need to make sure their scope is correct.</p>
+<p>The normal way </p><div class="fragment"><div class="line">&lt;<a class="code" href="Shape_8php.html#a92ed2229ea45cf3c0e84a02cf12a7533">h1</a>&gt;</div>
+<div class="line">&lt;?php</div>
+<div class="line">  echo $someVariable;</div>
+<div class="line">?&gt;</div>
+<div class="line">&lt;/<a class="code" href="Shape_8php.html#a92ed2229ea45cf3c0e84a02cf12a7533">h1</a>&gt;</div>
+</div><!-- fragment --><p><a class="el" href="classKim.html">Kim</a>'s way </p><div class="fragment"><div class="line">&lt;<a class="code" href="Shape_8php.html#a92ed2229ea45cf3c0e84a02cf12a7533">h1</a>&gt;{someVariable}&lt;/<a class="code" href="Shape_8php.html#a92ed2229ea45cf3c0e84a02cf12a7533">h1</a>&gt;</div>
+</div><!-- fragment --><h2><a class="anchor" id="kim_calling_php"></a>
+Calling built in PHP functions</h2>
+<p><a class="el" href="classKim.html">Kim</a> understands that we need to access some built in functions in our HTML templates, so she made it easy.</p>
+<p>The normal way </p><div class="fragment"><div class="line">&lt;<a class="code" href="Shape_8php.html#a92ed2229ea45cf3c0e84a02cf12a7533">h1</a>&gt;</div>
+<div class="line">&lt;?php</div>
+<div class="line">  echo substr(<span class="stringliteral">&quot;Some really long sentence!&quot;</span>,0,4).<span class="stringliteral">&quot;...&quot;</span>;</div>
+<div class="line">?&gt;</div>
+<div class="line">&lt;/<a class="code" href="Shape_8php.html#a92ed2229ea45cf3c0e84a02cf12a7533">h1</a>&gt;</div>
+</div><!-- fragment --><p><a class="el" href="classKim.html">Kim</a>'s way </p><div class="fragment"><div class="line">&lt;<a class="code" href="Shape_8php.html#a92ed2229ea45cf3c0e84a02cf12a7533">h1</a>&gt;{{call:substr?<span class="stringliteral">&quot;Some really long sentence!&quot;</span>,0,4}}...&lt;/<a class="code" href="Shape_8php.html#a92ed2229ea45cf3c0e84a02cf12a7533">h1</a>&gt;</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd><a class="el" href="classKim.html">Kim</a> only needs you to put your params in quotes when you have spaces or commas in between</dd></dl>
+<h2><a class="anchor" id="kim_classes"></a>
+Calling methods on classes</h2>
+<p><a class="el" href="classKim.html">Kim</a> is able instantiate classes as call their methods which should return either text or arrays</p>
+<p>The normal way </p><div class="fragment"><div class="line">&lt;<a class="code" href="Shape_8php.html#a92ed2229ea45cf3c0e84a02cf12a7533">h1</a>&gt;</div>
+<div class="line">&lt;?php</div>
+<div class="line">  $myObject = <span class="keyword">new</span> MyObject();</div>
+<div class="line">  echo $myObject-&gt;getName();</div>
+<div class="line">?&gt;</div>
+<div class="line">&lt;/<a class="code" href="Shape_8php.html#a92ed2229ea45cf3c0e84a02cf12a7533">h1</a>&gt;</div>
+</div><!-- fragment --><p><a class="el" href="classKim.html">Kim</a>'s way </p><div class="fragment"><div class="line">&lt;<a class="code" href="Shape_8php.html#a92ed2229ea45cf3c0e84a02cf12a7533">h1</a>&gt;{{MyObject:getName}}&lt;/<a class="code" href="Shape_8php.html#a92ed2229ea45cf3c0e84a02cf12a7533">h1</a>&gt;</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd><a class="el" href="classKim.html">Kim</a> uses {} to designate variables and {{}} to designate objects or control structures.</dd></dl>
+<h1><a class="anchor" id="debby"></a>
+Debby</h1>
+<div class="image">
+<img src="debby_intro.png" alt="debby_intro.png"/>
+</div>
+<h1><a class="anchor" id="maggy"></a>
+Maggy</h1>
+<div class="image">
+<img src="maggy_intro.png" alt="maggy_intro.png"/>
+</div>
+<h1><a class="anchor" id="emma"></a>
+Emma</h1>
+<div class="image">
+<img src="emma_intro.png" alt="emma_intro.png"/>
+</div>
+<dl class="section author"><dt>Author</dt><dd>Andre van Zuydam </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>1.0.0 </dd></dl>
+<dl class="section copyright"><dt>Copyright</dt><dd>Tina4 </dd></dl>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 7 2015 21:28:06 for Tina4Stack by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 7 2015 23:17:30 for Tina4Stack by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

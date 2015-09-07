@@ -106,11 +106,13 @@ $(document).ready(function(){initNavTree('index.html','');});
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#download_latest">Download the Latest Release</a></li>
-<li class="level1"><a href="#what_is_in_the_stack">What is in the Stack?</a></li>
-<li class="level1"><a href="#what_is_tina4">What is Tina4</a></li>
-<li class="level1"><a href="#tina">Tina</a></li>
+<ul><li class="level1"><a href="#tina">Tina</a><ul><li class="level2"><a href="#download_latest">Download the Latest Release</a></li>
+<li class="level2"><a href="#what_is_in_the_stack">What is in the Stack?</a></li>
+<li class="level2"><a href="#what_is_tina4">What is Tina4</a></li>
+</ul>
+</li>
 <li class="level1"><a href="#ruth">Ruth</a><ul><li class="level2"><a href="#ruth_example">Routing Example</a></li>
+<li class="level2"><a href="#ruth_example_variables">Routing Example with Variables</a></li>
 </ul>
 </li>
 <li class="level1"><a href="#cody">Cody</a><ul><li class="level2"><a href="#cody_example">Example of Bootstrap Input</a></li>
@@ -123,25 +125,63 @@ $(document).ready(function(){initNavTree('index.html','');});
 <li class="level2"><a href="#kim_classes">Calling methods on classes</a></li>
 </ul>
 </li>
-<li class="level1"><a href="#debby">Debby</a></li>
-<li class="level1"><a href="#maggy">Maggy</a></li>
-<li class="level1"><a href="#emma">Emma</a></li>
+<li class="level1"><a href="#debby">Debby</a><ul><li class="level2"><a href="#debby_create">Creating a Database Connection</a></li>
+<li class="level2"><a href="#debby_example">An Example Connection</a></li>
+<li class="level2"><a href="#debby_get_rows">Some CRUDL</a></li>
+</ul>
+</li>
+<li class="level1"><a href="#maggy">Maggy</a><ul><li class="level2"><a href="#maggy_how">How She Does It</a></li>
+</ul>
+</li>
+<li class="level1"><a href="#emma">Emma</a><ul><li class="level2"><a href="#emma_email">Sending an Email</a></li>
+<li class="level2"><a href="#emma_sendtext">Sending a Text / SMS message</a></li>
+</ul>
+</li>
+<li class="level1"><a href="#your_own_classes_with_olga">Olga</a><ul><li class="level2"><a href="#olga_single">Creating a Single Object</a></li>
+<li class="level2"><a href="#olga_multiple">Creating a multiple object class</a></li>
+<li class="level2"><a href="#olga_dynamic">Dynamic objects</a></li>
+</ul>
+</li>
 </ul>
 </div>
-<div class="textblock"><p><a class="anchor" id="introduction"></a> </p><div class="image">
+<div class="textblock"><h1><a class="anchor" id="tina"></a>
+Tina</h1>
+<div class="image">
 <img src="tina_intro.png" alt="tina_intro.png"/>
 <div class="caption">
 Looking for a development stack?</div></div>
-<p> The Tina4Stack started with a need to bring some uniformity to the development I was doing in PHP and especially where I was working with other developers on the same project. I have often wondered if I should start using one of the popular frameworks out there but have decided against it for various reasons. Instead I have decided to share with you my work bench so to speak where you can also benefit from the work that has gone into this tool.</p>
+<p> Tina is the CEO of the Tina4 Corporation, as anyone knows a successful company needs a strong leader. Her skills lie in the organization of each of the girls and making sure each person collaborates properly on the task at hand. Tina is passionate about providing solutions to her customers and it is very important to her that each peson is doing the job they were assigned. In a nutshell we have the following:</p>
+<ul>
+<li>
+Routing  </li>
+<li>
+Migrations  </li>
+<li>
+Database Abstraction  </li>
+<li>
+Code Simplification  </li>
+<li>
+Templating  </li>
+<li>
+UI Testing with Selenium  </li>
+<li>
+WYIWYG Report Generation  </li>
+<li>
+Email Handling  </li>
+<li>
+Object Abstraction  </li>
+</ul>
+<p>*</p>
+<p>The Tina4Stack started with a need to bring some uniformity to the development I was doing in PHP and especially where I was working with other developers on the same project. I have often wondered if I should start using one of the popular frameworks out there but have decided against it for various reasons. Instead I have decided to share with you my work bench so to speak where you can also benefit from the work that has gone into this tool.</p>
 <dl class="section note"><dt>Note</dt><dd>Tina4 simply means "This is NOT another Framework!"</dd></dl>
-<h1><a class="anchor" id="download_latest"></a>
-Download the Latest Release</h1>
+<h2><a class="anchor" id="download_latest"></a>
+Download the Latest Release</h2>
 <div class="image">
 <img src="https://img.shields.io/sourceforge/dw/tina4stack.svg" />
 </div>
 <p> <a href="https://sourceforge.net/projects/tina4stack/files/latest/download">Download Latest Release </a></p>
-<h1><a class="anchor" id="what_is_in_the_stack"></a>
-What is in the Stack?</h1>
+<h2><a class="anchor" id="what_is_in_the_stack"></a>
+What is in the Stack?</h2>
 <p>The Stack is built up from the following technologies which hopefully will get your development up and running in minutes. Incidentally we do not deploy any database engines for you and this should be done separately which is something we prefer.</p>
 <ul>
 <li>
@@ -184,47 +224,32 @@ Selenium Client </li>
 XCache UI </li>
 </ul>
 <dl class="section note"><dt>Note</dt><dd>On my todo list are the Tina4 clients for Linux &amp; MacOS</dd></dl>
-<h1><a class="anchor" id="what_is_tina4"></a>
-What is Tina4</h1>
+<h2><a class="anchor" id="what_is_tina4"></a>
+What is Tina4</h2>
 <p>Tina4 is a collection of tools which will help you with your PHP development. In order to make the tools easy to remember and use we have given them names so that you can identify with each of the personalities when you are working. For example <a class="el" href="classRuth.html">Ruth</a> is responsible for Routing, <a class="el" href="classMaggy.html">Maggy</a> is responsible for migrations.</p>
 <p>Now it may seem daunting to make use of tools you did not assist in building but you can use as little or as much of the tools as you want. After going over the core functionlity of each of the girls in the stack I will explain the basics of how everything is supposed to work.</p>
-<h1><a class="anchor" id="tina"></a>
-Tina</h1>
-<p>Tina is the CEO of the Tina4 Corporation, as anyone knows a successful company needs a strong leader. Her skills lie in the organization of each of the girls and making sure each person collaborates properly on the task at hand. Tina is passionate about providing solutions to her customers and it is very important to her that each peson is doing the job they were assigned. In a nutshell we have the following:</p>
-<ul>
-<li>
-Routing  </li>
-<li>
-Migrations  </li>
-<li>
-Database Abstraction  </li>
-<li>
-Code Simplification  </li>
-<li>
-Templating  </li>
-<li>
-UI Testing with Selenium  </li>
-<li>
-WYIWYG Report Generation  </li>
-<li>
-Email Handling  </li>
-<li>
-Object Abstraction  </li>
-</ul>
 <h1><a class="anchor" id="ruth"></a>
 Ruth</h1>
 <div class="image">
 <img src="ruth_intro.png" alt="ruth_intro.png"/>
 </div>
 <p><a class="el" href="classRuth.html">Ruth</a> as we have said before is responsible for routing. Routing as you may be familiar with is the ability to handle URL requests to your website. You may be quite comfortable with writing routing tables in Apache or NGINX. If you decide to use <a class="el" href="classRuth.html">Ruth</a> you immediately have an application which will run on NGINX and Apache equally well. <a class="el" href="classRuth.html">Ruth</a> also handles security and sessions which are explained in her section.</p>
-<p>A quick example of <a class="el" href="classRuth.html">Ruth</a> in action, you would get this link at <a href="http://localhost:12345/testing">http://localhost:12345/testing</a> when developing. The output of this route would be <em>Hello</em> <em>Tina4!</em> </p>
 <h2><a class="anchor" id="ruth_example"></a>
 Routing Example</h2>
+<p>A quick example of <a class="el" href="classRuth.html">Ruth</a> in action, you would get this link at <a href="http://localhost:12345/testing">http://localhost:12345/testing</a> when developing. The output of this route would be <em>Hello</em> <em>Tina4!</em> </p>
 <div class="fragment"><div class="line"><span class="comment">//Adding a GET route</span></div>
 <div class="line"><a class="code" href="classRuth.html#ad13bc87f60f8b74efd4c784fa2c49288">Ruth::addRoute</a> (<a class="code" href="Ruth_8php.html#acc73cd34b6fcffd15a4fdd050e0a86d8">RUTH_GET</a>, <span class="stringliteral">&quot;/testing&quot;</span>, <span class="keyword">function</span> () {</div>
 <div class="line">     echo <span class="stringliteral">&quot;Hello Tina4!&quot;</span>;</div>
 <div class="line">});</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Simply adding a PHP file under the routes folder and adding the above code is sufficient for <a class="el" href="classRuth.html">Ruth</a> to start working.</dd>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Simply adding a PHP file under the routes folder and adding the above code is sufficient for <a class="el" href="classRuth.html">Ruth</a> to start working.</dd></dl>
+<h2><a class="anchor" id="ruth_example_variables"></a>
+Routing Example with Variables</h2>
+<p>Wouldn't it be great if you could pass variables in your path as well, of course it would!</p>
+<div class="fragment"><div class="line"><span class="comment">//Adding a PUT route</span></div>
+<div class="line"><a class="code" href="classRuth.html#ad13bc87f60f8b74efd4c784fa2c49288">Ruth::addRoute</a> (<a class="code" href="Ruth_8php.html#a2b907fccde62015cd5962321135ce9d2">RUTH_PUT</a>, <span class="stringliteral">&quot;/pet/{id}&quot;</span>, <span class="keyword">function</span> ($someId) {</div>
+<div class="line">     echo <span class="stringliteral">&quot;Updating pet {$someId}&quot;</span>;</div>
+<div class="line">});</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>The variable names in PHP don't need to be the same, the order is what counts.</dd>
 <dd>
 The setup of the web server routes all URL requests to the <a class="el" href="tina4_8php.html">tina4.php</a> file which in turn relays them to <a class="el" href="classRuth.html">Ruth</a>. If your webserver has not been setup the stack will attempt to give you a configuration for Nginx or Apache.</dd></dl>
 <h1><a class="anchor" id="cody"></a>
@@ -305,17 +330,148 @@ Debby</h1>
 <div class="image">
 <img src="debby_intro.png" alt="debby_intro.png"/>
 </div>
+<p><a class="el" href="classDebby.html">Debby</a> got all her experience from using Cross Database Engine for PHP which has been around for 8 years now. <a class="el" href="classDebby.html">Debby</a> took those features and added to the functionality. She is able to connect to the most popular database engines and because she supports ODBC the possibilities are endless. Currently the tested engines are MySQL, Firebird &amp; SQLite3. Support is offered for Oracle, Postgres, CUBRID, MSSQL (Native) &amp; ODBC.</p>
+<h2><a class="anchor" id="debby_create"></a>
+Creating a Database Connection</h2>
+<p>All database connection files are stored under the connections folder. You can use the interface here : <a href="http://localhost:12345/debby/create">http://localhost:12345/debby/create</a> to make database connections. Each database connection will be registered as an object in <a class="el" href="classRuth.html">Ruth</a> which will then be accessible to your code.</p>
+<h2><a class="anchor" id="debby_example"></a>
+An Example Connection</h2>
+<p>This connection is an SQLite3 connection</p>
+<div class="fragment"><div class="line">global $DEB;</div>
+<div class="line">$DEB = <span class="keyword">new</span> <a class="code" href="classDebby.html">Debby</a>( <span class="stringliteral">&quot;test.db&quot;</span>, <span class="stringliteral">&quot;&quot;</span>, <span class="stringliteral">&quot;&quot;</span>, <span class="stringliteral">&quot;sqlite3&quot;</span>, <span class="stringliteral">&quot;YYYY-mm-dd&quot;</span> );</div>
+<div class="line"><a class="code" href="classRuth.html#a9d554d9bdfe7596d41a2b08a3c0db9ce">Ruth::setOBJECT</a>(<span class="stringliteral">&quot;DEB&quot;</span>, $DEB);</div>
+</div><!-- fragment --><p>The database path is an expression consisting of the hostname and path to the database itself. This covers a multitude of different database configurations. The hostname is only compulsory if it is not localhost or your database is attached to a specific IP address or is remote from the actual server.</p>
+<div class="fragment"><div class="line"><span class="comment">//MySQL :</span></div>
+<div class="line">$dbPath = <span class="stringliteral">&quot;127.0.0.1:my_database&quot;</span>;</div>
+<div class="line"></div>
+<div class="line"><span class="comment">//Firebird:</span></div>
+<div class="line">$dbPath = <span class="stringliteral">&quot;127.0.0.1:/tmp/TEST.FDB&quot;</span>;  <span class="comment">//or 127.0.0.1:c:\test\TEST.FDB</span></div>
+<div class="line"></div>
+<div class="line"><span class="comment">//SQLite3:</span></div>
+<div class="line">$dbPath = <span class="stringliteral">&quot;/tmp/database.db&quot;</span>;</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>The connections can be accessed using <a class="el" href="classRuth.html#a899c68457a6a7c1b8a0b25bfd74c4c15">Ruth::getOBJECT</a> when needed.</dd></dl>
+<h2><a class="anchor" id="debby_get_rows"></a>
+Some CRUDL</h2>
+<p><a class="el" href="classDebby.html">Debby</a> has a few methods which communicate with the database, you should however consider using <a class="el" href="classOlga.html">Olga</a> or <a class="el" href="classCody.html">Cody</a>'s REST interface for less effort.</p>
+<div class="fragment"><div class="line"><span class="comment">//Get the Debby Object</span></div>
+<div class="line"></div>
+<div class="line">$DEB = <a class="code" href="classRuth.html">Ruth</a>:getOBJECT(<span class="stringliteral">&quot;DEB&quot;</span>);</div>
+<div class="line"></div>
+<div class="line"><span class="comment">//Run some SQL</span></div>
+<div class="line"></div>
+<div class="line">$DEB-&gt;exec (<span class="stringliteral">&quot;create table test (id integer, name varchar(200), primary key(id))&quot;</span>);</div>
+<div class="line"></div>
+<div class="line"><span class="comment">//Insert a record</span></div>
+<div class="line"></div>
+<div class="line">$DEB-&gt;exec (<span class="stringliteral">&quot;insert into test (id, name) values (0, &#39;No One&#39;)&quot;</span>);</div>
+<div class="line"></div>
+<div class="line"><span class="comment">//Insert another record</span></div>
+<div class="line"></div>
+<div class="line">$DEB-&gt;insert(<span class="stringliteral">&quot;test&quot;</span>, [<span class="stringliteral">&quot;id&quot;</span> =&gt; 1, <span class="stringliteral">&quot;name&quot;</span> =&gt; <span class="stringliteral">&quot;Another Person&quot;</span>]);</div>
+<div class="line"></div>
+<div class="line"><span class="comment">//Update a record</span></div>
+<div class="line"></div>
+<div class="line">$DEB-&gt;exec (<span class="stringliteral">&quot;update test set name = &#39;Some One&#39; where id = 0&quot;</span>);</div>
+<div class="line"></div>
+<div class="line"><span class="comment">//Update another record</span></div>
+<div class="line"></div>
+<div class="line">$DEB-&gt;update(<span class="stringliteral">&quot;test&quot;</span>, [<span class="stringliteral">&quot;name&quot;</span> =&gt; <span class="stringliteral">&quot;Another Someone&quot;</span>], [<span class="stringliteral">&quot;id&quot;</span> =&gt; 1]);</div>
+<div class="line"></div>
+<div class="line"><span class="comment">//Delete a record</span></div>
+<div class="line">$DEB-&gt;exec (<span class="stringliteral">&quot;delete from test where id = 0&quot;</span>);</div>
+<div class="line"></div>
+<div class="line"><span class="comment">//Delete another record</span></div>
+<div class="line">$DEB-&gt;delete (<span class="stringliteral">&quot;test&quot;</span>, [<span class="stringliteral">&quot;id&quot;</span> =&gt; 1]);</div>
+<div class="line"></div>
+<div class="line"><span class="comment">//get some records</span></div>
+<div class="line">$rows = $DEB-&gt;getRows (<span class="stringliteral">&quot;select * from test&quot;</span>);</div>
+<div class="line"></div>
+<div class="line"><span class="keywordflow">foreach</span> ($rows as $rowId =&gt; $row) {</div>
+<div class="line">  echo $row-&gt;NAME; <span class="comment">//notice the capitals</span></div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line">$row = $DEB-&gt;getRow(<span class="stringliteral">&quot;select * from test&quot;</span>, 1); <span class="comment">//get the second row</span></div>
+<div class="line"></div>
+<div class="line">echo $row-&gt;NAME;</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd><a class="el" href="classDebby.html">Debby</a> makes all field names uppercase so you don't have to worry about what the names are for different databases.</dd></dl>
+<p><a class="el" href="classDebby.html">Debby</a> also understands different dialects of SQL so you don't have to worry about select top or select first or limit 10. She will be able to translate those for you. She also takes care of file uploads for you.</p>
 <h1><a class="anchor" id="maggy"></a>
 Maggy</h1>
 <div class="image">
 <img src="maggy_intro.png" alt="maggy_intro.png"/>
 </div>
+<p><a class="el" href="classMaggy.html">Maggy</a> helps you keep your database migrations current. She creates a table in your database where she tracks the changes. You can create migrations easily by going to <a href="http://localhost:12345/maggy/create">http://localhost:12345/maggy/create</a>.</p>
+<div class="image">
+<img src="maggy_create.png" alt="maggy_create.png"/>
+<div class="caption">
+Creating a migration</div></div>
+<p> The migrations will be stored under your migrations folder and can be edited there as well. To make the migrations work you can simply click on the browser button of Tina4 and the link to <a href="http://localhost:12345/maggy">http://localhost:12345/maggy</a> will be run.</p>
+<h2><a class="anchor" id="maggy_how"></a>
+How She Does It</h2>
+<p><a class="el" href="classMaggy.html">Maggy</a> works from the migrations folder in your document root. She looks for files with an sql extension which have been formatted as follows:</p>
+<p>YYYYMMDDHHMMSS &lt;Migration description&gt;=""&gt;.sql</p>
+<p>There are some basic rules to follow when using <a class="el" href="classMaggy.html">Maggy</a> and these are based on database limitations with regard to transaction handling: </p><ul>
+<li>
+create tables first, add the inserts in a separate migration file </li>
+<li>
+stored procedures and views should be in their own migration files  </li>
+<li>
+<p class="startli">indexes can be created with the tables but some database engines need the transaction of the table to be committed first </p>
+<p class="endli"></p>
+</li>
+</ul>
 <h1><a class="anchor" id="emma"></a>
 Emma</h1>
 <div class="image">
 <img src="emma_intro.png" alt="emma_intro.png"/>
 </div>
-<dl class="section author"><dt>Author</dt><dd>Andre van Zuydam </dd></dl>
+<p><a class="el" href="classEmma.html">Emma</a> is used to send emails so you don't need any other libraries. She takes care of embedding rich HTML and saves sent emails to the mailspool for you so you can see what's going on.</p>
+<h2><a class="anchor" id="emma_email"></a>
+Sending an Email</h2>
+<p>Use the Tina4 interface to see how the email got sent.</p>
+<div class="fragment"><div class="line">(<span class="keyword">new</span> <a class="code" href="classEmma.html">Emma</a>())-&gt;sendMail ( $recipient=<span class="stringliteral">&quot;Mr Recipient&lt;noone@nowhere.com&gt;&quot;</span>, $</div>
+<div class="line">                         $subject=<span class="stringliteral">&quot;Test Tina4&quot;</span>,</div>
+<div class="line">                         $message=<span class="stringliteral">&quot;Some rich text or HTML&quot;</span>,</div>
+<div class="line">                         $fromName=<span class="stringliteral">&quot;Tina&quot;</span>,</div>
+<div class="line">                         $fromAddress=<span class="stringliteral">&quot;tina@tina4.com&quot;</span>,</div>
+<div class="line">                         $attachments=null );</div>
+</div><!-- fragment --><h2><a class="anchor" id="emma_sendtext"></a>
+Sending a Text / SMS message</h2>
+<p>Currently <a class="el" href="classEmma.html">Emma</a> uses BulkSMS to send out text messages. Let us know if you have another preference.</p>
+<div class="fragment"><div class="line"><span class="comment">//requires a Bulk SMS username &amp; password http://bulksms.com</span></div>
+<div class="line">(<span class="keyword">new</span> <a class="code" href="classEmma.html">Emma</a>($username, $password))-&gt;sendText ($mobileno=<span class="stringliteral">&quot;8087234511&quot;</span>, $message=<span class="stringliteral">&quot;Hello World!&quot;</span>, $countryPrefix=<span class="stringliteral">&quot;01&quot;</span>);</div>
+</div><!-- fragment --><h1><a class="anchor" id="your_own_classes_with_olga"></a>
+Olga</h1>
+<p><a class="el" href="classOlga.html">Olga</a> enables the developer to use classes as data stores for data, these objects can be mapped back to a database which <a class="el" href="classOlga.html">Olga</a> will use to save or restore data from If you run xcache on your system, <a class="el" href="classOlga.html">Olga</a> will automatically persist these objects in memory making the load on the server very light.</p>
+<h2><a class="anchor" id="olga_single"></a>
+Creating a Single Object</h2>
+<p>We could create a Pet object, all classes need to have an id for the system to reference it by from memory </p><div class="fragment"><div class="line"><span class="keyword">class </span>Pet <span class="keyword">extends</span> <a class="code" href="classOlga.html">Olga</a> {</div>
+<div class="line">     var $id;</div>
+<div class="line">     var $name;</div>
+<div class="line">     var $type;</div>
+<div class="line"></div>
+<div class="line">     var $mapping = Array([  <span class="stringliteral">&quot;table&quot;</span> =&gt; <span class="stringliteral">&quot;tbl_pet&quot;</span>,</div>
+<div class="line">                             <span class="stringliteral">&quot;fields&quot;</span> =&gt; [</div>
+<div class="line">                                 <span class="stringliteral">&quot;id&quot;</span> =&gt; [<span class="stringliteral">&quot;field&quot;</span> =&gt; <span class="stringliteral">&quot;pet_id&quot;</span>],</div>
+<div class="line">                                 <span class="stringliteral">&quot;name&quot;</span> =&gt; [<span class="stringliteral">&quot;field&quot;</span> =&gt; <span class="stringliteral">&quot;pet_name&quot;</span>],</div>
+<div class="line">                                 <span class="stringliteral">&quot;type&quot;</span> =&gt; [<span class="stringliteral">&quot;field&quot;</span> =&gt; <span class="stringliteral">&quot;pet_type&quot;</span>]</div>
+<div class="line">                             ]</div>
+<div class="line">                    ]);</div>
+<div class="line">}</div>
+</div><!-- fragment --><h2><a class="anchor" id="olga_multiple"></a>
+Creating a multiple object class</h2>
+<p>We could then create a collection of pets which would use the Pet object as an array object</p>
+<div class="fragment"><div class="line"><span class="keyword">class </span>Pet <span class="keyword">extends</span> <a class="code" href="classOlga.html">Olga</a> {</div>
+<div class="line">     var $mapping = Array([  <span class="stringliteral">&quot;table&quot;</span> =&gt; <span class="stringliteral">&quot;tbl_pet&quot;</span>,</div>
+<div class="line">                             <span class="stringliteral">&quot;object&quot;</span> =&gt; <span class="stringliteral">&quot;Pet&quot;</span></div>
+<div class="line">                         ]);</div>
+<div class="line">}</div>
+</div><!-- fragment --><h2><a class="anchor" id="olga_dynamic"></a>
+Dynamic objects</h2>
+<p><a class="el" href="classOlga.html">Olga</a> is also quite useful for creating dynamic objects</p>
+<div class="fragment"><div class="line">$cat = <span class="keyword">new</span> <a class="code" href="classOlga.html">Olga</a>(<span class="stringliteral">&#39;{&quot;id&quot;:10,&quot;name&quot;:&quot;Garfield&quot;,&quot;type&quot;:&quot;cat&quot;}&#39;</span>);</div>
+<div class="line">echo $cat-&gt;getName();</div>
+</div><!-- fragment --><dl class="section author"><dt>Author</dt><dd>Andre van Zuydam </dd></dl>
 <dl class="section version"><dt>Version</dt><dd>1.0.0 </dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>Tina4 </dd></dl>
 </div></div><!-- contents -->
@@ -323,7 +479,7 @@ Emma</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Sep 8 2015 00:07:02 for Tina4Stack by
+    <li class="footer">Generated on Tue Sep 8 2015 01:09:52 for Tina4Stack by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

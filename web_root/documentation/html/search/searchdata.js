@@ -5,7 +5,7 @@ var indexSectionsWithContent =
   2: "cdekmoprst",
   3: "_abcdefghiklmnopqrstuvw",
   4: "$defprt",
-  5: "ot"
+  5: "t"
 };
 
 var indexSectionNames =

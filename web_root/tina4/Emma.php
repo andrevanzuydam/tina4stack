@@ -124,7 +124,17 @@ class Emma {
         
         return $multipart;  
     }
-    
+
+    /**
+     * Alias of send SMS
+     * @param $mobileno
+     * @param string $message
+     * @param string $countryPrefix
+     */
+    function sendText ($mobileno, $message="", $countryPrefix="01") {
+       $this->sendSMS($mobileno, $message, $countryPrefix);
+    }
+
     /**
      * Send SMS
      * @param String $mobileno

@@ -1,45 +1,5 @@
 <?php
 /**
- * @page olga Olga
- *
- * @section your_own_classes_with_olga Extending your own classes with Olga
- *
- * Olga enables the developer to use classes as data stores for data, these objects can be mapped back to a database which Olga will use to save or restore data from
- * If you run xcache on your system, Olga will automatically persist these objects in memory making the load on the server very light.
- *
- *
- * We could create a Pet object, all classes need to have an id for the system to reference it by from memory
- * @code
- *
- * class Pet extends Olga {
- *      var $id;
- *      var $name;
- *      var $type;
- *
- *      var $mapping = Array([  "table" => "tbl_pet",
- *                              "fields" => [
- *                                  "id" => ["field" => "pet_id"],
- *                                  "name" => ["field" => "pet_name"],
- *                                  "type" => ["field" => "pet_type"]
- *                              ]
- *                     ]);
- * }
- *
- *
- * @endcode
- *
- * We could then create a collection of pets which would use the Pet object as an array object
- *
- * @code
- * class Pet extends Olga {
- *      var $mapping = Array([  "table" => "tbl_pet",
- *                              "object" => "Pet"
- *                          ]);
- * }
- * @endcode
- *
- */
-/**
  * Olga is a class which adds getters and setters to your existing object, it has methods to export the class to JSON and to import the class from JSON
  * User: Andre van Zuydam
  * Date: 2015-09-04

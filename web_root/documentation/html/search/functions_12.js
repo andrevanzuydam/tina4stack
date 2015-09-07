@@ -9,6 +9,7 @@ var searchData=
   ['select',['select',['../classCody.html#a11ec72bcb8aa970fd04b058bd3612cd0',1,'Cody\select()'],['../Shape_8php.html#a701f78ac6d7ece9e18883fe7ee612e9f',1,'select():&#160;Shape.php']]],
   ['sendmail',['sendMail',['../classEmma.html#ada88e77bd691cedb6e8ba447d62761f1',1,'Emma']]],
   ['sendsms',['sendSMS',['../classEmma.html#adc96eb73ee69ddd33531cd0255ec5c07',1,'Emma']]],
+  ['sendtext',['sendText',['../classEmma.html#ae113e57003f2576ba53bb6f61e3cd1c9',1,'Emma']]],
   ['setattribute',['setAttribute',['../classhtmlElement.html#ac7e4f67382cecd0b2cf4516ef38f0480',1,'htmlElement']]],
   ['setauthorization',['setAuthorization',['../classRuth.html#a2cbe3cd7c0d3dfadac54a6020d075607',1,'Ruth']]],
   ['setblob',['setBlob',['../classDebby.html#a6a77444ee8c09f53fa741ae96b33e55c',1,'Debby']]],

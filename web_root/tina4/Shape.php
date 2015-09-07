@@ -2,6 +2,8 @@
 
 /**
  * The basic shape element class to handle inheritance
+ *
+ * @cond
  */
 class shapeBaseElement {
 
@@ -73,7 +75,10 @@ class shapeBaseElement {
 
 }
 
+
 /**
+ * @endcond
+ *
  * The htmlElement class which handles the HTML compilation etc
  */
 class htmlElement extends shapeBaseElement {
@@ -1773,7 +1778,10 @@ function text(){
     return $html;
 }
 
+
+
 /**
+ * @cond
  * JSMin.php - modified PHP implementation of Douglas Crockford's JSMin.
  *
  * <code>
@@ -2221,3 +2229,7 @@ class JSMin {
 class JSMin_UnterminatedStringException extends Exception {}
 class JSMin_UnterminatedCommentException extends Exception {}
 class JSMin_UnterminatedRegExpException extends Exception {}
+
+/**
+ * @endcond
+ */

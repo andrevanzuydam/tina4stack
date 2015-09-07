@@ -13,9 +13,7 @@
  *     A create table statement would be in its own file.
  * 3.) Stored procedures, triggers and views should be in their own files, they are run as individual statements and are commited so, delimter is not needed on the end of these.
  *     You do not need to change the delimiter either before running these statements. 
- *     
- * @author Andre van Zuydam <andre@xineoh.com>
- * @license GPL
+ *
  */
 class Maggy {
     /**

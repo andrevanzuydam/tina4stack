@@ -8,6 +8,14 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -15,7 +23,7 @@
   $(document).ready(function() { init_search(); });
 </script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
-<link href="doxyGen.css" rel="stylesheet" type="text/css"/>
+<link href="doxyGenTina4.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -43,7 +51,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
-      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -105,6 +112,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     </ul>
   </div>
 </div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('functions_func_s.html','');});
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -159,20 +180,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>setInherited()
 : <a class="el" href="classhtmlElement.html#ade31cfc5c7d655a21183e18bd0ea492f">htmlElement</a>
 </li>
-<li>setKey()
-: <a class="el" href="classshapeBaseElement.html#a2d50596a8a0e07ad66401e7c680ec68a">shapeBaseElement</a>
-</li>
 <li>setOBJECT()
 : <a class="el" href="classRuth.html#a9d554d9bdfe7596d41a2b08a3c0db9ce">Ruth</a>
 </li>
 <li>setParams()
 : <a class="el" href="classDebby.html#a3e22f5b7c5524ca41f92ed4cb4bb50ed">Debby</a>
-</li>
-<li>setParent()
-: <a class="el" href="classshapeBaseElement.html#a2549412d8c70edfd3c43d9aa84da49df">shapeBaseElement</a>
-</li>
-<li>setParentElement()
-: <a class="el" href="classshapeBaseElement.html#abbfca908d37f102e4a8e7b353c643d68">shapeBaseElement</a>
 </li>
 <li>setREQUEST()
 : <a class="el" href="classRuth.html#a0fc75ae6b986d7109f66f659cf1dcac2">Ruth</a>
@@ -193,8 +205,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classTestElement.html#ac5968c56cb813dba50a15b50946e5330">TestElement</a>
 </li>
 <li>setValue()
-: <a class="el" href="classshapeBaseElement.html#a6353680d2dc0774c53f18050d8bf0df3">shapeBaseElement</a>
-, <a class="el" href="classTestElement.html#ae61d3f666ac5c098dec914bcb7fdeaf6">TestElement</a>
+: <a class="el" href="classTestElement.html#ae61d3f666ac5c098dec914bcb7fdeaf6">TestElement</a>
 </li>
 <li>sortConditions()
 : <a class="el" href="classKim.html#a3fe85e0bf7c92053e0a4c3b76dba7259">Kim</a>
@@ -207,11 +218,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 7 2015 23:17:30 for Tina4Stack by &#160;<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.9.1
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated on Tue Sep 8 2015 00:07:03 for Tina4Stack by
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
+  </ul>
+</div>
 </body>
 </html>

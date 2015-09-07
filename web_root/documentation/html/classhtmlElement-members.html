@@ -8,6 +8,14 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -15,7 +23,7 @@
   $(document).ready(function() { init_search(); });
 </script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
-<link href="doxyGen.css" rel="stylesheet" type="text/css"/>
+<link href="doxyGenTina4.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -43,7 +51,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
-      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -72,6 +79,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('classhtmlElement.html','');});
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -86,7 +108,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-</div><!-- top -->
 <div class="header">
   <div class="headertitle">
 <div class="title">htmlElement Member List</div>  </div>
@@ -97,49 +118,41 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#aa52ba0af61d736d37927be6894660cd0">__clone</a>()</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classhtmlElement.html#a925a2a3ac520421cc180f391922595af">__construct</a>()</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classshapeBaseElement.html#a36980020a9e2e1ab0079b7c6abad349e">shapeBaseElement::__construct</a>($keyName=&quot;&quot;, $keyValue=&quot;&quot;)</td><td class="entry"><a class="el" href="classshapeBaseElement.html">shapeBaseElement</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classhtmlElement.html#a1ad02d4640ea217cafe77a53d8b916f0">__toString</a>()</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#a828427f0afb3dc929098581dc7df31b6">addAttribute</a>($keyName, $keyValue)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classhtmlElement.html#a063bcf0695c98e25ff2b7fa9ef3c88bf">addContent</a>($value)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#abd1779232533ec8dcf26c5154db0c22d">addDataSource</a>($name, $object)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classhtmlElement.html#aae8d6a0e00314fdd72301557161b4054">byClass</a>($keyName)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#a329d8c6c7a261b78d39cd4b401320616">byFor</a>($keyName)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classhtmlElement.html#a231a77af8cc0ecb36a0714a8888c278f">byId</a>($keyName)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#a8cc57a9db714d6f615bb169424ba505c">bySearch</a>($keyName, $keyIndex)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classhtmlElement.html#a5e50a939a38f541544c0166871da8853">cloneAttribute</a>($attribute)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#a89bb434be414cb5e8422141adf272432">cloneChildren</a>($element)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classhtmlElement.html#a505f41f80a0c7c027dcffe11ee669ff0">cloneContent</a>($content)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#a4e30cd7e3e6d8ad503766d056490c1ef">compileAttributes</a>()</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classhtmlElement.html#ac05144459b3739d692738dc947f6989c">compileContent</a>($acontent=null)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#ab45087063ba3e42851d01bd87681475b">compileHTML</a>()</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classhtmlElement.html#ab74714929671cc7cf3271404a621f4ae">getContent</a>()</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classshapeBaseElement.html#a2ed3481fc7f26976cab34075a9fe7215">getId</a>()</td><td class="entry"><a class="el" href="classshapeBaseElement.html">shapeBaseElement</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classshapeBaseElement.html#acc89cd4c440d11f1b771410a096db6c9">getKey</a>()</td><td class="entry"><a class="el" href="classshapeBaseElement.html">shapeBaseElement</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classshapeBaseElement.html#a19aff5da3dce4162e9b6f60226bf1a2c">getParent</a>()</td><td class="entry"><a class="el" href="classshapeBaseElement.html">shapeBaseElement</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classshapeBaseElement.html#a091d09076b19adff193a373d3d00b6d8">getParentElement</a>()</td><td class="entry"><a class="el" href="classshapeBaseElement.html">shapeBaseElement</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classshapeBaseElement.html#ad6ebb79ad6cb2d501f682938d15d4052">getValue</a>()</td><td class="entry"><a class="el" href="classshapeBaseElement.html">shapeBaseElement</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#a1ad02d4640ea217cafe77a53d8b916f0">__toString</a>()</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classhtmlElement.html#a828427f0afb3dc929098581dc7df31b6">addAttribute</a>($keyName, $keyValue)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#a063bcf0695c98e25ff2b7fa9ef3c88bf">addContent</a>($value)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classhtmlElement.html#abd1779232533ec8dcf26c5154db0c22d">addDataSource</a>($name, $object)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#aae8d6a0e00314fdd72301557161b4054">byClass</a>($keyName)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classhtmlElement.html#a329d8c6c7a261b78d39cd4b401320616">byFor</a>($keyName)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#a231a77af8cc0ecb36a0714a8888c278f">byId</a>($keyName)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classhtmlElement.html#a8cc57a9db714d6f615bb169424ba505c">bySearch</a>($keyName, $keyIndex)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#a5e50a939a38f541544c0166871da8853">cloneAttribute</a>($attribute)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classhtmlElement.html#a89bb434be414cb5e8422141adf272432">cloneChildren</a>($element)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#a505f41f80a0c7c027dcffe11ee669ff0">cloneContent</a>($content)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classhtmlElement.html#a4e30cd7e3e6d8ad503766d056490c1ef">compileAttributes</a>()</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#ac05144459b3739d692738dc947f6989c">compileContent</a>($acontent=null)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classhtmlElement.html#ab45087063ba3e42851d01bd87681475b">compileHTML</a>()</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#ab74714929671cc7cf3271404a621f4ae">getContent</a>()</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classhtmlElement.html#a26a8e3284834135dec7b0e01e84b0877">is_assoc</a>($array)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#ac36b3e96ac37cad8e499b6dd9dad4511">parseArgument</a>($arg)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classshapeBaseElement.html#a4547c40cb33c3d34f16a262d1dcca069">registerGlobal</a>()</td><td class="entry"><a class="el" href="classshapeBaseElement.html">shapeBaseElement</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#ac7e4f67382cecd0b2cf4516ef38f0480">setAttribute</a>($keyName, $keyValue)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classhtmlElement.html#abf6e0bb5133c6b654e38cb6a78dc91a8">setContent</a>($value)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#ade31cfc5c7d655a21183e18bd0ea492f">setInherited</a>()</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classshapeBaseElement.html#a2d50596a8a0e07ad66401e7c680ec68a">setKey</a>($value)</td><td class="entry"><a class="el" href="classshapeBaseElement.html">shapeBaseElement</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classshapeBaseElement.html#a2549412d8c70edfd3c43d9aa84da49df">setParent</a>($value=null)</td><td class="entry"><a class="el" href="classshapeBaseElement.html">shapeBaseElement</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classshapeBaseElement.html#abbfca908d37f102e4a8e7b353c643d68">setParentElement</a>($parentElement)</td><td class="entry"><a class="el" href="classshapeBaseElement.html">shapeBaseElement</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classhtmlElement.html#ac7e4f67382cecd0b2cf4516ef38f0480">setAttribute</a>($keyName, $keyValue)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#abf6e0bb5133c6b654e38cb6a78dc91a8">setContent</a>($value)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classhtmlElement.html#ade31cfc5c7d655a21183e18bd0ea492f">setInherited</a>()</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#adb7efcd82bb90b24024930604bb9da5d">setTags</a>($openingTag, $closingTag, $compress=false)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classshapeBaseElement.html#a6353680d2dc0774c53f18050d8bf0df3">setValue</a>($value)</td><td class="entry"><a class="el" href="classshapeBaseElement.html">shapeBaseElement</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#af70cbe9883bbe35f9a2573711625cfc4">templateHTML</a>($content, $object)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classhtmlElement.html#aa6e478845564e185c6f3084196b8e3b8">whenAnd</a>($args)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#a60b2acdcaba9e0916863769af9de9b08">whenEqual</a>($args)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classhtmlElement.html#afd1361f0a10bdb099102e22f7ecf63d3">whenLike</a>($args)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#a93cf423600b179eb6f71e6bcd7a250e2">whenOr</a>($args)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classhtmlElement.html#af70cbe9883bbe35f9a2573711625cfc4">templateHTML</a>($content, $object)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#aa6e478845564e185c6f3084196b8e3b8">whenAnd</a>($args)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classhtmlElement.html#a60b2acdcaba9e0916863769af9de9b08">whenEqual</a>($args)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classhtmlElement.html#afd1361f0a10bdb099102e22f7ecf63d3">whenLike</a>($args)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classhtmlElement.html#a93cf423600b179eb6f71e6bcd7a250e2">whenOr</a>($args)</td><td class="entry"><a class="el" href="classhtmlElement.html">htmlElement</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 7 2015 23:17:29 for Tina4Stack by &#160;<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.9.1
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated on Tue Sep 8 2015 00:07:02 for Tina4Stack by
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -5,8 +5,6 @@
  *
  * Currently supported database engines are: sqlite3, firebird-2.5, mysql
  *
- *
- * @author Andre van Zuydam <andre@xineoh.com>
  */
 class Reta {
 

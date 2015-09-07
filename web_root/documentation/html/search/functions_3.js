@@ -25,8 +25,6 @@ var searchData=
   ['compilecontent',['compileContent',['../classhtmlElement.html#ac05144459b3739d692738dc947f6989c',1,'htmlElement']]],
   ['compilehtml',['compileHTML',['../classhtmlElement.html#ab45087063ba3e42851d01bd87681475b',1,'htmlElement']]],
   ['connect',['connect',['../classDebby.html#a9f4e15cca354aa036ac823884c69cb61',1,'Debby']]],
-  ['consumemultiplelinecomment',['consumeMultipleLineComment',['../classJSMin.html#a1bda4db9c558409b8bfc75279a42ca8a',1,'JSMin']]],
-  ['consumesinglelinecomment',['consumeSingleLineComment',['../classJSMin.html#ad7f3a27d59bdb92db013a336b1c64f3a',1,'JSMin']]],
   ['count',['count',['../classOlga.html#abf255c4baa60ff0847c0ddc8f41d19f1',1,'Olga']]],
   ['createconnection',['createConnection',['../classDebby.html#a4cf1bbf921e33fee254129eb77fa4854',1,'Debby']]],
   ['createdatabase',['createDatabase',['../classKim.html#ae9db930151f99235866c68fd96208cd8',1,'Kim']]],

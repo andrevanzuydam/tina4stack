@@ -4,7 +4,9 @@
  *
  * @tableofcontents
  *
- * @section introduction Introduction to the Tina4Stack
+ * @anchor introduction
+ *
+ * @image html tina_intro.png "Looking for a development stack?"
  *
  * The Tina4Stack started with a need to bring some uniformity to the development I was doing in PHP and especially where
  * I was working with other developers on the same project.  I have often wondered if I should start using one of the popular
@@ -13,8 +15,7 @@
  *
  * @note Tina4 simply means "This is NOT another Framework!"
  *
- *
- *
+ * @section download_latest Download the Latest Release
  *
  *<IMG SRC="https://img.shields.io/sourceforge/dw/tina4stack.svg" />
  * <A HREF="https://sourceforge.net/projects/tina4stack/files/latest/download">

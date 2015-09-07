@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['action_5fdelete_5fa',['ACTION_DELETE_A',['../classJSMin.html#a034ff6ce80d8eeffb1548c65b907db73',1,'JSMin']]],
-  ['action_5fdelete_5fa_5fb',['ACTION_DELETE_A_B',['../classJSMin.html#a769648a1f5c364c3d964d12d0b4edb8a',1,'JSMin']]],
-  ['action_5fkeep_5fa',['ACTION_KEEP_A',['../classJSMin.html#aadc96fb8e03e7fd45dcc845695db56f6',1,'JSMin']]]
+  ['deb_5farray',['DEB_ARRAY',['../Debby_8php.html#ad75806d2ab1c7e4353a0a52f61793a84',1,'Debby.php']]],
+  ['deb_5fassoc',['DEB_ASSOC',['../Debby_8php.html#a0ef261713595fd84175fa98e45a60d8c',1,'Debby.php']]],
+  ['deb_5fobject',['DEB_OBJECT',['../Debby_8php.html#acaf4f00f16a383f146403a31dccd06c1',1,'Debby.php']]]
 ];

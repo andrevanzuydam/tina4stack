@@ -8,6 +8,14 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -15,7 +23,7 @@
   $(document).ready(function() { init_search(); });
 </script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
-<link href="doxyGen.css" rel="stylesheet" type="text/css"/>
+<link href="doxyGenTina4.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -43,7 +51,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
-      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -79,14 +86,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li class="current"><a href="functions_vars.html"><span>Variables</span></a></li>
     </ul>
   </div>
-  <div id="navrow4" class="tabs3">
-    <ul class="tablist">
-      <li><a href="#index_$"><span>$</span></a></li>
-      <li><a href="#index_a"><span>a</span></a></li>
-      <li class="current"><a href="#index_o"><span>o</span></a></li>
-    </ul>
-  </div>
 </div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('functions_vars.html','');});
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -102,20 +116,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 
 <div class="contents">
-&#160;
-
-<h3><a class="anchor" id="index_$"></a>- $ -</h3><ul>
-<li>$a
-: <a class="el" href="classJSMin.html#a2386c0978ac70ac8e9bd592fca835e82">JSMin</a>
-</li>
+&#160;<ul>
 <li>$affectedrows
 : <a class="el" href="classDebby.html#ab409e48612acfcba8cf89743b45b4457">Debby</a>
 </li>
 <li>$arrayObjects
 : <a class="el" href="classOlga.html#aeec96cdbc35fcd60afe0a26b4fe49f6e">Olga</a>
-</li>
-<li>$b
-: <a class="el" href="classJSMin.html#aafa0d83dd06ede16a81de0441c5eb1ad">JSMin</a>
 </li>
 <li>$createDB
 : <a class="el" href="classKim.html#a68fb575a2ef7faf6b3b679280331033d">Kim</a>
@@ -150,23 +156,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>$fieldinfo
 : <a class="el" href="classDebby.html#a7d54dc610647753b09fd501ee0b65f54">Debby</a>
 </li>
-<li>$input
-: <a class="el" href="classJSMin.html#afc2d10997a7e61c31cc9ed70e414829b">JSMin</a>
-</li>
-<li>$inputIndex
-: <a class="el" href="classJSMin.html#a4f772e961c1cd23e3baa6486a2952236">JSMin</a>
-</li>
-<li>$inputLength
-: <a class="el" href="classJSMin.html#adc61bf642369b9d96e4844b2e694cf76">JSMin</a>
-</li>
-<li>$keptComment
-: <a class="el" href="classJSMin.html#ac9f663a3d896ddbce3262eae7f777e94">JSMin</a>
-</li>
 <li>$KIM
 : <a class="el" href="classKim.html#a46554f1a34a5f3db1014d47b6ec37f00">Kim</a>
-</li>
-<li>$lastByteOut
-: <a class="el" href="classJSMin.html#aa33e5c3fabce5f410b11880757bd6521">JSMin</a>
 </li>
 <li>$lasterror
 : <a class="el" href="classDebby.html#ab74aec371d05b763d7c8123b80621c3d">Debby</a>
@@ -177,14 +168,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>$lastsql
 : <a class="el" href="classDebby.html#ae609a3e9058918214dbac27c36381323">Debby</a>
 </li>
-<li>$lookAhead
-: <a class="el" href="classJSMin.html#ad78bd58d8c2f93286068d85abc0afb57">JSMin</a>
-</li>
 <li>$nooffields
 : <a class="el" href="classDebby.html#a72634c1e21e0f68c5a69e6a1db478ff5">Debby</a>
-</li>
-<li>$output
-: <a class="el" href="classJSMin.html#ab1b9cc7015da8bc3e3cc5edbc60f0ac2">JSMin</a>
 </li>
 <li>$outputdateformat
 : <a class="el" href="classDebby.html#a708fea658eab39aad196703f8b8aaa18">Debby</a>
@@ -217,35 +202,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classRuth.html#aaaf0e436f08cbd148c492584832da4cc">Ruth</a>
 </li>
 </ul>
-
-
-<h3><a class="anchor" id="index_a"></a>- a -</h3><ul>
-<li>ACTION_DELETE_A
-: <a class="el" href="classJSMin.html#a034ff6ce80d8eeffb1548c65b907db73">JSMin</a>
-</li>
-<li>ACTION_DELETE_A_B
-: <a class="el" href="classJSMin.html#a769648a1f5c364c3d964d12d0b4edb8a">JSMin</a>
-</li>
-<li>ACTION_KEEP_A
-: <a class="el" href="classJSMin.html#aadc96fb8e03e7fd45dcc845695db56f6">JSMin</a>
-</li>
-</ul>
-
-
-<h3><a class="anchor" id="index_o"></a>- o -</h3><ul>
-<li>ORD_LF
-: <a class="el" href="classJSMin.html#ac2104a1ac3a1d438c01c88b7bfafd519">JSMin</a>
-</li>
-<li>ORD_SPACE
-: <a class="el" href="classJSMin.html#acae1641c88dbf4928c4a3c5b2428065c">JSMin</a>
-</li>
-</ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 7 2015 23:17:31 for Tina4Stack by &#160;<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.9.1
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated on Tue Sep 8 2015 00:07:03 for Tina4Stack by
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
+  </ul>
+</div>
 </body>
 </html>

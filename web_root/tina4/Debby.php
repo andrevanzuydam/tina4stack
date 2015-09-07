@@ -3,9 +3,6 @@
 /**
  * The database system on which the tina4stack connects to databases
  *
- * @author Andre van Zuydam <andre@xineoh.com>
- * @license GPL
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 define("DEB_OBJECT", 0);
 define("DEB_ARRAY", 1);
@@ -38,7 +35,6 @@ if (get_magic_quotes_gpc()) {
  *  Debby is for developers just beginning with PHP database development, it takes the differences between the PHP database implementations and
  *  makes it easy to work and switch between the databases.  It also acts as the testing platform for the SQL translation tool.
  *
- * @author Andre van Zuydam <andre@xineoh.com>
  */
 class Debby
 {

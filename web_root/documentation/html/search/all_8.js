@@ -2,7 +2,6 @@ var searchData=
 [
   ['generate',['generate',['../classReta.html#a7e909b970b993508a9ff7a5361a58032',1,'Reta']]],
   ['generatecsv',['generateCsv',['../classDebby.html#ac947c9394a4bfeda1f81902ffd03aa4c',1,'Debby']]],
-  ['get',['get',['../classJSMin.html#adcd5b6e8efc1792816812168118f49ef',1,'JSMin']]],
   ['get_5ffunc_5fargnames',['get_func_argNames',['../classTessa.html#a4053ed1b45b0faf76850ee56f2a8578f',1,'Tessa']]],
   ['getactions',['getActions',['../classTessa.html#a3fce6a71a2303c0bccd0d447375d1c96',1,'Tessa\getActions()'],['../Tessa_8php.html#af5e5c4ed7fd27b8d801633f34a0d5bc1',1,'getActions():&#160;Tessa.php']]],
   ['getaffectedrows',['getAffectedRows',['../classDebby.html#a1659291aeee9847ff87329914a8ac695',1,'Debby']]],
@@ -33,11 +32,10 @@ var searchData=
   ['getglobalsettings',['getGlobalSettings',['../classKim.html#a2bcf75443f82b5c8f49b4e82bdcab94d',1,'Kim']]],
   ['gethtmlattributes',['getHTMLAttributes',['../Shape_8php.html#a2ff0a84895d55c347f8ebed8eacb5cd0',1,'Shape.php']]],
   ['gethtmltext',['getHTMLText',['../Shape_8php.html#a4e6d621165472a8472beb5cb195147b9',1,'Shape.php']]],
-  ['getid',['getId',['../classshapeBaseElement.html#a2ed3481fc7f26976cab34075a9fe7215',1,'shapeBaseElement\getId()'],['../classTestElement.html#a2b6ab197b32c1eb95759f3576e7f5254',1,'TestElement\getID()']]],
+  ['getid',['getID',['../classTestElement.html#a2b6ab197b32c1eb95759f3576e7f5254',1,'TestElement']]],
   ['getinsertmenuitemform',['getInsertMenuItemForm',['../classKim.html#a7391f7a7d90adef0a048f2679aaa27fd',1,'Kim']]],
   ['getinsertsql',['getInsertSQL',['../classDebby.html#a16d70533ec98b133bbedb916e7599176',1,'Debby']]],
   ['getinstance',['getInstance',['../classDebby.html#a84bc3c4e3d17a383ed9d52601307be51',1,'Debby']]],
-  ['getkey',['getKey',['../classshapeBaseElement.html#acc89cd4c440d11f1b771410a096db6c9',1,'shapeBaseElement']]],
   ['getkeyvalue',['getKeyValue',['../classDebby.html#ab7154d566317a9b0d9c2fbc9365b874f',1,'Debby']]],
   ['getlasterror',['getLastError',['../classDebby.html#ae10ec43fb6945948e4c936d798cc3bb3',1,'Debby']]],
   ['getlastroute',['getLASTROUTE',['../classRuth.html#a692691e58b9b2fce80e0bed5a3207137',1,'Ruth']]],
@@ -52,8 +50,6 @@ var searchData=
   ['getobject',['getOBJECT',['../classRuth.html#a899c68457a6a7c1b8a0b25bfd74c4c15',1,'Ruth']]],
   ['getpagetemplate',['getPageTemplate',['../classCody.html#ab057111a248c76bd14a343324cec432e',1,'Cody\getPageTemplate()'],['../classDebby.html#ab4c3e5d14a404d1fdd6bc4ab078d64b8',1,'Debby\getPageTemplate()'],['../classKim.html#a3cb9fd00227b180b8118257b85acf6ff',1,'Kim\getPageTemplate()'],['../classMaggy.html#a494c35bf7f6d5a704e430d20da195954',1,'Maggy\getPageTemplate()'],['../classRuth.html#ac470a420ccefd668c3a50bead17e2d8a',1,'Ruth\getPageTemplate()']]],
   ['getparams',['getParams',['../classRuth.html#aa8c09285cc5f2a214b8fbe5e45e88cea',1,'Ruth']]],
-  ['getparent',['getParent',['../classshapeBaseElement.html#a19aff5da3dce4162e9b6f60226bf1a2c',1,'shapeBaseElement']]],
-  ['getparentelement',['getParentElement',['../classshapeBaseElement.html#a091d09076b19adff193a373d3d00b6d8',1,'shapeBaseElement']]],
   ['getpath',['getPATH',['../classRuth.html#abbbe520ef7554c895ab5f4213b8738a3',1,'Ruth']]],
   ['getpets',['getPets',['../classtestClass.html#a27e1098ad521d47aa53d15a2f862da30',1,'testClass']]],
   ['getpost_5fdata',['getPOST_DATA',['../classRuth.html#addbd05bd71b3abeff8e8250c46897e5b',1,'Ruth']]],
@@ -79,5 +75,5 @@ var searchData=
   ['getuserrecord',['getUserRecord',['../classKim.html#a6c3ce83f2f3bc3c7743f1bfa46f30d0e',1,'Kim']]],
   ['getusers',['getUsers',['../classKim.html#a31a5796278c813534e76d2ce91d9eed2',1,'Kim']]],
   ['getusertypes',['getUserTypes',['../classKim.html#a03d8b762e1c6d458e714904cd8b02dd6',1,'Kim']]],
-  ['getvalue',['getValue',['../classshapeBaseElement.html#ad6ebb79ad6cb2d501f682938d15d4052',1,'shapeBaseElement\getValue()'],['../classTestElement.html#a1964043ed9be26b977b5ed6b4d993aaa',1,'TestElement\getValue()']]]
+  ['getvalue',['getValue',['../classTestElement.html#a1964043ed9be26b977b5ed6b4d993aaa',1,'TestElement']]]
 ];

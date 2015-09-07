@@ -1,7 +1,6 @@
 var searchData=
 [
   ['redirect',['redirect',['../classRuth.html#a99efe91394d300de83f7124acea0b595',1,'Ruth']]],
-  ['registerglobal',['registerGlobal',['../classshapeBaseElement.html#a4547c40cb33c3d34f16a262d1dcca069',1,'shapeBaseElement']]],
   ['requesttoinput',['requestToInput',['../classRuth.html#ae10d9c25d1910e59a15662dd1304c23b',1,'Ruth']]],
   ['requesttosession',['requestToSESSION',['../classRuth.html#a627fd70f5f186ba0d4d3dc187a432b81',1,'Ruth']]],
   ['responseheader',['responseHeader',['../classRuth.html#aba8f6d2223ff063fc5d0133d6f85f2c0',1,'Ruth']]],

@@ -4,7 +4,6 @@ var searchData=
   ['abbr',['abbr',['../Shape_8php.html#a6dad20e33fe4af412f1c0d8771995b0b',1,'Shape.php']]],
   ['acceptalert',['acceptAlert',['../classTessa.html#ac6310dd007ead434f3d8cd2698263ded',1,'Tessa\acceptAlert()'],['../Tessa_8php.html#af0f9de4ab254db7dfb5177c464512a75',1,'AcceptAlert():&#160;Tessa.php']]],
   ['acronym',['acronym',['../Shape_8php.html#a2075525e48398c40aed318fdf73fb424',1,'Shape.php']]],
-  ['action',['action',['../classJSMin.html#afecad9e791629529f6b379bd7b20a4e4',1,'JSMin']]],
   ['addalias',['addAlias',['../classTessa.html#aafeac59dfa47fb1501a521bcf9438f15',1,'Tessa']]],
   ['addattribute',['addAttribute',['../classhtmlElement.html#a828427f0afb3dc929098581dc7df31b6',1,'htmlElement']]],
   ['addcontent',['addContent',['../classhtmlElement.html#a063bcf0695c98e25ff2b7fa9ef3c88bf',1,'htmlElement']]],

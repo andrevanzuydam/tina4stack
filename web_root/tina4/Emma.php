@@ -3,10 +3,7 @@
 /**
  * Emma is part of the Tina4 stack which allows you to easily send emails from your system without crazy configuration, emma can also read emails from an inbox you may have
  * @todo Add the ability to parse email addresses
- * 
- * @author Andre van Zuydam <andre@xineoh.com>
- * @license GPL
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
  */
 class Emma {
     

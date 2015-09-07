@@ -7,9 +7,8 @@
  */
 
 /**
- * Description of Phoebe
+ * Phoebe will build self contained phar files when its done
  *
- * @author Andre van Zuydam <andre@xineoh.com>
  */
 class Phoebe {
     //put your code here

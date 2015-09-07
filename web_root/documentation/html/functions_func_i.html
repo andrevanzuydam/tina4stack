@@ -8,6 +8,14 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -15,7 +23,7 @@
   $(document).ready(function() { init_search(); });
 </script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
-<link href="doxyGen.css" rel="stylesheet" type="text/css"/>
+<link href="doxyGenTina4.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -43,7 +51,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
-      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -105,6 +112,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     </ul>
   </div>
 </div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('functions_func_i.html','');});
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -135,31 +156,25 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>is_assoc()
 : <a class="el" href="classhtmlElement.html#a26a8e3284834135dec7b0e01e84b0877">htmlElement</a>
 </li>
-<li>isAlphaNum()
-: <a class="el" href="classJSMin.html#af54ff87064c2b9f19e4905e511fc83e5">JSMin</a>
-</li>
 <li>IsDate()
 : <a class="el" href="classCody.html#a2661001682a1aa2ad53e36d2ae2396c0">Cody</a>
 </li>
 <li>IsDifferent()
 : <a class="el" href="classTessa.html#accf6a6c6874c25022b628bc81918a9d0">Tessa</a>
 </li>
-<li>isEOF()
-: <a class="el" href="classJSMin.html#a450a0756edbd9508745f90ccacd08a27">JSMin</a>
-</li>
-<li>isRegexpLiteral()
-: <a class="el" href="classJSMin.html#a487b4b073a8319123317d776feb72f6f">JSMin</a>
-</li>
 <li>IWantTo()
 : <a class="el" href="classTessa.html#a9996261064c450e61e6530ec0441b945">Tessa</a>
 </li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 7 2015 23:17:30 for Tina4Stack by &#160;<a href="http://www.doxygen.org/index.html">
-<img class="footer" src="doxygen.png" alt="doxygen"/>
-</a> 1.8.9.1
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated on Tue Sep 8 2015 00:07:03 for Tina4Stack by
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
+  </ul>
+</div>
 </body>
 </html>

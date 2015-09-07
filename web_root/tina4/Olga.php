@@ -1,5 +1,44 @@
 <?php
-
+/**
+ * @page olga Olga
+ *
+ * @section your_own_classes_with_olga Extending your own classes with Olga
+ *
+ * Olga enables the developer to use classes as data stores for data, these objects can be mapped back to a database which Olga will use to save or restore data from
+ * If you run xcache on your system, Olga will automatically persist these objects in memory making the load on the server very light.
+ *
+ *
+ * We could create a Pet object, all classes need to have an id for the system to reference it by from memory
+ * @code
+ *
+ * class Pet extends Olga {
+ *      var $id;
+ *      var $name;
+ *      var $type;
+ *
+ *      var $mapping = Array([  "table" => "tbl_pet",
+ *                              "fields" => [
+ *                                  "id" => ["field" => "pet_id"],
+ *                                  "name" => ["field" => "pet_name"],
+ *                                  "type" => ["field" => "pet_type"]
+ *                              ]
+ *                     ]);
+ * }
+ *
+ *
+ * @endcode
+ *
+ * We could then create a collection of pets which would use the Pet object as an array object
+ *
+ * @code
+ * class Pet extends Olga {
+ *      var $mapping = Array([  "table" => "tbl_pet",
+ *                              "object" => "Pet"
+ *                          ]);
+ * }
+ * @endcode
+ *
+ */
 /**
  * Olga is a class which adds getters and setters to your existing object, it has methods to export the class to JSON and to import the class from JSON
  * User: Andre van Zuydam
@@ -9,6 +48,163 @@
 class Olga implements Iterator  {
 
     var $arrayObjects = []; //an array or collection of objects of the same type as this (we probably need to check if it is the same)
+
+    /**
+     * Method to get the results from XCache into the object
+     */
+    function populateFromXCache() {
+        if (function_exists("xcache_get")) {
+            if (!empty($this->id)) { //this must be a single record, we will need to fetch it by its unique id in memory
+                $json = unserialize(xcache_get("olgaSingleObject".get_class($this)."-".$this->id));
+                $this->fromJSON($json);
+            } else {
+                $objects = json_decode(unserialize(xcache_get("olgaArrayObjects".get_class($this))));
+                $this->clear();
+                if ($this->mapping["object"]) {
+                    foreach ($objects as $oid => $object) {
+                        $newObject = "";
+
+                        eval ('$newObject = new '.$this->mapping["object"].'(\''.json_encode($object).'\');');
+                        $this->append($newObject);
+                    }
+                } else { //No object found
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Method to put the results into the xcache
+     */
+    function populateToXCache() {
+        if (function_exists("xcache_set")) {
+            if (!empty($this->id)) { //save the single record
+                $json = $this->toJSON();
+                xcache_set("olgaSingleObject".get_class($this)."-".$this->id, serialize($json));
+            } else {
+                xcache_set("olgaArrayObjects".get_class($this), serialize($this->toJSON()));
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Method to get the results from the database
+     */
+    function populateFromDebby($DEB) {
+        if (!empty($this->id)) { //single object - very easy
+            if (!empty($this->mapping["table"])) {
+                if (!empty($this->mapping["fields"])) {
+                    $sql = "select ";
+                    $fields = [];
+                    foreach ($this->mapping["fields"] as $objectField => $field) {
+                        if ($objectField === "id") {
+                            $primaryKey = $field["field"];
+                        }
+                        $fields[] = $field["field"];
+                    }
+                    $sql .= join(",", $fields);
+                    $sql .= " from {$this->mapping["table"]} ";
+                    $sql .= " where {$primaryKey} = '{$this->id}'";
+
+                    $record = $DEB->getRow ($sql);
+                    if (!empty($record)) {
+                        //map to the memory record and the object
+                        foreach ($this->mapping["fields"] as $objectField => $field) {
+                            eval ('$this->' . ucwords($objectField) . ' = $record->' . $field["field"] . ';');
+                        }
+                    }
+
+                    $this->createGetSet();
+                    //save us to the memory
+                    $this->save(true);
+
+
+                } else { //No fields found
+                    return false;
+                }
+            } else { //No table found
+                return false;
+            }
+        } else { //complex object - very difficult - see paging //TODO:we must make paging happen here, for small objects no pressure
+            if (!empty($this->mapping["table"])) {
+                $sql = "select *";
+                $sql .= " from {$this->mapping["table"]} ";
+
+                if (!empty($this->mapping["object"])) {
+                    $records = $DEB->getRows($sql);
+                    foreach ($records as $rid => $record) {
+                        //create some objects in memory and add the object to this
+                        $newObject = "";
+                        eval ('$newObject = new '.$this->mapping["object"].'();');
+                        foreach ($newObject->mapping["fields"] as $objectField => $field) {
+                            eval('$newObject->'.$objectField.' = $record->'.$field["field"].';');
+                        }
+                        //add the object to memory
+                        $newObject->createGetSet();
+                        $newObject->save(true);
+                        $this->append($newObject);
+                    }
+
+                    //save the object to memory
+                    $this->save(true);
+
+                } else {
+                    return false;
+                }
+            } else { //No table found
+                return false;
+            }
+        }
+    }
+
+
+    function populateToDebby() {
+        return true;
+    }
+
+    /**
+     * A method to load the data from the database into the object in question
+     */
+    function load() {
+        //see what type of object we have, do we have a database object or not,
+        $DEB = Ruth::getOBJECT("DEB");
+        //read from the database
+        if (!empty($DEB)) {
+            //see if we can grab from xcache first
+            if (!$this->populateFromXCache()) {
+                return $this->populateFromDebby($DEB);
+            } else {
+                return $this->populateFromDebby($DEB);
+            }
+        } else {
+            return $this->populateFromXCache();
+        }
+    }
+
+    /**
+     * A method to save the data into the database from the object in question
+     * @param bool|false $onlyToMemory Saves only to memory
+     * @return bool
+     */
+    function save($onlyToMemory=false) {
+        $DEB = Ruth::getOBJECT("DEB");
+        //save the data to the database
+        if ($onlyToMemory) {
+            return $this->populateToXCache();
+        } else
+            if (!empty($DEB)) {
+                if ($this->populateToDebby()) {
+                    return $this->populateToXCache();
+                }
+            } else {
+                return $this->populateToXCache();
+            }
+    }
 
     /**
      * The clone function must recreate the object closures
@@ -48,7 +244,6 @@ class Olga implements Iterator  {
         }
     }
 
-
     /**
      * Create a JSON instance of the object
      * @return string
@@ -68,9 +263,13 @@ class Olga implements Iterator  {
      */
     function fromJSON($jsonString) {
         $jsonObject = json_decode($jsonString);
-        foreach ($jsonObject as $varName => $varValue) {
-            $this->$varName = $varValue;
+
+        if (!empty($jsonObject)) {
+            foreach ($jsonObject as $varName => $varValue) {
+                $this->$varName = $varValue;
+            }
         }
+
     }
 
     /**
@@ -99,7 +298,7 @@ class Olga implements Iterator  {
 
 
 
-                    if (!$isClosure && $key !== "arrayObjects") {
+                    if (!$isClosure && $key !== "arrayObjects"  && $key !== "mapping") {
 
                         $items[] = $this->__toJson("$key") . ':' . $this->__toJson( $value);
                     }
@@ -179,13 +378,9 @@ class Olga implements Iterator  {
     }
 
     /**
-     * Constructor to make getters and setters
+     * Create the getters & setters
      */
-    function __construct($jsonString="") {
-        if (!empty($jsonString)) {
-            $this->fromJSON($jsonString);
-        }
-
+    function createGetSet() {
         $variables = get_object_vars($this);
         foreach ($variables as $varName => $varValue) {
             if ($varName != "arrayObjects") {
@@ -204,6 +399,16 @@ class Olga implements Iterator  {
             }
 
         }
+    }
+
+    /**
+     * Constructor to make getters and setters
+     */
+    function __construct($jsonString="") {
+        if (!empty($jsonString)) {
+            $this->fromJSON($jsonString);
+        }
+        $this->createGetSet();
     }
 
     /**
@@ -262,5 +467,22 @@ class Olga implements Iterator  {
     public function rewind()
     {
         reset($this->arrayObjects);
+    }
+
+    /**
+     * Give a count of the records in the object
+     * @return int
+     */
+    public function count() {
+        return count($this->arrayObjects);
+    }
+
+    /**
+     * Method to clear all the objects from the system
+     * @return bool
+     */
+    public function clear() {
+        $this->arrayObjects = [];
+        return true;
     }
 }

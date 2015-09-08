@@ -19,8 +19,9 @@ class Olga implements Iterator  {
                 $this->fromJSON($json);
             } else {
                 $objects = json_decode(unserialize(xcache_get("olgaArrayObjects".get_class($this))));
+
                 $this->clear();
-                if ($this->mapping["object"]) {
+                if (!empty($this->mapping["object"]) && !empty($objects)) {
                     foreach ($objects as $oid => $object) {
                         $newObject = "";
 
@@ -128,7 +129,6 @@ class Olga implements Iterator  {
      */
     function populateToDebby() {
         $DEB = Ruth::getOBJECT("DEB");
-
 
         //read from the database
         if (!empty($DEB)) {

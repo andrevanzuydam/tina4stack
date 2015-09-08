@@ -12,7 +12,7 @@ var NAVTREE =
         [ "Routing Example with Variables", "index.html#ruth_example_variables", null ]
       ] ],
       [ "Cody", "index.html#cody", [
-        [ "Example of Bootstrap Input", "index.html#cody_example", null ],
+        [ "Example of Bootstrap Inputf", "index.html#cody_example", null ],
         [ "Example of Ajax Handler", "index.html#code_example_ajax", null ]
       ] ],
       [ "Kim", "index.html#kim", [
@@ -33,6 +33,7 @@ var NAVTREE =
         [ "Sending an Email", "index.html#emma_email", null ],
         [ "Sending a Text / SMS message", "index.html#emma_sendtext", null ]
       ] ],
+      [ "Tessa", "index.html#tessa_ui_tests", null ],
       [ "Olga", "index.html#your_own_classes_with_olga", [
         [ "Creating a Single Object", "index.html#olga_single", null ],
         [ "Creating a multiple object class", "index.html#olga_multiple", null ],

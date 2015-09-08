@@ -10,7 +10,7 @@
  *
  * Tina is the CEO of the Tina4 Corporation, as anyone knows a successful company needs a strong leader. Her skills lie in the organization of each
  * of the girls and making sure each person collaborates properly on the task at hand.  Tina is passionate about providing solutions to her customers
- * and it is very important to her that each peson is doing the job they were assigned.  In a nutshell we have the following:
+ * and it is very important to her that each person is doing the job they were assigned.  In a nutshell we have the following:
  *
  * <UL>
  *   <LI> Routing </LI>
@@ -19,7 +19,7 @@
  *   <LI> Code Simplification </LI>
  *   <LI> Templating </LI>
  *   <LI> UI Testing with Selenium </LI>
- *   <LI> WYIWYG Report Generation </LI>
+ *   <LI> WYSIWYG Report Generation </LI>
  *   <LI> Email Handling </LI>
  *   <LI> Object Abstraction </LI>
  * </UL> *
@@ -27,7 +27,7 @@
  *
  * The Tina4Stack started with a need to bring some uniformity to the development I was doing in PHP and especially where
  * I was working with other developers on the same project.  I have often wondered if I should start using one of the popular
- * frameworks out there but have decided against it for various reasons.  Instead I have decided to share with you my work bench
+ * frameworks out there but have decided against it for various reasons.  Instead I have decided to share with you my workbench
  * so to speak where you can also benefit from the work that has gone into this tool.
  *
  * @note Tina4 simply means "This is NOT another Framework!"
@@ -76,7 +76,7 @@
  * Routing, Maggy is responsible for migrations.
  *
  * Now it may seem daunting to make use of tools you did not assist in building but you can use as little or as much of the tools as you want.
- * After going over the core functionlity of each of the girls in the stack I will explain the basics of how everything is supposed to work.
+ * After going over the core functionality of each of the girls in the stack I will explain the basics of how everything is supposed to work.
  *
  *
  * @section ruth Ruth
@@ -127,11 +127,11 @@
  *
  * @image html cody_intro.png
  *
- * Cody was written to automate things that may take up a lot of repetition.  At this point in time Cody helps automate Bootstrap functionlity.
+ * Cody was written to automate things that may take up a lot of repetition.  At this point in time Cody helps automate Bootstrap functionaflity.
  * Cody has a very neat Ajax handler which automatically reads form variables and passes them to the URL you specify.  The Ajax handler of Cody can
  * also handle file uploading via Ajax and when used with Ruth and Debby you have very little coding to do.
  *
- * @subsection cody_example Example of Bootstrap Input
+ * @subsection cody_example Example of Bootstrap Inputf
  * The following code will create a properly formatted Bootstrap input with all the correct classes. You can see this in action in Maggy http://localhost:12345/maggy/create
  * @code{.php}
  *

@@ -115,7 +115,7 @@ $(document).ready(function(){initNavTree('index.html','');});
 <li class="level2"><a href="#ruth_example_variables">Routing Example with Variables</a></li>
 </ul>
 </li>
-<li class="level1"><a href="#cody">Cody</a><ul><li class="level2"><a href="#cody_example">Example of Bootstrap Input</a></li>
+<li class="level1"><a href="#cody">Cody</a><ul><li class="level2"><a href="#cody_example">Example of Bootstrap Inputf</a></li>
 <li class="level2"><a href="#code_example_ajax">Example of Ajax Handler</a></li>
 </ul>
 </li>
@@ -137,6 +137,7 @@ $(document).ready(function(){initNavTree('index.html','');});
 <li class="level2"><a href="#emma_sendtext">Sending a Text / SMS message</a></li>
 </ul>
 </li>
+<li class="level1"><a href="#tessa_ui_tests">Tessa</a></li>
 <li class="level1"><a href="#your_own_classes_with_olga">Olga</a><ul><li class="level2"><a href="#olga_single">Creating a Single Object</a></li>
 <li class="level2"><a href="#olga_multiple">Creating a multiple object class</a></li>
 <li class="level2"><a href="#olga_dynamic">Dynamic objects</a></li>
@@ -150,7 +151,7 @@ Tina</h1>
 <img src="tina_intro.png" alt="tina_intro.png"/>
 <div class="caption">
 Looking for a development stack?</div></div>
-<p> Tina is the CEO of the Tina4 Corporation, as anyone knows a successful company needs a strong leader. Her skills lie in the organization of each of the girls and making sure each person collaborates properly on the task at hand. Tina is passionate about providing solutions to her customers and it is very important to her that each peson is doing the job they were assigned. In a nutshell we have the following:</p>
+<p> Tina is the CEO of the Tina4 Corporation, as anyone knows a successful company needs a strong leader. Her skills lie in the organization of each of the girls and making sure each person collaborates properly on the task at hand. Tina is passionate about providing solutions to her customers and it is very important to her that each person is doing the job they were assigned. In a nutshell we have the following:</p>
 <ul>
 <li>
 Routing  </li>
@@ -165,14 +166,14 @@ Templating  </li>
 <li>
 UI Testing with Selenium  </li>
 <li>
-WYIWYG Report Generation  </li>
+WYSIWYG Report Generation  </li>
 <li>
 Email Handling  </li>
 <li>
 Object Abstraction  </li>
 </ul>
 <p>*</p>
-<p>The Tina4Stack started with a need to bring some uniformity to the development I was doing in PHP and especially where I was working with other developers on the same project. I have often wondered if I should start using one of the popular frameworks out there but have decided against it for various reasons. Instead I have decided to share with you my work bench so to speak where you can also benefit from the work that has gone into this tool.</p>
+<p>The Tina4Stack started with a need to bring some uniformity to the development I was doing in PHP and especially where I was working with other developers on the same project. I have often wondered if I should start using one of the popular frameworks out there but have decided against it for various reasons. Instead I have decided to share with you my workbench so to speak where you can also benefit from the work that has gone into this tool.</p>
 <dl class="section note"><dt>Note</dt><dd>Tina4 simply means "This is NOT another Framework!"</dd></dl>
 <h2><a class="anchor" id="download_latest"></a>
 Download the Latest Release</h2>
@@ -227,7 +228,7 @@ XCache UI </li>
 <h2><a class="anchor" id="what_is_tina4"></a>
 What is Tina4</h2>
 <p>Tina4 is a collection of tools which will help you with your PHP development. In order to make the tools easy to remember and use we have given them names so that you can identify with each of the personalities when you are working. For example <a class="el" href="classRuth.html">Ruth</a> is responsible for Routing, <a class="el" href="classMaggy.html">Maggy</a> is responsible for migrations.</p>
-<p>Now it may seem daunting to make use of tools you did not assist in building but you can use as little or as much of the tools as you want. After going over the core functionlity of each of the girls in the stack I will explain the basics of how everything is supposed to work.</p>
+<p>Now it may seem daunting to make use of tools you did not assist in building but you can use as little or as much of the tools as you want. After going over the core functionality of each of the girls in the stack I will explain the basics of how everything is supposed to work.</p>
 <h1><a class="anchor" id="ruth"></a>
 Ruth</h1>
 <div class="image">
@@ -257,9 +258,9 @@ Cody</h1>
 <div class="image">
 <img src="cody_intro.png" alt="cody_intro.png"/>
 </div>
-<p><a class="el" href="classCody.html">Cody</a> was written to automate things that may take up a lot of repetition. At this point in time <a class="el" href="classCody.html">Cody</a> helps automate Bootstrap functionlity. <a class="el" href="classCody.html">Cody</a> has a very neat Ajax handler which automatically reads form variables and passes them to the URL you specify. The Ajax handler of <a class="el" href="classCody.html">Cody</a> can also handle file uploading via Ajax and when used with <a class="el" href="classRuth.html">Ruth</a> and <a class="el" href="classDebby.html">Debby</a> you have very little coding to do.</p>
+<p><a class="el" href="classCody.html">Cody</a> was written to automate things that may take up a lot of repetition. At this point in time <a class="el" href="classCody.html">Cody</a> helps automate Bootstrap functionaflity. <a class="el" href="classCody.html">Cody</a> has a very neat Ajax handler which automatically reads form variables and passes them to the URL you specify. The Ajax handler of <a class="el" href="classCody.html">Cody</a> can also handle file uploading via Ajax and when used with <a class="el" href="classRuth.html">Ruth</a> and <a class="el" href="classDebby.html">Debby</a> you have very little coding to do.</p>
 <h2><a class="anchor" id="cody_example"></a>
-Example of Bootstrap Input</h2>
+Example of Bootstrap Inputf</h2>
 <p>The following code will create a properly formatted Bootstrap input with all the correct classes. You can see this in action in <a class="el" href="classMaggy.html">Maggy</a> <a href="http://localhost:12345/maggy/create">http://localhost:12345/maggy/create</a> </p><div class="fragment"><div class="line">echo (<span class="keyword">new</span> <a class="code" href="classCody.html">Cody</a>())-&gt;bootStrapInput(<span class="stringliteral">&quot;firstName&quot;</span>, <span class="stringliteral">&quot;First Name&quot;</span>, <span class="stringliteral">&quot;Full Names&quot;</span>, $defaultValue = <span class="stringliteral">&quot;&quot;</span>, <span class="stringliteral">&quot;text&quot;</span>);</div>
 </div><!-- fragment --><h2><a class="anchor" id="code_example_ajax"></a>
 Example of Ajax Handler</h2>
@@ -440,7 +441,9 @@ Sending a Text / SMS message</h2>
 <p>Currently <a class="el" href="classEmma.html">Emma</a> uses BulkSMS to send out text messages. Let us know if you have another preference.</p>
 <div class="fragment"><div class="line"><span class="comment">//requires a Bulk SMS username &amp; password http://bulksms.com</span></div>
 <div class="line">(<span class="keyword">new</span> <a class="code" href="classEmma.html">Emma</a>($username, $password))-&gt;sendText ($mobileno=<span class="stringliteral">&quot;8087234511&quot;</span>, $message=<span class="stringliteral">&quot;Hello World!&quot;</span>, $countryPrefix=<span class="stringliteral">&quot;01&quot;</span>);</div>
-</div><!-- fragment --><h1><a class="anchor" id="your_own_classes_with_olga"></a>
+</div><!-- fragment --><h1><a class="anchor" id="tessa_ui_tests"></a>
+Tessa</h1>
+<h1><a class="anchor" id="your_own_classes_with_olga"></a>
 Olga</h1>
 <p><a class="el" href="classOlga.html">Olga</a> enables the developer to use classes as data stores for data, these objects can be mapped back to a database which <a class="el" href="classOlga.html">Olga</a> will use to save or restore data from If you run xcache on your system, <a class="el" href="classOlga.html">Olga</a> will automatically persist these objects in memory making the load on the server very light.</p>
 <h2><a class="anchor" id="olga_single"></a>
@@ -479,7 +482,7 @@ Dynamic objects</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Sep 8 2015 09:51:21 for Tina4Stack by
+    <li class="footer">Generated on Tue Sep 8 2015 16:40:45 for Tina4Stack by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

@@ -1,0 +1,26 @@
+var classOlga =
+[
+    [ "__construct", "classOlga.html#a4688feb4c2a9584030f8f6f3b64bb2db", null ],
+    [ "__call", "classOlga.html#a44a731386b1e7682cbc3b01c0faef9cd", null ],
+    [ "__clone", "classOlga.html#a83be44e261718dbad296228b541a6c79", null ],
+    [ "__toJson", "classOlga.html#a87be848339896b4d554e0189f5ec23d4", null ],
+    [ "append", "classOlga.html#a183d3f4eab720c297684ccdac5c627b9", null ],
+    [ "clear", "classOlga.html#af2f971a5c1f12094536bb32eb042e649", null ],
+    [ "count", "classOlga.html#abf255c4baa60ff0847c0ddc8f41d19f1", null ],
+    [ "createGetSet", "classOlga.html#ac08323518a6c8131a357f046b5a0e201", null ],
+    [ "current", "classOlga.html#abe4a13fb8566761eb44fbed7c4125c14", null ],
+    [ "fromJSON", "classOlga.html#a0f2252c2c92246037adb8ba532e85aef", null ],
+    [ "key", "classOlga.html#a2ab85e63c42b998496daf20d89fa8a4a", null ],
+    [ "load", "classOlga.html#a3ce181004b4dc00140033a7a27eeb747", null ],
+    [ "next", "classOlga.html#a0f70223e5588db45cc81241c78391007", null ],
+    [ "persist", "classOlga.html#ac2e66056e2619f9bbdafa675702780e2", null ],
+    [ "populateFromDebby", "classOlga.html#ab1486ce669a2e243f9af2f568acb96a5", null ],
+    [ "populateFromXCache", "classOlga.html#ab67e7ac76ef6a557814cd7ac213dc430", null ],
+    [ "populateToDebby", "classOlga.html#a8710c283121a75c551f0beb7eeaf4aa1", null ],
+    [ "populateToXCache", "classOlga.html#ab8a8d78ed128b8d61de03ea5655b3d56", null ],
+    [ "rewind", "classOlga.html#ae69d5da6af979c897bd3fcf535d07169", null ],
+    [ "save", "classOlga.html#a2d4f4e863fd7f9c3e4fee16211b01c53", null ],
+    [ "toJSON", "classOlga.html#af49d06e30d44fab89411ee8994c530fa", null ],
+    [ "valid", "classOlga.html#a9aaaf12a2bbcd99f876e2e9e1dcac02b", null ],
+    [ "$arrayObjects", "classOlga.html#aeec96cdbc35fcd60afe0a26b4fe49f6e", null ]
+];

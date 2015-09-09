@@ -1,6 +1,8 @@
 var dir_611c5eb9b6b2679aa40bbd8b3ee46ca9 =
 [
     [ "Cody.php", "Cody_8php.html", [
+      [ "AjaxResponseAction", "classAjaxResponseAction.html", "classAjaxResponseAction" ],
+      [ "AjaxRouterResponse", "classAjaxRouterResponse.html", "classAjaxRouterResponse" ],
       [ "Cody", "classCody.html", "classCody" ]
     ] ],
     [ "Debby.php", "Debby_8php.html", "Debby_8php" ],
@@ -13,9 +15,7 @@ var dir_611c5eb9b6b2679aa40bbd8b3ee46ca9 =
     [ "Maggy.php", "Maggy_8php.html", [
       [ "Maggy", "classMaggy.html", "classMaggy" ]
     ] ],
-    [ "Olga.php", "Olga_8php.html", [
-      [ "Olga", "classOlga.html", "classOlga" ]
-    ] ],
+    [ "Olga.php", "Olga_8php.html", "Olga_8php" ],
     [ "Phoebe.php", "Phoebe_8php.html", [
       [ "Phoebe", "classPhoebe.html", "classPhoebe" ]
     ] ],

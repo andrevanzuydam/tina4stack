@@ -13,7 +13,7 @@ var NAVTREE =
         [ "Routing Example with Variables", "index.html#ruth_example_variables", null ]
       ] ],
       [ "Cody", "index.html#cody", [
-        [ "Example of Bootstrap Input", "index.html#cody_example", null ],
+        [ "Example of Bootstrap Inputf", "index.html#cody_example", null ],
         [ "Example of Ajax Handler", "index.html#code_example_ajax", null ]
       ] ],
       [ "Kim", "index.html#kim", [
@@ -69,8 +69,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "Cody_8php.html",
-"classDebby.html#a708fea658eab39aad196703f8b8aaa18",
-"functions_m.html"
+"classDebby.html#a243d5ab95ac9d5857be34a7db4eb6771",
+"functions_func.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

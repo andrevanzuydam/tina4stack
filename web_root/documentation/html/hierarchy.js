@@ -4,7 +4,10 @@ var hierarchy =
     [ "Debby", "classDebby.html", null ],
     [ "Emma", "classEmma.html", null ],
     [ "Iterator", null, [
-      [ "Olga", "classOlga.html", null ]
+      [ "Olga", "classOlga.html", [
+        [ "AjaxResponseAction", "classAjaxResponseAction.html", null ],
+        [ "AjaxRouterResponse", "classAjaxRouterResponse.html", null ]
+      ] ]
     ] ],
     [ "Kim", "classKim.html", null ],
     [ "Maggy", "classMaggy.html", null ],

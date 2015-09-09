@@ -497,6 +497,11 @@
  *                     ]);
  * }
  *
+ * //Getting a certain pet from the system
+ *
+ *  $pet = (new Pet())->getBy(["name" => "polly"]); // basically select * from table where name = 'polly';
+ *
+ *  echo $pet; //this will output a JSON object
  *
  * @endcode
  *

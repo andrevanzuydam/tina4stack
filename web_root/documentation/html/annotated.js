@@ -1,5 +1,7 @@
 var annotated =
 [
+    [ "AjaxResponseAction", "classAjaxResponseAction.html", "classAjaxResponseAction" ],
+    [ "AjaxRouterResponse", "classAjaxRouterResponse.html", "classAjaxRouterResponse" ],
     [ "Cody", "classCody.html", "classCody" ],
     [ "Debby", "classDebby.html", "classDebby" ],
     [ "Emma", "classEmma.html", "classEmma" ],

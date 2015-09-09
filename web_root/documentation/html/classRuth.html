@@ -174,6 +174,8 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a4f4e6184de654b141a679146e35f8f59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a169d4a654420b5abce66787cc8cb51b4"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRuth.html#a169d4a654420b5abce66787cc8cb51b4">setROLE</a> ($roleName=&quot;&quot;, $routesAllowed=&quot;&quot;, $defaultRole=<a class="el" href="tina4_8php.html#aec2deb5590a84bee262c3bea206ae88f">false</a>)</td></tr>
 <tr class="separator:a169d4a654420b5abce66787cc8cb51b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fbdddc0e7747b7779d08ac8e29bd0f5"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRuth.html#a3fbdddc0e7747b7779d08ac8e29bd0f5">authorizeRoute</a> ($roleNames=&quot;&quot;, $routeAllowed)</td></tr>
+<tr class="separator:a3fbdddc0e7747b7779d08ac8e29bd0f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cbe3cd7c0d3dfadac54a6020d075607"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRuth.html#a2cbe3cd7c0d3dfadac54a6020d075607">setAuthorization</a> ($roleName=&quot;&quot;, $authDATA=&quot;&quot;, $lifeTime=30)</td></tr>
 <tr class="separator:a2cbe3cd7c0d3dfadac54a6020d075607"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af751cee7c3766c478a09ea14ffc5ce99"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRuth.html#af751cee7c3766c478a09ea14ffc5ce99">delAuthorization</a> ()</td></tr>
@@ -198,6 +200,8 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:aa9bd38599bb5bd892ddf856c1687b04a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fbc42c3af4f62e230b4c3208ce9451c"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRuth.html#a0fbc42c3af4f62e230b4c3208ce9451c">parseRoutes</a> ($customPath=&quot;&quot;)</td></tr>
 <tr class="separator:a0fbc42c3af4f62e230b4c3208ce9451c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa86955ee0047542ac91be9b0bc85841"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRuth.html#afa86955ee0047542ac91be9b0bc85841">scripts</a> ()</td></tr>
+<tr class="separator:afa86955ee0047542ac91be9b0bc85841"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -315,6 +319,47 @@ Static Public Attributes</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Boolean Always returns true </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a3fbdddc0e7747b7779d08ac8e29bd0f5"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static Ruth::authorizeRoute </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$roleNames</em> = <code>&quot;&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$routeAllowed</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Dynamically allow routes to be added to a Role </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string&#160;|&#160;array</td><td class="paramname">$roleName</td><td></td></tr>
+    <tr><td class="paramtype"></td><td class="paramname">$routeAllowed</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -1207,6 +1252,30 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="afa86955ee0047542ac91be9b0bc85841"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static Ruth::scripts </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Some useful scripts which can be used with KIM </p>
+
+</div>
+</div>
 <a class="anchor" id="a2cbe3cd7c0d3dfadac54a6020d075607"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1638,7 +1707,7 @@ Static Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classRuth.html">Ruth</a></li>
-    <li class="footer">Generated on Wed Sep 9 2015 00:31:28 for Tina4Stack by
+    <li class="footer">Generated on Wed Sep 9 2015 21:03:47 for Tina4Stack by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

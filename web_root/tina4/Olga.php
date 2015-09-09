@@ -19,8 +19,9 @@ class Olga implements Iterator  {
                 $this->fromJSON($json);
             } else {
                 $objects = json_decode(unserialize(xcache_get("olgaArrayObjects".get_class($this))));
+
                 $this->clear();
-                if ($this->mapping["object"]) {
+                if (!empty($this->mapping["object"]) && !empty($objects)) {
                     foreach ($objects as $oid => $object) {
                         $newObject = "";
 
@@ -128,9 +129,11 @@ class Olga implements Iterator  {
      */
     function populateToDebby() {
         $DEB = Ruth::getOBJECT("DEB");
+
         //read from the database
         if (!empty($DEB)) {
             if (!empty($this->id)) { //a single record
+
                 if (!empty($this->mapping["table"])) {
                     if (!empty($this->mapping["fields"])) {
                         $fieldValues = [];
@@ -138,7 +141,8 @@ class Olga implements Iterator  {
                             if ($objectField === "id") {
                                 $primaryKey = [$field["field"] => $this->id];
                             }
-                            eval ('$fieldValues[$field["field"]] = $this->get'.$objectField.'();');
+                            eval (' if (!empty($this->get'.ucwords($objectField).'())) {  $fieldValues[$field["field"]] = $this->get'.ucwords($objectField).'(); } ');
+
                         }
 
                         $DEB->updateOrInsert($this->mapping["table"], $fieldValues, $primaryKey);
@@ -148,14 +152,17 @@ class Olga implements Iterator  {
                         return false;
                     }
                 }
-                  else {
+                else {
                     return false;
-                  }
+                }
             } else { //multiple objects
                 if (!empty($this->mapping["table"])) {
+
                     if (!empty($this->mapping["object"])) {
                         $newObject = "";
+
                         eval ('$newObject = new '.$this->mapping["object"].'();');
+                        $table = $newObject->mapping["table"];
                         foreach ($this as $rid => $object) {
                             if (!empty($newObject->mapping["fields"])) {
                                 if (!empty($newObject->mapping["table"])) {
@@ -164,10 +171,9 @@ class Olga implements Iterator  {
                                         if ($objectField === "id") {
                                             $primaryKey = [$field["field"] => $object->id];
                                         }
-                                        eval ('$fieldValues[$field["field"]] = $object->get'.$objectField.'();');
+                                        eval (' if (!empty($object->get'.ucwords($objectField).'())) {  $fieldValues[$field["field"]] = $object->get'.ucwords($objectField).'(); } ');
                                     }
-
-                                    $DEB->updateOrInsert($newObject->mapping["table"], $fieldValues, $primaryKey);
+                                    $DEB->updateOrInsert($table, $fieldValues, $primaryKey);
                                     $DEB->commit();
                                 }
                             } else {
@@ -210,12 +216,14 @@ class Olga implements Iterator  {
      * @return bool
      */
     function save($onlyToMemory=false) {
+
         $DEB = Ruth::getOBJECT("DEB");
         //save the data to the database
         if ($onlyToMemory) {
             return $this->populateToXCache();
         } else
             if (!empty($DEB)) {
+
                 if ($this->populateToDebby()) {
                     return $this->populateToXCache();
                 }
@@ -229,24 +237,7 @@ class Olga implements Iterator  {
      */
     function __clone() {
         //we will have to clone the closures
-        foreach( (array) $this as $key => $value ) {
-            if (is_callable($this->$key)) {
-                if (substr($key,0,3) === "get") {
-                    eval ('
-                    $this->' . $key . ' = function () {
-                        return $this->' . strtolower($key[3]).substr($key,4) . ';
-                    };');
-                }
-
-                if (substr($key,0,3) === "set") {
-                    eval ('
-                    $this->' . $key . ' = function ($value) {
-                         $this->' . strtolower($key[3]).substr($key,4) . ' = $value;
-                    };');
-                }
-
-            }
-        }
+        $this->createGetSet();
     }
 
     /**
@@ -254,7 +245,6 @@ class Olga implements Iterator  {
      */
     function append($object) {
         if (is_object($object)) {
-
             $this->arrayObjects[] = clone $object;
         }
         else {

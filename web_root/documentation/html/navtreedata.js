@@ -4,6 +4,7 @@ var NAVTREE =
     [ "Tina4 Stack", "index.html", [
       [ "Tina", "index.html#tina", [
         [ "Download the Latest Release", "index.html#download_latest", null ],
+        [ "Installation", "index.html#installing_tina4", null ],
         [ "What is in the Stack?", "index.html#what_is_in_the_stack", null ],
         [ "What is Tina4", "index.html#what_is_tina4", null ]
       ] ],
@@ -32,6 +33,10 @@ var NAVTREE =
       [ "Emma", "index.html#emma", [
         [ "Sending an Email", "index.html#emma_email", null ],
         [ "Sending a Text / SMS message", "index.html#emma_sendtext", null ]
+      ] ],
+      [ "Tessa", "index.html#tessa_ui_tests", [
+        [ "runTessa Example", "index.html#tessa_example", null ],
+        [ "Other Examples", "index.html#tessa_otherexamples", null ]
       ] ],
       [ "Olga", "index.html#your_own_classes_with_olga", [
         [ "Creating a Single Object", "index.html#olga_single", null ],

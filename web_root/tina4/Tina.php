@@ -39,6 +39,14 @@
  * Download Latest Release
  * </A>
  *
+ * @subsection installing_tina4 Installation
+ *
+ * Installation is pretty straight forward.  Download from the link above and unzip in your favourite place, the desktop
+ * will do fine just for a test.  From there double click on the tina4.exe and you will see the following:
+ *
+ * @image html tina4interface.png
+ *
+ *
  * @subsection what_is_in_the_stack What is in the Stack?
  *
  * The Stack is built up from the following technologies which hopefully will get your development up and running in minutes.
@@ -420,7 +428,48 @@
  *
  * @section tessa_ui_tests Tessa
  *
- * 
+ * @image html tessa_intro.png
+ *
+ * Tessa is used for UI testing, she has some simple commands which enable you to link up with Selenium server.  By default she
+ * uses Firefox todo the testing.  You will need to download the standalone Selenium server and run that before trying to run Tessa.
+ * Tessa can be run from http://localhost:12345/tessa
+ *
+ *
+ * Have a look at the code in the test folder in runTessa.php  Any functions that are found in files dropped in the test folder
+ * will be automatically injected into the runTessa class. That means you can call them from within the runTests methods by using $this->runMyTest().
+ *
+ * @subsection tessa_example runTessa Example
+ *
+ * @code
+ *
+ *
+ * IWantTo("Navigate to the extra running instance of my local site http://localhost:12346");
+ *
+ * NavigateTo("http://localhost:12346");
+ *
+ * IWantTo("Check the landing page for Tina4");
+ *
+ * IExpectToSee("Tina4 Release ".TINA4_RELEASE);
+ *
+ * IWantTo("See if there is some other things");
+ *
+ * IExpectToSee("Some other things");
+ *
+ * @endcode
+ *
+ * @subsection tessa_otherexamples Other Examples
+ *
+ * @code
+ * //Other examples
+ *
+ * LookFor("someId")->AndSetText("Hello");
+ *
+ * WaitFor2Seconds();
+ *
+ * LookFor("someButton")->AndClick();
+ *
+ *
+ * @endcode
  *
  *
  * @section your_own_classes_with_olga Olga
@@ -455,11 +504,17 @@
  * We could then create a collection of pets which would use the Pet object as an array object
  *
  * @code
- * class Pet extends Olga {
+ * class Pets extends Olga {
  *      var $mapping = Array([  "table" => "tbl_pet",
  *                              "object" => "Pet"
  *                          ]);
  * }
+ *
+ * //load the pets from the database
+ * $pets = new Pets();
+ * $pets->load();
+ *
+ *
  * @endcode
  *
  * @subsection olga_dynamic Dynamic objects

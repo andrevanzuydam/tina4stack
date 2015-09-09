@@ -107,6 +107,7 @@ $(document).ready(function(){initNavTree('index.html','');});
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
 <ul><li class="level1"><a href="#tina">Tina</a><ul><li class="level2"><a href="#download_latest">Download the Latest Release</a></li>
+<li class="level2"><a href="#installing_tina4">Installation</a></li>
 <li class="level2"><a href="#what_is_in_the_stack">What is in the Stack?</a></li>
 <li class="level2"><a href="#what_is_tina4">What is Tina4</a></li>
 </ul>
@@ -135,6 +136,10 @@ $(document).ready(function(){initNavTree('index.html','');});
 </li>
 <li class="level1"><a href="#emma">Emma</a><ul><li class="level2"><a href="#emma_email">Sending an Email</a></li>
 <li class="level2"><a href="#emma_sendtext">Sending a Text / SMS message</a></li>
+</ul>
+</li>
+<li class="level1"><a href="#tessa_ui_tests">Tessa</a><ul><li class="level2"><a href="#tessa_example">runTessa Example</a></li>
+<li class="level2"><a href="#tessa_otherexamples">Other Examples</a></li>
 </ul>
 </li>
 <li class="level1"><a href="#your_own_classes_with_olga">Olga</a><ul><li class="level2"><a href="#olga_single">Creating a Single Object</a></li>
@@ -180,6 +185,12 @@ Download the Latest Release</h2>
 <img src="https://img.shields.io/sourceforge/dw/tina4stack.svg" />
 </div>
 <p> <a href="https://sourceforge.net/projects/tina4stack/files/latest/download">Download Latest Release </a></p>
+<h2><a class="anchor" id="installing_tina4"></a>
+Installation</h2>
+<p>Installation is pretty straight forward. Download from the link above and unzip in your favourite place, the desktop will do fine just for a test. From there double click on the tina4.exe and you will see the following:</p>
+<div class="image">
+<img src="tina4interface.png" alt="tina4interface.png"/>
+</div>
 <h2><a class="anchor" id="what_is_in_the_stack"></a>
 What is in the Stack?</h2>
 <p>The Stack is built up from the following technologies which hopefully will get your development up and running in minutes. Incidentally we do not deploy any database engines for you and this should be done separately which is something we prefer.</p>
@@ -440,6 +451,35 @@ Sending a Text / SMS message</h2>
 <p>Currently <a class="el" href="classEmma.html">Emma</a> uses BulkSMS to send out text messages. Let us know if you have another preference.</p>
 <div class="fragment"><div class="line"><span class="comment">//requires a Bulk SMS username &amp; password http://bulksms.com</span></div>
 <div class="line">(<span class="keyword">new</span> <a class="code" href="classEmma.html">Emma</a>($username, $password))-&gt;sendText ($mobileno=<span class="stringliteral">&quot;8087234511&quot;</span>, $message=<span class="stringliteral">&quot;Hello World!&quot;</span>, $countryPrefix=<span class="stringliteral">&quot;01&quot;</span>);</div>
+</div><!-- fragment --><h1><a class="anchor" id="tessa_ui_tests"></a>
+Tessa</h1>
+<div class="image">
+<img src="tessa_intro.png" alt="tessa_intro.png"/>
+</div>
+<p><a class="el" href="classTessa.html">Tessa</a> is used for UI testing, she has some simple commands which enable you to link up with Selenium server. By default she uses Firefox todo the testing. You will need to download the standalone Selenium server and run that before trying to run <a class="el" href="classTessa.html">Tessa</a>. <a class="el" href="classTessa.html">Tessa</a> can be run from <a href="http://localhost:12345/tessa">http://localhost:12345/tessa</a></p>
+<p>Have a look at the code in the test folder in runTessa.php Any functions that are found in files dropped in the test folder will be automatically injected into the runTessa class. That means you can call them from within the runTests methods by using $this-&gt;runMyTest().</p>
+<h2><a class="anchor" id="tessa_example"></a>
+runTessa Example</h2>
+<div class="fragment"><div class="line"><a class="code" href="Tessa_8php.html#a743872d307323bf8cef1cc94ed6324ee">IWantTo</a>(<span class="stringliteral">&quot;Navigate to the extra running instance of my local site http://localhost:12346&quot;</span>);</div>
+<div class="line"></div>
+<div class="line">NavigateTo(<span class="stringliteral">&quot;http://localhost:12346&quot;</span>);</div>
+<div class="line"></div>
+<div class="line"><a class="code" href="Tessa_8php.html#a743872d307323bf8cef1cc94ed6324ee">IWantTo</a>(<span class="stringliteral">&quot;Check the landing page for Tina4&quot;</span>);</div>
+<div class="line"></div>
+<div class="line"><a class="code" href="Tessa_8php.html#a28ecccffe3517c38607586b303e312c1">IExpectToSee</a>(<span class="stringliteral">&quot;Tina4 Release &quot;</span>.TINA4_RELEASE);</div>
+<div class="line"></div>
+<div class="line"><a class="code" href="Tessa_8php.html#a743872d307323bf8cef1cc94ed6324ee">IWantTo</a>(<span class="stringliteral">&quot;See if there is some other things&quot;</span>);</div>
+<div class="line"></div>
+<div class="line"><a class="code" href="Tessa_8php.html#a28ecccffe3517c38607586b303e312c1">IExpectToSee</a>(<span class="stringliteral">&quot;Some other things&quot;</span>);</div>
+</div><!-- fragment --><h2><a class="anchor" id="tessa_otherexamples"></a>
+Other Examples</h2>
+<div class="fragment"><div class="line"><span class="comment">//Other examples</span></div>
+<div class="line"></div>
+<div class="line"><a class="code" href="Tessa_8php.html#a6e436b807e73d7ec9d079fab9161cc21">LookFor</a>(<span class="stringliteral">&quot;someId&quot;</span>)-&gt;AndSetText(<span class="stringliteral">&quot;Hello&quot;</span>);</div>
+<div class="line"></div>
+<div class="line"><a class="code" href="Tessa_8php.html#a4408ae641f64cfc2e35afc782627f928">WaitFor2Seconds</a>();</div>
+<div class="line"></div>
+<div class="line"><a class="code" href="Tessa_8php.html#a6e436b807e73d7ec9d079fab9161cc21">LookFor</a>(<span class="stringliteral">&quot;someButton&quot;</span>)-&gt;AndClick();</div>
 </div><!-- fragment --><h1><a class="anchor" id="your_own_classes_with_olga"></a>
 Olga</h1>
 <p><a class="el" href="classOlga.html">Olga</a> enables the developer to use classes as data stores for data, these objects can be mapped back to a database which <a class="el" href="classOlga.html">Olga</a> will use to save or restore data from If you run xcache on your system, <a class="el" href="classOlga.html">Olga</a> will automatically persist these objects in memory making the load on the server very light.</p>
@@ -461,11 +501,15 @@ Creating a Single Object</h2>
 </div><!-- fragment --><h2><a class="anchor" id="olga_multiple"></a>
 Creating a multiple object class</h2>
 <p>We could then create a collection of pets which would use the Pet object as an array object</p>
-<div class="fragment"><div class="line"><span class="keyword">class </span>Pet <span class="keyword">extends</span> <a class="code" href="classOlga.html">Olga</a> {</div>
+<div class="fragment"><div class="line"><span class="keyword">class </span>Pets <span class="keyword">extends</span> <a class="code" href="classOlga.html">Olga</a> {</div>
 <div class="line">     var $mapping = Array([  <span class="stringliteral">&quot;table&quot;</span> =&gt; <span class="stringliteral">&quot;tbl_pet&quot;</span>,</div>
 <div class="line">                             <span class="stringliteral">&quot;object&quot;</span> =&gt; <span class="stringliteral">&quot;Pet&quot;</span></div>
 <div class="line">                         ]);</div>
 <div class="line">}</div>
+<div class="line"></div>
+<div class="line"><span class="comment">//load the pets from the database</span></div>
+<div class="line">$pets = <span class="keyword">new</span> Pets();</div>
+<div class="line">$pets-&gt;load();</div>
 </div><!-- fragment --><h2><a class="anchor" id="olga_dynamic"></a>
 Dynamic objects</h2>
 <p><a class="el" href="classOlga.html">Olga</a> is also quite useful for creating dynamic objects</p>
@@ -479,7 +523,7 @@ Dynamic objects</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Sep 8 2015 09:51:21 for Tina4Stack by
+    <li class="footer">Generated on Wed Sep 9 2015 00:31:28 for Tina4Stack by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

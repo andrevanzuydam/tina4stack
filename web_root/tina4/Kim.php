@@ -548,20 +548,25 @@ class Kim {
 
             }
 
+
             $lookup = $elements;
             foreach ($elements as $eid => $element) {
                 $className = $element[0];
+
                 if ($className[0] !== "/") { //look for all classes that dont have a / which is the end tag
                     $lookupId = $eid+1;
                     $ignoreCounter = 0;
                     //look for the ending tag of this snippet
                     while ($lookupId < count($lookup)) {
                         $lelement = $lookup[$lookupId][0];
-                        if ($lelement === $className) { //found a nested class
+                        if ($lelement === $className || strtoupper(substr($lelement, 0, 2)) === "IF")  { //found a nested class
+
                             $ignoreCounter++;
                         }
 
-                        if ($lelement === "/".$className) {
+                        $lastElement = "";
+                        if ($lelement === "/".$className || strtoupper(substr($lelement, 0, 5)) === "ENDIF") {
+                            $lastElement = $lelement;
                             $ignoreCounter--;
                         }
 
@@ -570,7 +575,7 @@ class Kim {
                             $elements[$eid]["snippet_stop"] = $lookup[$lookupId][1]-2;
                             $elements[$eid]["snippet"] =  substr ($template,$elements[$eid]["snippet_start"],$elements[$eid]["snippet_stop"]-$elements[$eid]["snippet_start"]);
 
-                            $snippetLength = strlen ($elements[$eid]["snippet"]) +  strlen('{{/'.$className.'}}');
+                            $snippetLength = strlen ($elements[$eid]["snippet"]) +  strlen('{{'.$lastElement.'}}');
                             $modifiedTemplate = substr_replace ($modifiedTemplate,
                                 str_repeat (" ", $snippetLength ),
 
@@ -589,10 +594,13 @@ class Kim {
                     }
                 }
                 else {
+
                     unset ($elements[$eid]);
                 }
 
             }
+
+
 
             //we need to see if we have variable inside the called classes
             foreach ($elements as $eid => $element) {
@@ -780,7 +788,13 @@ class Kim {
 
             preg_match_all ('/{{(.*)}}/i', $template, $elements, PREG_OFFSET_CAPTURE);
             //then see about parsing methods & functions
+
+
+
             $parsedSnippets = $this->parseSnippets ($elements[1], $template, $data);
+
+
+
 
             //Reset the elements & template to the parsed elements
             $elements = $parsedSnippets["elements"];
@@ -802,8 +816,6 @@ class Kim {
                             if (!empty($data)) {
                                 preg_match_all ($this->varRegex, $myIf, $variables);
                                 foreach ($variables[1] as $index => $variable) {
-
-
                                     eval ('if (isset($data->'.$variable.')) { $variableValue = "{$data->'.$variable.'}";  }');
                                     if ((isset($variableValue) && !empty($variableValue)) || (isset($variableValue) && $variableValue === "0")) {
                                         $myIf = $this->parseValue("{" . $variable . "}", $this->parseTemplate($variableValue), $myIf);
@@ -844,9 +856,6 @@ class Kim {
                     $elementParts = explode (":", $element[0], 2);
 
                     $elementHash = md5(print_r($element,1));
-
-
-
 
                     $response[$elementHash] = "";
 

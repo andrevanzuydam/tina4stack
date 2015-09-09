@@ -826,9 +826,21 @@ Ruth::setOBJECT("' . Ruth::getREQUEST("txtALIAS") . '", $' . Ruth::getREQUEST("t
      * @param $fieldValues
      * @param $primaryKey
      */
-    function updateOrInsert($tablename, $fieldValues, $primaryKey) {
-        if (!$this->update($tablename, $fieldValues, $primaryKey)) {
-            $this->insert($tablename, $fieldValues);
+    function updateOrInsert($tableName, $fieldValues, $primaryKey) {
+        $sql = "select * from {$tableName} where ";
+        $count = 0;
+        foreach ($primaryKey as $key => $value) {
+            if ($count > 0) $sql .= " and ";
+            $sql .= "{$key} = '{$value}'";
+        }
+
+
+        $record = $this->getRow($sql);
+
+        if (!empty($record)) {
+            return $this->update($tableName, $fieldValues, $primaryKey);
+        }  else {
+            return $this->insert($tableName, $fieldValues);
         }
     }
 

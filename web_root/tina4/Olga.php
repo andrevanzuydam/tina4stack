@@ -5,15 +5,11 @@
  * Date: 2015-09-04
  * Time: 04:05 PM
  */
-
 define("OLGA_MATCH_ANY", 1);
 define("OLGA_MATCH_BEGINNING", 2);
 define("OLGA_MATCH_ENDING", 3);
-
 class Olga implements Iterator  {
-
     var $arrayObjects = []; //an array or collection of objects of the same type as this (we probably need to check if it is the same)
-
     /**
      * Method to get the results from XCache into the object
      */
@@ -303,7 +299,7 @@ class Olga implements Iterator  {
         //single object
         $DEB = Ruth::getOBJECT("DEB");
 
-        if (!empty($this->id)) {
+        if (!empty($this->id) || isset($this->id)) {
             $record = $DEB->getRow($sql);
             if (!empty($record)) {
                 //map to the memory record and the object
@@ -315,7 +311,9 @@ class Olga implements Iterator  {
             if (!empty($records)) {
                 //map to the memory record and the object
                 $this->clear();
+
                 foreach ($records as $rid => $record) {
+                    $newObject = "";
                     eval ('$newObject = new '.$this->mapping["object"].'();');
                     $newObject->mapRecord($record);
                     $this->append($newObject);
@@ -562,7 +560,8 @@ class Olga implements Iterator  {
     }
 
     /**
-     * Constructor to make getters and setters
+     * Constructor which will make getters & setters
+     * @param string $jsonString
      */
     function __construct($jsonString="") {
         if (!empty($jsonString)) {

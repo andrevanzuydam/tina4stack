@@ -5,6 +5,11 @@
  * Date: 2015-09-04
  * Time: 04:05 PM
  */
+
+define("OLGA_MATCH_ANY", 1);
+define("OLGA_MATCH_BEGINNING", 2);
+define("OLGA_MATCH_ENDING", 3);
+
 class Olga implements Iterator  {
 
     var $arrayObjects = []; //an array or collection of objects of the same type as this (we probably need to check if it is the same)
@@ -54,6 +59,16 @@ class Olga implements Iterator  {
     }
 
     /**
+     * Maps a record to the object
+     * @param $record
+     */
+    function mapRecord($record) {
+        foreach ($this->mapping["fields"] as $objectField => $field) {
+            eval ('$this->' . $objectField . ' = $record->' . $field["field"] . ';');
+        }
+    }
+
+    /**
      * Method to get the results from the database
      */
     function populateFromDebby($DEB) {
@@ -75,9 +90,7 @@ class Olga implements Iterator  {
                     $record = $DEB->getRow ($sql);
                     if (!empty($record)) {
                         //map to the memory record and the object
-                        foreach ($this->mapping["fields"] as $objectField => $field) {
-                            eval ('$this->' . ucwords($objectField) . ' = $record->' . $field["field"] . ';');
-                        }
+                        $this->mapRecord ($record);
                     }
 
                     $this->createGetSet();
@@ -102,9 +115,7 @@ class Olga implements Iterator  {
                         //create some objects in memory and add the object to this
                         $newObject = "";
                         eval ('$newObject = new '.$this->mapping["object"].'();');
-                        foreach ($newObject->mapping["fields"] as $objectField => $field) {
-                            eval('$newObject->'.$objectField.' = $record->'.$field["field"].';');
-                        }
+                        $newObject->mapRecord ($record);
                         //add the object to memory
                         $newObject->createGetSet();
                         $newObject->save(true);
@@ -287,6 +298,139 @@ class Olga implements Iterator  {
         }
 
     }
+
+    function populateObject($sql) {
+        //single object
+        $DEB = Ruth::getOBJECT("DEB");
+
+        if (!empty($this->id)) {
+            $record = $DEB->getRow($sql);
+            if (!empty($record)) {
+                //map to the memory record and the object
+                $this->mapRecord($record);
+            }
+        } else { //multiple object
+            $records = $DEB->getRows($sql);
+
+            if (!empty($records)) {
+                //map to the memory record and the object
+                $this->clear();
+                foreach ($records as $rid => $record) {
+                    eval ('$newObject = new '.$this->mapping["object"].'();');
+                    $newObject->mapRecord($record);
+                    $this->append($newObject);
+
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Exact matching for retrieving a field from the database
+     * @param $fieldArray
+     * @return $this
+     */
+    function getBy($fieldArray) {
+        $DEB = Ruth::getOBJECT("DEB");
+
+        //read from the database
+        if (!empty($DEB)) {
+            $sql = "select ";
+            $fields = [];
+            if (!empty ($this->mapping["fields"])) {
+                foreach ($this->mapping["fields"] as $objectField => $field) {
+                    $fields[] = $field["field"];
+                }
+            }
+
+            if (empty($fields)) {
+                $sql .= "*";
+            } else {
+                $sql .= join(",", $fields);
+            }
+
+
+            $sql .= " from {$this->mapping["table"]} ";
+            $sql .= " where ";
+
+            foreach ($fieldArray as $fieldName => $fieldValue) {
+                $searchFieldName = $fieldName;
+                if (!empty($this->mapping["fields"][$fieldName])) {
+                    $searchFieldName = $this->mapping["fields"][$fieldName]["field"];
+                }
+                $where[] = "{$searchFieldName} = '$fieldValue'";
+            }
+
+            $sql .= join (" and ", $where);
+
+            $this->populateObject($sql);
+        } else {
+            //TODO: something for me todo
+            die("Need to write this to fetch objects from memory!");
+        }
+
+        return $this;
+    }
+
+    /**
+     * Loose field matching
+     * @param $fieldArray
+     * @return $this
+     */
+    function getLike($fieldArray, $matchType=OLGA_MATCH_ENDING) {
+        $DEB = Ruth::getOBJECT("DEB");
+        //read from the database
+        if (!empty($DEB)) {
+            $sql = "select ";
+            $fields = [];
+            if (!empty ($this->mapping["fields"])) {
+                foreach ($this->mapping["fields"] as $objectField => $field) {
+                    $fields[] = $field["field"];
+                }
+            }
+
+            if (empty($fields)) {
+                $sql .= "*";
+            } else {
+                $sql .= join(",", $fields);
+            }
+
+            $sql .= " from {$this->mapping["table"]} ";
+            $sql .= " where ";
+
+            foreach ($fieldArray as $fieldName => $fieldValue) {
+                $searchFieldName = $fieldName;
+                if (!empty($this->mapping["fields"][$fieldName])) {
+                    $searchFieldName = $this->mapping["fields"][$fieldName]["field"];
+                }
+                switch ($matchType) {
+                    case OLGA_MATCH_ANY:
+                        $where[] = "upper({$searchFieldName}) like upper('%{$fieldValue}%')";
+                        break;
+                    case OLGA_MATCH_BEGINNING:
+                        $where[] = "upper({$searchFieldName}) like upper('%{$fieldValue}')";
+                        break;
+                    case OLGA_MATCH_ENDING:
+                        $where[] = "upper({$searchFieldName}) like upper('{$fieldValue}%')";
+                        break;
+                    default:
+                        die("Invalid match type : USE OLGA_MATCH_ANY,OLGA_MATCH_BEGINNING,OLGA_MATCH_ENDING");
+                        break;
+                }
+            }
+
+            $sql .= join (" and ", $where);
+
+            $this->populateObject($sql);
+        } else {
+            //TODO: something for me todo
+            die("Need to write this to fetch objects from memory!");
+        }
+        return $this;
+    }
+
+
 
     /**
      * Custom Object JSON encoder, thanks to boukeversteegh at gmail dot com, modified by Andre van Zuydam to ignore dynamic getters and setters

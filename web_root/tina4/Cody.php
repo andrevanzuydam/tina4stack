@@ -2413,7 +2413,7 @@ class Cody {
 
                 var form{$rand} = span{$rand}.parentElement;
                 var response{$rand} = document.getElementById('{$responseTarget}');
-                console.log(form{$rand}.nodeType, form{$rand}.nodeName);
+
                 if (form{$rand} !== undefined && form{$rand} != null && form{$rand}.nodeName == 'FORM') {
                     if (response{$rand} !== undefined && response{$rand} != null) {
                        function {$name}(targetRoute,responseTarget,defaultMethod) {
@@ -2467,7 +2467,7 @@ class Cody {
                                 xhr.onload = function () {
                                     if (xhr.status == 200) {
                                         result = JSON.parse(xhr.responseText);
-                                        console.log(result);
+
                                         targetElement = document.getElementById (responseTarget);
 
                                         if (targetElement != null && targetElement.tagName !== undefined && responseTarget != null) {
@@ -2484,7 +2484,7 @@ class Cody {
                                             if (result.responseAction == null) {
                                                 parse{$rand}Script(result.responseMessage);
                                             } else {
-                                                console.log ('AjaxReponseAction', result.responseAction);
+
                                                 parse{$rand}Script(result.responseAction.responseScript);
                                                 if (result.responseAction.redirectPath !== undefined && result.responseAction.redirectPath != null) {
                                                     location.href = result.responseAction.redirectPath;

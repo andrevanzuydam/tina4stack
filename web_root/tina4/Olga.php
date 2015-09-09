@@ -266,6 +266,14 @@ class Olga implements Iterator  {
     }
 
     /**
+     * Default to return a JSON string
+     * @return string
+     */
+    function __toString() {
+        return $this->toJSON();
+    }
+
+    /**
      * Converts a JSON strings values to the current object for instantiating the object
      * @param $jsonString
      */
@@ -391,7 +399,7 @@ class Olga implements Iterator  {
     function createGetSet() {
         $variables = get_object_vars($this);
         foreach ($variables as $varName => $varValue) {
-            if ($varName != "arrayObjects") {
+            if ($varName != "arrayObjects" && !method_exists($this, "get" . UcWords($varName)) && !method_exists($this, "set" . UcWords($varName)) ) {
                 $getter = "get" . UcWords($varName);
                 $setter = "set" . UcWords($varName);
                 eval ('

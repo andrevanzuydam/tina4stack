@@ -641,13 +641,35 @@ class Ruth {
         if ($defaultRole) {
             self::$DEFAULT_ROLE = $roleName;
         }
-        self::$ROLES[$roleName] = $routesAllowed;
+        if (!empty(self::$ROLES[$roleName])) {
+            self::$ROLES[$roleName] = array_merge(self::$ROLES[$roleName], $routesAllowed);
+        } else {
+            self::$ROLES[$roleName] = $routesAllowed;
+        }
 
         if (self::$DEBUG) {
             self::Message(__LINE__.": Routes Allowed ". print_r ($routesAllowed , 1));
         }
 
     }
+
+    /**
+     * Dynamically allow routes to be added to a Role
+     * @param string|array $roleName
+     * @param $routeAllowed
+     */
+    public static function authorizeRoute ($roleNames="", $routeAllowed) {
+        if (is_array($roleNames)) {
+            foreach ($roleNames as $id => $roleName) {
+                self::$ROLES[$roleName][] = $routeAllowed;
+            }
+        } else {
+            self::$ROLES[$roleNames][] = $routeAllowed;
+        }
+
+    }
+
+
 
     /**
      * The method to set authorization
@@ -740,12 +762,21 @@ class Ruth {
             //make sure we get the correct strings
             $formData =  html_entity_decode($formData, ENT_QUOTES);
 
-
+            $jsonRequest = [];
             foreach (explode('-!-', $formData) as $data) {
+
                 $param = explode ("=", $data, 2);
-                self::setREQUEST($param[0], $param[1]);
-                $_REQUEST[$param[0]] = $param[1];
+                $jsonRequest[$param[0]] = $param[1];
+
+                if (!empty($param[0])) {
+                    self::setREQUEST($param[0], $param[1]);
+                    $_REQUEST[$param[0]] = $param[1];
+                }
             }
+
+            $jsonRequest = json_encode((object) $jsonRequest);
+            self::setREQUEST("jsonRequest", $jsonRequest);
+            $_REQUEST["jsonRequest"] = $jsonRequest;
 
 
             unset($_REQUEST["formData"]);
@@ -1220,6 +1251,7 @@ class Ruth {
             }
 
             foreach (self::$ROLES[$roleName] as $rid => $roleRoute) {
+
                 if (self::matchRoute($roleRoute, $routePath)) {
                     $authorized = true;
                     break;
@@ -1352,6 +1384,20 @@ class Ruth {
                 }
             }
         }
+    }
+
+    /**
+     * Some useful scripts which can be used with KIM
+     */
+    public static function scripts () {
+        $scripts = script("
+        var Ruth = function(){};
+        Ruth.redirect = function(newPath) {
+            location.href = newPath;
+        }
+        ");
+
+        return $scripts;
     }
 
 }

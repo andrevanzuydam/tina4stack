@@ -1,11 +1,127 @@
 <?php
+
+require_once "Shape.php";
+require_once "Olga.php";
+
+/**
+ * Class AjaxResponseAction
+ *
+ * The response action is used as part of the response telling the system what should happen
+ *
+ * @code
+ *  $responseAction = new AjaxResponseAction();
+ *  $responseAction->setRedirectPath('/login');
+ *  $responseAction->setResponseScript(script("window.alert('You need to goto /login')"));
+ *
+ * @endcode
+ *
+ */
+class AjaxResponseAction extends Olga {
+    var $redirectPath = "";
+    var $responseScript = "";
+
+    /**
+     * Set the redirection path
+     * @param $path string Path to the new location the application must navigate
+     */
+    function setRedirectPath($path) {
+        $this->redirectPath = $path;
+    }
+
+    /**
+     * Get the redirect path
+     * @return string
+     */
+    function getRedirectPath() {
+        return $this->redirectPath;
+    }
+
+    /**
+     * Set the response script
+     * @param $script
+     */
+    function setResponseScript ($script) {
+        if (stripos($script,"script") === false) {
+            $this->responseScript = script($script)."";
+        }  else {
+            $this->responseScript = $script;
+        }
+    }
+
+    /**
+     * Get the response script
+     * @return string
+     */
+    function getResponseScript() {
+        return $this->responseScript;
+    }
+
+}
+/**
+ * Class AjaxRouterResponse
+ *
+ * AjaxRouterResponse should be used to return responses to the Cody ajaxRouter command
+ *
+ * @code
+ *  $responseAction = new AjaxResponseAction();
+ *  $responseAction->setRedirectPath('/login');
+ *  $responseAction->setResponseScript(script("window.alert('You need to goto /login')"));
+ *
+ *  $ajaxRouterResponse = new AjaxRouterResponse();
+ *  $ajaxRouterResponse->setResponseAction ($responseAction);
+ *  echo $ajaxRouterResponse->toJSON();
+ * @endcode
+ *
+ */
+class AjaxRouterResponse extends Olga {
+    var $responseCode = "200";
+    var $responseMessage = "";
+    var $responseAction = null;
+
+    /**
+     * Set the response code
+     * @param $code
+     */
+    function setResponseCode($code) {
+        $this->responseCode = $code;
+    }
+
+    /**
+     * Set the response message, if script tags are included the contents in them will be run
+     * @param $message
+     */
+    function setResponseMessage($message) {
+        $this->responseMessage = $message;
+    }
+
+
+    /**
+     * Set the response action which is an object of AjaxResponseAction
+     * @param $responseAction
+     */
+    function setResponseAction($responseAction) {
+        if (is_object($responseAction) && get_class($responseAction) === "AjaxResponseAction") {
+            $this->responseAction = $responseAction;
+        } else {
+            die("Response Action MUST be a AjaxResponseAction");
+        }
+    }
+
+    /**
+     * Get the response action
+     * @return AjaxResponseAction
+     */
+    function getResponseAction () {
+        return $this->responseAction();
+    }
+
+}
 /**
  * Description of Cody
  *
  * Cody is a CRUDL generation tool to make coding in Tina4 stack easy and fun
  *
  */
-require_once "Shape.php";
 class Cody {
 
     /**
@@ -2232,6 +2348,194 @@ class Cody {
         return $content;
     }
 
+    function getParseScript($name) {
+        return "
+        //function to run our own scripts
+        function parse{$name}Script(_source) {
+                    var source = _source;
+                    var scripts = new Array();
+                    // Strip out tags
+                    while(source.toLowerCase().indexOf('<'+'s'+'c'+'r'+'i'+'p'+'t') > -1 || source.toLowerCase().indexOf('</'+'s'+'c'+'r'+'i'+'p'+'t') > -1) {
+                        var s = source.toLowerCase().indexOf('<'+'s'+'c'+'r'+'i'+'p'+'t');
+                        var s_e = source.indexOf('>', s);
+                        var e = source.toLowerCase().indexOf('</'+'s'+'c'+'r'+'i'+'p'+'t', s);
+                        var e_e = source.indexOf('>', e);
+                        scripts.push(source.substring(s_e+1, e));
+                        source = source.substring(0, s) + source.substring(e_e+1);
+                    }
+
+                    // Loop through every script collected and eval it
+                    for(var i=0; i < scripts.length; i++) {
+                    try {
+                        if (scripts[i] != '') {
+                            try  {          //IE
+                                execScript(scripts[i]);
+                                    }
+                            catch(ex) {
+                                window.eval(scripts[i]);
+                                    }
+
+                        }
+                                }
+                    catch(e) {
+                        if (e instanceof SyntaxError) console.log (e.message+' - '+scripts[i]);
+                                }
+                }
+                            return source;
+            }";
+    }
+
+
+    /**
+     * Ajax Router for directing form inputs and general things from an html segment.
+     * @param string $responseTarget This is the targetted HTML Tag or element
+     * @return string The script needed to run the router
+     */
+    function ajaxRouter ($responseTarget="", $name="callRouter", $defaultMethod="post") {
+        $rand = rand(1000,9999);
+        $randName = "formSpan".$rand;
+
+        $html = span(["id" => $randName]);
+        $html .= script ("
+            serialize = function(obj) {
+                var str = [];
+                for(var p in obj)
+                  if (obj.hasOwnProperty(p)) {
+                    str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+                  }
+                return str.join('-!-');
+            }
+
+            ".$this->getParseScript($rand)."
+
+            var span{$rand} = document.getElementById('{$randName}');
+            if (span{$rand} !== null) {
+
+                var form{$rand} = span{$rand}.parentElement;
+                var response{$rand} = document.getElementById('{$responseTarget}');
+                console.log(form{$rand}.nodeType, form{$rand}.nodeName);
+                if (form{$rand} !== undefined && form{$rand} != null && form{$rand}.nodeName == 'FORM') {
+                    if (response{$rand} !== undefined && response{$rand} != null) {
+                       function {$name}(targetRoute,responseTarget,defaultMethod) {
+
+                            if (responseTarget === undefined) responseTarget = '{$responseTarget}';
+                            if (defaultMethod === undefined) defaultMethod = '{$defaultMethod}';
+
+                            //populate the form into a json element
+                            var e = form{$rand}.elements;
+                            var js{$rand} = {};
+
+                            for ( var elem, i = 0; ( elem = e[i] ); i++ ) {
+                                eName = (elem.id !== undefined) ? elem.id : (elem.name !== undefined) ? elem.name : null ;
+
+                                if (eName != null ) {
+                                    if (elem.type === 'radio' || elem.type === 'checkbox') {
+                                      if (elem.checked) {
+                                        js{$rand}[eName] = (elem.value !== '') ? elem.value : 1 ;
+                                      }
+                                        else if (elem.type === 'checkbox') {
+                                                js{$rand}[eName] = '0';
+                                            }
+                                    }
+                                      else {
+
+                                      if (elem.type === 'file') {
+
+                                        var fileData = elem.files[0];
+                                        if (fileData !== undefined) {
+                                          formData.append (eName, fileData, fileData.name);
+                                        }
+                                      } else {
+
+                                        js{$rand}[eName] = elem.value;
+
+                                      }
+
+                                    }
+                                } else {
+                                    console.log('Couldn\'t send form element via AJAX', elem);
+                                }
+                            }
+
+                            form{$rand}Data = new FormData();
+                            form{$rand}Data.append ('formData', serialize(js{$rand}));
+
+                            try {
+                                xhr = new XMLHttpRequest();
+                                xhr.open (defaultMethod, targetRoute);
+
+                                xhr.onload = function () {
+                                    if (xhr.status == 200) {
+                                        result = JSON.parse(xhr.responseText);
+                                        console.log(result);
+                                        targetElement = document.getElementById (responseTarget);
+
+                                        if (targetElement != null && targetElement.tagName !== undefined && responseTarget != null) {
+                                            tagTarget = targetElement.tagName.toUpperCase();
+
+                                            if (tagTarget === 'INPUT' || tagTarget === 'TEXTAREA') {
+                                                    console.log ('{$name} - Target is input:'+targetElement.id);
+                                                    targetElement.value = result.responseMessage;
+                                            }  else {
+                                                    console.log ('{$name} - Target is HTML element'+targetElement.id);
+                                                    targetElement.innerHTML = result.responseMessage;
+                                            }
+
+                                            if (result.responseAction == null) {
+                                                parse{$rand}Script(result.responseMessage);
+                                            } else {
+                                                console.log ('AjaxReponseAction', result.responseAction);
+                                                parse{$rand}Script(result.responseAction.responseScript);
+                                                if (result.responseAction.redirectPath !== undefined && result.responseAction.redirectPath != null) {
+                                                    location.href = result.responseAction.redirectPath;
+                                                }
+                                            }
+
+                                        } else if(typeof window[responseTarget] === 'function'){//if target is a function pass it the results
+                                            window[newTarget](result);
+                                        }
+                                          else {
+                                            console.log ('Tina4 - parse script');
+
+                                            if (result.responseAction == null) {
+                                                parse{$rand}Script(result.responseMessage);
+                                            } else {
+                                                parse{$rand}Script(result.responseAction.responseScript);
+                                                if (result.responseAction.redirectPath !== undefined && result.responseAction.redirectPath != null) {
+                                                    location.href = result.responseAction.redirectPath;
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        console.log('AjaxRouterResponse could not be gotten at '+targetRoute);
+                                    }
+                                }
+
+                                xhr.send(form{$rand}Data);
+                                delete form{$rand}Data;
+
+                            } catch (e) {
+                                console.log ('Tina4 ajaxRouter Error: ', e);
+                            }
+                       }
+
+                    } else {
+                        window.alert('HTML element with {$responseTarget} is not present on this page!');
+                    }
+                }  else {
+                    window.alert('{{Cody:ajaxRouter}} needs to be just within a form tag!');
+                }
+            } else {
+              window.alert('{{Cody:ajaxRouter}} could not be initialized!');
+            }
+        ");
+
+
+        return $html;
+    }
+
+
+
     /**
      * A function which encapulates the passing of form infomation with or without ids to a route and targeting the response to an html element.
      *
@@ -2274,39 +2578,7 @@ class Cody {
                 return false;
             }
             
-            //function to run our own scripts
-            function parse{$name}Script(_source) {
-                    var source = _source;
-                    var scripts = new Array();
-                    // Strip out tags
-                    while(source.toLowerCase().indexOf('<'+'s'+'c'+'r'+'i'+'p'+'t') > -1 || source.toLowerCase().indexOf('</'+'s'+'c'+'r'+'i'+'p'+'t') > -1) {
-                        var s = source.toLowerCase().indexOf('<'+'s'+'c'+'r'+'i'+'p'+'t');
-                        var s_e = source.indexOf('>', s);
-                        var e = source.toLowerCase().indexOf('</'+'s'+'c'+'r'+'i'+'p'+'t', s);
-                        var e_e = source.indexOf('>', e);
-                        scripts.push(source.substring(s_e+1, e));
-                        source = source.substring(0, s) + source.substring(e_e+1);
-                    }
-
-                    // Loop through every script collected and eval it
-                    for(var i=0; i < scripts.length; i++) {
-                        try {
-                          if (scripts[i] != '') {
-                            try  {          //IE
-                                  execScript(scripts[i]);
-                            }
-                            catch(ex) {
-                                window.eval(scripts[i]);
-                            }
-                                
-                            }
-                        }
-                        catch(e) {
-                          if (e instanceof SyntaxError) console.log (e.message+' - '+scripts[i]);
-                        }
-                    }
-                    return source;
-            }
+            ".$this->getParseScript($name)."
 
             // newRoute = 'path', newTarget = 'div,input', extraParam = 'JSON', ignoreRoute = false, newMethod = 'GET/POST'
             function {$name}(newRoute, newTarget, extraParam, newMethod, ignoreRoute) {
@@ -2317,13 +2589,13 @@ class Cody {
                 if (ignoreRoute === undefined) ignoreRoute = true;
 
                 if ((extraParam !== undefined || extraParam === null) && extraParam.length != 0) {
-                  jsonData = extraParam === null ? [] : extraParam;
+                  json{$name}Data = extraParam === null ? [] : extraParam;
                 }
                   else {
-                  jsonData = JSON.parse('{$fixedValues}');
+                  json{$name}Data = JSON.parse('{$fixedValues}');
                 }
                 
-                formData = new FormData();
+                form{$name}Data = new FormData();
                 
                 targetElement = document.getElementById (newTarget);
                 
@@ -2334,68 +2606,34 @@ class Cody {
                         var e = form.elements;
                         
                         for ( var elem, i = 0; ( elem = e[i] ); i++ ) {
+                            eName = (elem.id !== undefined) ? elem.id : (elem.name !== undefined) ? elem.name : null ;
 
-                            if (elem.id !== undefined && elem.id !== '') {
+                            if (eName != null ) {
                                 if (elem.type === 'radio' || elem.type === 'checkbox') {
                                   if (elem.checked) {
-                                    jsonData[elem.id] = (elem.value !== '') ? elem.value : 1 ;
+                                    json{$name}Data[eName] = (elem.value !== '') ? elem.value : 1 ;
                                   }
                                     else if (elem.type === 'checkbox') {
-                                            jsonData[elem.id] = '0';
+                                            json{$name}Data[eName] = '0';
                                         }
                                 }
                                   else {
                                   
                                   if (elem.type === 'file') {
                                     
-                                    var fileData = elem.files[0];
-                                    if (fileData !== undefined) {
-                                      formData.append (elem.id, fileData, fileData.name);
+                                    var file{$name}Data = elem.files[0];
+                                    if (file{$name}Data !== undefined) {
+                                      form{$name}Data.append (eName, file{$name}Data, file{$name}Data.name);
                                     }
                                   } else {
 
-                                    jsonData[elem.id] = elem.value;
+                                    json{$name}Data[eName] = elem.value;
                          
                                   }
                                   
                                 }
-                            }
-                              else {
-                              if (elem.name !== undefined) {
-                                    if (elem.type === 'radio' || elem.type === 'checkbox') {
-                                        if (elem.checked) {
-                                            if (elem.name.indexOf('[') == -1 && elem.name.indexOf(']') == -1) {
-                                              jsonData[elem.name] = (elem.value !== '') ? elem.value : 1 ;
-                                            }
-                                              else {
-                                              if (jsonData[elem.name] === undefined) jsonData[elem.name] = [];
-                                              jsonData[elem.name].push ((elem.value !== '') ? elem.value : 1);
-                                            }
-                                        }
-                                          else if (elem.type === 'checkbox') {
-                                              if (elem.name.indexOf('[') == -1 && elem.name.indexOf(']') == -1) {
-                                                  jsonData[elem.name] = '0';
-                                              }  else {
-                                                  if (jsonData[elem.name] === undefined) jsonData[elem.name] = [];
-                                                  jsonData[elem.name].push (0);
-                                              }
-
-                                        }
-                                    }
-                                    else {
-                                        
-                                        if (elem.type === 'file') {
-                                            var fileData = elem.files[0];
-                                            if (fileData !== undefined) {
-                                                formData.append (elem.name, fileData, fileData.name);
-                                            }
-                                        }  
-                                          else {
-                                          jsonData[elem.name] = elem.value;
-                                          
-                                        }    
-                                    }
-                                }
+                            } else {
+                                console.log('Couldn\'t send form element via AJAX', elem);
                             }
                         }
                     }
@@ -2404,7 +2642,7 @@ class Cody {
                 //try some normal AJAX stuff
                 try {
 
-                    formData.append ('formData', serialize(jsonData));
+                    form{$name}Data.append ('formData', serialize(json{$name}Data));
 
                     xhr = new XMLHttpRequest();
                     xhr.open (newMethod, newRoute);
@@ -2442,8 +2680,8 @@ class Cody {
 
                     }
 
-                    xhr.send(formData);
-                    delete formData;
+                    xhr.send(form{$name}Data);
+                    delete form{$name}Data;
                 } 
                 catch (e) {
                     console.log ('Tina4 ajaxHandler Error: ', e);

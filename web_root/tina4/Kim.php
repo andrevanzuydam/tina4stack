@@ -806,7 +806,7 @@ class Kim {
 
                                     eval ('if (isset($data->'.$variable.')) { $variableValue = "{$data->'.$variable.'}";  }');
                                     if ((isset($variableValue) && !empty($variableValue)) || (isset($variableValue) && $variableValue === "0")) {
-                                        $myIf = $this->parseValue("{" . $variable . "}", $variableValue , $myIf);
+                                        $myIf = $this->parseValue("{" . $variable . "}", $this->parseTemplate($variableValue), $myIf);
                                     }
                                 }
                             }

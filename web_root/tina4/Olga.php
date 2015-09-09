@@ -60,7 +60,7 @@ class Olga implements Iterator  {
      */
     function mapRecord($record) {
         foreach ($this->mapping["fields"] as $objectField => $field) {
-            eval ('$this->' . $objectField . ' = $record->' . $field["field"] . ';');
+            eval ('$this->' . $objectField . ' = $record->' . strtoupper($field["field"]) . ';');
         }
     }
 
@@ -115,6 +115,7 @@ class Olga implements Iterator  {
                         //add the object to memory
                         $newObject->createGetSet();
                         $newObject->save(true);
+
                         $this->append($newObject);
                     }
 
@@ -139,8 +140,7 @@ class Olga implements Iterator  {
 
         //read from the database
         if (!empty($DEB)) {
-            if (!empty($this->id)) { //a single record
-
+            if (!empty($this->id) || isset($this->id)) { //a single record
                 if (!empty($this->mapping["table"])) {
                     if (!empty($this->mapping["fields"])) {
                         $fieldValues = [];
@@ -151,7 +151,6 @@ class Olga implements Iterator  {
                             eval (' if (!empty($this->get'.ucwords($objectField).'())) {  $fieldValues[$field["field"]] = $this->get'.ucwords($objectField).'(); } ');
 
                         }
-
                         $DEB->updateOrInsert($this->mapping["table"], $fieldValues, $primaryKey);
                         $DEB->commit();
 

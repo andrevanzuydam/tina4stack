@@ -359,6 +359,7 @@
  *
  * echo $row->NAME;
  *
+ *
  * @endcode
  *
  * @note Debby makes all field names uppercase so you don't have to worry about what the names are for different databases.

@@ -107,21 +107,22 @@ class Olga implements Iterator  {
 
                 if (!empty($this->mapping["object"])) {
                     $records = $DEB->getRows($sql);
-                    foreach ($records as $rid => $record) {
-                        //create some objects in memory and add the object to this
-                        $newObject = "";
-                        eval ('$newObject = new '.$this->mapping["object"].'();');
-                        $newObject->mapRecord ($record);
-                        //add the object to memory
-                        $newObject->createGetSet();
-                        $newObject->save(true);
+                    if (!empty($records)) {
+                        foreach ($records as $rid => $record) {
+                            //create some objects in memory and add the object to this
+                            $newObject = "";
+                            eval ('$newObject = new ' . $this->mapping["object"] . '();');
+                            $newObject->mapRecord($record);
+                            //add the object to memory
+                            $newObject->createGetSet();
+                            $newObject->save(true);
 
-                        $this->append($newObject);
+                            $this->append($newObject);
+                        }
+
+                        //save the object to memory
+                        $this->save(true);
                     }
-
-                    //save the object to memory
-                    $this->save(true);
-
                 } else {
                     return false;
                 }

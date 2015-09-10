@@ -834,7 +834,6 @@ Ruth::setOBJECT("' . Ruth::getREQUEST("txtALIAS") . '", $' . Ruth::getREQUEST("t
             $sql .= "{$key} = '{$value}'";
         }
 
-
         $record = $this->getRow($sql);
 
         if (!empty($record)) {

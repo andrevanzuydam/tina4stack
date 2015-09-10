@@ -1951,7 +1951,7 @@ class Cody {
                     }
                 } else {
                     $colWidth = "col-md-6";
-                    $html .= div(["class" => "form-group", "id" => "form-group {$colWidth}" . $field["name"]], label(["id" => "label" . $field["name"], "for" => $field["name"]], ucwords(str_replace("_", " ", strtolower($field["alias"])))), $input);
+                    $html .= div(["class" => "form-group {$colWidth}", "id" => "form-group" . $field["name"]], label(["id" => "label" . $field["name"], "for" => $field["name"]], ucwords(str_replace("_", " ", strtolower($field["alias"])))), $input);
                 }
             } else {
                 $html .= input(["class" => "form-control hidden", "type" => "hidden",  "name" => strtoupper($field["name"]), "id" => strtoupper($field["name"])], $record[$fid]);

@@ -831,8 +831,14 @@ Ruth::setOBJECT("' . Ruth::getREQUEST("txtALIAS") . '", $' . Ruth::getREQUEST("t
         $count = 0;
         foreach ($primaryKey as $key => $value) {
             if ($count > 0) $sql .= " and ";
+            if ($value == 0 || empty($value)) {
+                $primaryKey[$key] = $this->getNextId($tableName, $key);
+                $fieldValues[$key] = $primaryKey[$key];
+            }
             $sql .= "{$key} = '{$value}'";
         }
+
+
 
         $record = $this->getRow($sql);
 

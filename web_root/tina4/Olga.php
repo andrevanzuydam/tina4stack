@@ -9,7 +9,17 @@ define("OLGA_MATCH_ANY", 1);
 define("OLGA_MATCH_BEGINNING", 2);
 define("OLGA_MATCH_ENDING", 3);
 class Olga implements Iterator  {
+    var $DEBUG = false;
     var $arrayObjects = []; //an array or collection of objects of the same type as this (we probably need to check if it is the same)
+    var $errors;
+    var $javascript = "<script> window.onclick = function() { var elements = document.getElementsByTagName('span'); for(var i = 0; i < elements.length; i++) {if ( elements[i].className === 'formError' ) {elements[i].style.display = 'none';} } }  </script>";
+
+    function debug ($message) {
+        if ($this->DEBUG) {
+            echo $message."\n";
+        }
+    }
+
     /**
      * Method to get the results from XCache into the object
      */
@@ -456,8 +466,7 @@ class Olga implements Iterator  {
 
 
 
-                    if (!$isClosure && $key !== "arrayObjects"  && $key !== "mapping") {
-
+                    if (!$isClosure && $key !== "arrayObjects"  && $key !== "mapping" && $key !== "validation" && $key != "DEBUG" && $key != "javascript" && $key != "errors") {
                         $items[] = $this->__toJson("$key") . ':' . $this->__toJson( $value);
                     }
                 }
@@ -644,4 +653,188 @@ class Olga implements Iterator  {
         $this->arrayObjects = [];
         return true;
     }
+
+    //Validation Section
+    function validName ($input, $checkValid = false ) {
+        $result = $this->validString($input);
+        return $result;
+    }
+
+    function validString ($input) {
+        return is_string($input) && $input !== "";
+    }
+
+    function validNumber ($input) {
+        return is_numeric($input) && $input !== "";
+    }
+
+    function validEmail ($input, $briteVerify = false) {
+        $result = true;
+        if (!filter_var($input, FILTER_VALIDATE_EMAIL)) {
+            $result = false;
+        }
+        return $result;
+    }
+
+    function validPhone ($input, $briteVerify = false ) {
+        $result = true;
+        if (!$this->validNumber(str_replace (" ", "", str_replace ("-", "", str_replace ( ")", "", str_replace ("(", "", str_replace ("+", "", str_replace ("-", "", $input ) ))))))) {
+            $result = false;
+        }
+        return $result;
+    }
+
+    /**
+     * This function will return either true or object with all the invalid fields
+     * @param $_REQUEST $requestArray
+     * @param JSON $requestTypes example '"street_address":{"string": "true"},"state":{"string": "true", "maxlength": "2"}'
+     */
+    function validateForm ($requestArray, $requestTypes) {
+        $requestTypes = json_decode("{".$requestTypes."}");
+        $valid = true;
+        $this->errors = [];
+        if ($this->DEBUG) echo "<pre>";
+        foreach ($requestArray as $requestName => $requestValue) {
+            if (!empty($requestTypes->$requestName)) {
+                $this->debug("Validate {$requestName}");
+
+                //Validate String
+                if (!empty($requestTypes->$requestName->string)) {
+                    $this->debug("Validating String");
+                    if (!$this->validString($requestValue)) {
+                        $this->errors[$requestName] = (!empty($requestTypes->$requestName->message)) ? $requestTypes->$requestName->message : $requestName." is not a valid string";
+                        $this->javascript .= $this->hookError ($requestName, $this->errors[$requestName]);
+                        $valid = false;
+                    }
+
+                }
+
+                //Validate Number
+                if (!empty($requestTypes->$requestName->number)) {
+                    $this->debug("Validating Number");
+                    if (!$this->validNumber($requestValue)) {
+                        $this->errors[$requestName] = (!empty($requestTypes->$requestName->message)) ? $requestTypes->$requestName->message : $requestName." is not a valid number";
+                        $this->javascript .= $this->hookError ($requestName, $this->errors[$requestName]);
+                        $valid = false;
+                    }
+
+                }
+
+                //Validate Name
+                if (!empty($requestTypes->$requestName->name)) {
+                    $this->debug("Validating Name");
+                    $validate = !empty($requestTypes->$requestName->validate) && $requestTypes->$requestName->validate;
+                    if (!$this->validName($requestValue, $validate)) {
+                        $this->errors[$requestName] = (!empty($requestTypes->$requestName->message)) ? $requestTypes->$requestName->message : $requestName." is not a valid name";
+                        $this->javascript .= $this->hookError ($requestName, $this->errors[$requestName]);
+                        $valid = false;
+                    }
+
+                }
+
+                //Validate Phone
+                if (!empty($requestTypes->$requestName->phone)) {
+                    $this->debug("Validating Phone Number");
+                    $validate = !empty($requestTypes->$requestName->validate) && $requestTypes->$requestName->validate;
+                    if (!$this->validPhone($requestValue, $validate)) {
+                        $this->errors[$requestName] = (!empty($requestTypes->$requestName->message)) ? $requestTypes->$requestName->message : $requestName." is not a valid phone number";
+                        $this->javascript .= $this->hookError ($requestName, $this->errors[$requestName]);
+                        $valid = false;
+                    }
+                }
+
+                //Validate Email
+                if (!empty($requestTypes->$requestName->email)) {
+                    $validate = !empty($requestTypes->$requestName->validate) && $requestTypes->$requestName->validate;
+                    $this->debug("Validating Email Address");
+                    if (!$this->validEmail($requestValue, $validate)) {
+                        $this->errors[$requestName] = (!empty($requestTypes->$requestName->message)) ? $requestTypes->$requestName->message : $requestName." is not a valid email address";
+                        $this->javascript .= $this->hookError ($requestName, $this->errors[$requestName]);
+                        $valid = false;
+                    }
+
+                }
+
+                //Validate the max length
+                if ($valid && isset($requestTypes->$requestName->maxlength)) {
+                    if (strlen($requestValue) > $requestTypes->$requestName->maxlength) {
+                        $this->errors[$requestName] = (!empty($requestTypes->$requestName->message)) ? $requestTypes->$requestName->message : $requestName." length should be less than equal to ".$requestTypes->$requestName->maxlength;
+                        $this->javascript .= $this->hookError ($requestName, $this->errors[$requestName]);
+                        $valid = false;
+                    }
+                }
+
+                //Validate the min length
+                if ($valid && isset($requestTypes->$requestName->minlength)) {
+                    if (strlen($requestValue) < $requestTypes->$requestName->minlength) {
+                        $this->errors[$requestName] = (!empty($requestTypes->$requestName->message)) ? $requestTypes->$requestName->message : $requestName." length should be greater than equal to ".$requestTypes->$requestName->minlength;
+                        $this->javascript .= $this->hookError ($requestName, $this->errors[$requestName]);
+                        $valid = false;
+                    }
+                }
+
+                //Validate the max value
+                if ($valid && isset($requestTypes->$requestName->maxvalue)) {
+                    if ($requestValue > $requestTypes->$requestName->maxvalue) {
+                        $this->errors[$requestName] = (!empty($requestTypes->$requestName->message)) ? $requestTypes->$requestName->message : $requestName." value should not be greater than  ".$requestTypes->$requestName->maxvalue;
+                        $this->javascript .= $this->hookError ($requestName, $this->errors[$requestName]);
+                        $valid = false;
+                    }
+                }
+
+                //Validate the min value
+                if ($valid && isset($requestTypes->$requestName->minvalue)) {
+
+                    if ($requestValue < $requestTypes->$requestName->minvalue) {
+                        $this->errors[$requestName] = (!empty($requestTypes->$requestName->message)) ? $requestTypes->$requestName->message : $requestName." value should not be less than ".$requestTypes->$requestName->minvalue;
+                        $this->javascript .= $this->hookError ($requestName, $this->errors[$requestName]);
+                        $valid = false;
+                    }
+                }
+
+
+            }
+        }
+
+        $this->debug(print_r ($this->errors, 1));
+        if ($this->DEBUG) echo "</pre>";
+        return $valid;
+    }
+
+    /**
+     * Uses minifyjs so be aware of this
+     * @param type $fieldName
+     * @param type $message
+     */
+    function hookError ($fieldName, $message) {
+
+        return script("
+            if (document.getElementById('error{$fieldName}') == null) {
+                newNode = document.createElement('span');
+                newNode.setAttribute('style', 'color:red');
+                newNode.setAttribute('class', 'formError');
+                newNode.setAttribute('id', 'error{$fieldName}');
+                newNode.innerHTML = '{$message}';
+                referenceNode = document.getElementById('{$fieldName}');
+                referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+            } else {
+              document.getElementById('error{$fieldName}').innerHTML = '{$message}';
+              document.getElementById('error{$fieldName}').style.display = 'block';
+            }
+        ");
+
+    }
+
+    function getErrors(){
+        return $this->errors;
+    }
+
+    function getErrorScript() {
+        return $this->javascript;
+    }
+
+    function failed() {
+        return (count($this->errors) > 0) ? true : false;
+    }
+
 }

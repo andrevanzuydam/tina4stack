@@ -769,12 +769,13 @@ Ruth::setOBJECT("' . Ruth::getREQUEST("txtALIAS") . '", $' . Ruth::getREQUEST("t
         $sqlInsert .= "values ( " . join(",", $columnValues) . ");";
 
         $params[] = $sqlInsert;
+
+
         foreach ($fieldValues as $field => $value) {
             if ($value !== "'now'" && $value !== "current_timestamp") {
                 $params[] = $value;
             }
         }
-
 
         return call_user_func_array([$this, "exec"],  $params);
     }
@@ -838,15 +839,17 @@ Ruth::setOBJECT("' . Ruth::getREQUEST("txtALIAS") . '", $' . Ruth::getREQUEST("t
             $sql .= "{$key} = '{$value}'";
         }
 
-
-
         $record = $this->getRow($sql);
 
         if (!empty($record)) {
-            return $this->update($tableName, $fieldValues, $primaryKey);
+            $result = $this->update($tableName, $fieldValues, $primaryKey);
+            $this->commit();
+
         }  else {
-            return $this->insert($tableName, $fieldValues);
+            $result = $this->insert($tableName, $fieldValues);
+            $this->commit();
         }
+        return $result;
     }
 
     /*

@@ -2488,7 +2488,7 @@ class Cody {
                                             } else {
 
                                                 parse{$rand}Script(result.responseAction.responseScript);
-                                                if (result.responseAction.redirectPath !== undefined && result.responseAction.redirectPath != null) {
+                                                if (result.responseAction.redirectPath !== undefined && result.responseAction.redirectPath != null && result.responseAction.redirectPath !== '') {
                                                     location.href = result.responseAction.redirectPath;
                                                 }
                                             }

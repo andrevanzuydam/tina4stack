@@ -28,6 +28,8 @@ class Olga implements Iterator  {
             if (!empty($this->id)) { //this must be a single record, we will need to fetch it by its unique id in memory
                 $json = unserialize(xcache_get("olgaSingleObject".get_class($this)."-".$this->id));
                 $this->fromJSON($json);
+
+                return $this;
             } else {
                 $objects = json_decode(unserialize(xcache_get("olgaArrayObjects".get_class($this))));
 
@@ -39,9 +41,11 @@ class Olga implements Iterator  {
                         eval ('$newObject = new '.$this->mapping["object"].'(\''.json_encode($object).'\');');
                         $this->append($newObject);
                     }
+
                 } else { //No object found
                     return false;
                 }
+                return $this;
             }
         } else {
             return false;
@@ -78,7 +82,7 @@ class Olga implements Iterator  {
      * Method to get the results from the database
      */
     function populateFromDebby($DEB) {
-        if (!empty($this->id)) { //single object - very easy
+        if (!empty($this->id) || isset($this->id)) { //single object - very easy
             if (!empty($this->mapping["table"])) {
                 if (!empty($this->mapping["fields"])) {
                     $sql = "select ";
@@ -99,12 +103,11 @@ class Olga implements Iterator  {
                         $this->mapRecord ($record);
                     }
 
-
                     $this->createGetSet();
                     //save us to the memory
                     $this->save(true);
 
-
+                    return $this;
                 } else { //No fields found
                     return false;
                 }
@@ -133,6 +136,7 @@ class Olga implements Iterator  {
 
                         //save the object to memory
                         $this->save(true);
+                        return $this;
                     }
                 } else {
                     return false;
@@ -218,16 +222,17 @@ class Olga implements Iterator  {
         //read from the database
         if (!empty($DEB)) {
             //see if we can grab from xcache first
-            if (!$this->populateFromXCache()) {
+
+            if (empty($this->populateFromXCache())) {
                 return $this->populateFromDebby($DEB);
             } else {
-                return $this->populateFromDebby($DEB);
+                return $this->populateFromXCache();
             }
         } else {
             return $this->populateFromXCache();
         }
 
-        return $this;
+
     }
 
     /**

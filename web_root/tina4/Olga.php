@@ -293,6 +293,22 @@ class Olga implements Iterator  {
     }
 
     /**
+     * Create an PHP array from the JSON representation of the object
+     * @return Array
+     */
+    function toArray() {
+        return (array) json_decode($this->toJSON());
+    }
+
+    /**
+     * Create an PHP object from the JSON representation of the object
+     * @return Array
+     */
+    function toObject() {
+        return (object) json_decode($this->toJSON());
+    }
+
+    /**
      * Default to return a JSON string
      * @return string
      */

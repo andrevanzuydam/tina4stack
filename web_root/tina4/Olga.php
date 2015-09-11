@@ -549,11 +549,6 @@ class Olga implements Iterator  {
         return false;
     }
 
-    //Save the object to disk or database or xcache in a structure
-    function persist() {
-        return false;
-    }
-
     /**
      * Create the getters & setters
      */
@@ -572,7 +567,7 @@ class Olga implements Iterator  {
 
                     $this->' . $setter . ' = function ($value) {
                         $this->' . $varName . ' = $value;
-                        $this->persist();
+                        return $this;
                     };
                     ');
             }

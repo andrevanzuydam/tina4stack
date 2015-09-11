@@ -26,6 +26,7 @@ class AjaxResponseAction extends Olga {
      */
     function setRedirectPath($path) {
         $this->redirectPath = $path;
+        return $this;
     }
 
     /**
@@ -46,6 +47,7 @@ class AjaxResponseAction extends Olga {
         }  else {
             $this->responseScript = $script;
         }
+        return $this;
     }
 
     /**

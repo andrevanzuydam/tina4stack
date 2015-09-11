@@ -99,6 +99,7 @@ class Olga implements Iterator  {
                         $this->mapRecord ($record);
                     }
 
+
                     $this->createGetSet();
                     //save us to the memory
                     $this->save(true);
@@ -225,6 +226,8 @@ class Olga implements Iterator  {
         } else {
             return $this->populateFromXCache();
         }
+
+        return $this;
     }
 
     /**
@@ -247,6 +250,8 @@ class Olga implements Iterator  {
             } else {
                 return $this->populateToXCache();
             }
+
+        return $this;
     }
 
     /**
@@ -550,7 +555,9 @@ class Olga implements Iterator  {
     function createGetSet() {
         $variables = get_object_vars($this);
         foreach ($variables as $varName => $varValue) {
-            if ($varName != "arrayObjects" && !method_exists($this, "get" . UcWords($varName)) && !method_exists($this, "set" . UcWords($varName)) ) {
+
+            if ($varName != "arrayObjects" && $varName !== "mapping" && $varName !== "validation" && $varName != "DEBUG" && $varName != "javascript" && $varName != "errors" && !method_exists($this, "get" . UcWords($varName)) && !method_exists($this, "set" . UcWords($varName)) ) {
+
                 $getter = "get" . UcWords($varName);
                 $setter = "set" . UcWords($varName);
                 eval ('

@@ -66,6 +66,7 @@ class Olga implements Iterator  {
         } else {
             return false;
         }
+        return $this;
     }
 
     /**
@@ -844,7 +845,7 @@ class Olga implements Iterator  {
               document.getElementById('error{$fieldName}').innerHTML = '{$message}';
               document.getElementById('error{$fieldName}').style.display = 'block';
             }
-        ");
+        ")."";
 
     }
 

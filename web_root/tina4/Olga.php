@@ -20,12 +20,14 @@ class Olga implements Iterator  {
         }
     }
 
+
+
     /**
      * Method to get the results from XCache into the object
      */
     function populateFromXCache() {
         if (function_exists("xcache_get")) {
-            if (!empty($this->id)) { //this must be a single record, we will need to fetch it by its unique id in memory
+            if (!empty($this->id) || isset($this->id)) { //this must be a single record, we will need to fetch it by its unique id in memory
                 $json = unserialize(xcache_get("olgaSingleObject".get_class($this)."-".$this->id));
                 $this->fromJSON($json);
 
@@ -57,11 +59,33 @@ class Olga implements Iterator  {
      */
     function populateToXCache() {
         if (function_exists("xcache_set")) {
-            if (!empty($this->id)) { //save the single record
+            if (!empty($this->id) || isset($this->id)) { //save the single record
                 $json = $this->toJSON();
                 xcache_set("olgaSingleObject".get_class($this)."-".$this->id, serialize($json));
             } else {
                 xcache_set("olgaArrayObjects".get_class($this), serialize($this->toJSON()));
+            }
+        } else {
+            return false;
+        }
+        return $this;
+    }
+
+    /**
+     * Method to remove an entry from xcache
+     * @return $this|bool
+     */
+    function removeFromXCache () {
+        if (function_exists("xcache_set")) {
+            if (!empty($this->id) || isset($this->id)) { //save the single record
+                if (xcache_isset("olgaSingleObject".get_class($this)."-".$this->id)) {
+                    xcache_unset("olgaSingleObject".get_class($this)."-".$this->id);
+                }
+            } else {
+
+                if (xcache_isset("olgaArrayObjects".get_class($this))) {
+                    xcache_unset("olgaArrayObjects".get_class($this));
+                }
             }
         } else {
             return false;
@@ -215,6 +239,59 @@ class Olga implements Iterator  {
     }
 
     /**
+     *  Remove items from the database
+     * @return bool
+     */
+    function removeFromDebby() {
+        $DEB = Ruth::getOBJECT("DEB");
+
+        //read from the database
+        if (!empty($DEB)) {
+            if (!empty($this->id) || isset($this->id)) { //a single record
+                if (!empty($this->mapping["table"])) {
+                    if (!empty($this->mapping["fields"])) {
+                        foreach ($this->mapping["fields"] as $objectField => $field) {
+                            if ($objectField === "id") {
+                                $primaryKey = [$field["field"] => $this->id];
+                            }
+                        }
+                        $DEB->delete ($this->mapping["table"], $primaryKey);
+                        $DEB->commit();
+                    } else {
+                        return false;
+                    }
+                }
+                else {
+                    return false;
+                }
+            } else { //multiple objects
+                if (!empty($this->mapping["table"])) {
+                    if (!empty($this->mapping["object"])) {
+                        $newObject = "";
+                        eval ('$newObject = new '.$this->mapping["object"].'();');
+                        $table = $newObject->mapping["table"];
+                        foreach ($this as $rid => $object) {
+                            if (!empty($newObject->mapping["fields"])) {
+                                if (!empty($newObject->mapping["table"])) {
+                                    $newObject->delete();
+                                }
+                            } else {
+                                return false;
+                            }
+                        }
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
+    /**
      * A method to load the data from the database into the object in question
      */
     function load() {
@@ -242,7 +319,6 @@ class Olga implements Iterator  {
      * @return bool
      */
     function save($onlyToMemory=false) {
-
         $DEB = Ruth::getOBJECT("DEB");
         //save the data to the database
         if ($onlyToMemory) {
@@ -259,6 +335,31 @@ class Olga implements Iterator  {
 
         return $this;
     }
+
+
+    /**
+     * A method to delete a whole object from the database & memory
+     * @param bool|false $onlyFromMemory
+     */
+    function delete ($onlyFromMemory=false) {
+        $DEB = Ruth::getOBJECT("DEB");
+        //delete the data from the database
+        if ($onlyFromMemory) {
+            return $this->removeFromXCache();
+        } else
+            if (!empty($DEB)) {
+
+                if ($this->removeFromDebby()) {
+                    return $this->removeFromXCache();
+                }
+            } else {
+                return $this->removeFromXCache();
+            }
+
+        return $this;
+
+    }
+
 
     /**
      * The clone function must recreate the object closures

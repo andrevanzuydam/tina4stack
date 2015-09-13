@@ -7,6 +7,6 @@ var searchData=
   ['updateconnection',['updateConnection',['../classDebby.html#af1c5109d660051d5d1d2f8e88d776cea',1,'Debby']]],
   ['updatemenuitem',['updateMenuItem',['../classKim.html#a1c8f6358dbec4612dd880ae09cb4a74e',1,'Kim']]],
   ['updatemigration',['updateMigration',['../classMaggy.html#afd787d71f29b356d6a6de0d0707b6be4',1,'Maggy']]],
-  ['updateorinsert',['updateOrInsert',['../classDebby.html#a1c8694a0b2bec1152c6d42e61ff3b246',1,'Debby']]],
+  ['updateorinsert',['updateOrInsert',['../classDebby.html#ad7417ce6e299dc3333a1bcdbba13506c',1,'Debby']]],
   ['updatepost',['updatePOST',['../classKim.html#a3725ce24c9501992a03e6386423e447c',1,'Kim']]]
 ];

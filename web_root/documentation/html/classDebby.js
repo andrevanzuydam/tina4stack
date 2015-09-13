@@ -44,7 +44,7 @@ var classDebby =
     [ "translateDate", "classDebby.html#a869768fbe62f60229e62cfe2fce9f1e2", null ],
     [ "update", "classDebby.html#a482145f057ea4b31d4414d0ea8997244", null ],
     [ "updateConnection", "classDebby.html#af1c5109d660051d5d1d2f8e88d776cea", null ],
-    [ "updateOrInsert", "classDebby.html#a1c8694a0b2bec1152c6d42e61ff3b246", null ],
+    [ "updateOrInsert", "classDebby.html#ad7417ce6e299dc3333a1bcdbba13506c", null ],
     [ "$affectedrows", "classDebby.html#ab409e48612acfcba8cf89743b45b4457", null ],
     [ "$dbdateformat", "classDebby.html#a2f7e21b7f33e7ad7ea66a5f55ad7876a", null ],
     [ "$dbh", "classDebby.html#aa4930493a32523bb82bf4491e6e48f01", null ],

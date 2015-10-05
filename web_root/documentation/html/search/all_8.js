@@ -24,6 +24,8 @@ var searchData=
   ['getdocument_5froot',['getDOCUMENT_ROOT',['../classRuth.html#a0801b3a28f3385eeee817a3deb14b028',1,'Ruth']]],
   ['geteditor',['getEditor',['../classKim.html#a35aa398ba9172f3044489c50d451099c',1,'Kim']]],
   ['geterror',['getError',['../classDebby.html#ae9d2704d501f1950be4bf08e4aecc3e7',1,'Debby']]],
+  ['geterrors',['getErrors',['../classOlga.html#a2a2fac35be8d0baea4b3e91e5a3c5d99',1,'Olga']]],
+  ['geterrorscript',['getErrorScript',['../classOlga.html#afa6a2714e084da0cd66e12c819b27834',1,'Olga']]],
   ['getfieldbyname',['getFieldByName',['../classDebby.html#ae3da5f2c30b39f32c11450f95a684613',1,'Debby']]],
   ['getfieldinfo',['getFieldInfo',['../classCody.html#a9190879d7bba88107875e2fe4723804c',1,'Cody\getFieldInfo()'],['../classDebby.html#ad32fa25b945f492253439ed78641d469',1,'Debby\getFieldInfo()']]],
   ['getfileexplorer',['getFileExplorer',['../classCody.html#a5737b5a18b58d98dc4a6f8ebc9053d3b',1,'Cody']]],

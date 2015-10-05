@@ -10,7 +10,6 @@ var searchData=
   ['parsetemplate',['parseTemplate',['../classKim.html#aff31f9e7bee71022c9edd8d3661e9aa9',1,'Kim']]],
   ['parsevalue',['parseValue',['../classKim.html#ae401f319dd0148a194304c54e19d6c1e',1,'Kim']]],
   ['path',['path',['../Shape_8php.html#a3b05eec13add53df44e232273d718ae4',1,'Shape.php']]],
-  ['persist',['persist',['../classOlga.html#ac2e66056e2619f9bbdafa675702780e2',1,'Olga']]],
   ['phoebe',['Phoebe',['../classPhoebe.html',1,'']]],
   ['phoebe_2ephp',['Phoebe.php',['../Phoebe_8php.html',1,'']]],
   ['populatedropdownitems',['populateDropDownItems',['../classCody.html#ade934190b62559aae3d784f7681253af',1,'Cody']]],

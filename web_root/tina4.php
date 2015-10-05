@@ -233,4 +233,8 @@ if (file_exists("kim.db") && strpos(Ruth::getREQUEST_URI(), "/maggy") === false)
 /**
  * Parse all the routes, never delete this code below, you can pass a single variable through to fake the route for testing.
  */
-Ruth::parseRoutes();
+if (php_sapi_name() === "cli-server" && preg_match('/\.(?:png|jpg|jpeg|gif|css|js)$/', $_SERVER["REQUEST_URI"])) {
+    return false;    // serve the requested resource as-is this if we are running a php-server
+} else {
+    Ruth::parseRoutes();
+}

@@ -70,7 +70,7 @@ var NAVTREEINDEX =
 [
 "Cody_8php.html",
 "classDebby.html#a246a7d5268c855f26ce31f4088ce56e9",
-"functions_func.html"
+"classtestClass.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

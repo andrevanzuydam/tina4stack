@@ -1,6 +1,8 @@
 var searchData=
 [
   ['redirect',['redirect',['../classRuth.html#a99efe91394d300de83f7124acea0b595',1,'Ruth']]],
+  ['removefromdebby',['removeFromDebby',['../classOlga.html#a6636579761c6824e69cf01bae9fcdd78',1,'Olga']]],
+  ['removefromxcache',['removeFromXCache',['../classOlga.html#afa597feb52756c27e31db3f589e6ce17',1,'Olga']]],
   ['requesttoinput',['requestToInput',['../classRuth.html#ae10d9c25d1910e59a15662dd1304c23b',1,'Ruth']]],
   ['requesttosession',['requestToSESSION',['../classRuth.html#a627fd70f5f186ba0d4d3dc187a432b81',1,'Ruth']]],
   ['responseheader',['responseHeader',['../classRuth.html#aba8f6d2223ff063fc5d0133d6f85f2c0',1,'Ruth']]],

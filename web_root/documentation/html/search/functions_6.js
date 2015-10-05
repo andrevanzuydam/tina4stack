@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['failed',['failed',['../classTessa.html#a3454246c38eb3976f01d1e9db22cdc4f',1,'Tessa']]],
+  ['failed',['failed',['../classOlga.html#a749c285a24ce60c35c5546905495d27c',1,'Olga\failed()'],['../classTessa.html#a3454246c38eb3976f01d1e9db22cdc4f',1,'Tessa\failed()']]],
   ['fetchrecord',['fetchRecord',['../classTessa.html#a9e3c7e459e53b5696e8d646d09c05dba',1,'Tessa\fetchRecord()'],['../Tessa_8php.html#a2f38c767e68dbdbb9f190d9d84f4fe92',1,'fetchRecord():&#160;Tessa.php']]],
   ['fetchrecords',['fetchRecords',['../classTessa.html#a54fe80d4ffe3cd047ca3c15e100bbd5c',1,'Tessa\fetchRecords()'],['../Tessa_8php.html#ad82e3558ce8c93c2830b80af26a758b4',1,'fetchRecords():&#160;Tessa.php']]],
   ['fieldset',['fieldset',['../Shape_8php.html#af0a5c921ccbf5e989abde4a2dccbb6f7',1,'Shape.php']]],

@@ -816,10 +816,10 @@ class Ruth {
                     $DEB = self::getOBJECT("DEB");
                     $database = $DEB->getDatabase();
                     $table = $database[$tableName];
-                    if (!empty($table[0]["pk"]) && $table[0]["pk"] === "PRIMARY KEY") {
-                        $primaryKey = $table[0]["field"];
+                    if (!empty($table[0]["pk"]) || $table[0]["pk"] === "PRIMARY KEY") {
+                        $primaryKey = strtoupper($table[0]["field"]);
                     } else {
-                        $primaryKey = $table[0]["field"]; // this is a generic fall back
+                        $primaryKey = strtoupper($table[0]["field"]); // this is a generic fall back
                     }
                     //try and add the record
                     $json = json_decode(Ruth::getPOST_DATA(), true);
@@ -861,10 +861,10 @@ class Ruth {
                     $DEB = self::getOBJECT("DEB");
                     $database = $DEB->getDatabase();
                     $table = $database[$tableName];
-                    if (!empty($table[0]["pk"]) && $table[0]["pk"] === "PRIMARY KEY") {
-                        $primaryKey = $table[0]["field"];
+                    if (!empty($table[0]["pk"]) || $table[0]["pk"] === "PRIMARY KEY") {
+                        $primaryKey = strtoupper($table[0]["field"]);
                     } else {
-                        $primaryKey = $table[0]["field"]; // this is a generic fall back
+                        $primaryKey = strtoupper($table[0]["field"]); // this is a generic fall back
                     }
 
                     $result = $DEB->getRow("select * from {$tableName} where {$primaryKey} = '{$id}'");
@@ -896,20 +896,20 @@ class Ruth {
                     $DEB = Ruth::getOBJECT("DEB");
                     $database = $DEB->getDatabase();
                     $table = $database[$tableName];
-                    if (!empty($table[0]["pk"]) && $table[0]["pk"] === "PRIMARY KEY") {
-                        $primaryKey = $table[0]["field"];
+                    if (!empty($table[0]["pk"]) || $table[0]["pk"] === "PRIMARY KEY") {
+                        $primaryKey = strtoupper($table[0]["field"]);
                     } else {
-                        $primaryKey = $table[0]["field"]; // this is a generic fall back
+                        $primaryKey = strtoupper($table[0]["field"]); // this is a generic fall back
                     }
 
                     $json = json_decode(file_get_contents("php://input"), false);
+
+
 
                     $tableData = "";
                     foreach ($table as $fid => $column) {
                         $column["field"] = strtoupper($column["field"]);
                         if (strtoupper($column["field"]) !== $primaryKey ) {
-
-
                             if (isset($json->$column["field"])) {
                                 $tableData[$column["field"]] = $json->$column["field"];
                             } else {
@@ -918,8 +918,12 @@ class Ruth {
                         }
                     }
 
+
+
                     $DEB->update ($tableName, $tableData, [$primaryKey => $id]);
                     $DEB->commit();
+
+
 
                     $result = $DEB->getRow("select * from {$tableName} where {$primaryKey} = '{$id}'");
                     if (!empty($result)) {
@@ -944,19 +948,22 @@ class Ruth {
          */
         self::addRoute(RUTH_PATCH, "/rest/{tablename}/{id}",
             function($tableName, $id){
+
                 Ruth::$wasAJAXCall = true;
                 Ruth::getRESTAuth(self::getSERVER("PHP_AUTH_USER"), self::getSERVER("PHP_AUTH_PW"));
                 if (!empty(self::getOBJECT("DEB"))) {
                     $DEB = self::getOBJECT("DEB");
                     $database = $DEB->getDatabase();
+
                     $table = $database[$tableName];
-                    if (!empty($table[0]["pk"]) && $table[0]["pk"] === "PRIMARY KEY") {
-                        $primaryKey = $table[0]["field"];
+                    if (!empty($table[0]["pk"]) || $table[0]["pk"] === "PRIMARY KEY") {
+                        $primaryKey = strtoupper($table[0]["field"]);
                     } else {
-                        $primaryKey = $table[0]["field"]; // this is a generic fall back
+                        $primaryKey = strtoupper($table[0]["field"]); // this is a generic fall back
                     }
 
                     $json = json_decode(file_get_contents("php://input"), false);
+
 
                     $tableData = "";
                     foreach ($table as $fid => $column) {
@@ -968,8 +975,10 @@ class Ruth {
                         }
                     }
 
+
                     $DEB->update ($tableName, $tableData, [$primaryKey => $id]);
                     $DEB->commit();
+
 
                     $result = $DEB->getRow("select * from {$tableName} where {$primaryKey} = '{$id}'");
                     if (!empty($result)) {
@@ -1000,10 +1009,10 @@ class Ruth {
                     $DEB = Ruth::getOBJECT("DEB");
                     $database = $DEB->getDatabase();
                     $table = $database[$tableName];
-                    if (!empty($table[0]["pk"]) && $table[0]["pk"] === "PRIMARY KEY") {
-                        $primaryKey = $table[0]["field"];
+                    if (!empty($table[0]["pk"]) || $table[0]["pk"] === "PRIMARY KEY") {
+                        $primaryKey = strtoupper($table[0]["field"]);
                     } else {
-                        $primaryKey = $table[0]["field"]; // this is a generic fall back
+                        $primaryKey = strtoupper($table[0]["field"]); // this is a generic fall back
                     }
                     if ( $DEB->delete($tableName, [$primaryKey => $id]) ) {
                         self::responseHeader("200", "Success: Record {$id} was deleted from {$tableName}");

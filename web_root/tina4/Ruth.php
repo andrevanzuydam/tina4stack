@@ -822,7 +822,7 @@ class Ruth {
                         $primaryKey = strtoupper($table[0]["field"]); // this is a generic fall back
                     }
                     //try and add the record
-                    $json = json_decode(Ruth::getPOST_DATA(), true);
+                    $json = json_decode(urldecode(file_get_contents("php://input")), false);
 
                     $tableData = "";
                     foreach ($json as $field => $value) {
@@ -902,9 +902,7 @@ class Ruth {
                         $primaryKey = strtoupper($table[0]["field"]); // this is a generic fall back
                     }
 
-                    $json = json_decode(file_get_contents("php://input"), false);
-
-
+                    $json = json_decode(urldecode(file_get_contents("php://input")), false);
 
                     $tableData = "";
                     foreach ($table as $fid => $column) {
@@ -918,12 +916,8 @@ class Ruth {
                         }
                     }
 
-
-
                     $DEB->update ($tableName, $tableData, [$primaryKey => $id]);
                     $DEB->commit();
-
-
 
                     $result = $DEB->getRow("select * from {$tableName} where {$primaryKey} = '{$id}'");
                     if (!empty($result)) {
@@ -962,8 +956,7 @@ class Ruth {
                         $primaryKey = strtoupper($table[0]["field"]); // this is a generic fall back
                     }
 
-                    $json = json_decode(file_get_contents("php://input"), false);
-
+                    $json = json_decode(urldecode(file_get_contents("php://input")), false);
 
                     $tableData = "";
                     foreach ($table as $fid => $column) {

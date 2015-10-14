@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['else',['else',['../tina4_8php.html#a350389f83aef240942d13c10eeecde80',1,'tina4.php']]],
+  ['else',['else',['../tina4_8php.html#a9f4b702e69d8c3757dace2ec6405681f',1,'tina4.php']]],
   ['em',['em',['../Shape_8php.html#a605ef153deddaa1caecd554de23b5d38',1,'Shape.php']]],
   ['embed',['embed',['../Shape_8php.html#a4e7325a59fa98717eaec0c5df78a6161',1,'Shape.php']]],
   ['embedimage',['embedImage',['../classDebby.html#af57d83562218d3a4b5e1de2f75a24cf0',1,'Debby']]],

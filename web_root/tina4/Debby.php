@@ -813,6 +813,7 @@ Ruth::setOBJECT("' . Ruth::getREQUEST("txtALIAS") . '", $' . Ruth::getREQUEST("t
             }
             $sqlUpdate .= " {$field} = ?";
             $params[] = $value;
+
             $count++;
         }
 
@@ -1626,7 +1627,7 @@ Ruth::setOBJECT("' . Ruth::getREQUEST("txtALIAS") . '", $' . Ruth::getREQUEST("t
                                             unset($row);
                                             $row = (object)[];
                                             foreach ($temprow as $fieldname => $fieldvalue) {
-                                                if (empty($fieldvalue)) {
+                                                if (!isset ($fieldvalue) && empty($fieldvalue)) {
                                                     $fieldvalue = "";
                                                 }
 
@@ -1992,6 +1993,8 @@ Ruth::setOBJECT("' . Ruth::getREQUEST("txtALIAS") . '", $' . Ruth::getREQUEST("t
         }
 
         $this->RAWRESULT = $result;
+
+
 
         /* Debugging for getRows */
         if (!empty($result)) {

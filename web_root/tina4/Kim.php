@@ -1138,14 +1138,14 @@ class Kim {
         $html = html (
             head (
                 title ($title),
-                alink (["rel" => "stylesheet", "href"=>"https://maxcdn.bootstrapcdn.com/bootswatch/latest/cosmo/bootstrap.min.css"]),
+                alink (["rel" => "stylesheet", "href"=>"https://maxcdn.bootstrapcdn.com/bootswatch/latest/spacelab/bootstrap.min.css"]),
                 alink (["rel" => "stylesheet", "href"=> "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css"]),
-                alink (["rel" => "stylesheet", "href"=> "http://jonmiles.github.io/bootstrap-treeview/css/bootstrap-treeview.css"]),
-                script(["src" => "http://code.jquery.com/jquery-2.1.4.min.js"]),
+                alink (["rel" => "stylesheet", "href"=> "https://jonmiles.github.io/bootstrap-treeview/css/bootstrap-treeview.css"]),
+                script(["src" => "https://code.jquery.com/jquery-2.1.4.min.js"]),
                 script(["src"=> "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"]),
                 script(["src" => "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.js"]),
-                script(["src" => "http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"]),
-                script(["src" => "http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/additional-methods.min.js"]),
+                script(["src" => "https://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"]),
+                script(["src" => "https://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/additional-methods.min.js"]),
                 script(["src" => "//cdn.ckeditor.com/4.5.1/standard/ckeditor.js"])
             ),
             body (["style" => "padding: 0px 20px 0px"],
@@ -1567,7 +1567,7 @@ ul.tree > li > ul > li > ul > li > a > label:before {
 
     function getRouteTarget($recordValue=null, $fieldName) {
 
-        $html = textarea(["name" => "txt".$fieldName, "style" => "width: 100%; color: #fff; background: black"], $recordValue);
+        $html = textarea(["id" => "txt".$fieldName, "name" => "txt".$fieldName, "style" => "width: 100%; color: #fff; background: black"], $recordValue);
         return $html;
     }
 

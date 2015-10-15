@@ -189,7 +189,7 @@ class Olga implements Iterator  {
                             if ($objectField === "id") {
                                 $primaryKey = [$field["field"] => $this->id];
                             }
-                            eval (' if (!empty($this->get'.ucwords($objectField).'())) {  $fieldValues[$field["field"]] = $this->get'.ucwords($objectField).'(); } ');
+                            eval (' if (!empty($this->get'.ucwords($objectField).'()) || $this->get'.ucwords($objectField).'() === "0" ) {  $fieldValues[$field["field"]] = $this->get'.ucwords($objectField).'(); } ');
 
                         }
                         $DEB->updateOrInsert($this->mapping["table"], $fieldValues, $primaryKey);
@@ -218,7 +218,7 @@ class Olga implements Iterator  {
                                         if ($objectField === "id") {
                                             $primaryKey = [$field["field"] => $object->id];
                                         }
-                                        eval (' if (!empty($object->get'.ucwords($objectField).'())) {  $fieldValues[$field["field"]] = $object->get'.ucwords($objectField).'(); } ');
+                                        eval (' if (!empty($object->get'.ucwords($objectField).'()) || $this->get'.ucwords($objectField).'() === "0" ) {  $fieldValues[$field["field"]] = $object->get'.ucwords($objectField).'(); } ');
                                     }
                                     $DEB->updateOrInsert($table, $fieldValues, $primaryKey);
                                     $DEB->commit();
@@ -325,7 +325,6 @@ class Olga implements Iterator  {
             return $this->populateToXCache();
         } else
             if (!empty($DEB)) {
-
                 if ($this->populateToDebby()) {
                     return $this->populateToXCache();
                 }
@@ -680,7 +679,7 @@ class Olga implements Iterator  {
                 $setter = "set" . UcWords($varName);
                 eval ('
                     $this->' . $getter . ' = function () {
-                        return $this->' . $varName . ';
+                        return "{$this->' . $varName . '}";
                     };
 
                     $this->' . $setter . ' = function ($value) {

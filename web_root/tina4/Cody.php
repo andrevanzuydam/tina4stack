@@ -2428,8 +2428,8 @@ class Cody {
                             var js{$rand} = {};
 
                             for ( var elem, i = 0; ( elem = e[i] ); i++ ) {
-                                eName = (elem.id !== undefined) ? elem.id : (elem.name !== undefined) ? elem.name : null ;
 
+                                eName = (elem.id !== undefined && elem.id !== '') ? elem.id : ((elem.name !== undefined) ? elem.name : null) ;
                                 if (eName != null ) {
                                     if (elem.type === 'radio' || elem.type === 'checkbox') {
                                       if (elem.checked) {
@@ -2608,7 +2608,7 @@ class Cody {
                         var e = form.elements;
                         
                         for ( var elem, i = 0; ( elem = e[i] ); i++ ) {
-                            eName = (elem.id !== undefined) ? elem.id : (elem.name !== undefined) ? elem.name : null ;
+                            eName = (elem.id !== undefined && elem.id !== '') ? elem.id : ((elem.name !== undefined) ? elem.name : null) ;
 
                             if (eName != null ) {
                                 if (elem.type === 'radio' || elem.type === 'checkbox') {

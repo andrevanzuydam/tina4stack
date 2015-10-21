@@ -842,6 +842,7 @@ class Ruth {
                     }  else {
                         self::responseHeader("400", "Failed: Could not add record to {$tableName}");
                     }
+                    $DEB->close();
                 } else {
                     die("DEB database object not registered");
                 }
@@ -983,6 +984,7 @@ class Ruth {
                     }  else {
                         self::responseHeader("400", "Failed: Record {$id} was NOT found in {$tableName}");
                     }
+                    $DEB->close();
                 } else {
                     die("DEB database object not registered");
                 }
@@ -1013,6 +1015,7 @@ class Ruth {
                     }  else {
                         self::responseHeader("400", "Failed: Record {$id} was NOT deleted from {$tableName}");
                     }
+                    $DEB->close();
                 } else {
                     die("DEB database object not registered");
                 }
@@ -1039,6 +1042,7 @@ class Ruth {
                     }  else {
                         self::responseHeader("400", "Failed: Listing for {$tableName}");
                     }
+                    $DEB->close();
                 } else {
                     die("DEB database object not registered");
                 }

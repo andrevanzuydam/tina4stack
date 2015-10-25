@@ -1318,7 +1318,7 @@ class Kim {
                 (new Cody())->bootStrapInput("txtORDER_INDEX", "Order Index", "The order index for the menu", $menu->ORDER_INDEX),
                 (new Cody())->bootStrapLookup("txtPARENT_ID", "Menu Parent", $this->KIM->getKeyValue("select menu_id, name from menu where (system_menu = 0 or menu_id = 0) "), $menu->PARENT_ID),
                 (new Cody())->bootStrapButton("btnDelete", "Delete", "$('#formMenu').submit(); if ( confirm('Delete this menu item?') ) { callAjax('/kim/menu/delete', 'right_nav', '', 'post');}", "btn btn-danger pull-right", "col-md-12", true),
-                (new Cody())->bootStrapButton("btnUpdate", "Save", "$('#formMenu').submit(); if ( $('#formMenu').validate().errorList.length == 0 ) { callAjax('/kim/menu/update', 'left_nav', null, 'post');}", "btn btn-primary pull-right", "col-md-12", true)
+                (new Cody())->bootStrapButton("btnUpdate", "Save", "$('#formMenu').submit(); if ( $('#formMenu').validate().errorList.length == 0 ) { callAjax('/kim/menu/update', 'left_nav', '', 'post');}", "btn btn-primary pull-right", "col-md-12", true)
             )
         );
 

@@ -58,6 +58,7 @@ location / {
                 </div>
                 <div class="panel-body">
 <pre> 
+DirectoryIndex tina4.php index.php
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

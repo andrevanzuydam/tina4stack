@@ -1110,6 +1110,12 @@ class Kim {
                                 $template = str_replace ("{".$element."}", "{".$element."}", $template);
                             }
                         }
+                        else
+                        if (is_array($var) || is_object($var)) {
+                            $var = print_r ($var, 1);
+                            $template = str_replace ("{".$element."}", $var, $template);
+
+                        }
                         else {
                             $template = str_replace ("{".$element."}", $var, $template);
                         }

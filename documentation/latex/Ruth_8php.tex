@@ -1,0 +1,54 @@
+\hypertarget{Ruth_8php}{}\section{web\+\_\+root/tina4/\+Ruth.php File Reference}
+\label{Ruth_8php}\index{web\+\_\+root/tina4/\+Ruth.\+php@{web\+\_\+root/tina4/\+Ruth.\+php}}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classRuth}{Ruth}
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const \hyperlink{Ruth_8php_a007827b20a122223418cd0bed933b32c}{R\+U\+T\+H\+\_\+\+I\+G\+N\+O\+R\+E\+\_\+\+R\+O\+U\+T\+E} true
+\item 
+const \hyperlink{Ruth_8php_acc73cd34b6fcffd15a4fdd050e0a86d8}{R\+U\+T\+H\+\_\+\+G\+E\+T} \char`\"{}G\+E\+T\char`\"{}
+\item 
+const \hyperlink{Ruth_8php_af749f90f066c3572c6dae5f01eb61af8}{R\+U\+T\+H\+\_\+\+P\+O\+S\+T} \char`\"{}P\+O\+S\+T\char`\"{}
+\item 
+const \hyperlink{Ruth_8php_a2b907fccde62015cd5962321135ce9d2}{R\+U\+T\+H\+\_\+\+P\+U\+T} \char`\"{}P\+U\+T\char`\"{}
+\item 
+const \hyperlink{Ruth_8php_a6b1071e153d1a5e0a9296990867f0b61}{R\+U\+T\+H\+\_\+\+P\+A\+T\+C\+H} \char`\"{}P\+A\+T\+C\+H\char`\"{}
+\item 
+const \hyperlink{Ruth_8php_abdf8b6f80e49d90cc5a6a6b79662fbbb}{R\+U\+T\+H\+\_\+\+D\+E\+L\+E\+T\+E} \char`\"{}D\+E\+L\+E\+T\+E\char`\"{}
+\end{DoxyCompactItemize}
+
+
+\subsection{Variable Documentation}
+\hypertarget{Ruth_8php_abdf8b6f80e49d90cc5a6a6b79662fbbb}{}\index{Ruth.\+php@{Ruth.\+php}!R\+U\+T\+H\+\_\+\+D\+E\+L\+E\+T\+E@{R\+U\+T\+H\+\_\+\+D\+E\+L\+E\+T\+E}}
+\index{R\+U\+T\+H\+\_\+\+D\+E\+L\+E\+T\+E@{R\+U\+T\+H\+\_\+\+D\+E\+L\+E\+T\+E}!Ruth.\+php@{Ruth.\+php}}
+\subsubsection[{R\+U\+T\+H\+\_\+\+D\+E\+L\+E\+T\+E}]{\setlength{\rightskip}{0pt plus 5cm}const R\+U\+T\+H\+\_\+\+D\+E\+L\+E\+T\+E \char`\"{}D\+E\+L\+E\+T\+E\char`\"{}}\label{Ruth_8php_abdf8b6f80e49d90cc5a6a6b79662fbbb}
+\hypertarget{Ruth_8php_acc73cd34b6fcffd15a4fdd050e0a86d8}{}\index{Ruth.\+php@{Ruth.\+php}!R\+U\+T\+H\+\_\+\+G\+E\+T@{R\+U\+T\+H\+\_\+\+G\+E\+T}}
+\index{R\+U\+T\+H\+\_\+\+G\+E\+T@{R\+U\+T\+H\+\_\+\+G\+E\+T}!Ruth.\+php@{Ruth.\+php}}
+\subsubsection[{R\+U\+T\+H\+\_\+\+G\+E\+T}]{\setlength{\rightskip}{0pt plus 5cm}const R\+U\+T\+H\+\_\+\+G\+E\+T \char`\"{}G\+E\+T\char`\"{}}\label{Ruth_8php_acc73cd34b6fcffd15a4fdd050e0a86d8}
+\hypertarget{Ruth_8php_a007827b20a122223418cd0bed933b32c}{}\index{Ruth.\+php@{Ruth.\+php}!R\+U\+T\+H\+\_\+\+I\+G\+N\+O\+R\+E\+\_\+\+R\+O\+U\+T\+E@{R\+U\+T\+H\+\_\+\+I\+G\+N\+O\+R\+E\+\_\+\+R\+O\+U\+T\+E}}
+\index{R\+U\+T\+H\+\_\+\+I\+G\+N\+O\+R\+E\+\_\+\+R\+O\+U\+T\+E@{R\+U\+T\+H\+\_\+\+I\+G\+N\+O\+R\+E\+\_\+\+R\+O\+U\+T\+E}!Ruth.\+php@{Ruth.\+php}}
+\subsubsection[{R\+U\+T\+H\+\_\+\+I\+G\+N\+O\+R\+E\+\_\+\+R\+O\+U\+T\+E}]{\setlength{\rightskip}{0pt plus 5cm}const R\+U\+T\+H\+\_\+\+I\+G\+N\+O\+R\+E\+\_\+\+R\+O\+U\+T\+E true}\label{Ruth_8php_a007827b20a122223418cd0bed933b32c}
+Routing system for the framework to handle H\+T\+T\+P requests
+
+Installation on N\+G\+I\+N\+X
+
+location / \{ root web\+\_\+root; try\+\_\+files \$uri \$uri/ /index.php; index index.\+php index.\+html index.\+htm; \}
+
+Installation on Apache Rewrite\+Engine On Rewrite\+Cond \%\{R\+E\+Q\+U\+E\+S\+T\+\_\+\+F\+I\+L\+E\+N\+A\+M\+E\} !-\/f Rewrite\+Cond \%\{R\+E\+Q\+U\+E\+S\+T\+\_\+\+F\+I\+L\+E\+N\+A\+M\+E\} !-\/d Rewrite\+Rule $^\wedge$(.$\ast$)\$ index.\+php \mbox{[}Q\+S\+A,L\mbox{]}
+
+\begin{DoxyAuthor}{Author}
+Andre van Zuydam \href{mailto:andrevanzuydam@gmail.com}{\tt andrevanzuydam@gmail.\+com}  G\+P\+L  \href{http://opensource.org/licenses/gpl-license.php}{\tt http\+://opensource.\+org/licenses/gpl-\/license.\+php} G\+N\+U Public License Defined variable to ignoring routes, used with add route 
+\end{DoxyAuthor}
+\hypertarget{Ruth_8php_a6b1071e153d1a5e0a9296990867f0b61}{}\index{Ruth.\+php@{Ruth.\+php}!R\+U\+T\+H\+\_\+\+P\+A\+T\+C\+H@{R\+U\+T\+H\+\_\+\+P\+A\+T\+C\+H}}
+\index{R\+U\+T\+H\+\_\+\+P\+A\+T\+C\+H@{R\+U\+T\+H\+\_\+\+P\+A\+T\+C\+H}!Ruth.\+php@{Ruth.\+php}}
+\subsubsection[{R\+U\+T\+H\+\_\+\+P\+A\+T\+C\+H}]{\setlength{\rightskip}{0pt plus 5cm}const R\+U\+T\+H\+\_\+\+P\+A\+T\+C\+H \char`\"{}P\+A\+T\+C\+H\char`\"{}}\label{Ruth_8php_a6b1071e153d1a5e0a9296990867f0b61}
+\hypertarget{Ruth_8php_af749f90f066c3572c6dae5f01eb61af8}{}\index{Ruth.\+php@{Ruth.\+php}!R\+U\+T\+H\+\_\+\+P\+O\+S\+T@{R\+U\+T\+H\+\_\+\+P\+O\+S\+T}}
+\index{R\+U\+T\+H\+\_\+\+P\+O\+S\+T@{R\+U\+T\+H\+\_\+\+P\+O\+S\+T}!Ruth.\+php@{Ruth.\+php}}
+\subsubsection[{R\+U\+T\+H\+\_\+\+P\+O\+S\+T}]{\setlength{\rightskip}{0pt plus 5cm}const R\+U\+T\+H\+\_\+\+P\+O\+S\+T \char`\"{}P\+O\+S\+T\char`\"{}}\label{Ruth_8php_af749f90f066c3572c6dae5f01eb61af8}
+\hypertarget{Ruth_8php_a2b907fccde62015cd5962321135ce9d2}{}\index{Ruth.\+php@{Ruth.\+php}!R\+U\+T\+H\+\_\+\+P\+U\+T@{R\+U\+T\+H\+\_\+\+P\+U\+T}}
+\index{R\+U\+T\+H\+\_\+\+P\+U\+T@{R\+U\+T\+H\+\_\+\+P\+U\+T}!Ruth.\+php@{Ruth.\+php}}
+\subsubsection[{R\+U\+T\+H\+\_\+\+P\+U\+T}]{\setlength{\rightskip}{0pt plus 5cm}const R\+U\+T\+H\+\_\+\+P\+U\+T \char`\"{}P\+U\+T\char`\"{}}\label{Ruth_8php_a2b907fccde62015cd5962321135ce9d2}

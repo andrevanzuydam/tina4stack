@@ -16,7 +16,7 @@ date_default_timezone_set('America/Los_Angeles');
  * Auto load paths for Tina4 to put your project together
  * Each path you wish to be included can be separated by the default PHP path separator
  */
-define("TINA4_INCLUDES", "project".PATH_SEPARATOR."objects");
+define("TINA4_INCLUDES", "project".PATH_SEPARATOR."objects".PATH_SEPARATOR."git");
 /**
  * A standard way of operating a PHP website is to specify a session name for the site, Ruth needs a session to be set before she can operate otherwise she will call her sessions TINA4
  */

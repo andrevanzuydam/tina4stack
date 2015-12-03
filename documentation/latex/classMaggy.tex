@@ -1,0 +1,98 @@
+\hypertarget{classMaggy}{}\section{Maggy Class Reference}
+\label{classMaggy}\index{Maggy@{Maggy}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMaggy_a067cf2f5b502b1ff73d63e1a2b927545}{\+\_\+\+\_\+construct} (\$migration\+Path=\char`\"{}migration\char`\"{}, \$delim=\char`\"{};\char`\"{}, \$run\+Migrations=false)
+\item 
+\hyperlink{classMaggy_a4c8fb8426aeb2aaed4968fbb207d19c2}{do\+Migration} ()
+\item 
+\hyperlink{classMaggy_a2b4d618fa3afc138f4b1cab39adc371c}{create\+Migration} ()
+\item 
+\hyperlink{classMaggy_a494c35bf7f6d5a704e430d20da195954}{get\+Page\+Template} (\$\hyperlink{Shape_8php_ad264ad0cabbe965bf7f7c8a5ed6abebb}{title}=\char`\"{}Default\char`\"{})
+\item 
+\hyperlink{classMaggy_afd787d71f29b356d6a6de0d0707b6be4}{update\+Migration} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Description of \hyperlink{classMaggy}{Maggy}
+
+\hyperlink{classMaggy}{Maggy} makes migrating of your database a breeze, all you need to do is make a migration folder in your web root and create files in the following format
+
+There are some \char`\"{}rules\char`\"{} that \hyperlink{classMaggy}{Maggy} prescribes for the migrations and it would be in your best interests to follow them. 1.) File formats are in the following format\+: Y\+Y\+Y\+Y\+M\+M\+D\+D\+H\+H\+M\+M\+S\+S Description of migration followed by dot sql Example\+: 01012015101525 The first migration.\+sql 2.) Do not put commit statements in the S\+Q\+L, this will make it impossible for a migration to fail or roll back. Instead make more files. A create table statement would be in its own file. 3.) Stored procedures, triggers and views should be in their own files, they are run as individual statements and are commited so, delimter is not needed on the end of these. You do not need to change the delimiter either before running these statements.
+
+\begin{DoxyAuthor}{Author}
+Andre van Zuydam \href{mailto:andre@xineoh.com}{\tt andre@xineoh.\+com}  G\+P\+L 
+\end{DoxyAuthor}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classMaggy_a067cf2f5b502b1ff73d63e1a2b927545}{}\index{Maggy@{Maggy}!\+\_\+\+\_\+construct@{\+\_\+\+\_\+construct}}
+\index{\+\_\+\+\_\+construct@{\+\_\+\+\_\+construct}!Maggy@{Maggy}}
+\subsubsection[{\+\_\+\+\_\+construct}]{\setlength{\rightskip}{0pt plus 5cm}Maggy\+::\+\_\+\+\_\+construct (
+\begin{DoxyParamCaption}
+\item[{}]{\$migration\+Path = {\ttfamily \char`\"{}migration\char`\"{}}, }
+\item[{}]{\$delim = {\ttfamily \char`\"{};\char`\"{}}, }
+\item[{}]{\$run\+Migrations = {\ttfamily false}}
+\end{DoxyParamCaption}
+)}\label{classMaggy_a067cf2f5b502b1ff73d63e1a2b927545}
+Constructor for \hyperlink{classMaggy}{Maggy}
+
+There needs to be a \hyperlink{classRuth}{Ruth} Object D\+E\+B for the database declared using the \hyperlink{classDebby}{Debby} Class The path is relative to your web folder.
+
+
+\begin{DoxyParams}[1]{Parameters}
+String & {\em \$migration\+Path} & relative path to your web folder \\
+\hline
+String & {\em \$delim} & A delimiter to say how your S\+Q\+L is run \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMaggy_a2b4d618fa3afc138f4b1cab39adc371c}{}\index{Maggy@{Maggy}!create\+Migration@{create\+Migration}}
+\index{create\+Migration@{create\+Migration}!Maggy@{Maggy}}
+\subsubsection[{create\+Migration}]{\setlength{\rightskip}{0pt plus 5cm}Maggy\+::create\+Migration (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classMaggy_a2b4d618fa3afc138f4b1cab39adc371c}
+\hypertarget{classMaggy_a4c8fb8426aeb2aaed4968fbb207d19c2}{}\index{Maggy@{Maggy}!do\+Migration@{do\+Migration}}
+\index{do\+Migration@{do\+Migration}!Maggy@{Maggy}}
+\subsubsection[{do\+Migration}]{\setlength{\rightskip}{0pt plus 5cm}Maggy\+::do\+Migration (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classMaggy_a4c8fb8426aeb2aaed4968fbb207d19c2}
+Do Migration
+
+Do Migration finds the last possible migration based on what is read from the database on the constructor It then opens the migration file, imports it into the database and tries to run each statement. The migration files must run in sequence and \hyperlink{classMaggy}{Maggy} will stop if she hits an error!
+
+D\+O N\+O\+T U\+S\+E C\+O\+M\+M\+I\+T S\+T\+A\+T\+E\+M\+E\+N\+T\+S I\+N Y\+O\+U\+R M\+I\+G\+R\+A\+T\+I\+O\+N\+S , R\+A\+T\+H\+E\+R B\+R\+E\+A\+K T\+H\+I\+N\+G\+S U\+P I\+N\+T\+O S\+M\+A\+L\+L\+E\+R L\+O\+G\+I\+C\+A\+L P\+I\+E\+C\+E\+S \hypertarget{classMaggy_a494c35bf7f6d5a704e430d20da195954}{}\index{Maggy@{Maggy}!get\+Page\+Template@{get\+Page\+Template}}
+\index{get\+Page\+Template@{get\+Page\+Template}!Maggy@{Maggy}}
+\subsubsection[{get\+Page\+Template}]{\setlength{\rightskip}{0pt plus 5cm}Maggy\+::get\+Page\+Template (
+\begin{DoxyParamCaption}
+\item[{}]{\$title = {\ttfamily \char`\"{}Default\char`\"{}}}
+\end{DoxyParamCaption}
+)}\label{classMaggy_a494c35bf7f6d5a704e430d20da195954}
+The default page template for maggy 
+\begin{DoxyParams}[1]{Parameters}
+type & {\em \$title} & String A title to name the page by \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+type Shape A page template with default bootstrap 
+\end{DoxyReturn}
+\hypertarget{classMaggy_afd787d71f29b356d6a6de0d0707b6be4}{}\index{Maggy@{Maggy}!update\+Migration@{update\+Migration}}
+\index{update\+Migration@{update\+Migration}!Maggy@{Maggy}}
+\subsubsection[{update\+Migration}]{\setlength{\rightskip}{0pt plus 5cm}Maggy\+::update\+Migration (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classMaggy_afd787d71f29b356d6a6de0d0707b6be4}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+web\+\_\+root/tina4/\hyperlink{Maggy_8php}{Maggy.\+php}\end{DoxyCompactItemize}

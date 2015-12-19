@@ -1,0 +1,1 @@
+This is the folder where your version snippets are kept

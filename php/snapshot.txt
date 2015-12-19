@@ -1,9 +1,9 @@
 This snapshot was automatically generated on
-Wed, 27 Aug 2014 19:12:02 +0000
+Thu, 03 Dec 2015 20:03:45 +0000
 
-Version: 5.6.0
+Version: 7.0.0
 Branch: HEAD
-Build: C:\php-sdk\php56\vc11\x86\obj\Release_TS
+Build: C:\php-sdk\php70dev\vc14\x86\obj\Release_TS
 
 Built-in Extensions
 ===========================
@@ -12,15 +12,12 @@ bcmath
 calendar
 ctype
 date
-ereg
 filter
-ftp
 hash
 iconv
 json
 mcrypt
 SPL
-odbc
 pcre
 Reflection
 session
@@ -34,194 +31,455 @@ dom
 PDO
 Phar
 SimpleXML
-wddx
 xml
+wddx
 xmlreader
 xmlwriter
-mhash
 
 
 Dependency information:
-Module: php5apache2_4.dll
+Module: php7apache2_4.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
 
 Module: php-cgi.exe
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-environment-l1-1-0.dll
+	api-ms-win-crt-filesystem-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
+	api-ms-win-crt-locale-l1-1-0.dll
 
 Module: php.exe
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-environment-l1-1-0.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-utility-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-filesystem-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
+	api-ms-win-crt-locale-l1-1-0.dll
 
 Module: php-win.exe
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-environment-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
+	api-ms-win-crt-locale-l1-1-0.dll
 
 Module: phpdbg.exe
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-locale-l1-1-0.dll
+	api-ms-win-crt-environment-l1-1-0.dll
 
-Module: php5phpdbg.dll
+Module: php7phpdbg.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-locale-l1-1-0.dll
+
+Module: php_phpdbg_webhelper.dll
+===========================
+	vcruntime140.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
 
 Module: php_bz2.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
 
 Module: php_com_dotnet.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
 
 Module: php_curl.dll
 ===========================
 	libeay32.dll
+	libssh2.dll
 	ssleay32.dll
 	normaliz.dll
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-filesystem-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-utility-l1-1-0.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-environment-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
 
 Module: php_enchant.dll
 ===========================
 	libenchant.dll
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
 
 Module: php_fileinfo.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-utility-l1-1-0.dll
+	api-ms-win-crt-filesystem-l1-1-0.dll
+	api-ms-win-crt-environment-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-locale-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
+
+Module: php_ftp.dll
+===========================
+	ssleay32.dll
+	libeay32.dll
+	vcruntime140.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
 
 Module: php_gd2.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-utility-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-filesystem-l1-1-0.dll
+	api-ms-win-crt-environment-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
 
 Module: php_gettext.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-environment-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-filesystem-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-utility-l1-1-0.dll
 
 Module: php_gmp.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
 
 Module: php_imap.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-utility-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-filesystem-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-environment-l1-1-0.dll
+	api-ms-win-crt-conio-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
 
 Module: php_interbase.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
 
 Module: php_intl.dll
 ===========================
-	icuuc53.dll
-	icuin53.dll
-	icuio53.dll
-	msvcr110.dll
-	msvcp110.dll
+	icuuc56.dll
+	icuin56.dll
+	icuio56.dll
+	msvcp140.dll
+	vcruntime140.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-environment-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-locale-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
 
 Module: php_ldap.dll
 ===========================
 	libsasl.dll
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-utility-l1-1-0.dll
+	api-ms-win-crt-environment-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
 	ssleay32.dll
 	libeay32.dll
 
 Module: php_mbstring.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
 
 Module: php_oci8_12c.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+
+Module: php_odbc.dll
+===========================
+	vcruntime140.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
 
 Module: php_opcache.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-filesystem-l1-1-0.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
 
 Module: php_openssl.dll
 ===========================
 	ssleay32.dll
 	libeay32.dll
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-environment-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
 
 Module: php_pgsql.dll
 ===========================
 	libpq.dll
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
 
 Module: php_shmop.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
 
 Module: php_snmp.dll
 ===========================
 	libeay32.dll
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-utility-l1-1-0.dll
+	api-ms-win-crt-locale-l1-1-0.dll
+	api-ms-win-crt-environment-l1-1-0.dll
+	api-ms-win-crt-filesystem-l1-1-0.dll
 
 Module: php_sockets.dll
 ===========================
 	iphlpapi.dll
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
 
 Module: php_sqlite3.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-utility-l1-1-0.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
 
-Module: php_sybase_ct.dll
+Module: php_sysvshm.dll
 ===========================
-	libsybcs.dll
-	libsybct.dll
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
 
 Module: php_tidy.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-environment-l1-1-0.dll
 
 Module: php_exif.dll
 ===========================
-	msvcr110.dll
-
-Module: php_mysql.dll
-===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
 
 Module: php_mysqli.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
 
 Module: php_pdo_firebird.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
 
 Module: php_pdo_mysql.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
 
 Module: php_pdo_oci.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
 
 Module: php_pdo_odbc.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
 
 Module: php_pdo_pgsql.dll
 ===========================
 	libpq.dll
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
 
 Module: php_pdo_sqlite.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-utility-l1-1-0.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
 
 Module: php_soap.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-filesystem-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
 
 Module: php_xmlrpc.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-convert-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-string-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-time-l1-1-0.dll
 
 Module: php_xsl.dll
 ===========================
-	msvcr110.dll
+	vcruntime140.dll
+	api-ms-win-crt-stdio-l1-1-0.dll
+	api-ms-win-crt-heap-l1-1-0.dll
+	api-ms-win-crt-filesystem-l1-1-0.dll
+	api-ms-win-crt-math-l1-1-0.dll
+	api-ms-win-crt-utility-l1-1-0.dll
+	api-ms-win-crt-time-l1-1-0.dll
+	api-ms-win-crt-runtime-l1-1-0.dll
 

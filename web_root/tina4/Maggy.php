@@ -222,9 +222,9 @@ class Maggy {
               
         $form = (new Cody())->bootStrapPanel("Create Migration", $form);
         
-        $html->addContent ($form);
-        
-      
+        $html->byId("content")->addContent ($form);
+
+
         
         return $html;
     }

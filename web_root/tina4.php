@@ -66,11 +66,11 @@ if (function_exists("xcache_get")) {
 
 
 
+
 if (!defined ("TINA4_INCLUDES")) define("TINA4_INCLUDES", "project");
 if (!defined ("TINA4_SESSION")) define("TINA4_SESSION", "TINA4");
 if (!defined ("TINA4_RUTH_DEBUG")) define("TINA4_RUTH_DEBUG", false);
     
-Ruth::autoLoad($_TINA4_LOAD_PATHS . TINA4_INCLUDES, true, true);
 
 /*
  * Initialize the TIN4 session
@@ -89,6 +89,24 @@ if (!empty(TINA4_SESSION)) {
 } else {
     tina4Message("TINA4_SESSION variable is not set", "Config Error");
 }
+
+//tests for a particular version of the application in the version folder of root
+if (!empty(Ruth::getREQUEST("version"))) {
+    if (file_exists(Ruth::getDOCUMENT_ROOT()."/versions/".Ruth::getREQUEST("version"))) {
+        define ("TINA4_VERSION", Ruth::getDOCUMENT_ROOT()."/versions/".Ruth::getREQUEST("version"));
+    } else {
+        echo Ruth::getREQUEST("version")." is not a valid version of the application";
+        exit;
+    }
+}  else {
+
+    define ("TINA4_VERSION", "");
+}
+
+
+Ruth::autoLoad($_TINA4_LOAD_PATHS . TINA4_INCLUDES, true, true);
+
+
 
 /**
  * Check for mobile device
@@ -216,8 +234,18 @@ if ( strpos (Ruth::getREQUEST_URI(), "/cody") !== false ) {
             echo (new Cody())->codeBuilder();
         }
     );
+
+    Ruth::addRoute(RUTH_POST, "/cody", function() {
+            echo (new Cody())->codeBuilder();
+        }
+    );
     
     Ruth::addRoute(RUTH_POST, "/cody/{action}", function($action) {
+            echo (new Cody())->codeHandler($action);
+        }
+    );
+
+    Ruth::addRoute(RUTH_GET, "/cody/{action}", function($action) {
             echo (new Cody())->codeHandler($action);
         }
     );

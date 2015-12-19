@@ -313,12 +313,23 @@ class Ruth {
         $paths = explode (PATH_SEPARATOR, $paths);
         $code =  'function autoloadTina4($classname) {';
         foreach ($paths as $pid => $path) {
-            $code .= 'if (file_exists("'.$path.'/{$classname}.php")) {
+            $code .= '
+                  if (!empty(TINA4_VERSION) && file_exists("'.TINA4_VERSION."/".$path.'/{$classname}.php")) {
+                    require_once ("'.TINA4_VERSION."/".$path.'/{$classname}.php");
+                  } else
+                  if (file_exists("'.$path.'/{$classname}.php")) {
                      require_once ("'.$path.'/{$classname}.php");
                   }';
+
             foreach(glob("{$path}/*.php") as $filename){
                 if (!$ignoreRequires) {
-                    require_once $filename;
+
+                    $versionFileName = str_replace(Ruth::getDOCUMENT_ROOT(), TINA4_VERSION, $filename );
+                    if (!empty(TINA4_VERSION) && file_exists($versionFileName)) {
+                        require_once $versionFileName;
+                    } else {
+                        require_once $filename;
+                    }
                 }
             }
         }
@@ -1283,6 +1294,8 @@ class Ruth {
 
         //Choose the correct route
         $found = false;
+
+
         foreach (self::$routes as $rid => $route) {
             if ($route->requestMethod == self::$REQUEST_METHOD) {
                 if (self::matchRoute($route->routePath, self::$REQUEST_URI)) {
@@ -1308,9 +1321,6 @@ class Ruth {
                         $reflection = new ReflectionFunction ($route->routeFunction);
 
                         $method_args_count = $reflection->getParameters();
-
-
-
 
                         if (count($params) != count($method_args_count)) {
                             for ($i = 0; $i < count($method_args_count); $i++) {

@@ -535,6 +535,41 @@
  *
  * @endcode
  *
+ *
+ * @section Versioning
+ *
+ * Tina4 stack allows you to start versioning your project based on the original source code you had.  It allows you to test new functionality as a version whilst keeping
+ * the existing code.  Only the files that you changed need to be moved into a versioning system and they can be combined with the existing files.  The structure is very
+ * simple at the moment.
+ *
+ * @code
+ *   web_root -
+ *            |--versions-
+ *                        |--v1.0.1-
+ *                        |         |-assets-
+ *                        |         |       |-pages-
+ *                        |         |               |-index.html
+ *                        |         |
+ *                        |         |-project-
+ *                        |                  |-Example.php
+ *                        |
+ *                        |
+ *                        |
+ *                        |
+ *                        |--v1.0.2
+ *                        |         |-assets-
+ *                        |         |       |-pages-
+ *                        |         |               |-index.html
+ *                        |         |
+ *                        |         |-project-
+ *                        |                  |-Example.php
+ *
+ * @endcode
+ *
+ *  You can test different versions by adding the suffix ?version=<version folder> to your URL. Example:  http://localhost:12345/?version=v1.0.1
+ *
+ *  Once a version becomes stable it's changes can be copied down into the web_root.
+ *
  * @author Andre van Zuydam
  * @version 1.0.0
  * @copyright Tina4

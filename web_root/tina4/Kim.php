@@ -145,9 +145,13 @@ class Kim {
      */
     function getDefaultPage($pageName) {
 
-
-
         $assetFolder = Ruth::getDOCUMENT_ROOT()."/assets";
+        $versionFolder = "";
+
+        if (!empty(TINA4_VERSION)) {
+            $versionFolder = TINA4_VERSION."/assets";
+        }
+
         $html = "";
         $fileName = "";
         $found = false;
@@ -157,7 +161,11 @@ class Kim {
         if ($pageName === "/") {
             foreach ($this->defaultPages as $id => $page) {
                 if (file_exists($assetFolder."/pages/".$page)) {
-                    $fileName = $assetFolder."/pages/".$page;
+                    if (!empty($versionFolder) && file_exists($versionFolder."/pages/".$page)) {
+                        $fileName = $versionFolder."/pages/". $page; //get the versioned file
+                    } else {
+                        $fileName = $assetFolder . "/pages/" . $page;
+                    }
                     $found = true;
                     break;
                 }
@@ -170,7 +178,11 @@ class Kim {
             }
             foreach ($this->defaultExtensions as $eid => $extension) {
                 if (file_exists($assetFolder.$pageName.$extension)) {
-                    $fileName = $assetFolder.$pageName.$extension;
+                    if (!empty($versionFolder) && file_exists($versionFolder.$pageName.$extension)) {
+                        $fileName = $versionFolder.$pageName.$extension;
+                    } else {
+                        $fileName = $assetFolder.$pageName.$extension;
+                    }
                     $found = true;
                     break;
                 }
@@ -184,7 +196,12 @@ class Kim {
                 $pageName = "/pages".$pageName;
                 foreach ($this->defaultExtensions as $eid => $extension) {
                     if (file_exists($assetFolder.$pageName.$extension)) {
-                        $fileName = $assetFolder.$pageName.$extension;
+                        if (!empty($versionFolder) && file_exists($versionFolder.$pageName.$extension)) {
+                            $fileName = $versionFolder.$pageName.$extension;
+                        } else {
+                            $fileName = $assetFolder.$pageName.$extension;
+                        }
+
                         $found = true;
                         break;
                     }
@@ -702,9 +719,24 @@ class Kim {
             else {
                 //first eval the template . this will load code parts into memory which are PHP code.
                 $assetFolder = Ruth::getDOCUMENT_ROOT()."/assets/";
+                $versionFolder = "";
+
+                if (!empty(TINA4_VERSION)) {
+                    $versionFolder = TINA4_VERSION."/assets";
+                }
+
+
+
                 foreach ($this->defaultExtensions as $eid => $extension) {
                     if (file_exists($assetFolder.$template.$extension)) {
-                        $template = file_get_contents($assetFolder.$template.$extension);
+
+                        if (!empty($versionFolder) && file_exists($versionFolder.$template.$extension)) {
+                            $template = file_get_contents($versionFolder.$template.$extension);
+                        } else {
+                            $template = file_get_contents($assetFolder.$template.$extension);
+                        }
+
+
                         if (defined("TINA4_HAS_CACHE") && TINA4_HAS_CACHE !== false  && !empty($data) && strpos($template, "{{") === false) {
                             xcache_set ($checkSum, $template);
                         }

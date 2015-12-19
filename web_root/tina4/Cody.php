@@ -229,21 +229,21 @@ class Cody {
      * @param type $title String A title to name the page by
      * @return type Shape A page template with default bootstrap
      */
+
+//<link href="metro.css" rel="stylesheet">
+//<script src="jquery.js"></script>
+//<script src="metro.js"></script>
+
     function getPageTemplate($title="Default") {
         $html = html (
             head (
                 title ($title),
-                alink (["rel" => "stylesheet", "href"=>"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"]),
-                alink (["rel" => "stylesheet", "href"=> "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"]),
-                alink (["rel" => "stylesheet", "href"=> "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css"]),
-                alink (["rel" => "stylesheet", "href"=> "https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css"]),
-                script(["src" => "https://code.jquery.com/jquery-2.1.4.min.js"]),
-                script (["src"=> "https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"])
-
-
-
+                alink (["rel" => "stylesheet", "href"=>"/assets/metro-ui/css/metro.min.css"]),
+                alink (["rel" => "stylesheet", "href"=>"/assets/metro-ui/css/metro-schemes.min.css"]),
+                script (["src"=> "/assets/js/jquery-2.1.4.min.js"]),
+                script (["src"=> "/assets/metro-ui/js/metro.js"])
             ),
-            body (  ["style" => "padding: 0px 20px 0px", "id" => "content"])
+            body (["id" => "content"])
 
         );
         return $html;
@@ -2252,44 +2252,317 @@ class Cody {
     }
 
 
+    function getFilesForUpdate($dir) {
+        $fileArray = [];
+
+        foreach (glob($dir."/*") as $file) {
+            $file = str_replace ('\\', '/', $file);
+            if (is_dir($file)) {
+                $fileArray = array_merge( $fileArray, $this->getFilesForUpdate($file));
+            } else {
+                $fileArray[] = $file;
+            }
+        }
+        return $fileArray;
+    }
+
+
+    function runUpdate ($versionFolder, $destFolder, $applyUpdates=false) {
+        $destFolder = str_replace ('\\', '/', $destFolder);
+        $versionFolder = str_replace ('\\', '/', $versionFolder);
+
+        $updateFiles = $this->getFilesForUpdate ($versionFolder);
+        $list = []; //list of changes
+
+        if (!file_exists($destFolder."/backup")) {
+            mkdir($destFolder."/backup", "0755", true);
+        }
+
+        $backupFile = $destFolder."/backup/pre".str_replace("/", "_", str_replace($destFolder, "", $versionFolder)).".zip";
+
+        $list[] = "Creating a backup file {$backupFile}";
+        $zip = new ZipArchive();
+        if($zip->open($backupFile, ZIPARCHIVE::CREATE) !== true) {
+            $list[] = "Can't create zip file, already exists ...";
+            return $list;
+        }
+
+        //add the files
+
+        foreach ($updateFiles as $uid => $file) {
+            //see if file exists in the destination folder
+            $destFile = str_replace ($versionFolder, $destFolder, $file);
+            $message = "";
+            if (file_exists($destFile) && file_get_contents($destFile) !== "") {
+                $message = "{$destFile} needs to be updated &";
+            } else {
+                $message = "{$destFile} needs to be created &";
+            }
+
+            $zipFileName = substr (str_replace ($versionFolder, "", $file), 1);
+            $list[] = $message." ".$zipFileName." added to zip file";
+
+            $zip->addFile( $destFile, $zipFileName);
+
+        }
+
+        $zip->close();
+        $list[] = "Zip file created";
+
+        if ($applyUpdates){
+            foreach ($updateFiles as $uid => $file) {
+                $destFile = str_replace ($versionFolder, $destFolder, $file);
+                $list[] = "{$file} copied over to {$destFile}";
+                file_put_contents ( $destFile,  file_get_contents ( $file ) );
+            }
+        }
+
+
+        return $list;
+    }
+
+
+    function getNewFile ($filePath) {
+
+        $html = div(["class" => "padding20 dialog", "data-show" => "true",  "data-role" => "dialog", "data-close-button" => "true", "data-overlay" => "true", "id" => "newFileDialog"],
+                h3("New File"),
+                p(
+                    "File will be created in:", br(),
+                    b("{$filePath}")
+                ),
+                form(["method" => "post", "data-role" => "validator", "onsubmit" => "return false;"],
+                    label(["class" => "block"], "File name"),
+                    input(["id" => "newFileName", "style" => "width:100%","data-validate-func" => "required", "data-validate-hint" => "Please type in a filename",  "name" => "fileName", "type" => "text"]),
+                    label(["class" => "block"], "Reason"),
+                    textarea(["" => "newFileReason","style" => "width:100%", "data-validate-func" => "required", "data-validate-hint" => "Reason for creating the file (used for git)", "name" => "fileReason"]),
+                    div (input(["type" => "submit", "class" => "button success", "onclick" => "ajaxCode ('/cody/createFile', 'actionArea', {fileName: $('#newFileName').val(), fileReason: $('#newFileReason').val(), createPath: filePath, targetVersion: $('targetVersion').val() }); return false;"], "Create"),
+                         input(["type" => "button", "class" => "button danger", "onclick" => "$('#newFileDialog').data('dialog').close();"], "Cancel"))
+                ),
+                span(["class" => "dialog-close-button"])
+
+                );
+
+        return $html;
+    }
+
+    function getRelease( $versionFolder, $destFolder ) {
+        $updates = $this->runUpdate($versionFolder, $destFolder, true);
+        $listUpdates = ul();
+        foreach ($updates as $uid => $list) {
+            $listUpdates->addContent(li($list));
+        }
+
+        $html = div(["class" => "padding20 dialog", "data-show" => "true",  "data-role" => "dialog", "data-close-button" => "true", "data-overlay" => "true", "id" => "newFileDialog"],
+            h3("Updates List"),
+            $listUpdates,
+            span(["class" => "dialog-close-button"])
+        );
+
+        return $html;
+    }
+
+
     function codeHandler ($action) {
         $html = "";
         switch ($action) {
+            case "login":
+                $html = $this->getPageTemplate("Login");
+
+                $content = '<div style="width:30%;" class="login-form padding20 block-shadow">
+                                        <form action="/cody/validate" method="post">
+                                            <h1 class="text-light">Login to Cody</h1>
+                                            <hr class="thin"/>
+                                            <br />
+                                            <div class="input-control text full-size" data-role="input">
+                                                <label for="user_login">User:</label>
+                                                <input type="text" name="user_login" id="user_login">
+                                                <button class="button helper-button clear"><span class="mif-cross"></span></button>
+                                            </div>
+                                            <br />
+                                            <br />
+                                            <div class="input-control password full-size" data-role="input">
+                                                <label for="user_password">Password:</label>
+                                                <input type="password" name="user_password" id="user_password">
+                                                <button class="button helper-button reveal"><span class="mif-looks"></span></button>
+                                            </div>
+                                            <br />
+                                            <br />
+                                            <div class="form-actions">
+                                                <button type="submit" class="button primary">Login</button>
+                                            </div>
+                                        </form>
+                                    </div>';
+
+                $html->byId("content")->setContent($content);
+            break;
+            case "validate":
+                $user = (new Kim())->KIM->getRow("select * from user where email = '".Ruth::getREQUEST("user_login")."'");
+
+                if (password_verify(Ruth::getREQUEST("user_password"), $user->PASSWD)) {
+                    Ruth::setSESSION("codyAuthenticated", ["loggedin" => 1, "user" => $user]);
+                    Ruth::redirect("/cody");
+                }
+                else {
+                    Ruth::setSESSION("codyAuthenticated", null);
+                    Ruth::redirect("/cody/login");
+                }
+            break;
+            case "logout":
+                Ruth::setSESSION("codyAuthenticated",  null);
+                Ruth::redirect("/cody/login");
+            break;
+            case "refreshFileExplorer":
+               $html .= $this->getFileTree(Ruth::getDOCUMENT_ROOT(), "loadFileCode", true);
+            break;
             case "loadFile":
-                $html .= $this->getCodeWindow ("1", file_get_contents(Ruth::getREQUEST("fileName")));
+                $fileName = Ruth::getREQUEST("fileName");
+                if (strpos(Ruth::getREQUEST("fileName"), str_replace('\\', '/', Ruth::getDOCUMENT_ROOT()."/versions/")) === false) {
+                    $fileName = str_replace ( str_replace ('\\', '/', Ruth::getDOCUMENT_ROOT()), Ruth::getREQUEST("targetVersion"), $fileName  );
+                }
 
+                if (file_exists($fileName)) {
+                    $html .= $this->getCodeWindow ("1", file_get_contents($fileName));
+                }
+                  else {
+                      $html .= $this->getCodeWindow ("1", file_get_contents(Ruth::getREQUEST("fileName")));
+                  }
+            break;
+            case "newFile":
+                $html .= $this->getNewFile(Ruth::getREQUEST("filePath"));
+            break;
+            case "createFile":
+                //initial file
+                $fileName =  Ruth::getREQUEST("createPath")."/".Ruth::getREQUEST("fileName");
+                $fileName = str_replace (" ", "", $fileName);
+                if (strpos($fileName,".php") == false) {
+                    $fileName = $fileName.".php";
+                }
+                file_put_contents($fileName, ''); //dont put a place holder file on creation, this will get released anyway
+                $versionFile = str_replace ( str_replace('\\', '/', Ruth::getDOCUMENT_ROOT()), Ruth::getREQUEST("targetVersion"), $fileName );
+                file_put_contents($versionFile, '<'.'?'.'p'.'hp '."\n"."/**\nName : ".Ruth::getREQUEST("fileName")."\nReason:".Ruth::getREQUEST("fileReason")."\n**/");
+                $html .= script("refreshFileExplorer();");
+                //add it to Git?
+            break;
+            case "deleteFile":
+                if (strpos(Ruth::getREQUEST("fileName"), str_replace('\\', '/', Ruth::getDOCUMENT_ROOT()."/versions/")) !== false) {
+                    //what should we do if we find the file in the original space
+                    $currentFile = str_replace(Ruth::getREQUEST("targetVersion"), str_replace('\\', '/', Ruth::getDOCUMENT_ROOT()), Ruth::getREQUEST("fileName"));
+                    if (file_get_contents($currentFile) === "") {
+                        unlink($currentFile);
+                    }
 
-                break;
+                    $fileName = Ruth::getREQUEST("fileName");
+                }  else {
+                    //file should get added to a delete list for the version to delete it
+
+                    $fileName = Ruth::getREQUEST("fileName");
+                }
+                unlink($fileName);
+                $html .= script("refreshFileExplorer();");
+            break;
+            case "saveFile":
+               //see if the file exists in the versioned area if there is no versioning in the name
+               //save the file in the correct place
+
+               if (strpos(Ruth::getREQUEST("fileName"), str_replace('\\', '/', Ruth::getDOCUMENT_ROOT()."/versions/")) === false) {
+                   //need to make the directory
+                   $fileName = Ruth::getREQUEST("fileName");
+
+                   $fileName = str_replace ( str_replace ('\\', '/', Ruth::getDOCUMENT_ROOT()), Ruth::getREQUEST("targetVersion"), $fileName  );
+                   $dirName = dirname($fileName);
+                   if (!file_exists($dirName)) {
+                       mkdir($dirName, "0755", true);
+                   }
+
+               }  else {
+                   $fileName = Ruth::getREQUEST("fileName");
+               }
+
+               //TODO: Version the files here
+               file_put_contents($fileName, Ruth::getREQUEST("fileCode"));
+
+               $html .= script("$('#fileVersioning').html('Saved ".date("Y-m-d H:i:s")." - {$fileName}');  refreshFileExplorer();");
+            break;
+            case "releaseFiles":
+               $html .= $this->getRelease(Ruth::getREQUEST("targetVersion"), Ruth::getDOCUMENT_ROOT());
+            break;
             default:
                 $html = "Unknown {$action} ".print_r (Ruth::getREQUEST(), 1);
-                break;
+            break;
         }
 
         return $html;
     }
 
     function codeBuilder() {
-        $links [] = script(["src" => "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"]);
-        $links [] = script(["src" => "https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"]);
-        $links [] = alink(["rel" => "stylesheet", "href" => "https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"]);
+        if (!Ruth::getSESSION("codyAuthenticated")) Ruth::redirect("/cody/login");
+
+        $html = $this->getPageTemplate("Code Builder");
+
+        if (empty(Ruth::getREQUEST("targetVersion"))) {
+            $version = "v1.0.1";
+            Ruth::setREQUEST("targetVersion", str_replace ('\\', '/', Ruth::getDOCUMENT_ROOT()."/versions/v1.0.1"));
+        } else {
+            $version = str_replace (str_replace ('\\', '/', Ruth::getDOCUMENT_ROOT()."/versions/"), "", Ruth::getREQUEST("targetVersion"));
+        }
 
         $content = $this->ajaxHandler("", "", "ajaxCode", "", "post", false);
+        $content .= div(["class"=>"app-bar darcula"],
+            a (["class"=>"app-bar-element", "href"=> "/?version={$version}", "target" => "_blank"], "Home"),
+            span (["class" => "app-bar-divider"]),
+            ul(["class" => "app-bar-menu"],
+                li(a(["onclick" => "newFileCode()"], "New File")),
+                li(a(["onclick" => "saveFileCode()"], "Save File")),
+                li(a(["class" => "button danger", "onclick" => "console.log(fileName); if (fileName !== '' && confirm('Are you sure you want to delete '+fileName+'?') ) { deleteFileCode(); }"],"Delete")),
+                li($this->getAppVersions()),
+                li(a (["class"=> "button success", "href"=> "#", "onclick" => "releaseFiles()"], "Release")),
+                li(a (["href"=> "/cody/logout"], "Logout"))
+
+            ),
+
+            span (["class" => "app-bar-pullbutton"])
+        );
         $content .= script ("
-        function loadFileCode (aFileName) {
-            ajaxCode ('/cody/loadFile', 'codeArea', {fileName: aFileName});
+        var fileName;
+        var filePath;
+
+        function newFileCode() {
+            ajaxCode ('/cody/newFile', 'fileArea', {filePath: filePath});
+
+        }
+
+        function refreshFileExplorer() {
+            ajaxCode ('/cody/refreshFileExplorer', 'fileExplorer', {filePath: filePath});
+        }
+
+
+        function saveFileCode() {
+           aFileName = fileName;
+           ajaxCode ('/cody/saveFile', 'actionArea', {fileName: aFileName, fileCode: editor.getValue(), targetVersion: $('targetVersion').val() });
+        }
+
+        function releaseFiles(){
+           ajaxCode ('/cody/releaseFiles', 'actionArea', {targetVersion: $('targetVersion').val()});
+        }
+
+        function deleteFileCode() {
+           aFileName = fileName;
+           ajaxCode ('/cody/deleteFile', 'actionArea', {fileName: aFileName, targetVersion: $('targetVersion').val() });
+        }
+
+        function loadFileCode (aFileName, aFilePath) {
+            filePath = aFilePath;
+            if (aFileName !== '') {
+              ajaxCode ('/cody/loadFile', 'codeArea', {fileName: aFileName});
+            }
         }
         ");
         $content .= $this->getFileExplorer();
+        $content .= div (["id" => "fileArea"]);
+        $content .= div (["id" => "fileVersioning"], "File versioning");
         $content .= div (["id" => "codeArea"], $this->getCodeWindow("1", file_get_contents("index.php")));
-
-        $html = shape(doctype(), html(
-                head(meta(["charset" => "UTF-8"]), title("Code- Online Developer Editor"), $links),
-
-                body(
-                    $content
-                )
-            )
-        );
+        $content .= div (["id" => "actionArea"]); //place where the actions happen
+        $html->byId("content")->setContent ($content);
 
         return $html;
     }
@@ -2304,14 +2577,39 @@ class Cody {
 
 
     function getCodeWindow($id, $code) {
-        $content = script(["src" => "https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/ace.js"]);
-        $content .= script(["src" => "https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/mode-php.js"]);
+        $content = script(["src" => "/ace/ace.js"]);
+        $content .= script(["src" => "/ace/mode-php.js"]);
+        $content .= script(["src" => "/ace/ext-beautify.js"]);
+        $content .= script(["src" => "/ace/ext-statusbar.js"]);
+        $content .= script(["src" => "/ace/ext-error_marker.js"]);
+
 
         $content .=  div(["id" => "codeWindow{$id}", "style" => "min-width: 0px; max-height: 600px; min-height: 600px", "name" => "codeWindow{$id}"], htmlentities($code));
-        $content .= script("$(function() {
+        $content .= script("
+
                                 var editor = ace.edit('codeWindow{$id}');
-                                    editor.getSession().setMode('ace/mode/php');
-                             } );
+                                    editor.setTheme('ace/theme/monokai');
+                                    editor.getSession().setMode({path:'ace/mode/php', inline:true});
+
+                                //supress save dialog
+                                window.onkeypress = function(event) {
+                                    if (event.charCode === 115 && event.ctrlKey) {
+                                        event.preventDefault();
+
+                                    }
+                                };
+
+                                editor.commands.addCommand({
+                                            name: 'saveFile',
+                                            bindKey: {
+                                            win: 'Ctrl-S',
+                                            mac: 'Command-S',
+                                            sender: 'editor|cli'
+                                            },
+                                            exec: function(env, args, request) {
+                                                saveFileCode();
+                                            }
+                                            });
                             ");
         return $content;
     }
@@ -2322,21 +2620,83 @@ class Cody {
         return $content;
     }
 
+    function getAppVersions() {
+        $files = scandir(Ruth::getDOCUMENT_ROOT()."/versions");
+
+        $html = select (["style" => " width: 9em;", "targetVersion" => "targetVersion", "name" => "targetVersion", "onchange" => "document.forms[0].submit();"]);
+
+        $count = 0;
+        foreach ($files as $fid => $file) {
+            if ($file != "." && $file != "..") {
+                $value = str_replace ('\\', '/', Ruth::getDOCUMENT_ROOT()."/versions/".$file);
+
+                if (is_dir(Ruth::getDOCUMENT_ROOT()."/versions/".$file)) {
+                    if ($value === Ruth::getREQUEST("targetVersion")) {
+                        $html->AddContent(option(["value" => $value, "selected"], $file));
+
+                    } else {
+                        $html->AddContent(option(["value" => $value], $file));
+
+                    }
+                    $count++;
+                }
+            }
+
+        }
+
+        if ($count == 0) {
+            $html->addContent(option(["value" => str_replace ('\\', '/', Ruth::getDOCUMENT_ROOT()."/versions/v1.01")], "v1.0.1"));
+        }
+
+        return form(["method" => "post", "action" => "/cody"], "Version:". $html );
+    }
 
     function getFileTree($path="", $callBack="", $root=false) {
-        $content = ul(["class" => "tree"], "");
+        $targetVersion = Ruth::getREQUEST("targetVersion");
+        $content = ul(["class" => "treeview", "data-role" => "treeview"], "");
         $files = scandir($path);
         foreach ($files as $fid => $file) {
             if ($file != "." && $file != "..") {
                 $fileName = str_replace ('\\', '/', $path."/".$file);
-                if (is_dir($path."/".$file)) {
-                    $content->addContent ( $list = li (a (["href" => "#"], $file )) );
-                } else {
-                    $content->addContent ( $list = li (a (["href" => "#", "onclick" => "{$callBack}('{$fileName}')"], $file )) );
+                $found = false;
+                if (!empty(TINA4_EDITOR_PATHS) && $file !== "tina4.php" && $file != "restAPI.php") {
+                    foreach (TINA4_EDITOR_PATHS as $id => $allowedPath) {
+                        if (stripos($fileName, str_replace ('\\', '/', Ruth::getDOCUMENT_ROOT()."/".$allowedPath)) !== false) {
+                            $found = true;
+                            break;
+                        }
+                    }
                 }
-                if (is_dir($path."/".$file)) {
-                    $list->addContent ($this->getFileTree($path."/".$file, $callBack));
+
+                if ($found) {
+                    if (is_dir($path."/".$file)) {
+                        $tpath = str_replace('\\', '/', $path."/".$file);
+
+                        if ($tpath === Ruth::getREQUEST("filePath")) {
+                            $content->addContent($list = li(["class" => "node", "onclick" => "{$callBack}('', '{$tpath}')"], span(["class" => "leaf"], $file), span(["class" => "node-toggle"])));
+                        }  else {
+                            $content->addContent($list = li(["class" => "node collapsed", "onclick" => "{$callBack}('', '{$tpath}')"], span(["class" => "leaf"], $file), span(["class" => "node-toggle"])));
+                        }
+
+                    } else {
+                        $path = str_replace('\\', '/', $path);
+                        $versionFileName =  str_replace ( str_replace('\\', '/', Ruth::getDOCUMENT_ROOT()), $targetVersion, $fileName  );
+
+                        if (file_exists($versionFileName)) {
+                            $content->addContent ( $list = li (a (["style" => "color:pink", "class" => "leaf", "href" => "#", "onclick" => "fileName = '{$versionFileName}';  {$callBack}('{$versionFileName}', '{$path}')"], $file )) );
+
+                        } else {
+                            $content->addContent ( $list = li (a (["class" => "leaf", "href" => "#", "onclick" => "fileName = '{$fileName}'; {$callBack}('{$fileName}', '{$path}')"], $file )) );
+
+                        }
+
+                    }
+                    if (is_dir($path."/".$file)) {
+
+                        $list->addContent ($this->getFileTree($path."/".$file, $callBack));
+                    }
                 }
+
             }
         }
 

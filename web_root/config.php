@@ -25,9 +25,12 @@ define("TINA4_SESSION", "TINA4");
  * Set ruth debugging on for better debugging
  */
 define("TINA4_RUTH_DEBUG", false);
-
-/** 
+/**
  * Disable the cache for development or if you don't like it 
  */
-define("TINA4_DISABLE_CACHE", false); //this means we ignore the cache
+define("TINA4_DISABLE_CACHE", false); //this means we ignore the cache, currently not supported in PHP 7.0
+/**
+ * Define the paths relative to the web_root where we can load files from
+ **/
+define("TINA4_EDITOR_PATHS", ["assets", "objects", "project", "roles", "routes", "tina4", "config.php"]);
 

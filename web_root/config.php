@@ -7,7 +7,7 @@
 /**
  * Define the release version of the stack
  */
-define("TINA4_RELEASE", "v1.0.3");
+define("TINA4_RELEASE", "v1.0.4");
 /**
  * Set default time zone
  */

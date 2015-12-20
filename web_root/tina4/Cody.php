@@ -1169,7 +1169,9 @@ class Cody {
                 $mtooltip = "";
             }
 
-            $hideColumns = explode(",", strtoupper($hideColumns));
+            if (!is_array($hideColumns)) {
+                $hideColumns = explode(",", strtoupper($hideColumns));
+            }
 
             $DEB->getRow("select first 1 * from ({$sql}) t");
             $fieldInfo = $DEB->fieldinfo;
@@ -2365,6 +2367,28 @@ class Cody {
     function codeHandler ($action) {
         $html = "";
         switch ($action) {
+            case "fileVersion":
+                $fileNameOnly = explode ("/", Ruth::getREQUEST("fileName"));
+                $fileNameOnly = $fileNameOnly[sizeof($fileNameOnly)-1];
+                $release = str_replace (str_replace('\\', '/', Ruth::getDOCUMENT_ROOT()."/versions/"), "", Ruth::getREQUEST("targetVersion"));
+
+                $sqlVersion = "select * from kim_version where file_name = '{$fileNameOnly}' and release = '{$release}' order by version_no desc";
+
+                $versions = $this->DEB->getRows($sqlVersion);
+
+                if (!empty($versions)) {
+                    $select = select(["name" => "lastVersion", "id" => "lastVersion"]);
+
+                    $select->addContent(option(["value" => ""], "Current Version"));
+                    foreach ($versions as $vid => $version) {
+                        $select->addContent(option(["value" => $version->VERSION_ID], $version->DATE_CREATED . " " . $version->USERNAME . " - " . $version->VERSION_NO));
+                    }
+
+                    $html .= label(["for" => "lastVersion"], "Previous Versions") . $select . button(["class" => "button info", "onclick" => "loadPreviousVersion()"], "Load");
+                } else {
+                    $html .= b("No previous versions found ...");
+                }
+            break;
             case "login":
                 $html = $this->getPageTemplate("Login");
 
@@ -2415,21 +2439,28 @@ class Cody {
                $html .= $this->getFileTree(Ruth::getDOCUMENT_ROOT(), "loadFileCode", true);
             break;
             case "loadFile":
-                $fileName = Ruth::getREQUEST("fileName");
-                if (strpos(Ruth::getREQUEST("fileName"), str_replace('\\', '/', Ruth::getDOCUMENT_ROOT()."/versions/")) === false) {
-                    $fileName = str_replace ( str_replace ('\\', '/', Ruth::getDOCUMENT_ROOT()), Ruth::getREQUEST("targetVersion"), $fileName  );
-                }
+                if (!empty(Ruth::getREQUEST("versionId"))) {
+                    $version = $this->DEB->getRow("select * from kim_version where version_id = ".Ruth::getREQUEST("versionId"));
+                    $html .= $this->getCodeWindow("1", $version->CONTENT);
+                } else {
+                    $fileName = Ruth::getREQUEST("fileName");
+                    if (strpos(Ruth::getREQUEST("fileName"), str_replace('\\', '/', Ruth::getDOCUMENT_ROOT() . "/versions/")) === false) {
+                        $fileName = str_replace(str_replace('\\', '/', Ruth::getDOCUMENT_ROOT()), Ruth::getREQUEST("targetVersion"), $fileName);
+                    }
 
-                if (file_exists($fileName)) {
-                    $html .= $this->getCodeWindow ("1", file_get_contents($fileName));
+                    if (file_exists($fileName)) {
+                        $html .= $this->getCodeWindow("1", file_get_contents($fileName));
+                    } else {
+                        $html .= $this->getCodeWindow("1", file_get_contents(Ruth::getREQUEST("fileName")));
+                    }
+
+                    $html .= script("getFileVersion();");
                 }
-                  else {
-                      $html .= $this->getCodeWindow ("1", file_get_contents(Ruth::getREQUEST("fileName")));
-                  }
             break;
             case "newFile":
                 $html .= $this->getNewFile(Ruth::getREQUEST("filePath"));
-            break;
+
+                break;
             case "createFile":
                 //initial file
                 $fileName =  Ruth::getREQUEST("createPath")."/".Ruth::getREQUEST("fileName");
@@ -2440,7 +2471,7 @@ class Cody {
                 file_put_contents($fileName, ''); //dont put a place holder file on creation, this will get released anyway
                 $versionFile = str_replace ( str_replace('\\', '/', Ruth::getDOCUMENT_ROOT()), Ruth::getREQUEST("targetVersion"), $fileName );
                 file_put_contents($versionFile, '<'.'?'.'p'.'hp '."\n"."/**\nName : ".Ruth::getREQUEST("fileName")."\nReason:".Ruth::getREQUEST("fileReason")."\n**/");
-                $html .= script("refreshFileExplorer();");
+                $html .= script("refreshFileExplorer(); getFileVersion();");
                 //add it to Git?
             break;
             case "deleteFile":
@@ -2458,7 +2489,7 @@ class Cody {
                     $fileName = Ruth::getREQUEST("fileName");
                 }
                 unlink($fileName);
-                $html .= script("refreshFileExplorer();");
+                $html .= script("refreshFileExplorer(); getFileVersion();");
             break;
             case "saveFile":
                //see if the file exists in the versioned area if there is no versioning in the name
@@ -2478,10 +2509,25 @@ class Cody {
                    $fileName = Ruth::getREQUEST("fileName");
                }
 
-               //TODO: Version the files here
+               $release = str_replace (str_replace('\\', '/', Ruth::getDOCUMENT_ROOT()."/versions/"), "", Ruth::getREQUEST("targetVersion"));
+
+               $sqlInsert = "insert into kim_version (file_name, username, date_created, content, release, version_no )
+                             values(?, ?, 'now', ?, ?, ?)";
+
+               $fileNameOnly = explode ("/", $fileName);
+               $fileNameOnly = $fileNameOnly[sizeof($fileNameOnly)-1];
+
+               $versionNo = $this->DEB->getNextId("kim_version", "version_no", "file_name = '{$fileNameOnly}'");
+
+               $username = Ruth::getSESSION("codyAuthenticated");
+
+               $username = $username["user"]->FIRST_NAME." ".$username["user"]->LAST_NAME;
+
+               $this->DEB->exec($sqlInsert, $fileNameOnly, $username, file_get_contents($fileName), $release, $versionNo);
+
                file_put_contents($fileName, Ruth::getREQUEST("fileCode"));
 
-               $html .= script("$('#fileVersioning').html('Saved ".date("Y-m-d H:i:s")." - {$fileName}');  refreshFileExplorer();");
+               $html .= script("$('#fileVersioning').html('Saved ".date("Y-m-d H:i:s")." - {$fileName}');  refreshFileExplorer(); getFileVersion();");
             break;
             case "releaseFiles":
                $html .= $this->getRelease(Ruth::getREQUEST("targetVersion"), Ruth::getDOCUMENT_ROOT());
@@ -2526,6 +2572,17 @@ class Cody {
         var fileName;
         var filePath;
 
+
+        function loadPreviousVersion() {
+            aFileName = fileName;
+            ajaxCode ('/cody/loadFile', 'codeArea', { fileName : aFileName, versionId : $('#lastVersion').val()});
+        }
+
+        function getFileVersion() {
+           aFileName = fileName;
+           ajaxCode ('/cody/fileVersion', 'fileVersioning', { fileName: aFileName,  filePath: filePath, targetVersion: $('targetVersion').val()});
+        }
+
         function newFileCode() {
             ajaxCode ('/cody/newFile', 'fileArea', {filePath: filePath});
 
@@ -2559,7 +2616,7 @@ class Cody {
         ");
         $content .= $this->getFileExplorer();
         $content .= div (["id" => "fileArea"]);
-        $content .= div (["id" => "fileVersioning"], "File versioning");
+        $content .= div (["id" => "fileVersioning"], b("Click on a file on the left to see version information"));
         $content .= div (["id" => "codeArea"], $this->getCodeWindow("1", file_get_contents("index.php")));
         $content .= div (["id" => "actionArea"]); //place where the actions happen
         $html->byId("content")->setContent ($content);
@@ -2645,7 +2702,7 @@ class Cody {
         }
 
         if ($count == 0) {
-            $html->addContent(option(["value" => str_replace ('\\', '/', Ruth::getDOCUMENT_ROOT()."/versions/v1.01")], "v1.0.1"));
+            $html->addContent(option(["value" => str_replace ('\\', '/', Ruth::getDOCUMENT_ROOT()."/versions/v1.0.1")], "v1.0.1"));
         }
 
         return form(["method" => "post", "action" => "/cody"], "Version:". $html );

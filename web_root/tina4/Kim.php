@@ -35,7 +35,7 @@ class Kim {
         }
 
         if (Ruth::getOBJECT("DEB")) {
-            if (!file_exists ( Ruth::getDOCUMENT_ROOT()."/migrations/19000101100000 initial_kim_global_settings.sql" ) || !file_exists ( Ruth::getDOCUMENT_ROOT()."/migrations/19000101100001 initial_kim_content_table.sql" )) {
+            if (!file_exists ( Ruth::getDOCUMENT_ROOT()."/migrations/19000101100000 initial_kim_global_settings.sql" ) || !file_exists ( Ruth::getDOCUMENT_ROOT()."/migrations/19000101100001 initial_kim_content_table.sql" )  || !file_exists ( Ruth::getDOCUMENT_ROOT()."/migrations/19000101100002 initial_kim_code_versioning.sql" )) {
 
                 $sqlGlobalSettings = "create table global_setting (
                                             global_setting_id integer default 0 not null,
@@ -60,6 +60,20 @@ class Kim {
                                         )";
 
                 file_put_contents (Ruth::getDOCUMENT_ROOT()."/migrations/19000101100001 initial_kim_content_table.sql", $sqlContentTable );
+
+
+                $sqlVersionTable = "create table kim_version (
+                                        version_id integer default 0 not null,
+                                        file_name varchar (400) default '',
+                                        username varchar(200) default '',
+                                        date_created timestamp,
+                                        content blob,
+                                        release varchar(20) default 'v1.0.1',
+                                        version_no integer,
+                                        primary key(version_id)
+                                    )";
+
+                file_put_contents( Ruth::getDOCUMENT_ROOT()."/migrations/19000101100002 initial_kim_code_versioning.sql", $sqlVersionTable );
             }
         }
 
@@ -1564,7 +1578,7 @@ ul.tree > li > ul > li > ul > li > a > label:before {
         $customFields["CREATED"] = ["type" => "readonly", "defaultValue" => date("Y-m-d h:i:s")];
 
         //More detailed information for the system to use the correct primary key and table, useful when there is complex table joins
-        $tableInfo = ["table" => "user", "primarykey" => "user_id"];
+        $tableInfo = ["table" => "user", "primarykey" => "user_id", "fields" => "user_id, first_name, last_name, photo, email, passwd, status, role_id, created"];
         $content = (new Cody($this->KIM))->bootStrapTable(
             $sql="select user_id, first_name, last_name, photo, email, passwd, status, role_id, created from user where user_id <> 0 order by last_name",
             $buttons,

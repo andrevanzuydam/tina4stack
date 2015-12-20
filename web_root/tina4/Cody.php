@@ -2437,6 +2437,7 @@ class Cody {
             break;
             case "refreshFileExplorer":
                $html .= $this->getFileTree(Ruth::getDOCUMENT_ROOT(), "loadFileCode", true);
+               $html .=  script("getFileVersion();");
             break;
             case "loadFile":
                 if (!empty(Ruth::getREQUEST("versionId"))) {
@@ -2471,7 +2472,7 @@ class Cody {
                 file_put_contents($fileName, ''); //dont put a place holder file on creation, this will get released anyway
                 $versionFile = str_replace ( str_replace('\\', '/', Ruth::getDOCUMENT_ROOT()), Ruth::getREQUEST("targetVersion"), $fileName );
                 file_put_contents($versionFile, '<'.'?'.'p'.'hp '."\n"."/**\nName : ".Ruth::getREQUEST("fileName")."\nReason:".Ruth::getREQUEST("fileReason")."\n**/");
-                $html .= script("refreshFileExplorer(); getFileVersion();");
+                $html .= script("refreshFileExplorer();");
                 //add it to Git?
             break;
             case "deleteFile":
@@ -2489,7 +2490,7 @@ class Cody {
                     $fileName = Ruth::getREQUEST("fileName");
                 }
                 unlink($fileName);
-                $html .= script("refreshFileExplorer(); getFileVersion();");
+                $html .= script("refreshFileExplorer();");
             break;
             case "saveFile":
                //see if the file exists in the versioned area if there is no versioning in the name
@@ -2523,11 +2524,12 @@ class Cody {
 
                $username = $username["user"]->FIRST_NAME." ".$username["user"]->LAST_NAME;
 
-               $this->DEB->exec($sqlInsert, $fileNameOnly, $username, file_get_contents($fileName), $release, $versionNo);
-
+               if (file_exists($fileName)) {
+                   $this->DEB->exec($sqlInsert, $fileNameOnly, $username, file_get_contents($fileName), $release, $versionNo);
+               }
                file_put_contents($fileName, Ruth::getREQUEST("fileCode"));
 
-               $html .= script("$('#fileVersioning').html('Saved ".date("Y-m-d H:i:s")." - {$fileName}');  refreshFileExplorer(); getFileVersion();");
+               $html .= script("$('#fileVersioning').html('Saved ".date("Y-m-d H:i:s")." - {$fileName}');    refreshFileExplorer();");
             break;
             case "releaseFiles":
                $html .= $this->getRelease(Ruth::getREQUEST("targetVersion"), Ruth::getDOCUMENT_ROOT());
@@ -2596,6 +2598,7 @@ class Cody {
         function saveFileCode() {
            aFileName = fileName;
            ajaxCode ('/cody/saveFile', 'actionArea', {fileName: aFileName, fileCode: editor.getValue(), targetVersion: $('targetVersion').val() });
+
         }
 
         function releaseFiles(){

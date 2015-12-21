@@ -34,3 +34,7 @@ define("TINA4_DISABLE_CACHE", false); //this means we ignore the cache, currentl
  **/
 define("TINA4_EDITOR_PATHS", ["assets", "objects", "project", "roles", "routes", "tina4", "config.php"]);
 
+/**
+ * Define the path for the rest path for access to the database
+ */
+define("TINA4_REST_PATH", "api");

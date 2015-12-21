@@ -492,7 +492,7 @@ class Cody {
 
         Ruth::addRoute(RUTH_GET, "/cody/swagger",
             function () {
-                //generate a database schema for the default /rest interface
+                //generate a database schema for the default rest interface
                 Ruth::$wasAJAXCall = true;
                 if (Ruth::getOBJECT("DEB")) {
                     unlink(Ruth::getDOCUMENT_ROOT().'/routes/restAPI.php');
@@ -517,7 +517,7 @@ class Cody {
 
 
                         //LIST
-                        $code .= "*\n".'*    @SWG\Get('."\n".'*     path="/rest/'.$tableName.'",
+                        $code .= "*\n".'*    @SWG\Get('."\n".'*     path="/'.TINA4_REST_PATH.'/'.$tableName.'",
                         @SWG\Response(response="200", description = "A list of records from the '.$tableName.' table" ),
                         @SWG\Response(response="400", description = "No content for '.$tableName.' table" ),
                         @SWG\Response(response="403", description = "Forbidden to access the REST service" ),
@@ -525,7 +525,7 @@ class Cody {
                         )'."\n";
 
                         //CREATE
-                        $code .= "*\n".'*    @SWG\Post('."\n".'*     path="/rest/'.$tableName.'",
+                        $code .= "*\n".'*    @SWG\Post('."\n".'*     path="/'.TINA4_REST_PATH.'/'.$tableName.'",
                         @SWG\Response(response="200", description = "A new record added to '.$tableName.' table" ),
                         @SWG\Response(response="400", description = "Failed to add a record for '.$tableName.' table" ),
                         @SWG\Response(response="403", description = "Forbidden to access the REST service" ),
@@ -540,7 +540,7 @@ class Cody {
                         )'."\n";
 
                         //READ
-                        $code .= "*\n".'*    @SWG\Get('."\n".'*     path="/rest/'.$tableName.'/{id}",
+                        $code .= "*\n".'*    @SWG\Get('."\n".'*     path="/'.TINA4_REST_PATH.'/'.$tableName.'/{id}",
                         @SWG\Response(response="200", description = "Get a record from '.$tableName.' table" ),
                         @SWG\Response(response="400", description = "Failed to get a record from '.$tableName.' table" ),
                         @SWG\Response(response="403", description = "Forbidden to access the REST service" ),
@@ -554,7 +554,7 @@ class Cody {
                         )'."\n";
 
                         //UPDATE
-                        $code .= "*\n".'*    @SWG\Put('."\n".'*     path="/rest/'.$tableName.'/{id}",
+                        $code .= "*\n".'*    @SWG\Put('."\n".'*     path="/'.TINA4_REST_PATH.'/'.$tableName.'/{id}",
                         @SWG\Response(response="200", description = "Update a record from '.$tableName.' table" ),
                         @SWG\Response(response="400", description = "Failed to update a record from '.$tableName.' table" ),
                         @SWG\Response(response="403", description = "Forbidden to access the REST service" ),
@@ -574,7 +574,7 @@ class Cody {
                         )'."\n";
 
                         //PATCH
-                        $code .= "*\n".'*    @SWG\Patch('."\n".'*     path="/rest/'.$tableName.'/{id}",
+                        $code .= "*\n".'*    @SWG\Patch('."\n".'*     path="/'.TINA4_REST_PATH.'/'.$tableName.'/{id}",
                         @SWG\Response(response="200", description = "Patch a record from '.$tableName.' table" ),
                         @SWG\Response(response="400", description = "Failed to patch a record from '.$tableName.' table" ),
                         @SWG\Response(response="403", description = "Forbidden to access the REST service" ),
@@ -594,7 +594,7 @@ class Cody {
                         )'."\n";
 
                         //DELETE
-                        $code .= "*\n".'*    @SWG\Delete('."\n".'*     path="/rest/'.$tableName.'/{id}",
+                        $code .= "*\n".'*    @SWG\Delete('."\n".'*     path="/'.TINA4_REST_PATH.'/'.$tableName.'/{id}",
                         @SWG\Response(response="200", description = "Delete a record from '.$tableName.' table" ),
                         @SWG\Response(response="400", description = "Failed to delete a record from '.$tableName.' table" ),
                         @SWG\Response(response="403", description = "Forbidden to access the REST service" ),
@@ -2357,6 +2357,7 @@ class Cody {
         $html = div(["class" => "padding20 dialog", "data-show" => "true",  "data-role" => "dialog", "data-close-button" => "true", "data-overlay" => "true", "id" => "newFileDialog"],
             h3("Updates List"),
             $listUpdates,
+            a (["class" => "button success", "href" => "/cody"], "Refresh"),
             span(["class" => "dialog-close-button"])
         );
 
@@ -2479,8 +2480,6 @@ class Cody {
                 }
 
 
-
-
                 file_put_contents($versionFile, '<'.'?'.'p'.'hp '."\n"."/**\nName : ".Ruth::getREQUEST("fileName")."\nReason:".Ruth::getREQUEST("fileReason")."\n**/");
                 $html .= script("refreshFileExplorer();");
                 //add it to Git?
@@ -2543,6 +2542,12 @@ class Cody {
             break;
             case "releaseFiles":
                $html .= $this->getRelease(Ruth::getREQUEST("targetVersion"), Ruth::getDOCUMENT_ROOT());
+
+               $version = str_replace (str_replace('\\', '/', Ruth::getDOCUMENT_ROOT()."/versions/"), "", Ruth::getREQUEST("targetVersion"));
+               $version++;
+
+               mkdir (str_replace('\\', '/', Ruth::getDOCUMENT_ROOT()."/versions/{$version}"));
+
             break;
             default:
                 $html = "Unknown {$action} ".print_r (Ruth::getREQUEST(), 1);
@@ -2558,11 +2563,24 @@ class Cody {
         $html = $this->getPageTemplate("Code Builder");
 
         if (empty(Ruth::getREQUEST("targetVersion"))) {
-            $version = "v1.0.1";
-            Ruth::setREQUEST("targetVersion", str_replace ('\\', '/', Ruth::getDOCUMENT_ROOT()."/versions/v1.0.1"));
+            $files = scandir(Ruth::getDOCUMENT_ROOT() . "/versions");
+
+            rsort($files);
+            foreach ($files as $fid => $file) {
+                if ($file != "." && $file != "..") {
+                    $value = str_replace('\\', '/', Ruth::getDOCUMENT_ROOT() . "/versions/" . $file);
+
+                    if (empty(Ruth::getREQUEST("targetVersion"))) {
+                        Ruth::setREQUEST("targetVersion", $value);
+                        $version = $file;
+                    }
+                }
+            }
         } else {
             $version = str_replace (str_replace ('\\', '/', Ruth::getDOCUMENT_ROOT()."/versions/"), "", Ruth::getREQUEST("targetVersion"));
         }
+
+
 
         $content = $this->ajaxHandler("", "", "ajaxCode", "", "post", false);
         $content .= div(["class"=>"app-bar darcula"],
@@ -2695,10 +2713,16 @@ class Cody {
 
         $html = select (["style" => " width: 9em;", "targetVersion" => "targetVersion", "name" => "targetVersion", "onchange" => "document.forms[0].submit();"]);
 
+
+        rsort($files);
         $count = 0;
         foreach ($files as $fid => $file) {
             if ($file != "." && $file != "..") {
                 $value = str_replace ('\\', '/', Ruth::getDOCUMENT_ROOT()."/versions/".$file);
+
+                if(empty(Ruth::getREQUEST("targetVersion"))) {
+                    Ruth::setREQUEST("targetVersion", $value);
+                }
 
                 if (is_dir(Ruth::getDOCUMENT_ROOT()."/versions/".$file)) {
                     if ($value === Ruth::getREQUEST("targetVersion")) {

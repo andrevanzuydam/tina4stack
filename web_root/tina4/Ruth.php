@@ -819,7 +819,7 @@ class Ruth {
          * CREATE
          * Add a specific record to the table
          */
-        self::addRoute(RUTH_POST, "/rest/{tablename}",
+        self::addRoute(RUTH_POST, "/".TINA4_REST_PATH."/{tablename}",
             function($tableName, $id){
                 Ruth::$wasAJAXCall = true;
                 Ruth::getRESTAuth(self::getSERVER("PHP_AUTH_USER"), self::getSERVER("PHP_AUTH_PW"));
@@ -865,7 +865,7 @@ class Ruth {
          * READ
          * Get a specific record from a table using the primary key
          */
-        self::addRoute(RUTH_GET, "/rest/{tablename}/{id}",
+        self::addRoute(RUTH_GET, "/".TINA4_REST_PATH."/{tablename}/{id}",
             function($tableName, $id){
                 self::$wasAJAXCall = true;
                 Ruth::getRESTAuth(self::getSERVER("PHP_AUTH_USER"), self::getSERVER("PHP_AUTH_PW"));
@@ -900,7 +900,7 @@ class Ruth {
          * UPDATE
          * Update a specific record in the system based on its ID
          */
-        self::addRoute(RUTH_PUT, "/rest/{tablename}/{id}",
+        self::addRoute(RUTH_PUT, "/".TINA4_REST_PATH."/{tablename}/{id}",
             function($tableName, $id){
                 self::$wasAJAXCall = true;
                 self::getRESTAuth(self::getSERVER("PHP_AUTH_USER"), self::getSERVER("PHP_AUTH_PW"));
@@ -952,7 +952,7 @@ class Ruth {
          * PATCH
          * Patch a specific record in the system based on its ID
          */
-        self::addRoute(RUTH_PATCH, "/rest/{tablename}/{id}",
+        self::addRoute(RUTH_PATCH, "/".TINA4_REST_PATH."/{tablename}/{id}",
             function($tableName, $id){
 
                 Ruth::$wasAJAXCall = true;
@@ -1007,7 +1007,7 @@ class Ruth {
          * DELETE
          * Delete a specific record from a table using the primary key
          */
-        self::addRoute(RUTH_DELETE, "/rest/{tablename}/{id}",
+        self::addRoute(RUTH_DELETE, "/".TINA4_REST_PATH."/{tablename}/{id}",
             function($tableName, $id){
                 self::$wasAJAXCall = true;
                 self::getRESTAuth(self::getSERVER("PHP_AUTH_USER"), self::getSERVER("PHP_AUTH_PW"));
@@ -1037,7 +1037,7 @@ class Ruth {
          * LIST
          * Get a list of records out of the database
          */
-        self::addRoute(RUTH_GET, "/rest/{tablename}",
+        self::addRoute(RUTH_GET, "/".TINA4_REST_PATH."/{tablename}",
             function($tableName, $id){
                 self::$wasAJAXCall = true;
                 self::getRESTAuth(self::getSERVER("PHP_AUTH_USER"), self::getSERVER("PHP_AUTH_PW"));
@@ -1395,7 +1395,7 @@ class Ruth {
             else {
                 file_put_contents (self::getREAL_PATH()."/ajax_debug.log", print_r(self::getREQUEST(),1).print_r(self::getCOOKIE(),1).print_r(self::getSESSION(),1));
                 //output the debug window
-                if ( stripos(Ruth::getREQUEST_URI(),"/rest") === false && stripos(Ruth::getREQUEST_URI(),"/swagger") === false && Ruth::getREQUEST_URI()  != "/debug" && !self::$wasAJAXCall) {
+                if ( stripos(Ruth::getREQUEST_URI(),"/".TINA4_REST_PATH) === false && stripos(Ruth::getREQUEST_URI(),"/swagger") === false && Ruth::getREQUEST_URI()  != "/debug" && !self::$wasAJAXCall) {
                     echo (new Kim())->parseTemplate("/snippet/debug", ["CODE" => file_get_contents(self::getREAL_PATH() . "/ajax_debug.log")]);
                 }
             }

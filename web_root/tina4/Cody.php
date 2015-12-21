@@ -2471,6 +2471,16 @@ class Cody {
                 }
                 file_put_contents($fileName, ''); //dont put a place holder file on creation, this will get released anyway
                 $versionFile = str_replace ( str_replace('\\', '/', Ruth::getDOCUMENT_ROOT()), Ruth::getREQUEST("targetVersion"), $fileName );
+
+
+                $dirName = dirname($versionFile);
+                if (!file_exists($dirName)) {
+                    mkdir($dirName, "0755", true);
+                }
+
+
+
+
                 file_put_contents($versionFile, '<'.'?'.'p'.'hp '."\n"."/**\nName : ".Ruth::getREQUEST("fileName")."\nReason:".Ruth::getREQUEST("fileReason")."\n**/");
                 $html .= script("refreshFileExplorer();");
                 //add it to Git?

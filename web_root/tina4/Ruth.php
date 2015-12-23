@@ -39,7 +39,7 @@ class Ruth {
     private static $DEBUG = false;  //If this is true we have debugging
     /**
      * The list of all the routes in the system which are in the form  (object) array("requestMethod" => $requestMethod, "routePath" => $routePath, "routeFunction" => $routeFunction);
-     * @var Array
+     * @var array
      */
     private static $routes = [];    //Routes that the system must route through
     /**
@@ -48,37 +48,37 @@ class Ruth {
     private static $errorRoutes = [];
     /**
      * A list of objects which must persist in Ruth
-     * @var Array
+     * @var array
      */
     private static $objects = [];   //Any objects that need to be used in the system
     /**
      * An array snapshot of the $_SESSION variable
-     * @var Array
+     * @var array
      */
     private static $SESSION;        //The session variables
     /**
      * An array snapshot of the $_REQUEST variable
-     * @var Array
+     * @var array
      */
     private static $REQUEST;        //The request variables
     /**
      * An array snapshot of the $_COOKIE variable
-     * @var Array
+     * @var array
      */
     private static $COOKIE;         //All the cookie variables
     /**
      * An array snapshot of the $_SERVER variable
-     * @var Array
+     * @var array
      */
     private static $SERVER;         //All the server variables
     /**
      * An array snapshot of the $_FILES variable
-     * @var Array
+     * @var array
      */
     private static $FILES;          //Any file variables
     /**
      * The roles are not compulsory but can be defined to provide security in the system
-     * @var Array
+     * @var array
      */
     private static $ROLES = [];     //Roles are all the permissions for the routes
     /**
@@ -151,7 +151,7 @@ class Ruth {
 
     /**
      * A list of codes that will be used with HTTP responses
-     * @var Array
+     * @var array
      */
     private static $CODES = array(  //An array of possible error messages we can send through to the end user
         100 => 'Continue',
@@ -225,7 +225,6 @@ class Ruth {
      * Static class mustn't destruct
      */
     private function __destruct() {
-
     }
 
     /**
@@ -255,6 +254,7 @@ class Ruth {
      * Function to check that the authorization is correct for the user's requesting permission
      * @param String $username
      * @param String $password
+     * @return bool
      */
     public static function getRESTAuth($username, $password) {
         if (strpos(self::getSERVER("HTTP_HOST"), "local") === false) {
@@ -265,15 +265,17 @@ class Ruth {
                     die();
                 }
             } else { //Search through the arrays to get the correct usernames and validate the salt
-                foreach (self::$restUser as $rid => $restUser) {
-                    if ($restUser === $username) {
-                        //check if the passwords match
-                        if (password_verify($password, self::$restPass[$rid])) {
-                            //do nothing but exit because we are good!
-                            return true;
-                        } else {
-                            self::responseHeader(403);
-                            die();
+                if (!empty(self::$restUser)) {
+                    foreach (self::$restUser as $rid => $restUser) {
+                        if ($restUser === $username) {
+                            //check if the passwords match
+                            if (password_verify($password, self::$restPass[$rid])) {
+                                //do nothing but exit because we are good!
+                                return true;
+                            } else {
+                                self::responseHeader(403);
+                                die();
+                            }
                         }
                     }
                 }
@@ -363,7 +365,7 @@ class Ruth {
     /**
      * A function to set request variables using Ruth
      * @param String $keyName The name of the request variable to set.
-     * @param type $keyValue The value stored in the request variable
+     * @param string|type $keyValue The value stored in the request variable
      */
     public static function setREQUEST ($keyName="", $keyValue="") {
         if (!empty($keyName)) {
@@ -560,25 +562,25 @@ class Ruth {
     public static function getLASTROUTE ($requestMethod="") {
         $notFound = true;
         if (!empty($_SESSION["routeLASTPATH"]) && count ($_SESSION["routeLASTPATH"]) > 1) {
-            $icount = count ($_SESSION["routeLASTPATH"])-2;
+            $iCount = count ($_SESSION["routeLASTPATH"])-2;
             if (!empty($requestMethod)) {
-                $icount++;
+                $iCount++;
             }
-            while ($notFound && $icount > 0 ) {
+            while ($notFound && $iCount > 0 ) {
 
                 if (empty($requestMethod)) {
-                    $match = strtoupper($_SESSION["routeLASTPATH"][$icount]->requestMethod);
+                    $match = strtoupper($_SESSION["routeLASTPATH"][$iCount]->requestMethod);
                 }
                 else {
 
                     $match = strtoupper($requestMethod);
                 }
-                if (strtoupper($_SESSION["routeLASTPATH"][$icount]->requestMethod) === $match) {
+                if (strtoupper($_SESSION["routeLASTPATH"][$iCount]->requestMethod) === $match) {
                     $notFound = false;
-                    return $_SESSION["routeLASTPATH"][$icount]->routePath;
+                    return $_SESSION["routeLASTPATH"][$iCount]->routePath;
                 }
 
-                $icount--;
+                $iCount--;
             }
         }
 
@@ -638,6 +640,7 @@ class Ruth {
                 return false;
             }
         }
+        return false;
     }
 
 
@@ -742,6 +745,7 @@ class Ruth {
      * It also parses the URL for any get variables that may be present and puts them in the internal $REQUEST
      *
      * @param String $sessionName The name of the session for the web application
+     * @return bool
      */
     public static function initRuth($sessionName) {
         if (empty($sessionName))
@@ -820,7 +824,7 @@ class Ruth {
          * Add a specific record to the table
          */
         self::addRoute(RUTH_POST, "/".TINA4_REST_PATH."/{tablename}",
-            function($tableName, $id){
+            function($tableName){
                 Ruth::$wasAJAXCall = true;
                 Ruth::getRESTAuth(self::getSERVER("PHP_AUTH_USER"), self::getSERVER("PHP_AUTH_PW"));
                 if (!empty(self::getOBJECT("DEB"))) {
@@ -1038,12 +1042,12 @@ class Ruth {
          * Get a list of records out of the database
          */
         self::addRoute(RUTH_GET, "/".TINA4_REST_PATH."/{tablename}",
-            function($tableName, $id){
+            function($tableName){
                 self::$wasAJAXCall = true;
                 self::getRESTAuth(self::getSERVER("PHP_AUTH_USER"), self::getSERVER("PHP_AUTH_PW"));
                 if (!empty(self::getOBJECT("DEB"))) {
                     $DEB = self::getOBJECT("DEB");
-                    $database = $DEB->getDatabase();
+
 
                     $result = $DEB->getRows("select * from {$tableName}");
                     if (!empty($result)) {
@@ -1070,8 +1074,8 @@ class Ruth {
      *
      * This parses the params from the ? sent on the URL
      *
-     * @param String The URL that was posted to the router
-     * @return Array An array of params that were passed from the URL - GET variables
+     * @param string a URL that was posted to the router
+     * @return array An array of params that were passed from the URL - GET variables
      */
     private static function parseParams($URI = "") {
         $params = array();

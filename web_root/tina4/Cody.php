@@ -2625,9 +2625,11 @@ class Cody {
 
         function saveFileCode() {
            editor.session.getUndoManager().markClean();
+           $('#saveButton').removeClass('button info');
            aFileName = fileName;
-
-           ajaxCode ('/cody/saveFile', 'actionArea', {fileName: aFileName, fileCode: editor.getValue(), targetVersion: $('targetVersion').val() });
+           if (aFileName !== 'undefined') {
+            ajaxCode ('/cody/saveFile', 'actionArea', {fileName: aFileName, fileCode: editor.getValue(), targetVersion: $('targetVersion').val() });
+           }
 
         }
 
@@ -2669,19 +2671,63 @@ class Cody {
     function getCodeWindow($id, $code) {
         $content = script(["src" => "/ace/ace.js"]);
         $content .= script(["src" => "/ace/mode-php.js"]);
+        $content .= script(["src" => "/ace/mode-html.js"]);
         $content .= script(["src" => "/ace/ext-beautify.js"]);
         $content .= script(["src" => "/ace/ext-statusbar.js"]);
         $content .= script(["src" => "/ace/ext-error_marker.js"]);
+        $content .= script(["src" => "/ace/ext-language_tools.js"]);
+        $content .= script(["src" => "/ace/snippets/tina4.js"]);
+
+
+        //get all the methods and functions in memory
+        $codeList = get_defined_functions();
+        $codeList = join (",", $codeList["user"]);
+
+
 
 
         $content .=  div(["id" => "codeWindow{$id}", "style" => "min-width: 0px;  min-height: 100px; ", "name" => "codeWindow{$id}"], htmlentities($code));
         $content .= script("
 
+
+                                ace.require('ace/ext/status_bar');
+                                ace.require('ace/snippet/tina4');
+
+                                var snippetManager = ace.require('ace/snippets').snippetManager;
+
+
+
                                 var editor = ace.edit('codeWindow{$id}');
-                                    editor.setTheme('ace/theme/monokai');
+                                    editor.setTheme('ace/theme/terminal');
                                     editor.getSession().setMode({path:'ace/mode/php', inline:true});
-                                    editor.session.getUndoManager().reset();
-                                    $('#saveButton').removeClass('button info');
+
+
+
+
+                                 //load the custom snippets
+
+                                 ace.config.loadModule('ace/ext/language_tools', function () {
+                                    editor.\$blockScrolling = Infinity;
+                                    editor.setOptions({
+                                    enableBasicAutocompletion: false,
+                                    enableSnippets: true,
+                                    enableLiveAutocompletion: true});
+                                    ace.config.loadModule('ace/snippets/php-inline', function (m) {
+                                        if (m) {
+                                            snippetManager.files.php = m;
+                                            console.log(m.snippets);
+                                            m.snippets = snippetManager.parseSnippetFile(m.snippetText);
+                                            var customSnippets = tina4_snippets();
+                                            customSnippets.forEach(function (s) { m.snippets.push(s); });
+                                            snippetManager.register(m.snippets, m.scope);
+                                        }
+                                    });
+
+                                 });
+
+                                 editor.session.getUndoManager().reset();
+                                 $('#saveButton').removeClass('button info');
+
 
                                 function resizeAce() {
                                     var h = window.innerHeight;
@@ -2695,7 +2741,6 @@ class Cody {
                                 resizeAce();
 
                                 editor.on('input', function() {
-                                    console.log (editor.session.getUndoManager());
                                     if (!editor.session.getUndoManager().isClean()) {
                                         $('#saveButton').removeClass('disabled');
                                         $('#saveButton').addClass('button info');

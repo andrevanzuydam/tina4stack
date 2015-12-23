@@ -7,7 +7,7 @@
 /**
  * Define the release version of the stack
  */
-define("TINA4_RELEASE", "v1.0.4");
+define("TINA4_RELEASE", "v1.0.5");
 /**
  * Set default time zone
  */
@@ -37,3 +37,12 @@ define("TINA4_EDITOR_PATHS", ["assets", "objects", "project", "roles", "routes",
  * Define the path for the rest path for access to the database
  */
 define("TINA4_REST_PATH", "api");
+
+/**
+ * Define the git path
+ */
+define ("TINA4_GIT_BIN", "C:/Program Files/Git/bin/git.exe");
+if (defined("TINA4_GIT_BIN") && !file_exists(TINA4_GIT_BIN)) {
+    echo "Please define TINA4_GIT_BIN in ".__FILE__;
+    exit;
+}

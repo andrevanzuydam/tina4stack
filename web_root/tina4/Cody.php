@@ -2385,9 +2385,9 @@ class Cody {
                         $select->addContent(option(["value" => $version->VERSION_ID], $version->DATE_CREATED . " " . $version->USERNAME . " - " . $version->VERSION_NO));
                     }
 
-                    $html .= label(["for" => "lastVersion"], "Previous Versions") . $select . button(["class" => "button info", "onclick" => "loadPreviousVersion()"], "Load");
+                    $html .= label(["for" => "lastVersion"], "Filename: ".b("{$fileNameOnly}")." Previous Versions") . $select . button(["class" => "button info", "onclick" => "loadPreviousVersion()"], "Load");
                 } else {
-                    $html .= b("No previous versions found ...");
+                    $html .= "Filename: ".b("{$fileNameOnly} No previous versions found ...");
                 }
             break;
             case "login":
@@ -2588,7 +2588,7 @@ class Cody {
             span (["class" => "app-bar-divider"]),
             ul(["class" => "app-bar-menu"],
                 li(a(["onclick" => "newFileCode()"], "New File")),
-                li(a(["onclick" => "saveFileCode()"], "Save File")),
+                li(a(["id"=>"saveButton", "onclick" => "saveFileCode()"], "Save File")),
                 li(a(["class" => "button danger", "onclick" => "console.log(fileName); if (fileName !== '' && confirm('Are you sure you want to delete '+fileName+'?') ) { deleteFileCode(); }"],"Delete")),
                 li($this->getAppVersions()),
                 li(a (["class"=> "button success", "href"=> "#", "onclick" => "releaseFiles()"], "Release")),
@@ -2624,7 +2624,9 @@ class Cody {
 
 
         function saveFileCode() {
+           editor.session.getUndoManager().markClean();
            aFileName = fileName;
+
            ajaxCode ('/cody/saveFile', 'actionArea', {fileName: aFileName, fileCode: editor.getValue(), targetVersion: $('targetVersion').val() });
 
         }
@@ -2672,12 +2674,63 @@ class Cody {
         $content .= script(["src" => "/ace/ext-error_marker.js"]);
 
 
-        $content .=  div(["id" => "codeWindow{$id}", "style" => "min-width: 0px; max-height: 600px; min-height: 600px", "name" => "codeWindow{$id}"], htmlentities($code));
+        $content .=  div(["id" => "codeWindow{$id}", "style" => "min-width: 0px;  min-height: 100px; ", "name" => "codeWindow{$id}"], htmlentities($code));
         $content .= script("
 
                                 var editor = ace.edit('codeWindow{$id}');
                                     editor.setTheme('ace/theme/monokai');
                                     editor.getSession().setMode({path:'ace/mode/php', inline:true});
+                                    editor.session.getUndoManager().reset();
+                                    $('#saveButton').removeClass('button info');
+
+                                function resizeAce() {
+                                    var h = window.innerHeight;
+                                    if (h > 100) {
+                                        $('#codeWindow{$id}').css('height', (h - 100).toString() + 'px');
+                                    }
+                                };
+                                $(window).on('resize', function () {
+                                    resizeAce();
+                                });
+                                resizeAce();
+
+                                editor.on('input', function() {
+                                    console.log (editor.session.getUndoManager());
+                                    if (!editor.session.getUndoManager().isClean()) {
+                                        $('#saveButton').removeClass('disabled');
+                                        $('#saveButton').addClass('button info');
+                                     }
+                                    else {
+                                        $('#saveButton').removeClass('button info');
+                                        $('#saveButton').addClass('disabled');
+                                    }
+
+                                });
+
+                                var heightUpdateFunction = function() {
+
+                                    // http://stackoverflow.com/questions/11584061/
+                                    var newHeight =
+                                              editor.getSession().getScreenLength()
+                                              * editor.renderer.lineHeight
+                                              + editor.renderer.scrollBar.getWidth();
+
+                                    $('#editor').height(newHeight.toString() + \"px\");
+                                    $('#editor-section').height(newHeight.toString() + \"px\");
+
+                                    // This call is required for the editor to fix all of
+                                    // its inner structure for adapting to a change in size
+                                    editor.resize();
+                                };
+
+                                // Set initial size to match initial content
+                                heightUpdateFunction();
+
+                                // Whenever a change happens inside the ACE editor, update
+                                // the size again
+                                editor.getSession().on('change', heightUpdateFunction);
+
+                                $('#codeWindow{$id}').height = $(window).height();
 
                                 //supress save dialog
                                 window.onkeypress = function(event) {

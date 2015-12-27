@@ -90,17 +90,24 @@ if (!empty(TINA4_SESSION)) {
     tina4Message("TINA4_SESSION variable is not set", "Config Error");
 }
 
+if (substr(Ruth::getSERVER("REQUEST_URI"),0,10) == "/?version=" && !empty(Ruth::getREQUEST("version"))) {
+    Ruth::setSESSION("version", Ruth::getREQUEST("version"));
+    Ruth::redirect("/");
+    exit;
+}
+
 //tests for a particular version of the application in the version folder of root
-if (!empty(Ruth::getREQUEST("version"))) {
-    if (file_exists(Ruth::getDOCUMENT_ROOT()."/versions/".Ruth::getREQUEST("version"))) {
-        define ("TINA4_VERSION", Ruth::getDOCUMENT_ROOT()."/versions/".Ruth::getREQUEST("version"));
+if (!empty(Ruth::getSESSION("version")) && !defined("TINA4_VERSION")) {
+    if (file_exists(Ruth::getDOCUMENT_ROOT()."/versions/".Ruth::getSESSION("version"))) {
+        define ("TINA4_VERSION", Ruth::getDOCUMENT_ROOT()."/versions/".Ruth::getSESSION("version"));
     } else {
-        echo Ruth::getREQUEST("version")." is not a valid version of the application";
+        echo Ruth::getSESSION("version")." is not a valid version of the application";
         exit;
     }
 }  else {
-
-    define ("TINA4_VERSION", "");
+   if (!defined ("TINA4_VERSION")) {
+       define("TINA4_VERSION", "");
+   }
 }
 
 

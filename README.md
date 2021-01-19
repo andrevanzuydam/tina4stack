@@ -5,7 +5,7 @@
 This repository is intended for legacy support, there is a new version you can install using composer
 
 ```
-  composer require andrevanzuydam\tina4php
+  composer require andrevanzuydam/tina4php
 ```
 
 [Check it out here for more detailed instructions](https://andrevanzuydam.github.io/tina4-php/#/)

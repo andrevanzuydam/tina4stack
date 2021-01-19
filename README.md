@@ -10,9 +10,9 @@ This repository is intended for legacy support, there is a new version you can i
 
 [Check it out here for more detailed instructions](https://andrevanzuydam.github.io/tina4-php/#/)
 
+OR
 
-
-[Download Latest Release](https://github.com/andrevanzuydam/tina4stack/releases)
+[Download Legacy Version](https://github.com/andrevanzuydam/tina4stack/releases)
 
 ### Tina4 ###
 Tina4 - This is not another framework. The download you will get consists of the following technologies:

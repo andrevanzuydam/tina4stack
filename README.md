@@ -1,5 +1,17 @@
 # README #
 
+### Tina4 Version 2 ###
+
+This repository is intended for legacy support, there is a new version you can install using composer
+
+```
+  composer require andrevanzuydam\tina4php
+```
+
+[Check it out here for more detailed instructions](https://andrevanzuydam.github.io/tina4-php/#/)
+
+
+
 [Download Latest Release](https://github.com/andrevanzuydam/tina4stack/releases)
 
 ### Tina4 ###
